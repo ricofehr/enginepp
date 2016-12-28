@@ -14,7 +14,7 @@ namespace proxygl {
 
 /* fixed height and width for gl window */
 constexpr float kWidthWindow = 1200.0f;
-constexpr float kHeightWindow = 800.0f;
+constexpr float kHeightWindow = 740.0f;
 
 void initGL();
 void settingsGL(engine::universe::Universe *universe);
