@@ -6,9 +6,30 @@ A 3d engine at very early stage and in working progress.
 The program generates 4 rooms with some bricks created and moved randomly,
 The camera can move with mouse (head orientation) and arrow keys (camera direction).
 
-## Compile
+## Prerequisites
 
-Needs OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+Needs Cmake, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+
+On ubuntu or Debian, apt-get make full prerequisites install
+```
+apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev
+```
+
+On OSX, we need XCode and install some libraries with brew (SOIL must be install manually)
+```
+brew install cmake glm glew glfw3
+```
+
+And SOIL must be install manually
+```
+$ git clone https://github.com/smibarber/libSOIL
+$ cd libSOIL && make
+$ sudo mkdir -p /usr/local/include/SOIL
+$ sudo cp *.h /usr/local/include/SOIL/
+$ sudo cp libSOIL.* /usr/local/lib/
+```
+
+## Compile
 
 ```
 $ cmake .
