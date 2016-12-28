@@ -216,8 +216,7 @@ void settingsGL(engine::universe::Universe *uni)
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do{
-        if(glfwGetWindowAttrib(kGLWindow, GLFW_FOCUSED) == 1)
-            draw();
+    	draw();
     }
     while(glfwGetKey(kGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
           && glfwWindowShouldClose(kGLWindow) == 0);
