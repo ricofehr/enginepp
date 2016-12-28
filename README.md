@@ -66,9 +66,10 @@ Scanning dependencies of target engine
 
 ## Folders
 ```
-+--src/ Sources
++--src/ 	Sources
 +--bin/		Binary folder where engine executable is written
 +--assets/      Texture files
++--demos/	Demo gif animated files
 ```
 
 ## Run
@@ -79,6 +80,7 @@ When we cross a door, we change room (4 rooms).
 ```
 bin/./engine
 ```
+![Engine](demos/enginepp.gif?raw=true)
 
 ## Todo
 
