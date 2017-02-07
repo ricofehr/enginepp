@@ -3,17 +3,17 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-/* OpenCL 1.2 */
-#define CL_HPP_MINIMUM_OPENCL_VERSION 120
-#define CL_HPP_TARGET_OPENCL_VERSION 120
-
 #define CL_HPP_ENABLE_EXCEPTIONS
+
+#define CL_HPP_MINIMUM_OPENCL_VERSION 200
+#define CL_HPP_TARGET_OPENCL_VERSION 200
 
 #include "engine/universe/model3d.h"
 
 #include <glm/glm.hpp>
 #include <SOIL/SOIL.h>
 
+/* OpenCL 1.2 for macbook, 2.0 for others */
 #ifdef __APPLE__
     #include <OpenCL/cl2.hpp>
 #else
@@ -35,13 +35,16 @@ namespace {
     /* Unique id for object */
     static int objectid = 1;
     /* OpenCL env */
-    static cl::Kernel collision_kernel;
+    static cl::Kernel collision_kernel_step1;
+    static cl::Kernel collision_kernel_step2;
     static cl::CommandQueue collision_queue;
     static cl::Buffer bufferbox1;
     static cl::Buffer bufferbox2;
     static cl::Buffer bufferdist;
+    static cl::Pipe pipedist;
 
-    void initCollisionCL() {
+    void initCollisionCL()
+    {
         try {
             /* Query for platforms */
             std::vector <cl::Platform> platforms;
@@ -60,11 +63,13 @@ namespace {
             /* Create the memory buffers */
             bufferbox1 = cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float));
             bufferbox2 = cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float));
+            pipedist = cl::Pipe(context, sizeof(float), 10);
             bufferdist = cl::Buffer(context, CL_MEM_WRITE_ONLY, 10 * sizeof(float));
 
             /* Read the program Source */
             std::ifstream source_file("cl/collision_kernel.cl");
-            std::string source_code(std::istreambuf_iterator<char>(source_file), (std::istreambuf_iterator<char>()));
+            std::string source_code(std::istreambuf_iterator<char>(source_file),
+                                    (std::istreambuf_iterator<char>()));
             cl::Program::Sources source(1, source_code);
 
             /* Create the program from the source code */
@@ -74,7 +79,8 @@ namespace {
             program.build(devices);
 
             /* Create the kernel */
-            collision_kernel = cl::Kernel(program, "collision");
+            collision_kernel_step1 = cl::Kernel(program, "collision_step1");
+            collision_kernel_step2 = cl::Kernel(program, "collision_step2");
 
         } catch(cl::Error error) {
             std::cout << error.what() << "(" << error.err() << ")" << std::endl;
@@ -185,14 +191,20 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle)
         collision_queue.enqueueWriteBuffer(bufferbox2, CL_TRUE, 0, 9 * sizeof(float), box2);
 
         /* Set kernel arguments */
-        collision_kernel.setArg(0, bufferbox1);
-        collision_kernel.setArg(1, bufferbox2);
-        collision_kernel.setArg(2, bufferdist);
+        collision_kernel_step1.setArg(0, bufferbox1);
+        collision_kernel_step1.setArg(1, bufferbox2);
+        collision_kernel_step1.setArg(2, &pipedist);
+
+        collision_kernel_step2.setArg(0, &pipedist);
+        collision_kernel_step2.setArg(1, bufferbox1);
+        collision_kernel_step2.setArg(2, bufferbox2);
+        collision_kernel_step2.setArg(3, bufferdist);
 
         /* Execute the kernel (10 workitem in 1 workgroup => compute distance for the 10 fact) */
         cl::NDRange global(10);
         cl::NDRange local(10);
-        collision_queue.enqueueNDRangeKernel(collision_kernel, cl::NullRange, global, local);
+        collision_queue.enqueueNDRangeKernel(collision_kernel_step1, cl::NullRange, global, local);
+        collision_queue.enqueueNDRangeKernel(collision_kernel_step2, cl::NullRange, global, local);
 
         /* Copy the output data back to the host */
         collision_queue.enqueueReadBuffer(bufferdist, CL_TRUE, 0, 10 * sizeof(float), distances);

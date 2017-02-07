@@ -8,7 +8,7 @@ The camera can move with mouse (head orientation) and arrow keys (camera directi
 
 ## Prerequisites
 
-Needs Cmake (>3.1), OpenCL (1.2), OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+Needs Cmake (>3.1), OpenCL (2.0), OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
 
 On ubuntu or Debian, apt-get make full prerequisites install
 ```
@@ -76,7 +76,7 @@ Scanning dependencies of target engine
 ## Features
 
 - C++11
-- OpenCL 1.2
+- OpenCL 2.0
 - Opengl 3
 - Use of Glew, GLM, SOIL, Glfw libraries
 - CMake for compile
