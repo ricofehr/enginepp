@@ -7,17 +7,16 @@
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
 #define CL_HPP_TARGET_OPENCL_VERSION 120
 
+#define CL_HPP_ENABLE_EXCEPTIONS
+
 #include "engine/universe/model3d.h"
 
 #include <glm/glm.hpp>
 #include <SOIL/SOIL.h>
 
 #ifdef __APPLE__
-    #define __CL_ENABLE_EXCEPTIONS
-    #include <OpenCL/cl.hpp>
+    #include <OpenCL/cl2.hpp>
 #else
-    #define CL_HPP_ENABLE_EXCEPTIONS
-    #define CL_HPP_ENABLE_PROGRAM_CONSTRUCTION_FROM_ARRAY_COMPATIBILITY
     #include <CL/cl2.hpp>
 #endif
 
@@ -66,7 +65,7 @@ namespace {
             /* Read the program Source */
             std::ifstream source_file("cl/collision_kernel.cl");
             std::string source_code(std::istreambuf_iterator<char>(source_file), (std::istreambuf_iterator<char>()));
-            cl::Program::Sources source(1, std::make_pair(source_code.c_str(), source_code.length() + 1));
+            cl::Program::Sources source(1, source_code);
 
             /* Create the program from the source code */
             cl::Program program = cl::Program(context, source);

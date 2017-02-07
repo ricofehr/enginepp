@@ -8,7 +8,7 @@ The camera can move with mouse (head orientation) and arrow keys (camera directi
 
 ## Prerequisites
 
-Needs Cmake, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+Needs Cmake (>3.1), OpenCL (1.2), OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
 
 On ubuntu or Debian, apt-get make full prerequisites install
 ```
@@ -36,8 +36,8 @@ $ sudo cp libSOIL.* /usr/local/lib/
 
 And OpenCL must be install manually
 ```
-$ wget https://www.khronos.org/registry/OpenCL/api/2.1/cl.hpp
-$ sudo mv cl.hpp /System/Library/Frameworks/OpenCL.framework/Headers/
+$ wget https://github.com/KhronosGroup/OpenCL-CLHPP/releases/download/v2.0.10/cl2.hpp
+$ sudo mv cl2.hpp /System/Library/Frameworks/OpenCL.framework/Headers/
 ```
 
 For OpenCL header copy, need execute this in terminal on Recovery Mode
@@ -76,7 +76,7 @@ Scanning dependencies of target engine
 ## Features
 
 - C++11
-- OpenCL 1.2 used for collisions compute
+- OpenCL 1.2
 - Opengl 3
 - Use of Glew, GLM, SOIL, Glfw libraries
 - CMake for compile
