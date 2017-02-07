@@ -12,12 +12,17 @@ Needs Cmake, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
 
 On ubuntu or Debian, apt-get make full prerequisites install
 ```
-apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev
+$ apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers
+```
+
+For OpenCL, we need gpu library, for intel gpu
+```
+$ apt-get install beignet-dev
 ```
 
 On OSX, we need XCode and install some libraries with brew (SOIL must be install manually)
 ```
-brew install cmake glm glew glfw3
+$ brew install cmake glm glew glfw3
 ```
 
 And SOIL must be install manually
@@ -27,6 +32,17 @@ $ cd libSOIL && make
 $ sudo mkdir -p /usr/local/include/SOIL
 $ sudo cp *.h /usr/local/include/SOIL/
 $ sudo cp libSOIL.* /usr/local/lib/
+```
+
+And OpenCL must be install manually
+```
+$ wget https://www.khronos.org/registry/OpenCL/api/2.1/cl.hpp
+$ sudo mv cl.hpp /System/Library/Frameworks/OpenCL.framework/Headers/
+```
+
+For OpenCL header copy, need execute this in terminal on Recovery Mode
+```
+$ csrutil disable
 ```
 
 ## Compile
@@ -60,6 +76,7 @@ Scanning dependencies of target engine
 ## Features
 
 - C++11
+- OpenCL 1.2 used for collisions compute
 - Opengl 3
 - Use of Glew, GLM, SOIL, Glfw libraries
 - CMake for compile
@@ -67,8 +84,10 @@ Scanning dependencies of target engine
 ## Folders
 ```
 +--src/ 	Sources
++--cl/      OpenCL Kernels folder
++--glsl/    OpenGL Shaders folder
 +--bin/		Binary folder where engine executable is written
-+--assets/      Texture files
++--assets/  Texture files
 +--demos/	Demo gif animated files
 ```
 

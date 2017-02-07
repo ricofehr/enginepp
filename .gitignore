@@ -28,6 +28,9 @@
 *.out
 *.app
 
+# Vim temporary
+*.swp
+
 # Cmake files and folder
 Makefile
 cmake_install.cmake
