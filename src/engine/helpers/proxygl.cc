@@ -34,8 +34,8 @@ static engine::universe::Universe *universe = nullptr;
 */
 void LoadShaders()
 {
-    const char *vertex_file_path = "SimpleVertexShader.vertexshader";
-    const char *fragment_file_path = "SimpleFragmentShader.fragmentshader";
+    const char *vertex_file_path = "glsl/SimpleVertexShader.vertexshader";
+    const char *fragment_file_path = "glsl/SimpleFragmentShader.fragmentshader";
 
     /* Create the shaders */
     GLuint vertexshader_id = glCreateShader(GL_VERTEX_SHADER);
