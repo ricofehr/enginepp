@@ -16,6 +16,14 @@ namespace geometry {
 class Shape3D {
 
 public:
+    /* Default constructor, move and copy constructor / operator */
+    Shape3D() = default;
+    Shape3D(Shape3D&&) = default;
+    Shape3D& operator=(Shape3D&&) = default;
+
+    Shape3D(const Shape3D&) = default;
+    Shape3D& operator=(const Shape3D&) = default;
+
     glm::mat4 ComputeMVP();
     virtual void Draw() = 0;
 
@@ -28,7 +36,8 @@ public:
     void set_move(glm::vec4 move) { move_ = move; }
     void set_move(glm::vec3 move) { move_ = glm::vec4(move, 0.0f); }
 
-    virtual ~Shape3D() {}
+    /* Abstract class, so vietual destructor */
+    virtual ~Shape3D() = default;
 
 protected:
     glm::vec4 location_;

@@ -20,7 +20,16 @@ class WindowModel : public Model3D {
 public:
     WindowModel();
     WindowModel(int face, float scale, glm::vec4 location);
-    ~WindowModel() {}
+
+    /* Default move and copy constructor / operator */
+    WindowModel(WindowModel&&) = default;
+    WindowModel& operator=(WindowModel&&) = default;
+
+    WindowModel(const WindowModel&) = default;
+    WindowModel& operator=(const WindowModel&) = default;
+
+    /* Default destructor */
+    ~WindowModel() override = default;
 
 private:
     int face_;

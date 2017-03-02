@@ -22,7 +22,15 @@ public:
     Cube(float scale, glm::vec4 location, glm::vec4 move);
     Cube(float scale, glm::vec4 location, GLuint vertexbuffer, GLuint texturebuffer);
     Cube(float scale, glm::vec4 location, glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer);
-    virtual ~Cube() override {}
+    /* Default move and copy constructor / operator */
+    Cube(Cube&&) = default;
+    Cube& operator=(Cube&&) = default;
+
+    Cube(const Cube&) = default;
+    Cube& operator=(const Cube&) = default;
+
+    /* Default destructor */
+    virtual ~Cube() override = default;
 
     void Draw() override;
 

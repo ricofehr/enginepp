@@ -22,7 +22,16 @@ public:
          GLuint vertexbuffer, GLuint texturebuffer);
     Quad(int face, float scale, glm::vec4 location,
          glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer);
-    ~Quad() override {}
+
+    /* Default move and copy constructor / operator */
+    Quad(Quad&&) = default;
+    Quad& operator=(Quad&&) = default;
+
+    Quad(const Quad&) = default;
+    Quad& operator=(const Quad&) = default;
+
+    /* Default destructor */
+    ~Quad() override = default;
 
     void Draw() override;
 

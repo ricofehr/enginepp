@@ -20,7 +20,16 @@ class Door : public Model3D {
 public:
     Door();
     Door(int face, float scale, glm::vec4 location);
-    ~Door() {}
+
+    /* Default move and copy constructor / operator */
+    Door(Door&&) = default;
+    Door& operator=(Door&&) = default;
+
+    Door(const Door&) = default;
+    Door& operator=(const Door&) = default;
+
+    /* Default destructor */
+    ~Door() override = default;
 
 private:
     int face_;

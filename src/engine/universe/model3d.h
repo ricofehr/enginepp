@@ -20,6 +20,13 @@ class Model3D {
 
 public:
     Model3D();
+    /* Default move and copy constructor / operator */
+    Model3D(Model3D&&) = default;
+    Model3D& operator=(Model3D&&) = default;
+
+    Model3D(const Model3D&) = default;
+    Model3D& operator=(const Model3D&) = default;
+
     void Draw();
     std::vector<Model3D*> DetectCollision(Model3D *obstacle);
 
@@ -38,7 +45,8 @@ public:
     friend bool operator!=(const Model3D &o1, const Model3D &o2);
     int type() const { return type_; }
 
-    virtual ~Model3D() {}
+    /* Default destructor */
+    virtual ~Model3D() = default;
 
 protected:
     static const int kMODEL3D_CAMERA = 1;

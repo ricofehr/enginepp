@@ -20,7 +20,16 @@ public:
     Brick();
     Brick(float scale, glm::vec4 location);
     Brick(float scale, glm::vec4 location, glm::vec4 move);
-    ~Brick() {}
+
+    /* Default move and copy constructor / operator */
+    Brick(Brick&&) = default;
+    Brick& operator=(Brick&&) = default;
+
+    Brick(const Brick&) = default;
+    Brick& operator=(const Brick&) = default;
+
+    /* Default destructor */
+    ~Brick() override = default;
 };
 
 }//namespace geometry

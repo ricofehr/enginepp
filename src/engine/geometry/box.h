@@ -26,7 +26,16 @@ public:
     Box();
     Box(float scale, glm::vec4 location, std::vector<glm::vec3> coords);
     Box(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
-    ~Box() {}
+
+    /* Default move and copy constructor / operator */
+    Box(Box&&) = default;
+    Box& operator=(Box&&) = default;
+
+    Box(const Box&) = default;
+    Box& operator=(const Box&) = default;
+
+    /* Default destructor */
+    ~Box() override = default;
 
     std::vector<glm::vec3> ComputeCoords() const;
     void MoveCoords();

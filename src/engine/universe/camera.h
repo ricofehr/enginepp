@@ -22,7 +22,16 @@ public:
     Camera(float cx, float cy, float cz,
            float vx, float vy, float vz,
            float hx, float hy, float hz);
-    ~Camera() {}
+
+    /* Default move and copy constructor / operator */
+    Camera(Camera&&) = default;
+    Camera& operator=(Camera&&) = default;
+
+    Camera(const Camera&) = default;
+    Camera& operator=(const Camera&) = default;
+
+    /* Default destructor */
+    ~Camera() override = default;
 
     glm::vec3 direction() const { return direction_; }
     glm::vec3 head() const { return head_; }

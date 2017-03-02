@@ -18,7 +18,16 @@ class Wall : public Model3D {
 public:
     Wall();
     Wall(int face, float scale, glm::vec4 location);
-    ~Wall() {}
+
+    /* Default move and copy constructor / operator */
+    Wall(Wall&&) = default;
+    Wall& operator=(Wall&&) = default;
+
+    Wall(const Wall&) = default;
+    Wall& operator=(const Wall&) = default;
+
+    /* Default destructor */
+    ~Wall() override = default;
 
 private:
     int face_;
