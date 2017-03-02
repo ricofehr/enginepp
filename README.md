@@ -75,7 +75,7 @@ Scanning dependencies of target engine
 
 ## Features
 
-- C++11
+- C++14
 - OpenCL 1.2
 - Opengl 3
 - Use of Glew, GLM, SOIL, Glfw libraries
@@ -100,6 +100,14 @@ When we cross a door, we change room (4 rooms).
 bin/./engine
 ```
 ![Engine](demos/enginepp.gif?raw=true)
+
+## Documentation
+
+Doxy pages are available [here](http://oxy.enginepp.nextdeploy.io)
+
+## UML
+
+![Class Diagram](http://oxy.enginepp.nextdeploy.io/enginepp.png)
 
 ## Todo
 
