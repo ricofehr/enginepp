@@ -200,7 +200,8 @@ Wall::Wall(int face, float scale, glm::vec4 location)
     face_ = face;
     type_ = kMODEL3D_WALL;
     border_ = engine::geometry::Box(scale, location, move, coords[face_]);
-    std::unique_ptr<engine::geometry::Quad> quad_ptr{new engine::geometry::Quad(face_, scale, location, move,vertexbuffer[face_], texturebuffer[face_])};
+
+    auto quad_ptr{std::make_unique<engine::geometry::Quad>(face_, scale, location, move,vertexbuffer[face_], texturebuffer[face_])};
     elements_.push_back(std::move(quad_ptr));
 }
 

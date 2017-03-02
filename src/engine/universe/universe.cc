@@ -46,7 +46,7 @@ void Universe::InitRooms()
     /* Add rooms on current universe object */
     std::vector<std::vector<bool>>::iterator it_doors = is_doors.begin();
     for (auto &loc : locations) {
-        std::unique_ptr<Room> room_ptr{new Room(loc, *it_doors)};
+        auto room_ptr{std::make_unique<Room>(loc, *it_doors)};
         rooms_.push_back(std::move(room_ptr));
         it_doors++;
     }
@@ -58,9 +58,7 @@ void Universe::InitRooms()
 void Universe::InitCamera()
 {
     std::cout << "Init Camera\n";
-    cam_ = std::unique_ptr<Camera> {
-        new Camera(0.0f, 1.0f, 5.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f)
-    };
+    cam_ = std::make_unique<Camera>(0.0f, 1.0f, 5.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
 
 /* Compute and draw next hop for the gl scene */

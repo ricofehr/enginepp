@@ -32,7 +32,7 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors) {
     location_ = location;
     /* 4 walls, floor and roof */
     for (auto face = 0; face < 6; face++) {
-        std::unique_ptr<Wall> wall_ptr{new Wall(face, 15.0f, location_)};
+        auto wall_ptr{std::make_unique<Wall>(face, 15.0f, location_)};
         walls_.push_back(std::move(wall_ptr));
     }
 
@@ -46,12 +46,11 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors) {
     /* On each room, 2 doors and 2 windows (windows are on face with no door) */
     for (auto face = 0; face < 4; face++) {
         if (is_doors[face]) {
-            std::unique_ptr<Door> door_ptr{new Door(face, 15.0f, location_ + location_center_face[face])};
+            auto door_ptr{std::make_unique<Door>(face, 15.0f, location_ + location_center_face[face])};
             doors_.push_back(std::move(door_ptr));
         } else {
-            std::unique_ptr<WindowModel> window_ptr{new WindowModel(face, 15.0f, location_ + location_center_face[face])};
+            auto window_ptr{std::make_unique<WindowModel>(face, 15.0f, location_ + location_center_face[face])};
             windows_.push_back(std::move(window_ptr));
-
         }
     }
 
@@ -92,10 +91,9 @@ void Room::GenerateObjects() {
         z0 = (z0 % 2 == 0) ? -z0 : z0;
 
         /* Create Brick object and add to the Current Room */
-        std::unique_ptr<Brick> brick_ptr{new Brick(scale,
-                                  location_ + glm::vec4(x0, -4.8f + (r%8), z0, 0.0f),
-                                  glm::vec4(x, y, z, 0.0f))};
-
+        auto brick_ptr{std::make_unique<Brick>(scale,
+                                       location_ + glm::vec4(x0, -4.8f + (r%8), z0, 0.0f),
+                                       glm::vec4(x, y, z, 0.0f))};
         objects_.push_back(std::move(brick_ptr));
     }
 
