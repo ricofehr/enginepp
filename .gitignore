@@ -40,3 +40,4 @@ CMakeFiles/
 # Bin folder
 bin/*
 !bin/.gitkeep
+.DS_Store
