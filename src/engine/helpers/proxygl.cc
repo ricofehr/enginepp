@@ -21,7 +21,7 @@ namespace proxygl {
 GLFWwindow* kGLWindow = nullptr;
 GLuint kProgramId = -1;
 GLuint kMatrixId = -1;
-engine::universe::Camera *kCam = nullptr;
+const engine::universe::Camera *kCam = nullptr;
 
 namespace {
 

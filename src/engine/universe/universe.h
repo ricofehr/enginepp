@@ -24,17 +24,18 @@ public:
     Universe();
     ~Universe();
 
+    void NextHop();
+
+    const Camera *cam() const { return cam_.get(); }
+
+private:
     void InitRooms();
     void InitCamera();
 
-    void NextHop();
-
-    Camera *cam() const { return cam_.get(); }
-
-private:
     std::unique_ptr<Camera> cam_;
     std::vector<std::unique_ptr<Room>> rooms_;
     Room *active_room_;
+
 };
 
 }//namespace universe
