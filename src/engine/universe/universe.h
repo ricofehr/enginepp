@@ -12,6 +12,7 @@
 
 #include "engine/universe/room.h"
 #include "engine/universe/camera.h"
+#include "engine/helpers/proxycl.h"
 
 namespace engine {
 namespace universe {
@@ -32,6 +33,7 @@ private:
     void InitRooms();
     void InitCamera();
 
+    std::unique_ptr<engine::helpers::ProxyCL> proxy_cl_;
     std::unique_ptr<Camera> cam_;
     std::vector<std::unique_ptr<Room>> rooms_;
     Room *active_room_;

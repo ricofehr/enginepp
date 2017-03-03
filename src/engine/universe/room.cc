@@ -26,10 +26,11 @@ Room::Room()
      :Room(glm::vec4(1.0f)) {}
 
 Room::Room(glm::vec4 location)
-     :Room(location, {false, false, false, false}){}
+     :Room(location, {false, false, false, false}, nullptr){}
 
-Room::Room(glm::vec4 location, std::vector<bool> is_doors) {
+Room::Room(glm::vec4 location, std::vector<bool> is_doors, engine::helpers::ProxyCL *proxy_cl) {
     location_ = location;
+    proxy_cl_ = proxy_cl;
     /* 4 walls, floor and roof */
     for (auto face = 0; face < 6; face++) {
         auto wall_ptr{std::make_unique<Wall>(face, 15.0f, location_)};
@@ -65,7 +66,7 @@ void Room::GenerateObjects() {
     int x0, z0;
 
     srand(time(NULL));
-    for (auto i = 0; i < 8; i++) {
+    for (auto i = 0; i < 80; i++) {
         /* Entropy value */
         r = rand();
         /* For sizes available for brick */
@@ -152,28 +153,28 @@ void Room::PivotCollision(Model3D *object)
     std::vector<Model3D*> recompute;
 
     if (*object != *kCam) {
-        recompute = object->DetectCollision(kCam);
+        recompute = object->DetectCollision(kCam, proxy_cl_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
     }
 
     for (auto &w : walls_) {
-        recompute = object->DetectCollision(w.get());
+        recompute = object->DetectCollision(w.get(), proxy_cl_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
     }
 
     for (auto &w : windows_) {
-        recompute = object->DetectCollision(w.get());
+        recompute = object->DetectCollision(w.get(), proxy_cl_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
     }
 
     for (auto &d : doors_) {
-        recompute = object->DetectCollision(d.get());
+        recompute = object->DetectCollision(d.get(), proxy_cl_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
@@ -183,7 +184,7 @@ void Room::PivotCollision(Model3D *object)
         if (*object == *p)
                 continue;
 
-        recompute = object->DetectCollision(p.get());
+        recompute = object->DetectCollision(p.get(), proxy_cl_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }

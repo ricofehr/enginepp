@@ -3,30 +3,14 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-/* OpenCL 1.2 */
-#define CL_HPP_MINIMUM_OPENCL_VERSION 120
-#define CL_HPP_TARGET_OPENCL_VERSION 120
-
-#define CL_HPP_ENABLE_EXCEPTIONS
-
 #include "engine/universe/model3d.h"
 
-#include <glm/glm.hpp>
 #include <SOIL/SOIL.h>
-
-#ifdef __APPLE__
-    #include <OpenCL/cl2.hpp>
-#else
-    #include <CL/cl2.hpp>
-#endif
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-
-#include "engine/geometry/box.h"
-#include "engine/geometry/shape3d.h"
 
 namespace engine {
 namespace universe {
@@ -34,62 +18,11 @@ namespace universe {
 namespace {
     /* Unique id for object */
     static int objectid = 1;
-    /* OpenCL env */
-    static cl::Kernel collision_kernel;
-    static cl::CommandQueue collision_queue;
-    static cl::Buffer bufferbox1;
-    static cl::Buffer bufferbox2;
-    static cl::Buffer bufferdist;
-
-    void initCollisionCL() {
-        try {
-            /* Query for platforms */
-            std::vector <cl::Platform> platforms;
-            cl::Platform::get(&platforms);
-
-            /* Get a list of devices on this platform */
-            std::vector<cl::Device> devices;
-            platforms[0].getDevices(CL_DEVICE_TYPE_ALL, &devices);
-
-            /* Create a context for the devices */
-            cl::Context context(devices);
-
-            /* Create a command-queue for the first device */
-            collision_queue = cl::CommandQueue(context, devices[0]);
-
-            /* Create the memory buffers */
-            bufferbox1 = cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float));
-            bufferbox2 = cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float));
-            bufferdist = cl::Buffer(context, CL_MEM_WRITE_ONLY, 10 * sizeof(float));
-
-            /* Read the program Source */
-            std::ifstream source_file("cl/collision_kernel.cl");
-            std::string source_code(std::istreambuf_iterator<char>(source_file), (std::istreambuf_iterator<char>()));
-            cl::Program::Sources source(1, source_code);
-
-            /* Create the program from the source code */
-            cl::Program program = cl::Program(context, source);
-
-            /* Compile the program for the devices */
-            program.build(devices);
-
-            /* Create the kernel */
-            collision_kernel = cl::Kernel(program, "collision");
-
-        } catch(cl::Error error) {
-            std::cout << error.what() << "(" << error.err() << ")" << std::endl;
-            exit(1);
-        }
-    }
 }
 
 /* Constructor */
 Model3D::Model3D()
 {
-    /* Init openCl env only once */
-    if (objectid == 1)
-           initCollisionCL();
-
     id_ = objectid++;
     distance_ = -1;
     obstacle_ = nullptr;
@@ -132,9 +65,10 @@ void Model3D::Draw()
 }
 
 /* Task who detect if obstacle is in collision with current object */
-std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle)
+std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, engine::helpers::ProxyCL *proxy_cl)
 {
-    float distance = 1.0f, distances[10];
+    float distance = 1.0f;
+    std::vector<float> distances;
     int fact = 1, fact2 = 0;
     std::vector<Model3D*> recompute;
     Model3D *oldobstacle1, *oldobstacle2;
@@ -178,36 +112,15 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle)
     float box2[9] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
 
     /* Compute distance collision thanks to opencl */
-    try {
+    distances = proxy_cl->ComputeCollisionCL(box1, box2);
 
-        /* Copy the input data to the input buffer */
-        collision_queue.enqueueWriteBuffer(bufferbox1, CL_TRUE, 0, 9 * sizeof(float), box1);
-        collision_queue.enqueueWriteBuffer(bufferbox2, CL_TRUE, 0, 9 * sizeof(float), box2);
-
-        /* Set kernel arguments */
-        collision_kernel.setArg(0, bufferbox1);
-        collision_kernel.setArg(1, bufferbox2);
-        collision_kernel.setArg(2, bufferdist);
-
-        /* Execute the kernel (10 workitem in 1 workgroup => compute distance for the 10 fact) */
-        cl::NDRange global(10);
-        cl::NDRange local(10);
-        collision_queue.enqueueNDRangeKernel(collision_kernel, cl::NullRange, global, local);
-
-        /* Copy the output data back to the host */
-        collision_queue.enqueueReadBuffer(bufferdist, CL_TRUE, 0, 10 * sizeof(float), distances);
-
-        /* Get the min distance of the 10 facts */
-        distance = 1.0f;
-        for (int i = 0; i < 10; i++) {
-            if (distances[i] != 1.0f) {
-                distance = distances[i];
-                break;
-            }
+    /* Get the min distance of the 10 facts */
+    distance = 1.0f;
+    for (int i = 0; i < 10; i++) {
+        if (distances[i] != 1.0f) {
+            distance = distances[i];
+            break;
         }
-    } catch(cl::Error error) {
-        std::cout << error.what() << "(" << error.err() << ")" << std::endl;
-        distance = 1.0f;
     }
 
     /* Compute distance and update collision properties if needed */
@@ -215,7 +128,7 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle)
         (obstacle_ == nullptr || distance < distance_) &&
         (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
 
-            std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
+            //std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
             oldobstacle1 = obstacle_;
             oldobstacle2 = obstacle->obstacle();
 

@@ -18,6 +18,7 @@ set(geometry_SRCS
     src/engine/geometry/box.cc)
 
 set(helpers_SRCS
+    src/engine/helpers/proxycl.cc
     src/engine/helpers/proxygl.cc)
 
 set(universe_SRCS
@@ -43,6 +44,7 @@ set(geometry_HDRS
     src/engine/geometry/box.h)
 
 set(helpers_HDRS
+    src/engine/helpers/proxycl.h
     src/engine/helpers/proxygl.h)
 
 set(universe_HDRS

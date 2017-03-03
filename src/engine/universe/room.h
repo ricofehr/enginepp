@@ -9,10 +9,10 @@
 #include <vector>
 
 #include "engine/universe/model3d.h"
+#include "engine/helpers/proxycl.h"
 #include "engine/universe/wall.h"
 #include "engine/universe/window_model.h"
 #include "engine/universe/door.h"
-
 #include "engine/universe/brick.h"
 
 namespace engine {
@@ -24,7 +24,7 @@ class Room {
 public:
     Room();
     Room(glm::vec4 location);
-    Room(glm::vec4 location, std::vector<bool> is_doors);
+    Room(glm::vec4 location, std::vector<bool> is_doors, engine::helpers::ProxyCL *proxy_cl);
 
     glm::vec4 location() const { return location_; }
 
@@ -37,6 +37,7 @@ private:
     std::vector<std::unique_ptr<Door>> doors_;
     std::vector<std::unique_ptr<WindowModel>> windows_;
     std::vector<std::unique_ptr<Model3D>> objects_;
+    engine::helpers::ProxyCL *proxy_cl_{nullptr};
 
     void GenerateObjects();
     void PivotCollision(Model3D *object);

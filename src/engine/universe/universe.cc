@@ -43,10 +43,13 @@ void Universe::InitRooms()
 
     std::cout << "Init Rooms\n";
 
+    proxy_cl_ = std::make_unique<engine::helpers::ProxyCL>();
+    proxy_cl_->InitCollisionCL();
+
     /* Add rooms on current universe object */
     std::vector<std::vector<bool>>::iterator it_doors = is_doors.begin();
     for (auto &loc : locations) {
-        auto room_ptr{std::make_unique<Room>(loc, *it_doors)};
+        auto room_ptr{std::make_unique<Room>(loc, *it_doors, proxy_cl_.get())};
         rooms_.push_back(std::move(room_ptr));
         it_doors++;
     }

@@ -6,11 +6,12 @@
 #ifndef ENGINE_UNIVERSE_MODEL3D_H_
 #define ENGINE_UNIVERSE_MODEL3D_H_
 
-#include <glm/glm.hpp>
+//#include <glm/glm.hpp>
 #include <memory>
 
 #include "engine/geometry/shape3d.h"
 #include "engine/geometry/box.h"
+#include "engine/helpers/proxycl.h"
 
 namespace engine {
 namespace universe {
@@ -28,7 +29,7 @@ public:
     Model3D& operator=(const Model3D&) = default;
 
     void Draw();
-    std::vector<Model3D*> DetectCollision(Model3D *obstacle);
+    std::vector<Model3D*> DetectCollision(Model3D *obstacle, engine::helpers::ProxyCL *proxy_cl);
 
     int id() const { return id_; }
     float distance() const { return distance_; }
