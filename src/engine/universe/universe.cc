@@ -11,15 +11,39 @@
 #include <iostream>
 #include <memory>
 
+#include "engine/parallell/cl_parallell.h"
+#include "engine/parallell/serial_parallell.h"
+#include "engine/parallell/cilk_parallell.h"
 
 namespace engine {
 namespace universe {
 
 /* Constructor */
-Universe::Universe()
+Universe::Universe(int type_parallell)
 {
+    InitProxyParallell(type_parallell);
     InitCamera();
     InitRooms();
+}
+
+/* Init parallell proxy pointer */
+void Universe::InitProxyParallell(int type_parallell)
+{
+    using engine::parallell::EngineParallell;
+
+    switch (type_parallell) {
+        case EngineParallell::kPARALLELL_CILK:
+            proxy_parallell_ = std::make_unique<engine::parallell::CilkParallell>();
+            break;
+        case EngineParallell::kPARALLELL_CL:
+            proxy_parallell_ = std::make_unique<engine::parallell::CLParallell>();
+            break;
+        default:
+            proxy_parallell_ = std::make_unique<engine::parallell::SerialParallell>();
+            break;
+    }
+
+    proxy_parallell_->InitCollisionParallell();
 }
 
 /* Create Rooms for gl scene */
@@ -43,13 +67,10 @@ void Universe::InitRooms()
 
     std::cout << "Init Rooms\n";
 
-    proxy_cl_ = std::make_unique<engine::helpers::ProxyCL>();
-    proxy_cl_->InitCollisionCL();
-
     /* Add rooms on current universe object */
     std::vector<std::vector<bool>>::iterator it_doors = is_doors.begin();
     for (auto &loc : locations) {
-        auto room_ptr{std::make_unique<Room>(loc, *it_doors, proxy_cl_.get())};
+        auto room_ptr{std::make_unique<Room>(loc, *it_doors, proxy_parallell_.get())};
         rooms_.push_back(std::move(room_ptr));
         it_doors++;
     }

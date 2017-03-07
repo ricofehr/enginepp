@@ -12,7 +12,7 @@
 
 #include "engine/universe/room.h"
 #include "engine/universe/camera.h"
-#include "engine/helpers/proxycl.h"
+#include "engine/parallell/engine_parallell.h"
 
 namespace engine {
 namespace universe {
@@ -22,7 +22,7 @@ class Universe {
 
 public:
 
-    Universe();
+    Universe(int type_parallell);
     ~Universe();
 
     void NextHop();
@@ -32,8 +32,9 @@ public:
 private:
     void InitRooms();
     void InitCamera();
+    void InitProxyParallell(int type_parallell);
 
-    std::unique_ptr<engine::helpers::ProxyCL> proxy_cl_;
+    std::unique_ptr<engine::parallell::EngineParallell> proxy_parallell_;
     std::unique_ptr<Camera> cam_;
     std::vector<std::unique_ptr<Room>> rooms_;
     Room *active_room_;

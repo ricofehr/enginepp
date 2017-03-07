@@ -65,7 +65,7 @@ void Model3D::Draw()
 }
 
 /* Task who detect if obstacle is in collision with current object */
-std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, engine::helpers::ProxyCL *proxy_cl)
+std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, engine::parallell::EngineParallell *proxy_parallell)
 {
     float distance = 1.0f;
     std::vector<float> distances;
@@ -111,17 +111,8 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, engine::helper
     float box1[9] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
     float box2[9] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
 
-    /* Compute distance collision thanks to opencl */
-    distances = proxy_cl->ComputeCollisionCL(box1, box2);
-
-    /* Get the min distance of the 10 facts */
-    distance = 1.0f;
-    for (int i = 0; i < 10; i++) {
-        if (distances[i] != 1.0f) {
-            distance = distances[i];
-            break;
-        }
-    }
+    /* Compute distance collision thanks to parallell library (opencl, cilk, or no parallell use) */
+    distance = proxy_parallell->ComputeCollisionParallell(box1, box2);
 
     /* Compute distance and update collision properties if needed */
     if (distance != 1.0f &&

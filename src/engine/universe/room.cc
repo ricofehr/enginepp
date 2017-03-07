@@ -28,9 +28,9 @@ Room::Room()
 Room::Room(glm::vec4 location)
      :Room(location, {false, false, false, false}, nullptr){}
 
-Room::Room(glm::vec4 location, std::vector<bool> is_doors, engine::helpers::ProxyCL *proxy_cl) {
+Room::Room(glm::vec4 location, std::vector<bool> is_doors, engine::parallell::EngineParallell *proxy_parallell) {
     location_ = location;
-    proxy_cl_ = proxy_cl;
+    proxy_parallell_ = proxy_parallell;
     /* 4 walls, floor and roof */
     for (auto face = 0; face < 6; face++) {
         auto wall_ptr{std::make_unique<Wall>(face, 15.0f, location_)};
@@ -66,7 +66,7 @@ void Room::GenerateObjects() {
     int x0, z0;
 
     srand(time(NULL));
-    for (auto i = 0; i < 80; i++) {
+    for (auto i = 0; i < 45; i++) {
         /* Entropy value */
         r = rand();
         /* For sizes available for brick */
@@ -94,7 +94,7 @@ void Room::GenerateObjects() {
         /* Create Brick object and add to the Current Room */
         auto brick_ptr{std::make_unique<Brick>(scale,
                                        location_ + glm::vec4(x0, -4.8f + (r%8), z0, 0.0f),
-                                       glm::vec4(x, y, z, 0.0f))};
+                                       glm::vec4(x * 0.3f, y * 0.3f, z * 0.3f, 0.0f))};
         objects_.push_back(std::move(brick_ptr));
     }
 
@@ -153,28 +153,28 @@ void Room::PivotCollision(Model3D *object)
     std::vector<Model3D*> recompute;
 
     if (*object != *kCam) {
-        recompute = object->DetectCollision(kCam, proxy_cl_);
+        recompute = object->DetectCollision(kCam, proxy_parallell_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
     }
 
     for (auto &w : walls_) {
-        recompute = object->DetectCollision(w.get(), proxy_cl_);
+        recompute = object->DetectCollision(w.get(), proxy_parallell_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
     }
 
     for (auto &w : windows_) {
-        recompute = object->DetectCollision(w.get(), proxy_cl_);
+        recompute = object->DetectCollision(w.get(), proxy_parallell_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
     }
 
     for (auto &d : doors_) {
-        recompute = object->DetectCollision(d.get(), proxy_cl_);
+        recompute = object->DetectCollision(d.get(), proxy_parallell_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }
@@ -184,7 +184,7 @@ void Room::PivotCollision(Model3D *object)
         if (*object == *p)
                 continue;
 
-        recompute = object->DetectCollision(p.get(), proxy_cl_);
+        recompute = object->DetectCollision(p.get(), proxy_parallell_);
         for (auto &r : recompute) {
             PivotCollision(r);
         }

@@ -6,7 +6,6 @@ project(engine)
 set(engine_VERSION 0.1)
 
 include_directories(src)
-#add_subdirectory(src)
 set (CMAKE_CXX_STANDARD 14)
 # define bin folder as destination folder
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -18,8 +17,12 @@ set(geometry_SRCS
     src/engine/geometry/box.cc)
 
 set(helpers_SRCS
-    src/engine/helpers/proxycl.cc
     src/engine/helpers/proxygl.cc)
+
+set(parallell_SRCS
+    src/engine/parallell/cl_parallell.cc
+    src/engine/parallell/cilk_parallell.cc
+    src/engine/parallell/serial_parallell.cc)
 
 set(universe_SRCS
     src/engine/universe/camera.cc
@@ -34,6 +37,7 @@ set(universe_SRCS
 set(engine_SRCS
     ${geometry_SRCS}
     ${helpers_SRCS}
+    ${parallell_SRCS}
     ${universe_SRCS}
     src/engine.cc)
 
@@ -44,8 +48,13 @@ set(geometry_HDRS
     src/engine/geometry/box.h)
 
 set(helpers_HDRS
-    src/engine/helpers/proxycl.h
     src/engine/helpers/proxygl.h)
+
+set(parallell_HDRS
+    src/engine/parallell/engine_parallell.h
+    src/engine/parallell/cl_parallell.h
+    src/engine/parallell/cilk_parallell.h
+    src/engine/parallell/serial_parallell.h)
 
 set(universe_HDRS
     src/engine/universe/camera.h
@@ -60,6 +69,7 @@ set(universe_HDRS
 set(engine_HDRS
     ${geometry_HDRS}
     ${helpers_HDRS}
+    ${parallell_HDRS}
     ${universe_HDRS})
 
 add_executable(engine ${engine_SRCS} ${engine_HDRS})
@@ -68,7 +78,7 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenCL REQUIRED)
-link_directories(${OpenCL_LIBRARY})
-include_directories(engine ${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS})
-target_link_libraries(engine ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY})
-
+add_definitions("-fcilkplus -std=gnu++14 -stdlib=libc++")
+include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS})
+#include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1)
+target_link_libraries(engine ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY} cilkrts)

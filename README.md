@@ -8,9 +8,9 @@ The camera can move with mouse (head orientation) and arrow keys (camera directi
 
 ## Prerequisites
 
-Needs Cmake (>3.1), OpenCL (1.2), OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+Needs Cmake (>3.1), OpenCL (1.2), CilkPlus, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
 
-On ubuntu or Debian, apt-get make full prerequisites install
+On ubuntu or Debian, apt-get make most of prerequisites install
 ```
 $ apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers
 ```
@@ -18,6 +18,11 @@ $ apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev lib
 For OpenCL, we need gpu library, for intel gpu
 ```
 $ apt-get install beignet-dev
+```
+
+For CilkPlus installation, you can execute script below (detailed instructions on the [github page](https://github.com/cilkplus/cilkplus.github.com/blob/master/index.md#try-cilk-plusllvm)).
+```
+./scripts/./cilk_linux.sh
 ```
 
 On OSX, we need XCode and install some libraries with brew (SOIL must be install manually)
@@ -45,14 +50,33 @@ For OpenCL header copy, need execute this in terminal on Recovery Mode
 $ csrutil disable
 ```
 
+For CilkPlus installation, you can execute script below (detailed instructions on the [github page](https://github.com/cilkplus/cilkplus.github.com/blob/master/index.md#try-cilk-plusllvm)).
+```
+./scripts/./cilk_osx.sh
+```
+
 ## Compile
 
+Step1, generate MakeFiles and check prerequisites
 ```
 $ cmake .
 -- Configuring done
 -- Generating done
 -- Build files have been written to: ~/enginepp
+```
 
+Step2, Before each compile, we need init env for cilkplus use.
+On Linux
+```
+source ./scripts/./cilk_vars_linux.sh
+```
+On MacOS
+```
+source ./scripts/./cilk_vars_osx.sh
+```
+
+Step3, compile program
+```
 $ make
 Scanning dependencies of target engine
 [  6%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/shape3d.cc.o
@@ -77,6 +101,7 @@ Scanning dependencies of target engine
 
 - C++14
 - OpenCL 1.2
+- CilkPlus
 - Opengl 3
 - Use of Glew, GLM, SOIL, Glfw libraries
 - CMake for compile
@@ -97,7 +122,9 @@ Use mouse for head orientation and arrow keys for camera move.
 When we cross a door, we change room (4 rooms).
 
 ```
-bin/./engine
+bin/./engine  # no parallell support
+bin/./engine -p opencl # use opencl for parallell computes (collisions)
+bin/./engine -p cilk # use cilkplus for parallell computes (collisions)
 ```
 ![Engine](demos/enginepp.gif?raw=true)
 

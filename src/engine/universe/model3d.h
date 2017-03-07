@@ -11,7 +11,7 @@
 
 #include "engine/geometry/shape3d.h"
 #include "engine/geometry/box.h"
-#include "engine/helpers/proxycl.h"
+#include "engine/parallell/engine_parallell.h"
 
 namespace engine {
 namespace universe {
@@ -29,7 +29,7 @@ public:
     Model3D& operator=(const Model3D&) = default;
 
     void Draw();
-    std::vector<Model3D*> DetectCollision(Model3D *obstacle, engine::helpers::ProxyCL *proxy_cl);
+    std::vector<Model3D*> DetectCollision(Model3D *obstacle, engine::parallell::EngineParallell *proxy_parallell);
 
     int id() const { return id_; }
     float distance() const { return distance_; }

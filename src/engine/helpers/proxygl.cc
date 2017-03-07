@@ -148,7 +148,7 @@ void draw()
     /* Swap buffers and poll */
     glfwSwapBuffers(kGLWindow);
     glfwPollEvents();
-    usleep(50000);
+    //usleep(50000);
 }
 
 }//namespace
@@ -202,6 +202,9 @@ void settingsGL(engine::universe::Universe *uni)
     /* Ensure we can capture keys being pressed below */
     glfwSetInputMode(kGLWindow, GLFW_STICKY_KEYS, GL_TRUE);
 
+    /* Disable vsync (avoid limit to 60 pfs) */
+    glfwSwapInterval(0);
+
     /* Create and compile our GLSL program from the shader */
     LoadShaders();
 
@@ -214,9 +217,24 @@ void settingsGL(engine::universe::Universe *uni)
     assert(kProgramId != -1);
     assert(kCam != nullptr);
 
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
+
+
     /* Draw if window is focused and destroy window if ESC is pressed */
     do{
-    	draw();
+     // Measure speed
+     double currentTime = glfwGetTime();
+     nbFrames++;
+     if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
+         // printf and reset timer
+         printf("%f ms/frame, ", 1000.0/double(nbFrames));
+         printf("%f fps\n", double(nbFrames));
+         nbFrames = 0;
+         lastTime += 1.0;
+     }
+
+        draw();
     }
     while(glfwGetKey(kGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
           && glfwWindowShouldClose(kGLWindow) == 0);
