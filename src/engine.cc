@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
 
 #include "engine/universe/universe.h"
 #include "engine/helpers/proxygl.h"
@@ -19,6 +21,10 @@ int main(int argc, char *argv[])
         if (arg == "opencl")
             type_parallell = EngineParallell::kPARALLELL_CL;
     }
+
+    /* Disable cilk parallelism if serial */
+    if (type_parallell == EngineParallell::kPARALLELL_SERIAL)
+        __cilkrts_set_param("nworkers", "1");
 
 	/* Init world */
     engine::helpers::proxygl::initGL();

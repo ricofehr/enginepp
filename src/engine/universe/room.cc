@@ -8,6 +8,8 @@
 #include <unistd.h>
 
 #include <iostream>
+#include <cilk/cilk.h>
+#include <tbb/mutex.h>
 
 #include "engine/universe/camera.h"
 
@@ -64,14 +66,22 @@ void Room::GenerateObjects() {
     float x, y, z;
     float scale;
     int x0, z0;
+    tbb::mutex genobjects_mutex;
 
     srand(time(NULL));
-    for (auto i = 0; i < 45; i++) {
+    /* Parallell objects generation with cilkplus */
+    cilk_for (auto i = 0; i < nbobjects_; i++) {
         /* Entropy value */
         r = rand();
         /* For sizes available for brick */
         scale = 1.0f / (float)(i % 4 + 1.0);
 
+        /* 1/10 of bricks are static */
+        if (i % 10 == 0) {
+            x = 0.0f;
+            y = 0.0f;
+            z = 0.0f;
+        }
         /* One brick every 8 moves on y axis */
         if (i % 7 == 0) {
             y = rand() % 30 * 0.01f + 0.3f;
@@ -95,7 +105,12 @@ void Room::GenerateObjects() {
         auto brick_ptr{std::make_unique<Brick>(scale,
                                        location_ + glm::vec4(x0, -4.8f + (r%8), z0, 0.0f),
                                        glm::vec4(x * 0.3f, y * 0.3f, z * 0.3f, 0.0f))};
-        objects_.push_back(std::move(brick_ptr));
+
+        /* Ensure that only one push_back at same time */
+        {
+            tbb::mutex::scoped_lock lock(genobjects_mutex);
+            objects_.push_back(std::move(brick_ptr));
+        }
     }
 
 }
@@ -137,9 +152,11 @@ void Room::DetectCollision()
         PivotCollision(kCam);
     }
 
-    /* And for all others moving objects */
-    for (auto &o : objects_) {
-        PivotCollision(o.get());
+    /* For all others moving objects
+       Parallell loop with cilkplus */
+    cilk_for (auto i = 0; i < objects_.size(); i++) {
+        if (objects_[i]->IsMoved())
+            PivotCollision(objects_[i].get());
     }
 }
 
@@ -155,40 +172,46 @@ void Room::PivotCollision(Model3D *object)
     if (*object != *kCam) {
         recompute = object->DetectCollision(kCam, proxy_parallell_);
         for (auto &r : recompute) {
-            PivotCollision(r);
+            cilk_spawn PivotCollision(r);
         }
     }
 
-    for (auto &w : walls_) {
-        recompute = object->DetectCollision(w.get(), proxy_parallell_);
+    /* Parallell collision loop for walls with cilkplus */
+    cilk_for (auto i = 0; i < walls_.size(); i++) {
+        recompute = object->DetectCollision(walls_[i].get(), proxy_parallell_);
         for (auto &r : recompute) {
-            PivotCollision(r);
+            cilk_spawn PivotCollision(r);
         }
     }
 
-    for (auto &w : windows_) {
-        recompute = object->DetectCollision(w.get(), proxy_parallell_);
+    /* Parallell collision loop for windows with cilkplus */
+    cilk_for (auto i = 0; i < windows_.size(); i++) {
+        recompute = object->DetectCollision(windows_[i].get(), proxy_parallell_);
         for (auto &r : recompute) {
-            PivotCollision(r);
+            cilk_spawn PivotCollision(r);
         }
     }
 
-    for (auto &d : doors_) {
-        recompute = object->DetectCollision(d.get(), proxy_parallell_);
+    /* Parallell collision loop for doors with cilkplus */
+    cilk_for (auto i = 0; i < doors_.size(); i++) {
+        recompute = object->DetectCollision(doors_[i].get(), proxy_parallell_);
         for (auto &r : recompute) {
-            PivotCollision(r);
+            cilk_spawn PivotCollision(r);
         }
     }
 
-    for (auto &p : objects_) {
-        if (*object == *p)
+    /* Parallell collision loop for objects with cilkplus */
+    cilk_for (auto i = 0; i < objects_.size(); i++) {
+        if (*object == *objects_[i])
                 continue;
 
-        recompute = object->DetectCollision(p.get(), proxy_parallell_);
+        recompute = object->DetectCollision(objects_[i].get(), proxy_parallell_);
         for (auto &r : recompute) {
-            PivotCollision(r);
+            cilk_spawn PivotCollision(r);
         }
     }
+
+    cilk_sync;
 }
 
 }//namespace universe

@@ -8,11 +8,11 @@ The camera can move with mouse (head orientation) and arrow keys (camera directi
 
 ## Prerequisites
 
-Needs Cmake (>3.1), OpenCL (1.2), CilkPlus, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+Needs Cmake (>3.1), OpenCL (1.2), CilkPlus and TBB, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
 
 On ubuntu or Debian, apt-get make most of prerequisites install
 ```
-$ apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers
+$ apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers libtbb-dev
 ```
 
 For OpenCL, we need gpu library, for intel gpu
@@ -27,7 +27,7 @@ For CilkPlus installation, you can execute script below (detailed instructions o
 
 On OSX, we need XCode and install some libraries with brew (SOIL must be install manually)
 ```
-$ brew install cmake glm glew glfw3
+$ brew install cmake glm glew glfw3 tbb
 ```
 
 And SOIL must be install manually
@@ -101,7 +101,7 @@ Scanning dependencies of target engine
 
 - C++14
 - OpenCL 1.2
-- CilkPlus
+- CilkPlus / TBB
 - Opengl 3
 - Use of Glew, GLM, SOIL, Glfw libraries
 - CMake for compile
@@ -122,9 +122,9 @@ Use mouse for head orientation and arrow keys for camera move.
 When we cross a door, we change room (4 rooms).
 
 ```
-bin/./engine  # no parallell support
-bin/./engine -p opencl # use opencl for parallell computes (collisions)
-bin/./engine -p cilk # use cilkplus for parallell computes (collisions)
+bin/./engine  # no parallell support: serial collision computes and unique core for other cilkplus loops
+bin/./engine -p opencl # use opencl for collisions computes and cilkplus for other parallell loops
+bin/./engine -p cilk # use cilkplus for collisions computes and other parallell loops
 ```
 ![Engine](demos/enginepp.gif?raw=true)
 

@@ -33,6 +33,7 @@ public:
 
 private:
     glm::vec4 location_;
+    int nbobjects_{33};
     std::vector<std::unique_ptr<Wall>> walls_;
     std::vector<std::unique_ptr<Door>> doors_;
     std::vector<std::unique_ptr<WindowModel>> windows_;

@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
+#include <cilk/cilk.h>
 
 #include <iostream>
 #include <vector>
@@ -34,11 +35,12 @@ Box::Box(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3>
 /* Compute coordinates for current box */
 std::vector<glm::vec3> Box::ComputeCoords() const
 {
-    std::vector<glm::vec3> ret;
+    std::vector<glm::vec3> ret(coords_.size());
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location_)) * glm::scale(scale_);
 
-    for (auto &point : coords_) {
-        ret.push_back(glm::vec3(model * glm::vec4(point, 1.0f)));
+    /* Parallell coords compute with cilkplus */
+    cilk_for (auto i = 0; i < coords_.size(); i++) {
+        ret[i] = glm::vec3(model * glm::vec4(coords_[i], 1.0f));
     }
 
     return ret;

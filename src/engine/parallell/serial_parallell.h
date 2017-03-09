@@ -14,7 +14,7 @@ public:
     ~SerialParallell() override = default;
 
 private:
-    int granularity_{1024};
+    int granularity_{16};
 };
 
 }//namespace parallell

@@ -8,6 +8,7 @@
 #define CL_HPP_ENABLE_EXCEPTIONS
 
 #include <vector>
+#include <tbb/mutex.h>
 
 #ifdef __APPLE__
     #include <OpenCL/cl2.hpp>
@@ -32,8 +33,9 @@ private:
     cl::CommandQueue cl_queue_;
     std::vector<cl::Buffer> bufferin_;
     std::vector<cl::Buffer> bufferout_;
-    int granularity_{1024};
-    int wk_size_{128};
+    int granularity_{16};
+    int wk_size_{4};
+    tbb::mutex collision_mutex_;
 };
 
 }//namespace parallell

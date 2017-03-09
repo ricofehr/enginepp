@@ -90,23 +90,27 @@ float CLParallell::ComputeCollisionParallell(float box1[], float box2[])
     std::vector<float> distances(granularity_, 1.0f);
     float *distances_ptr = distances.data();
 
-    /* Copy the input data to the input buffer */
-    cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
-    cl_queue_.enqueueWriteBuffer(bufferin_[1], CL_TRUE, 0, 9 * sizeof(float), box2);
-    cl_queue_.enqueueWriteBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
+    /* Protect shared opencl vars with mutex (because cilkplus parallell with objects loop) */
+    {
+        tbb::mutex::scoped_lock lock(collision_mutex_);
+        /* Copy the input data to the input buffer */
+        cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
+        cl_queue_.enqueueWriteBuffer(bufferin_[1], CL_TRUE, 0, 9 * sizeof(float), box2);
+        cl_queue_.enqueueWriteBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
 
-    /* Set kernel arguments */
-    cl_kernel_.setArg(0, bufferin_[0]);
-    cl_kernel_.setArg(1, bufferin_[1]);
-    cl_kernel_.setArg(2, bufferout_[0]);
+        /* Set kernel arguments */
+        cl_kernel_.setArg(0, bufferin_[0]);
+        cl_kernel_.setArg(1, bufferin_[1]);
+        cl_kernel_.setArg(2, bufferout_[0]);
 
-    /* Execute the kernel (1 workitem in 10 workgroup => compute distance for the 10 fact) */
-    cl::NDRange global(granularity_);
-    cl::NDRange local(wk_size_);
-    cl_queue_.enqueueNDRangeKernel(cl_kernel_, cl::NullRange, global, local);
+        /* Execute the kernel (1 workitem in 10 workgroup => compute distance for the 10 fact) */
+        cl::NDRange global(granularity_);
+        cl::NDRange local(wk_size_);
+        cl_queue_.enqueueNDRangeKernel(cl_kernel_, cl::NullRange, global, local);
 
-    /* Copy the output data back to the host */
-    cl_queue_.enqueueReadBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
+        /* Copy the output data back to the host */
+        cl_queue_.enqueueReadBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
+    }
 
     for (auto i = 0; i < granularity_; i++) {
         if (distances[i] != 1.0f)

@@ -148,7 +148,6 @@ void draw()
     /* Swap buffers and poll */
     glfwSwapBuffers(kGLWindow);
     glfwPollEvents();
-    //usleep(50000);
 }
 
 }//namespace
