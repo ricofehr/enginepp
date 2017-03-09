@@ -23,7 +23,6 @@ class Universe {
 public:
 
     Universe(int type_parallell);
-    ~Universe();
 
     void NextHop();
 

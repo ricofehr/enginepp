@@ -89,7 +89,6 @@ float CLParallell::ComputeCollisionParallell(float box1[], float box2[])
 {
     std::vector<float> distances(granularity_, 1.0f);
     float *distances_ptr = distances.data();
-    float distance {1.0f};
 
     /* Copy the input data to the input buffer */
     cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
@@ -110,11 +109,11 @@ float CLParallell::ComputeCollisionParallell(float box1[], float box2[])
     cl_queue_.enqueueReadBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
 
     for (auto i = 0; i < granularity_; i++) {
-        if (distances[i] < distance)
-            distance = distances[i];
+        if (distances[i] != 1.0f)
+            return distances[i];
     }
 
-    return distance;
+    return 1.0f;
 }
 
 }//namespace helpers

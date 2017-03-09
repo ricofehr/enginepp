@@ -16,7 +16,6 @@ void SerialParallell::InitCollisionParallell() {}
 /* Init cl collision kernel */
 float SerialParallell::ComputeCollisionParallell(float box1[], float box2[])
 {
-    float fact = 0.0f;
     float x1, y1, z1, w1, h1, d1, move1x, move1y, move1z;
     float x2, y2, z2, w2, h2, d2, move2x, move2y, move2z;
 
@@ -39,7 +38,7 @@ float SerialParallell::ComputeCollisionParallell(float box1[], float box2[])
     move2y = box2[7] / granularity_;
     move2z = box2[8] / granularity_;
 
-    while (fact++ < granularity_) {
+    for (auto fact = 0.0f; fact < granularity_; fact += 1.0f) {
         x1 += move1x;
         y1 += move1y;
         z1 += move1z;
@@ -49,10 +48,8 @@ float SerialParallell::ComputeCollisionParallell(float box1[], float box2[])
 
         if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
             y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
-                //std::cout << fact << std::endl;
-                //std::cout << (fact - 1) / granularity_ << std::endl;
-    	        return (fact - 1) / granularity_;
-            }
+            return fact / granularity_;
+        }
     }
 
     return 1.0f;

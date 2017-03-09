@@ -24,7 +24,7 @@ namespace {
 Model3D::Model3D()
 {
     id_ = objectid++;
-    distance_ = -1;
+    distance_ = -1.0f;
     obstacle_ = nullptr;
     id_last_collision_ = 0;
     is_controlled_ = false;
@@ -57,7 +57,7 @@ void Model3D::Draw()
         element->set_distance(distance_);
         element->Draw();
     }
-    distance_ = -1;
+    distance_ = -1.0f;
     /* An object cant touch same object twice, except camera */
     if (!is_controlled_ && obstacle_ != nullptr)
         id_last_collision_ = obstacle_->id();

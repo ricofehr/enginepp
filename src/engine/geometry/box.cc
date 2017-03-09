@@ -48,7 +48,7 @@ std::vector<glm::vec3> Box::ComputeCoords() const
 void Box::MoveCoords()
 {
     if (!IsMoved()) {
-        distance_ = -1;
+        distance_ = -1.0f;
         return;
     }
 
@@ -59,15 +59,14 @@ void Box::MoveCoords()
         location_[0] += move_[0] * distance_;
         location_[2] += move_[2] * distance_;
     }
-    else if (distance_ != -1)
+    else if (distance_ != -1.0f) {
         location_ += distance_ * move_;
-    else
-        location_ += move_;
-
-    if (distance_ != -1)
         move_ = -move_;
+    } else {
+        location_ += move_;
+    }
 
-    distance_ = -1;
+    distance_ = -1.0f;
 }
 
 }//namespace geometry

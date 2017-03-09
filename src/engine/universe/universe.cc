@@ -104,8 +104,5 @@ void Universe::NextHop()
     active_room_->Draw();
 }
 
-/* Destructor */
-Universe::~Universe() {}
-
 }//namespace universe
 }//namespace engine

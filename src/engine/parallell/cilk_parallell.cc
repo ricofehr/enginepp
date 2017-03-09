@@ -9,12 +9,17 @@
 #include <string>
 
 #include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
 #include <cilk/reducer_min.h>
 
 namespace engine {
 namespace parallell {
 
-void CilkParallell::InitCollisionParallell() {}
+/* Ensure nworkers are setted to core number, not ht number */
+void CilkParallell::InitCollisionParallell() {
+    int numWorkers = __cilkrts_get_nworkers();
+    __cilkrts_set_param("nworkers", std::to_string(numWorkers / 2).c_str());
+}
 
 /* Init cl collision kernel */
 float CilkParallell::ComputeCollisionParallell(float box1[], float box2[])
@@ -52,10 +57,8 @@ float CilkParallell::ComputeCollisionParallell(float box1[], float box2[])
 
         if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
             y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
-                //std::cout << fact << std::endl;
-                //std::cout << (fact - 1) / granularity_ << std::endl;
-    	        distance.calc_min(static_cast<float>((fact - 1) / granularity_));
-            }
+                distance.calc_min(static_cast<float>(fact / granularity_));
+        }
     }
 
     return distance->get_value();
