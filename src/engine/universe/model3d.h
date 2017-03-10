@@ -6,8 +6,8 @@
 #ifndef ENGINE_UNIVERSE_MODEL3D_H_
 #define ENGINE_UNIVERSE_MODEL3D_H_
 
-//#include <glm/glm.hpp>
 #include <memory>
+#include <tbb/mutex.h>
 
 #include "engine/geometry/shape3d.h"
 #include "engine/geometry/box.h"
@@ -28,6 +28,7 @@ public:
     Model3D(const Model3D&) = default;
     Model3D& operator=(const Model3D&) = default;
 
+    void PrepareDraw();
     void Draw();
     std::vector<Model3D*> DetectCollision(Model3D *obstacle, engine::parallell::EngineParallell *proxy_parallell);
 
@@ -65,6 +66,7 @@ protected:
     int type_;
     bool is_crossed_;
     bool is_controlled_;
+    tbb::mutex collision_mutex_;
 };
 
 }//namespace geometry

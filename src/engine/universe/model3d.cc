@@ -11,6 +11,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <cilk/cilk.h>
 
 namespace engine {
 namespace universe {
@@ -42,8 +43,8 @@ bool operator!=(const Model3D& o1, const Model3D& o2)
     return o1.id() != o2.id();
 }
 
-/* Draw the model */
-void Model3D::Draw()
+/* Compute coords and move for the model */
+void Model3D::PrepareDraw()
 {
     /* if we can cross into object, make distance to 15 */
     if (obstacle_ != nullptr && obstacle_->IsCrossed()) {
@@ -55,13 +56,22 @@ void Model3D::Draw()
     border_.MoveCoords();
     for (auto &element : elements_) {
         element->set_distance(distance_);
-        element->Draw();
+        element->ComputeMVP();
     }
     distance_ = -1.0f;
     /* An object cant touch same object twice, except camera */
     if (!is_controlled_ && obstacle_ != nullptr)
         id_last_collision_ = obstacle_->id();
     obstacle_ = nullptr;
+}
+
+/* Draw the model */
+void Model3D::Draw()
+{
+    for (auto &element : elements_) {
+        element->set_distance(distance_);
+        element->Draw();
+    }
 }
 
 /* Task who detect if obstacle is in collision with current object */
@@ -115,35 +125,38 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, engine::parall
     distance = proxy_parallell->ComputeCollisionParallell(box1, box2);
 
     /* Compute distance and update collision properties if needed */
-    if (distance != 1.0f &&
-        (obstacle_ == nullptr || distance < distance_) &&
-        (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
+    {
+        tbb::mutex::scoped_lock lock(collision_mutex_);
+        if (distance != 1.0f &&
+            (obstacle_ == nullptr || distance < distance_) &&
+            (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
 
-            //std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
-            oldobstacle1 = obstacle_;
-            oldobstacle2 = obstacle->obstacle();
+                //std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
+                oldobstacle1 = obstacle_;
+                oldobstacle2 = obstacle->obstacle();
 
-            obstacle_ = obstacle;
-            distance_ = distance;
-            obstacle_->set_distance(distance);
-            obstacle_->set_obstacle(this);
+                obstacle_ = obstacle;
+                distance_ = distance;
+                obstacle_->set_distance(distance);
+                obstacle_->set_obstacle(this);
 
-            /* Recompute for polygons unbinded */
-            if (oldobstacle1 != nullptr) {
-                oldobstacle1->set_distance(-1);
-                oldobstacle1->set_obstacle(nullptr);
-                if (oldobstacle1->IsMoved())
-                    recompute.push_back(std::move(oldobstacle1));
-            }
+                /* Recompute for polygons unbinded */
+                if (oldobstacle1 != nullptr) {
+                    oldobstacle1->set_distance(-1);
+                    oldobstacle1->set_obstacle(nullptr);
+                    if (oldobstacle1->IsMoved())
+                        recompute.push_back(std::move(oldobstacle1));
+                }
 
-            if (oldobstacle2 != nullptr && oldobstacle2->IsMoved()) {
-                oldobstacle2->set_distance(-1);
-                oldobstacle2->set_obstacle(nullptr);
-                recompute.push_back(std::move(oldobstacle2));
-            }
+                if (oldobstacle2 != nullptr && oldobstacle2->IsMoved()) {
+                    oldobstacle2->set_distance(-1);
+                    oldobstacle2->set_obstacle(nullptr);
+                    recompute.push_back(std::move(oldobstacle2));
+                }
 
-            oldobstacle1 = nullptr;
-            oldobstacle2 = nullptr;
+                oldobstacle1 = nullptr;
+                oldobstacle2 = nullptr;
+        }
     }
 
     return recompute;

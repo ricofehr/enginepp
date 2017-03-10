@@ -5,8 +5,6 @@
 
 #include "engine/geometry/shape3d.h"
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
@@ -30,7 +28,7 @@ namespace geometry {
 *
 *   Return a mvp mat4 matrix
 */
-glm::mat4 Shape3D::ComputeMVP()
+void Shape3D::ComputeMVP()
 {
     /* kWidthWindow, kHeightWindow, kCam fixed values */
     using engine::helpers::proxygl::kWidthWindow;
@@ -65,9 +63,7 @@ glm::mat4 Shape3D::ComputeMVP()
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location_));
 
     /* Our ModelViewProjection : multiplication of our 3 matrices */
-    glm::mat4 mvp = projection * view * model * glm::scale(scale_);
-
-    return mvp;
+    mvp_ = projection * view * model * glm::scale(scale_);
 }
 
 }//namespace geometry

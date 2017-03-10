@@ -6,8 +6,8 @@
 #include "engine/geometry/cube.h"
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-
 #include <iostream>
 
 #include "engine/helpers/proxygl.h"
@@ -26,7 +26,8 @@ namespace geometry {
 
 namespace {
 
-GLuint elementbuffer = 0;
+
+static GLuint elementbuffer = 0;
 
 /* Load element coordinates in buffer */
 void CreateElementBuffer() {
@@ -97,8 +98,8 @@ void Cube::Draw()
         return;
     }
 
-    glm::mat4 mvp = ComputeMVP();
-    glUniformMatrix4fv(kMatrixId, 1, GL_FALSE, &mvp[0][0]);
+    glEnable(GL_CULL_FACE);
+    glUniformMatrix4fv(kMatrixId, 1, GL_FALSE, &mvp_[0][0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 

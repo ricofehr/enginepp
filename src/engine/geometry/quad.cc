@@ -6,7 +6,9 @@
 #include "engine/geometry/quad.h"
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <iostream>
 
 #include "engine/helpers/proxygl.h"
 
@@ -85,9 +87,9 @@ void Quad::Draw()
         return;
     }
 
-    glm::mat4 mvp = ComputeMVP();
-    glUniformMatrix4fv(kMatrixId, 1, GL_FALSE, &mvp[0][0]);
-
+    /* lock for ensure only one object draw buffer in same time */
+    glDisable(GL_CULL_FACE);
+    glUniformMatrix4fv(kMatrixId, 1, GL_FALSE, &mvp_[0][0]);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
     /* 3 attributes: vertex, color, and textures */

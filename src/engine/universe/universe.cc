@@ -100,7 +100,7 @@ void Universe::NextHop()
     }
 
     active_room_->DetectCollision();
-    cam_->Draw();
+    cam_->PrepareDraw();
     active_room_->Draw();
 }
 

@@ -24,7 +24,7 @@ public:
     Shape3D(const Shape3D&) = default;
     Shape3D& operator=(const Shape3D&) = default;
 
-    glm::mat4 ComputeMVP();
+    void ComputeMVP();
     virtual void Draw() = 0;
 
     bool IsMoved() const { return move_[0] != 0.0f || move_[1] != 0.0f || move_[2] != 0.0f; }
@@ -43,6 +43,7 @@ protected:
     glm::vec4 location_;
     glm::vec4 move_;
     glm::vec3 scale_;
+    glm::mat4 mvp_;
     float distance_;
 };
 
