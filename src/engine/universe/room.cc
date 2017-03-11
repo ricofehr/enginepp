@@ -10,15 +10,8 @@
 #include <iostream>
 #include <cilk/cilk.h>
 
-#include "engine/universe/camera.h"
 
 namespace engine {
-
-namespace helpers {
-namespace proxygl {
-    extern engine::universe::Camera* kCam;
-}//namespace proxygl
-}//namespace helpers
 
 namespace universe {
 
@@ -27,10 +20,12 @@ Room::Room()
      :Room(glm::vec4(1.0f)) {}
 
 Room::Room(glm::vec4 location)
-     :Room(location, {false, false, false, false}, nullptr){}
+     :Room(location, {false, false, false, false}, nullptr, nullptr){}
 
-Room::Room(glm::vec4 location, std::vector<bool> is_doors, engine::parallell::EngineParallell *proxy_parallell) {
+Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
+           engine::parallell::EngineParallell *proxy_parallell) {
     location_ = location;
+    cam_ = cam;
     proxy_parallell_ = proxy_parallell;
     /* 4 walls, floor and roof */
     for (auto face = 0; face < 6; face++) {
@@ -130,7 +125,7 @@ void Room::Draw() {
 
     /* Parallell compute new coords and init new move vector */
     cilk_for (auto cnt = 0; cnt < room_objects.size(); cnt++) {
-        room_objects[cnt]->PrepareDraw();
+        room_objects[cnt]->PrepareDraw(cam_);
     }
 
     /* GL draw in serial (not threaded !) */
@@ -141,13 +136,11 @@ void Room::Draw() {
 /* Detect collisions inside current room */
 void Room::DetectCollision()
 {
-    using engine::helpers::proxygl::kCam;
-
     /* Record moving orders for camera */
-    kCam->Move();
+    cam_->Move();
     /* First check camera collision */
-    if (kCam->IsMoved()) {
-        PivotCollision(kCam);
+    if (cam_->IsMoved()) {
+        PivotCollision(cam_);
     }
 
     /* For all others moving objects
@@ -161,8 +154,6 @@ void Room::DetectCollision()
 /* Detect all collision for one Object */
 void Room::PivotCollision(Model3D *object)
 {
-    using engine::helpers::proxygl::kCam;
-
     /* If collisionsi, previously computed, are cancelled for an object,
        we need to detect again for this one */
     std::vector<Model3D*> recompute;
@@ -170,7 +161,7 @@ void Room::PivotCollision(Model3D *object)
     /* Prepare an unique objects collection for collision detection */
     auto cnt = 0;
     std::vector<Model3D*> room_objects(1 + walls_.size() + windows_.size() + doors_.size() + objects_.size());
-    room_objects[cnt++] = kCam;
+    room_objects[cnt++] = cam_;
     for (auto &o : walls_)
         room_objects[cnt++] = o.get();
     for (auto &o : windows_)

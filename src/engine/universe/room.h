@@ -15,6 +15,7 @@
 #include "engine/universe/window_model.h"
 #include "engine/universe/door.h"
 #include "engine/universe/brick.h"
+#include "engine/universe/camera.h"
 
 namespace engine {
 namespace universe {
@@ -25,7 +26,8 @@ class Room {
 public:
     Room();
     Room(glm::vec4 location);
-    Room(glm::vec4 location, std::vector<bool> is_doors, engine::parallell::EngineParallell *proxy_parallell);
+    Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
+         engine::parallell::EngineParallell *proxy_parallell);
 
     glm::vec4 location() const { return location_; }
 
@@ -35,6 +37,7 @@ public:
 private:
     glm::vec4 location_;
     int nbobjects_{33};
+    Camera *cam_{nullptr};
     std::vector<std::unique_ptr<Wall>> walls_;
     std::vector<std::unique_ptr<Door>> doors_;
     std::vector<std::unique_ptr<WindowModel>> windows_;

@@ -44,7 +44,7 @@ bool operator!=(const Model3D& o1, const Model3D& o2)
 }
 
 /* Compute coords and move for the model */
-void Model3D::PrepareDraw()
+void Model3D::PrepareDraw(Camera *cam)
 {
     /* if we can cross into object, make distance to 15 */
     if (obstacle_ != nullptr && obstacle_->IsCrossed()) {
@@ -56,7 +56,7 @@ void Model3D::PrepareDraw()
     border_.MoveCoords();
     for (auto &element : elements_) {
         element->set_distance(distance_);
-        element->ComputeMVP();
+        element->ComputeMVP(cam);
     }
     distance_ = -1.0f;
     /* An object cant touch same object twice, except camera */

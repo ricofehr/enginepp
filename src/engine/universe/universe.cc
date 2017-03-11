@@ -70,7 +70,7 @@ void Universe::InitRooms()
     /* Add rooms on current universe object */
     std::vector<std::vector<bool>>::iterator it_doors = is_doors.begin();
     for (auto &loc : locations) {
-        auto room_ptr{std::make_unique<Room>(loc, *it_doors, proxy_parallell_.get())};
+        auto room_ptr{std::make_unique<Room>(loc, *it_doors, cam_.get(), proxy_parallell_.get())};
         rooms_.push_back(std::move(room_ptr));
         it_doors++;
     }
@@ -100,7 +100,7 @@ void Universe::NextHop()
     }
 
     active_room_->DetectCollision();
-    cam_->PrepareDraw();
+    cam_->PrepareDraw(cam_.get());
     active_room_->Draw();
 }
 

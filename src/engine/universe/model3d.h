@@ -16,6 +16,9 @@
 namespace engine {
 namespace universe {
 
+/* Forward declaration of Camera class */
+class Camera;
+
 /* Define a 3d model */
 class Model3D {
 
@@ -28,7 +31,7 @@ public:
     Model3D(const Model3D&) = default;
     Model3D& operator=(const Model3D&) = default;
 
-    void PrepareDraw();
+    void PrepareDraw(Camera *cam);
     void Draw();
     std::vector<Model3D*> DetectCollision(Model3D *obstacle, tbb::mutex &collision_mutex,
                                           engine::parallell::EngineParallell *proxy_parallell);

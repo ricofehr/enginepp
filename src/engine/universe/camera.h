@@ -9,10 +9,12 @@
 #include <glm/glm.hpp>
 
 #include "engine/universe/model3d.h"
-#include "engine/universe/room.h"
 
 namespace engine {
 namespace universe {
+
+/* Forward declaration of class Room */
+class Room;
 
 /* Manage 3d Camera */
 class Camera : public Model3D {

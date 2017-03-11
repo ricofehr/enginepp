@@ -21,7 +21,6 @@ namespace proxygl {
 GLFWwindow* kGLWindow = nullptr;
 GLuint kProgramId = -1;
 GLuint kMatrixId = -1;
-const engine::universe::Camera *kCam = nullptr;
 
 namespace {
 
@@ -196,7 +195,6 @@ void settingsGL(engine::universe::Universe *uni)
 {
     /* Init Global universe var */
     universe = uni;
-    kCam = uni->cam();
 
     /* Ensure we can capture keys being pressed below */
     glfwSetInputMode(kGLWindow, GLFW_STICKY_KEYS, GL_TRUE);
@@ -214,7 +212,6 @@ void settingsGL(engine::universe::Universe *uni)
     assert(universe != nullptr);
     assert(kMatrixId != -1);
     assert(kProgramId != -1);
-    assert(kCam != nullptr);
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;

@@ -13,13 +13,6 @@
 
 namespace engine {
 
-/* Use of global camera defined in proxygl namespace */
-namespace helpers {
-namespace proxygl {
-    extern engine::universe::Camera* kCam;
-}//namespace proxygl
-}//namespace helpers
-
 namespace geometry {
 
 /*
@@ -28,21 +21,20 @@ namespace geometry {
 *
 *   Return a mvp mat4 matrix
 */
-void Shape3D::ComputeMVP()
+void Shape3D::ComputeMVP(engine::universe::Camera *cam)
 {
-    /* kWidthWindow, kHeightWindow, kCam fixed values */
+    /* kWidthWindow, kHeightWindow  fixed values */
     using engine::helpers::proxygl::kWidthWindow;
     using engine::helpers::proxygl::kHeightWindow;
-    using engine::helpers::proxygl::kCam;
 
-    glm::mat4 projection = glm::perspective(glm::radians(kCam->fov()),
+    glm::mat4 projection = glm::perspective(glm::radians(cam->fov()),
                                             kWidthWindow / kHeightWindow,
                                             0.1f, 300.0f);
 
     glm::mat4 view = glm::lookAt(
-        kCam->location(),
-        kCam->location() + kCam->direction(),
-        kCam->head()
+        cam->location(),
+        cam->location() + cam->direction(),
+        cam->head()
     );
 
     /* if distance_ is 15, we change room.
