@@ -7,6 +7,7 @@
 #define ENGINE_UNIVERSE_ROOM_H_
 
 #include <vector>
+#include <tbb/mutex.h>
 
 #include "engine/universe/model3d.h"
 #include "engine/parallell/engine_parallell.h"
@@ -39,6 +40,7 @@ private:
     std::vector<std::unique_ptr<WindowModel>> windows_;
     std::vector<std::unique_ptr<Model3D>> objects_;
     engine::parallell::EngineParallell *proxy_parallell_{nullptr};
+    tbb::mutex collision_mutex_;
 
     void GenerateObjects();
     void PivotCollision(Model3D *object);

@@ -9,7 +9,6 @@
 
 #include <iostream>
 #include <cilk/cilk.h>
-#include <tbb/mutex.h>
 
 #include "engine/universe/camera.h"
 
@@ -117,27 +116,26 @@ void Room::GenerateObjects() {
 
 /* Draw room and all objects inside it */
 void Room::Draw() {
-    /* Show all faces of walls, windows and doors */
-    glDisable(GL_CULL_FACE);
+    /* Prepare an unique objects collection for collision detection */
+    auto cnt = 0;
+    std::vector<Model3D*> room_objects(walls_.size() + windows_.size() + doors_.size() + objects_.size());
+    for (auto &o : walls_)
+        room_objects[cnt++] = o.get();
+    for (auto &o : windows_)
+        room_objects[cnt++] = o.get();
+    for (auto &o : doors_)
+        room_objects[cnt++] = o.get();
+    for (auto &o : objects_)
+        room_objects[cnt++] = o.get();
 
-    for (auto &w : walls_) {
-        w->Draw();
+    /* Parallell compute new coords and init new move vector */
+    cilk_for (auto cnt = 0; cnt < room_objects.size(); cnt++) {
+        room_objects[cnt]->PrepareDraw();
     }
 
-    for (auto &d : doors_) {
-        d->Draw();
-    }
-
-    for (auto &w : windows_) {
-        w->Draw();
-    }
-
-    /* Optimize display for moving objects */
-    glEnable(GL_CULL_FACE);
-
-    for (auto &o : objects_) {
+    /* GL draw in serial (not threaded !) */
+    for (auto &o: room_objects)
         o->Draw();
-    }
 }
 
 /* Detect collisions inside current room */
@@ -169,45 +167,26 @@ void Room::PivotCollision(Model3D *object)
        we need to detect again for this one */
     std::vector<Model3D*> recompute;
 
-    if (*object != *kCam) {
-        recompute = object->DetectCollision(kCam, proxy_parallell_);
-        for (auto &r : recompute) {
-            cilk_spawn PivotCollision(r);
-        }
-    }
-
-    /* Parallell collision loop for walls with cilkplus */
-    cilk_for (auto i = 0; i < walls_.size(); i++) {
-        recompute = object->DetectCollision(walls_[i].get(), proxy_parallell_);
-        for (auto &r : recompute) {
-            cilk_spawn PivotCollision(r);
-        }
-    }
-
-    /* Parallell collision loop for windows with cilkplus */
-    cilk_for (auto i = 0; i < windows_.size(); i++) {
-        recompute = object->DetectCollision(windows_[i].get(), proxy_parallell_);
-        for (auto &r : recompute) {
-            cilk_spawn PivotCollision(r);
-        }
-    }
-
-    /* Parallell collision loop for doors with cilkplus */
-    cilk_for (auto i = 0; i < doors_.size(); i++) {
-        recompute = object->DetectCollision(doors_[i].get(), proxy_parallell_);
-        for (auto &r : recompute) {
-            cilk_spawn PivotCollision(r);
-        }
-    }
+    /* Prepare an unique objects collection for collision detection */
+    auto cnt = 0;
+    std::vector<Model3D*> room_objects(1 + walls_.size() + windows_.size() + doors_.size() + objects_.size());
+    room_objects[cnt++] = kCam;
+    for (auto &o : walls_)
+        room_objects[cnt++] = o.get();
+    for (auto &o : windows_)
+        room_objects[cnt++] = o.get();
+    for (auto &o : doors_)
+        room_objects[cnt++] = o.get();
+    for (auto &o : objects_)
+        room_objects[cnt++] = o.get();
 
     /* Parallell collision loop for objects with cilkplus */
-    cilk_for (auto i = 0; i < objects_.size(); i++) {
-        if (*object == *objects_[i])
-                continue;
-
-        recompute = object->DetectCollision(objects_[i].get(), proxy_parallell_);
-        for (auto &r : recompute) {
-            cilk_spawn PivotCollision(r);
+    cilk_for (auto i = 0; i < room_objects.size(); i++) {
+        if (*object != *room_objects[i]) {
+            recompute = object->DetectCollision(room_objects[i], collision_mutex_, proxy_parallell_);
+            for (auto &r : recompute) {
+                cilk_spawn PivotCollision(r);
+            }
         }
     }
 

@@ -69,13 +69,13 @@ void Model3D::PrepareDraw()
 void Model3D::Draw()
 {
     for (auto &element : elements_) {
-        element->set_distance(distance_);
         element->Draw();
     }
 }
 
 /* Task who detect if obstacle is in collision with current object */
-std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, engine::parallell::EngineParallell *proxy_parallell)
+std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &collision_mutex,
+                                               engine::parallell::EngineParallell *proxy_parallell)
 {
     float distance = 1.0f;
     std::vector<float> distances;
@@ -125,10 +125,10 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, engine::parall
     distance = proxy_parallell->ComputeCollisionParallell(box1, box2);
 
     /* Compute distance and update collision properties if needed */
-    {
-        tbb::mutex::scoped_lock lock(collision_mutex_);
-        if (distance != 1.0f &&
-            (obstacle_ == nullptr || distance < distance_) &&
+    if (distance != 1.0f) {
+        /* Protect conccurency update for objects in a room */
+        tbb::mutex::scoped_lock lock_c(collision_mutex);
+        if ((obstacle_ == nullptr || distance < distance_) &&
             (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
 
                 //std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;

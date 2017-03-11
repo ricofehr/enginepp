@@ -30,7 +30,8 @@ public:
 
     void PrepareDraw();
     void Draw();
-    std::vector<Model3D*> DetectCollision(Model3D *obstacle, engine::parallell::EngineParallell *proxy_parallell);
+    std::vector<Model3D*> DetectCollision(Model3D *obstacle, tbb::mutex &collision_mutex,
+                                          engine::parallell::EngineParallell *proxy_parallell);
 
     int id() const { return id_; }
     float distance() const { return distance_; }
@@ -66,7 +67,7 @@ protected:
     int type_;
     bool is_crossed_;
     bool is_controlled_;
-    tbb::mutex collision_mutex_;
+    //tbb::mutex collision_mutex_;
 };
 
 }//namespace geometry
