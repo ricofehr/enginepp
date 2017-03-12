@@ -23,10 +23,10 @@ void CLParallell::InitCollisionParallell() {
         std::vector <cl::Platform> platforms;
         cl::Platform::get(&platforms);
 
-        /* Get a list of devices on this platform */
+        /* Select best devices in the workstation */
         std::vector<cl::Device> devices;
         for (auto &pf: platforms) {
-            pf.getDevices(CL_DEVICE_TYPE_CPU, &devices);
+            pf.getDevices(CL_DEVICE_TYPE_ALL, &devices);
             for (auto &dev : devices) {
                 size_t num;
                 dev.getInfo(CL_DEVICE_MAX_COMPUTE_UNITS, &num);
@@ -40,7 +40,6 @@ void CLParallell::InitCollisionParallell() {
 
         std::cout << max_cores << std::endl;
         /* Ensure items size  are valid */
-        //device_target.getInfo(CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, &num);
         size_t nums[3]{0};
         device_target.getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &nums);
         std::cout << nums[0] << "::" << granularity_ << std::endl;
