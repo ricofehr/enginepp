@@ -12,12 +12,24 @@ Needs Cmake (>3.1), OpenCL (1.2), CilkPlus and TBB, OpenGL3 (>3.3) and GLew / GL
 
 On ubuntu or Debian, apt-get make most of prerequisites install
 ```
-$ apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers libtbb-dev
+# apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers libtbb-dev lsb-core
 ```
 
 For OpenCL, we need gpu library, for intel gpu
 ```
-$ apt-get install beignet-dev
+# apt-get install beignet-dev
+```
+
+Or for nvidia gpu
+```
+# apt-get install nvidia-opencl-dev
+```
+
+And intel (for intel cpu) runtime
+```
+$ wget "http://registrationcenter-download.intel.com/akdlm/irc_nas/9019/opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25.tgz"
+$ tar xvfz opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25.tgz
+$ cd  opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25 && ./install.sh
 ```
 
 For CilkPlus installation, you can execute script below (detailed instructions on the [github page](https://github.com/cilkplus/cilkplus.github.com/blob/master/index.md#try-cilk-plusllvm)).
@@ -123,8 +135,8 @@ When we cross a door, we change room (4 rooms).
 
 ```
 bin/./engine  # no parallell support: serial collision computes and unique core for other cilkplus loops
+bin/./engine -p cilkplus # use cilkplus for collisions computes and other parallell loops
 bin/./engine -p opencl # use opencl for collisions computes and cilkplus for other parallell loops
-bin/./engine -p cilk # use cilkplus for collisions computes and other parallell loops
 ```
 ![Engine](demos/enginepp.gif?raw=true)
 

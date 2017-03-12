@@ -5,6 +5,9 @@ if [[ -d /usr/local/cilkplus ]]; then
     exit 0
 fi
 
+sudo mkdir /usr/local/cilkplus
+sudo chmod 777 /usr/local/cilkplus
+
 rm -rf /tmp/cilkplus
 mkdir /tmp/cilkplus
 pushd /tmp/cilkplus >/dev/null
