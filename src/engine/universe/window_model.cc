@@ -5,6 +5,7 @@
 
 #include "engine/universe/window_model.h"
 
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <SOIL/SOIL.h>
 

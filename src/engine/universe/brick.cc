@@ -5,7 +5,7 @@
 
 #include "engine/universe/brick.h"
 
-#include <glm/glm.hpp>
+#include <GL/glew.h>
 #include <SOIL/SOIL.h>
 
 #include <iostream>
