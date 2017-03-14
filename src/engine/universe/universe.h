@@ -22,7 +22,7 @@ class Universe {
 
 public:
 
-    Universe(int type_parallell);
+    Universe();
 
     void NextHop();
 
@@ -31,13 +31,13 @@ public:
 private:
     void InitRooms();
     void InitCamera();
-    void InitProxyParallell(int type_parallell);
+    void InitProxyParallell();
 
     std::unique_ptr<engine::parallell::EngineParallell> proxy_parallell_;
     std::unique_ptr<Camera> cam_;
     std::vector<std::unique_ptr<Room>> rooms_;
     Room *active_room_;
-
+    int nbrooms_{4};
 };
 
 }//namespace universe

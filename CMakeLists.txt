@@ -9,6 +9,7 @@ include_directories(src)
 set (CMAKE_CXX_STANDARD 14)
 # define bin folder as destination folder
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 set(geometry_SRCS
     src/engine/geometry/shape3d.cc
@@ -17,6 +18,7 @@ set(geometry_SRCS
     src/engine/geometry/box.cc)
 
 set(helpers_SRCS
+    src/engine/helpers/proxy_config.cc
     src/engine/helpers/proxygl.cc)
 
 set(parallell_SRCS
@@ -48,6 +50,7 @@ set(geometry_HDRS
     src/engine/geometry/box.h)
 
 set(helpers_HDRS
+    src/engine/helpers/proxy_config.h
     src/engine/helpers/proxygl.h)
 
 set(parallell_HDRS
@@ -74,10 +77,13 @@ set(engine_HDRS
 
 add_executable(engine ${engine_SRCS} ${engine_HDRS})
 
+find_package(Cilk REQUIRED)
+find_package(TBB REQUIRED)
+find_package(Config++ REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenCL REQUIRED)
 add_definitions("-fcilkplus -std=gnu++14 -stdlib=libc++")
-include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS})
-target_link_libraries(engine ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY} cilkrts tbb)
+include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${Config++_INCLUDE_DIRS})
+target_link_libraries(engine ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY} config++ cilkrts tbb)

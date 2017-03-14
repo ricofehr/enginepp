@@ -12,6 +12,7 @@
 #include <fstream>
 
 #include "engine/universe/universe.h"
+#include "engine/helpers/proxy_config.h"
 
 namespace engine {
 namespace helpers {
@@ -68,7 +69,8 @@ void LoadShaders()
     int info_log_length;
 
     /* Compile Vertex Shader */
-    std::cout << "Compiling shader : " << vertex_file_path << std::endl;
+    if (ProxyConfig::getSetting<int>("debug") > 0)
+        std::cout << "Compiling shader : " << vertex_file_path << std::endl;
     const char *vertexsource_pointer = vertexshader_code.c_str();
     glShaderSource(vertexshader_id, 1, &vertexsource_pointer , nullptr);
     glCompileShader(vertexshader_id);
@@ -83,7 +85,8 @@ void LoadShaders()
     }
 
     /* Compile Fragment Shader */
-    std::cout << "Compiling shader : " << fragment_file_path << std::endl;
+    if (ProxyConfig::getSetting<int>("debug") > 0)
+        std::cout << "Compiling shader : " << fragment_file_path << std::endl;
     const char *fragmentsource_pointer = fragmentshader_code.c_str();
     glShaderSource(fragmentshader_id, 1, &fragmentsource_pointer, nullptr);
     glCompileShader(fragmentshader_id);
@@ -98,7 +101,8 @@ void LoadShaders()
     }
 
     /* Link the program */
-    std::cout << "Linking program" << std::endl;
+    if (ProxyConfig::getSetting<int>("debug") > 0)
+        std::cout << "Linking program" << std::endl;
     kProgramId = glCreateProgram();
     glAttachShader(kProgramId, vertexshader_id);
     glAttachShader(kProgramId, fragmentshader_id);
@@ -125,7 +129,7 @@ void LoadShaders()
 *
 *    Display function triggered when opengl must display again all polygons
 */
-void draw()
+void Draw()
 {
     /* Enable depth test */
     glEnable(GL_DEPTH_TEST);
@@ -140,7 +144,10 @@ void draw()
     glUseProgram(kProgramId);
 
     /* Fill polygon */
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if (ProxyConfig::getSetting<bool>("grid"))
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     universe->NextHop();
 
@@ -149,17 +156,47 @@ void draw()
     glfwPollEvents();
 }
 
+int Fps(double &last_time, int &nb_frames)
+{
+    int ret = 0;
+    /* Measure speed */
+    double current_time = glfwGetTime();
+    nb_frames++;
+    if (current_time - last_time >= 1.0) {
+        int debug = ProxyConfig::getSetting<int>("debug");
+        /* Print if debug */
+        if (debug == ProxyConfig::kDEBUG_ALL)
+            printf("%f ms/frame, ", 1000.0 / double(nb_frames));
+        if (debug == ProxyConfig::kDEBUG_PERF || debug == ProxyConfig::kDEBUG_ALL)
+            printf("%f fps\n", double(nb_frames));
+        /* Reset timer */
+        ret = nb_frames;
+        nb_frames = 0;
+        last_time += 1.0;
+    }
+
+    return ret;
+}
+
 }//namespace
 
 /* Init gl Window */
-void initGL()
+void InitGL()
 {
+    /* Default value for width and height */
+    float window_width = 1200.0f;
+    float window_height = 740.0f;
+
     /* Initialise GLFW */
     if (!glfwInit())
     {
         std::cerr << "Failed to initialize GLFW\n";
         exit(-1);
     }
+
+    /* Check width and height into config file and ensure values are setted */
+    window_width = ProxyConfig::getSetting<float>("width");
+    window_height = ProxyConfig::getSetting<float>("height");
 
     glfwWindowHint(GLFW_SAMPLES, 4); /* 4x antialiasing */
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); /* OpenGL 3.3 */
@@ -169,7 +206,7 @@ void initGL()
     glfwWindowHint(GLFW_RESIZABLE, false);
 
     /* Open a window and create its OpenGL context (use glfwGetPrimaryMonitor() on third parameter for FS) */
-    kGLWindow = glfwCreateWindow(kWidthWindow, kHeightWindow, "=== Engine ===", nullptr, nullptr);
+    kGLWindow = glfwCreateWindow(window_width, window_height, "=== Engine ===", nullptr, nullptr);
     if(kGLWindow == nullptr) {
         std::cerr << "Failed to open GLFW window\n";
         glfwTerminate();
@@ -191,7 +228,7 @@ void initGL()
 }
 
 /* Setup gl scene */
-void settingsGL(engine::universe::Universe *uni)
+void SettingsGL(engine::universe::Universe *uni)
 {
     /* Init Global universe var */
     universe = uni;
@@ -199,8 +236,9 @@ void settingsGL(engine::universe::Universe *uni)
     /* Ensure we can capture keys being pressed below */
     glfwSetInputMode(kGLWindow, GLFW_STICKY_KEYS, GL_TRUE);
 
-    /* Disable vsync (avoid limit to 60 pfs) */
-    glfwSwapInterval(0);
+    /* Vsync Setting (default is enable) */
+    if (!ProxyConfig::getSetting<bool>("vsync"))
+        glfwSwapInterval(0);
 
     /* Create and compile our GLSL program from the shader */
     LoadShaders();
@@ -213,27 +251,16 @@ void settingsGL(engine::universe::Universe *uni)
     assert(kMatrixId != -1);
     assert(kProgramId != -1);
 
-    double lastTime = glfwGetTime();
-    int nbFrames = 0;
-
+    double last_time = glfwGetTime();
+    int nb_frames = 0;
 
     /* Draw if window is focused and destroy window if ESC is pressed */
-    do{
-     // Measure speed
-     double currentTime = glfwGetTime();
-     nbFrames++;
-     if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
-         // printf and reset timer
-         printf("%f ms/frame, ", 1000.0/double(nbFrames));
-         printf("%f fps\n", double(nbFrames));
-         nbFrames = 0;
-         lastTime += 1.0;
-     }
-
-        draw();
+    do {
+        Fps(last_time, nb_frames);
+        Draw();
     }
-    while(glfwGetKey(kGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
-          && glfwWindowShouldClose(kGLWindow) == 0);
+    while (glfwGetKey(kGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
+           && glfwWindowShouldClose(kGLWindow) == 0);
 }
 
 }//namespace proxygl

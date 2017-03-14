@@ -1,6 +1,8 @@
 #ifndef ENGINE_PARALLELL_ENGINEPARALLELL_H_
 #define ENGINE_PARALLELL_ENGINEPARALLELL_H_
 
+#include <iostream>
+
 namespace engine {
 namespace parallell {
 
@@ -14,6 +16,9 @@ public:
     static const int kPARALLELL_SERIAL = 1;
     static const int kPARALLELL_CILK = 2;
     static const int kPARALLELL_CL = 3;
+
+protected:
+    int granularity_{16};
 };
 
 }//namespace parallell

@@ -13,6 +13,8 @@
 #include <string>
 #include <cilk/cilk.h>
 
+#include "engine/helpers/proxy_config.h"
+
 namespace engine {
 namespace universe {
 
@@ -130,8 +132,11 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &co
         tbb::mutex::scoped_lock lock_c(collision_mutex);
         if ((obstacle_ == nullptr || distance < distance_) &&
             (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
+                /* Print debug if setting */
+                using engine::helpers::ProxyConfig;
+                if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION)
+                    std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
 
-                //std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
                 oldobstacle1 = obstacle_;
                 oldobstacle2 = obstacle->obstacle();
 

@@ -10,9 +10,9 @@
 #include <iostream>
 #include <cilk/cilk.h>
 
+#include "engine/helpers/proxy_config.h"
 
 namespace engine {
-
 namespace universe {
 
 /* Constructors */
@@ -50,6 +50,10 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
             windows_.push_back(std::move(window_ptr));
         }
     }
+
+    /* Check objects count into config file */
+    using engine::helpers::ProxyConfig;
+    nbobjects_ = ProxyConfig::getSetting<int>("objects_count");
 
     GenerateObjects();
 }

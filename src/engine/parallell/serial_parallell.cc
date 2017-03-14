@@ -7,11 +7,20 @@
 
 #include <iostream>
 #include <string>
+#include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
+
+#include "engine/helpers/proxy_config.h"
 
 namespace engine {
 namespace parallell {
 
-void SerialParallell::InitCollisionParallell() {}
+void SerialParallell::InitCollisionParallell() {
+    using engine::helpers::ProxyConfig;
+    granularity_ = ProxyConfig::getSetting<int>("granularity");
+
+    __cilkrts_set_param("nworkers", "1");
+}
 
 /* Init cl collision kernel */
 float SerialParallell::ComputeCollisionParallell(float box1[], float box2[])

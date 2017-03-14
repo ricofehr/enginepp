@@ -12,7 +12,7 @@ Needs Cmake (>3.1), OpenCL (1.2), CilkPlus and TBB, OpenGL3 (>3.3) and GLew / GL
 
 On ubuntu or Debian, apt-get make most of prerequisites install
 ```
-# apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers libtbb-dev lsb-core
+# apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers libtbb-dev lsb-core libconfig++-dev
 ```
 
 For OpenCL, we need gpu library, for intel gpu
@@ -39,7 +39,7 @@ For CilkPlus installation, you can execute script below (detailed instructions o
 
 On OSX, we need XCode and install some libraries with brew (SOIL must be install manually)
 ```
-$ brew install cmake glm glew glfw3 tbb
+$ brew install cmake glm glew glfw3 tbb libconfig
 ```
 
 And SOIL must be install manually
@@ -69,15 +69,7 @@ For CilkPlus installation, you can execute script below (detailed instructions o
 
 ## Compile
 
-Step1, generate MakeFiles and check prerequisites
-```
-$ cmake .
--- Configuring done
--- Generating done
--- Build files have been written to: ~/enginepp
-```
-
-Step2, Before each compile, we need init env for cilkplus use.
+Step1, Before each compile, we need init env for cilkplus use.
 On Linux
 ```
 source ./scripts/./cilk_vars_linux.sh
@@ -85,6 +77,14 @@ source ./scripts/./cilk_vars_linux.sh
 On MacOS
 ```
 source ./scripts/./cilk_vars_osx.sh
+```
+
+Step2, generate MakeFiles and check prerequisites
+```
+$ cmake .
+-- Configuring done
+-- Generating done
+-- Build files have been written to: ~/enginepp
 ```
 
 Step3, compile program
@@ -120,24 +120,68 @@ Scanning dependencies of target engine
 
 ## Folders
 ```
-+--src/ 	Sources
-+--cl/      OpenCL Kernels folder
-+--glsl/    OpenGL Shaders folder
-+--bin/		Binary folder where engine executable is written
 +--assets/  Texture files
++--bin/		Binary folder where engine executable is written
++--cl/      OpenCL Kernels folder
++--cmake/   Cmake modules folder
++--config/  Config folder
 +--demos/	Demo gif animated files
++--dia/     Uml and span diagrams
++--glsl/    OpenGL Shaders folder
++--scripts/ Bash scripts
++--src/ 	Sources
 ```
+
+## Settings
+
+A default setting file is present at config/enginepp.ini.default
+For local config change, we can duplicate this file
+```
+$ cp config/enginepp.ini.default config/enginepp.ini
+$ vi config/enginepp.ini
+```
+
+It's also possible to change mostly setting on the fly with program parameters (See below).
 
 ## Run
 
 Use mouse for head orientation and arrow keys for camera move.
 When we cross a door, we change room (4 rooms).
 
+Before run, we need init env for cilkplus use.
+On Linux
 ```
-bin/./engine  # no parallell support: serial collision computes and unique core for other cilkplus loops
-bin/./engine -p cilkplus # use cilkplus for collisions computes and other parallell loops
-bin/./engine -p opencl # use opencl for collisions computes and cilkplus for other parallell loops
+source ./scripts/./cilk_vars_linux.sh
 ```
+On MacOS
+```
+source ./scripts/./cilk_vars_osx.sh
+```
+
+Default run, without any parameter
+```
+bin/./engine  # Use settings as setted in config file (config/enginepp.ini or config/enginepp.ini.default).
+```
+
+Program accept options who can override config settings
+```
+-d n  Debug mode, 0: no debug, 1: performance debug, 2: collision debug, 3: all debug
+-g n  Granularity on collision computes
+-h    Display help
+-l    Display config
+-o n  Count of objects in rooms
+-p serial|cilkplus|opencl
+      serial: no parallellism
+      cilkplus: use intel cilkplus library
+      opencl: intel cilkplus for all parallell computes but opencl for collision computes
+-r n  Count of rooms
+```
+
+For example
+```
+./bin/./engine -d 0 -p serial -o 24 -g 32 # no debug, no parallellism, 24 objects, 32 computes for collision
+```
+
 ![Engine](demos/enginepp.gif?raw=true)
 
 ## Documentation
@@ -146,11 +190,4 @@ Doxy pages are available [here](http://oxy.enginepp.nextdeploy.io)
 
 ## UML
 
-![Class Diagram](http://oxy.enginepp.nextdeploy.io/enginepp.png)
-
-## Todo
-
-- Improve collision algorithm
-- Manage shadows and lights
-- Improve camera move and interactions
-- Manage drawing of more 3d models 
+![Class Diagram](dia/classes.png)

@@ -30,6 +30,7 @@
 
 # Vim temporary
 *.swp
+*~
 
 # Cmake files and folder
 Makefile
@@ -41,3 +42,6 @@ CMakeFiles/
 bin/*
 !bin/.gitkeep
 .DS_Store
+
+# Config overridded
+config/enginepp.ini

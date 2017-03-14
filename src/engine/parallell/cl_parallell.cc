@@ -9,6 +9,8 @@
 #include <fstream>
 #include <string>
 
+#include "engine/helpers/proxy_config.h"
+
 namespace engine {
 namespace parallell {
 
@@ -17,6 +19,9 @@ void CLParallell::InitCollisionParallell() {
     cl::Device device_target;
     int max_cores = 0;
     size_t num;
+
+    using engine::helpers::ProxyConfig;
+    granularity_ = ProxyConfig::getSetting<int>("granularity");
 
     try {
         /* Query for platforms */

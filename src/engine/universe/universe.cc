@@ -14,22 +14,26 @@
 #include "engine/parallell/cl_parallell.h"
 #include "engine/parallell/serial_parallell.h"
 #include "engine/parallell/cilk_parallell.h"
+#include "engine/helpers/proxy_config.h"
 
 namespace engine {
 namespace universe {
 
 /* Constructor */
-Universe::Universe(int type_parallell)
+Universe::Universe()
 {
-    InitProxyParallell(type_parallell);
+    InitProxyParallell();
     InitCamera();
     InitRooms();
 }
 
 /* Init parallell proxy pointer */
-void Universe::InitProxyParallell(int type_parallell)
+void Universe::InitProxyParallell()
 {
     using engine::parallell::EngineParallell;
+    /* Get parallell type from config */
+    using engine::helpers::ProxyConfig;
+    int type_parallell = ProxyConfig::getSetting<int>("parallell");
 
     switch (type_parallell) {
         case EngineParallell::kPARALLELL_CILK:
@@ -49,6 +53,10 @@ void Universe::InitProxyParallell(int type_parallell)
 /* Create Rooms for gl scene */
 void Universe::InitRooms()
 {
+    /* Check objects count into config file */
+    using engine::helpers::ProxyConfig;
+    nbrooms_ = ProxyConfig::getSetting<int>("rooms_count");
+
     /* Locations for 4 rooms */
     std::vector<glm::vec4> locations = {
         glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
@@ -65,7 +73,8 @@ void Universe::InitRooms()
         {false, false, true, true},
     };
 
-    std::cout << "Init Rooms\n";
+    if (ProxyConfig::getSetting<int>("debug") > 0)
+        std::cout << "Init Rooms\n";
 
     /* Add rooms on current universe object */
     std::vector<std::vector<bool>>::iterator it_doors = is_doors.begin();
@@ -73,6 +82,8 @@ void Universe::InitRooms()
         auto room_ptr{std::make_unique<Room>(loc, *it_doors, cam_.get(), proxy_parallell_.get())};
         rooms_.push_back(std::move(room_ptr));
         it_doors++;
+        if (rooms_.size() == nbrooms_)
+            break;
     }
 
     active_room_ = nullptr;
@@ -81,7 +92,10 @@ void Universe::InitRooms()
 /* Create Camera for gl scene */
 void Universe::InitCamera()
 {
-    std::cout << "Init Camera\n";
+    using engine::helpers::ProxyConfig;
+    if (ProxyConfig::getSetting<int>("debug") > 0)
+        std::cout << "Init Camera\n";
+
     cam_ = std::make_unique<Camera>(0.0f, 1.0f, 5.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
 

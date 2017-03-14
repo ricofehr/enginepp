@@ -70,7 +70,6 @@ protected:
     int type_;
     bool is_crossed_;
     bool is_controlled_;
-    //tbb::mutex collision_mutex_;
 };
 
 }//namespace geometry

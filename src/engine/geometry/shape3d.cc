@@ -8,8 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "engine/helpers/proxygl.h"
 #include "engine/universe/camera.h"
+#include "engine/helpers/proxy_config.h"
 
 namespace engine {
 
@@ -23,12 +23,13 @@ namespace geometry {
 */
 void Shape3D::ComputeMVP(engine::universe::Camera *cam)
 {
-    /* kWidthWindow, kHeightWindow  fixed values */
-    using engine::helpers::proxygl::kWidthWindow;
-    using engine::helpers::proxygl::kHeightWindow;
+    /* width and height config values */
+    using engine::helpers::ProxyConfig;
+    float window_width = ProxyConfig::getSetting<float>("width");
+    float window_height = ProxyConfig::getSetting<float>("height");
 
     glm::mat4 projection = glm::perspective(glm::radians(cam->fov()),
-                                            kWidthWindow / kHeightWindow,
+                                            window_width / window_height,
                                             0.1f, 300.0f);
 
     glm::mat4 view = glm::lookAt(

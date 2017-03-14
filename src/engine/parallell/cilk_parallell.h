@@ -13,8 +13,6 @@ public:
     float ComputeCollisionParallell(float box1[], float box2[]) override final;
     ~CilkParallell() override = default;
 
-private:
-    int granularity_{16};
 };
 
 }//namespace parallell

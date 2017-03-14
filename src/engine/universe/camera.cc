@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "engine/universe/room.h"
+#include "engine/helpers/proxy_config.h"
 #include "engine/helpers/proxygl.h"
 
 namespace engine {
@@ -100,8 +101,10 @@ Camera::Camera(float cx, float cy, float cz,
 void Camera::Move()
 {
     using engine::helpers::proxygl::kGLWindow;
-    using engine::helpers::proxygl::kWidthWindow;
-    using engine::helpers::proxygl::kHeightWindow;
+    /* width and height config values */
+    using engine::helpers::ProxyConfig;
+    float window_width = ProxyConfig::getSetting<float>("width");
+    float window_height = ProxyConfig::getSetting<float>("width");
 
     const float zoom_sensitivity = -0.2f;
     float speed = 4.0f;
@@ -116,15 +119,15 @@ void Camera::Move()
     last_time = current_time;
     /* Ensure cursor is well centered before record move */
     if (skip_time++ < 10) {
-        glfwSetCursorPos(kGLWindow, kWidthWindow/2 , kHeightWindow/2);
+        glfwSetCursorPos(kGLWindow, window_width/2 , window_height/2);
         return;
     }
 
     glfwGetCursorPos(kGLWindow, &xpos, &ypos);
 
     /* Compute new orientation */
-    horizontal_angle_ += mouse_speed * delta_time * static_cast<float>(kWidthWindow/2 - xpos);
-    vertical_angle_   += mouse_speed * delta_time * static_cast<float>(kHeightWindow/2 - ypos);
+    horizontal_angle_ += mouse_speed * delta_time * static_cast<float>(window_width/2 - xpos);
+    vertical_angle_   += mouse_speed * delta_time * static_cast<float>(window_height/2 - ypos);
 
     /* Direction : Spherical coordinates to Cartesian coordinates conversion */
     direction_[0] = cos(vertical_angle_) * sin(horizontal_angle_);
@@ -166,7 +169,7 @@ void Camera::Move()
     }
 
     /* Reset Cursor position at center of screen */
-    glfwSetCursorPos(kGLWindow, kWidthWindow/2, kHeightWindow/2);
+    glfwSetCursorPos(kGLWindow, window_width/2, window_height/2);
 
     /* Manage Field of View with mouse wheel */
     glfwSetScrollCallback(kGLWindow, OnScroll);
