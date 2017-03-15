@@ -30,9 +30,12 @@ public:
          engine::parallell::EngineParallell *proxy_parallell);
 
     glm::vec4 location() const { return location_; }
+    int countObjects() const { return objects_.size(); }
+    bool IsFull() const { return objects_.size() >= nbobjects_; }
 
     void Draw();
     void DetectCollision();
+    void GenerateRandomObject();
 
 private:
     glm::vec4 location_;
@@ -44,8 +47,10 @@ private:
     std::vector<std::unique_ptr<Model3D>> objects_;
     engine::parallell::EngineParallell *proxy_parallell_{nullptr};
     tbb::mutex collision_mutex_;
+    tbb::mutex genobject_mutex_;
 
     void GenerateObjects();
+    void GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale);
     void PivotCollision(Model3D *object);
 };
 

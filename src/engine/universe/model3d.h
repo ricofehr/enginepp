@@ -23,6 +23,12 @@ class Camera;
 class Model3D {
 
 public:
+    static const int kMODEL3D_CAMERA = 1;
+    static const int kMODEL3D_WALL = 2;
+    static const int kMODEL3D_WINDOW = 3;
+    static const int kMODEL3D_DOOR = 4;
+    static const int kMODEL3D_BRICK = 5;
+
     Model3D();
     /* Default move and copy constructor / operator */
     Model3D(Model3D&&) = default;
@@ -55,12 +61,6 @@ public:
     virtual ~Model3D() = default;
 
 protected:
-    static const int kMODEL3D_CAMERA = 1;
-    static const int kMODEL3D_WALL = 2;
-    static const int kMODEL3D_WINDOW = 3;
-    static const int kMODEL3D_DOOR = 4;
-    static const int kMODEL3D_BRICK = 5;
-
     std::vector<std::unique_ptr<engine::geometry::Shape3D>> elements_;
     engine::geometry::Box border_;
     Model3D *obstacle_;

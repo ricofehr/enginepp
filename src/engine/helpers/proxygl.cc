@@ -166,9 +166,9 @@ int Fps(double &last_time, int &nb_frames)
         int debug = ProxyConfig::getSetting<int>("debug");
         /* Print if debug */
         if (debug == ProxyConfig::kDEBUG_ALL)
-            printf("%f ms/frame, ", 1000.0 / double(nb_frames));
+            std::cout << 1000.0 / static_cast<double>(nb_frames) << " ms/frame" << std::endl;
         if (debug == ProxyConfig::kDEBUG_PERF || debug == ProxyConfig::kDEBUG_ALL)
-            printf("%f fps\n", double(nb_frames));
+            std::cout << nb_frames << " fps, " << universe->countObjects() << " objects" << std::endl;
         /* Reset timer */
         ret = nb_frames;
         nb_frames = 0;

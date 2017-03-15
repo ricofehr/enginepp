@@ -2,6 +2,8 @@
 parallell = 2
 // count of objects generated inside rooms
 objects_count = 32
+// load objects once each 2s
+load_objects_seq = false
 // number of rooms
 rooms_count = 4
 // accuracy for collision (higher is better accurate but need more cpu use)

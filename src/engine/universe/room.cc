@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include <iostream>
+#include <unistd.h>
 #include <cilk/cilk.h>
 
 #include "engine/helpers/proxy_config.h"
@@ -55,66 +56,82 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
     using engine::helpers::ProxyConfig;
     nbobjects_ = ProxyConfig::getSetting<int>("objects_count");
 
-    GenerateObjects();
+    if (!ProxyConfig::getSetting<bool>("load_objects_seq"))
+        GenerateObjects();
 }
 
 /* Generates Random bricks into Room */
-void Room::GenerateObjects() {
-    int r;
-    float x, y, z;
-    float scale;
-    int x0, z0;
-    tbb::mutex genobjects_mutex;
+void Room::GenerateObjects()
+{
+    /* Reset seed */
+    srand (time(NULL));
 
-    srand(time(NULL));
     /* Parallell objects generation with cilkplus */
     cilk_for (auto i = 0; i < nbobjects_; i++) {
-        /* Entropy value */
-        r = rand();
-        /* For sizes available for brick */
-        scale = 1.0f / (float)(i % 4 + 1.0);
+        GenerateRandomObject();
+    }
+}
 
-        /* 1/10 of bricks are static */
-        if (i % 10 == 0) {
-            x = 0.0f;
-            y = 0.0f;
-            z = 0.0f;
-        }
-        /* One brick every 8 moves on y axis */
-        if (i % 7 == 0) {
-            y = rand() % 30 * 0.01f + 0.3f;
-            x = 0.0f;
-            z = 0.0f;
-        } else {
-            x = rand() % 70 * 0.01f + 0.04;
-            x = (r % 2 == 0) ? -x : x;
-            z = rand() % 70 * 0.01f + 0.04f;
-            z = (r % 3 == 0) ? -z : z;
-            y = 0.0f;
-        }
+/* Generates Random bricks into Room */
+void Room::GenerateRandomObject()
+{
+    int r = 0, index = objects_.size();
+    float x = 0.0f, y = 0.0f, z = 0.0f;
+    float scale = 1.0f;
+    int x0 = 0, z0 = 0;
 
-        /* Initial x and z coordinates */
-        x0 = rand() % 10;
-        x0 = (x0 % 2 == 0) ? -x0 : x0;
-        z0 = rand() % 15;
-        z0 = (z0 % 2 == 0) ? -z0 : z0;
+    /* Entropy value */
+    r = rand();
+    /* For sizes available */
+    scale = 1.0f / (float)(index % 4 + 1.0);
 
-        /* Create Brick object and add to the Current Room */
-        auto brick_ptr{std::make_unique<Brick>(scale,
-                                       location_ + glm::vec4(x0, -4.8f + (r%8), z0, 0.0f),
-                                       glm::vec4(x * 0.3f, y * 0.3f, z * 0.3f, 0.0f))};
-
-        /* Ensure that only one push_back at same time */
-        {
-            tbb::mutex::scoped_lock lock(genobjects_mutex);
-            objects_.push_back(std::move(brick_ptr));
-        }
+    /* 1/10 are static */
+    if (index % 10 == 0) {
+        x = 0.0f;
+        y = 0.0f;
+        z = 0.0f;
+    }
+    /* 1/7 moves on y axis */
+    else if (index % 7 == 0) {
+        y = (rand() % 20 + 3) * 0.01f;
+        x = 0.0f;
+        z = 0.0f;
+    } else {
+        x = (rand() % 20 + 3) * 0.01f;
+        x = (r % 2 == 0) ? -x : x;
+        z = (rand() % 20 + 3) * 0.01f;
+        z = (r % 3 == 0) ? -z : z;
+        y = 0.0f;
     }
 
+    /* Initial x and z coordinates */
+    x0 = rand() % 10;
+    x0 = (x0 % 2 == 0) ? -x0 : x0;
+    z0 = rand() % 15;
+    z0 = (z0 % 2 == 0) ? -z0 : z0;
+
+    GenerateObject(Model3D::kMODEL3D_BRICK, glm::vec4(x0, -4.8f + (r%8), z0, 0.0f),
+                   glm::vec4(x, y, z, 0.0f), scale);
+}
+
+void Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale)
+{
+    std::unique_ptr<Model3D> obj_ptr;
+
+    /* Create Brick object and add to the Current Room */
+    if (type_object == Model3D::kMODEL3D_BRICK)
+        obj_ptr = std::make_unique<Brick>(scale, location_ + location, move);
+
+    /* Ensure that only one push_back at same time */
+    {
+        tbb::mutex::scoped_lock lock(genobject_mutex_);
+        objects_.push_back(std::move(obj_ptr));
+    }
 }
 
 /* Draw room and all objects inside it */
-void Room::Draw() {
+void Room::Draw()
+{
     /* Prepare an unique objects collection for collision detection */
     auto cnt = 0;
     std::vector<Model3D*> room_objects(walls_.size() + windows_.size() + doors_.size() + objects_.size());

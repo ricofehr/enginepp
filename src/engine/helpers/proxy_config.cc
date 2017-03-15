@@ -61,6 +61,10 @@ void ProxyConfig::DefaultValues()
         setValue("objects_count", libconfig::Setting::TypeInt, 16);
     }
 
+    if (!exists("load_objects_seq")) {
+        setValue("load_objects_seq", libconfig::Setting::TypeBoolean, false);
+    }
+
     if (!exists("rooms_count")) {
         setValue("rooms_count", libconfig::Setting::TypeInt, 4);
     }
@@ -89,10 +93,11 @@ void ProxyConfig::ParseConfig() const
     std::cout << "Window width: " << getValue<float>("width") << std::endl;
     std::cout << "Window height: " << getValue<float>("height") << std::endl;
     std::cout << "Objects count: " << getValue<int>("objects_count") << std::endl;
+    std::cout << "Load objects sequentially in time: " << getValue<bool>("load_objects_seq") << std::endl;
     std::cout << "Rooms count: " << getValue<int>("rooms_count") << std::endl;
     std::cout << "Collision granularity: " << getValue<int>("granularity") << std::endl;
-    std::cout << "Vsync (limit framerate to monitor): " << getValue<int>("vsync") << std::endl;
-    std::cout << "Grid mode (not fill polygons): " << getValue<int>("grid") << std::endl;
+    std::cout << "Vsync (limit framerate to monitor): " << getValue<bool>("vsync") << std::endl;
+    std::cout << "Grid mode (not fill polygons): " << getValue<bool>("grid") << std::endl;
     std::cout << "Debug mode (0 -> no debug, 1 -> performance debug, 2 -> collision debug, 3 -> all debug): " << getValue<int>("debug") << std::endl;
 }
 

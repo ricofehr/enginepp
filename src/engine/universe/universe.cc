@@ -7,6 +7,7 @@
 
 #include <glm/glm.hpp>
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <memory>
@@ -18,6 +19,10 @@
 
 namespace engine {
 namespace universe {
+
+namespace {
+    double kLastTime = 0;
+}
 
 /* Constructor */
 Universe::Universe()
@@ -116,6 +121,17 @@ void Universe::NextHop()
     active_room_->DetectCollision();
     cam_->PrepareDraw(cam_.get());
     active_room_->Draw();
+
+    using engine::helpers::ProxyConfig;
+    if (ProxyConfig::getSetting<bool>("load_objects_seq")) {
+        double current_time = glfwGetTime();
+        if (current_time - kLastTime >= 2.0f) {
+            for (auto &r : rooms_)
+                if (!r->IsFull())
+                    r->GenerateRandomObject();
+            kLastTime = current_time;
+        }
+    }
 }
 
 }//namespace universe

@@ -27,6 +27,7 @@ public:
     void NextHop();
 
     const Camera *cam() const { return cam_.get(); }
+    int countObjects() const { return active_room_->countObjects(); }
 
 private:
     void InitRooms();
