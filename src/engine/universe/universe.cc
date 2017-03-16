@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <memory>
+#include <cilk/cilk.h>
 
 #include "engine/parallell/cl_parallell.h"
 #include "engine/parallell/serial_parallell.h"
@@ -107,6 +108,8 @@ void Universe::InitCamera()
 /* Compute and draw next hop for the gl scene */
 void Universe::NextHop()
 {
+    using engine::helpers::ProxyConfig;
+
     if (active_room_ == nullptr
         || !cam_->IsInRoom(*active_room_)) {
 
@@ -118,19 +121,30 @@ void Universe::NextHop()
         }
     }
 
-    active_room_->DetectCollision();
+    /* Record moving orders for camera */
+    cam_->Move();
+    /* Detect collision in rooms */
+    cilk_for (auto cnt = 0; cnt < rooms_.size(); cnt++) {
+        rooms_[cnt]->DetectCollision();
+    }
+
     cam_->PrepareDraw(cam_.get());
     active_room_->Draw();
 
-    using engine::helpers::ProxyConfig;
+    double current_time = glfwGetTime();
+    cilk_for (auto cnt = 0; cnt < rooms_.size(); cnt++) {
+        rooms_[cnt]->ReinitGrid();
+    }
+
+    /* GL functions during object generate, then needs serial execution */
     if (ProxyConfig::getSetting<bool>("load_objects_seq")) {
-        double current_time = glfwGetTime();
-        if (current_time - kLastTime >= 2.0f) {
-            for (auto &r : rooms_)
-                if (!r->IsFull())
-                    r->GenerateRandomObject();
-            kLastTime = current_time;
+        for (auto &r : rooms_) {
+            if (!r->IsFull() && current_time - kLastTime >= 0.5f)
+                r->GenerateRandomObject();
         }
+
+        if (current_time - kLastTime >= 0.5f)
+            kLastTime = current_time;
     }
 }
 

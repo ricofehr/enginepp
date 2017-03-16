@@ -36,18 +36,19 @@ public:
     void Draw();
     void DetectCollision();
     void GenerateRandomObject();
+    void ReinitGrid();
 
 private:
     glm::vec4 location_;
     int nbobjects_{33};
     Camera *cam_{nullptr};
+    bool grid_[5][15][15]{false};
     std::vector<std::unique_ptr<Wall>> walls_;
     std::vector<std::unique_ptr<Door>> doors_;
     std::vector<std::unique_ptr<WindowModel>> windows_;
     std::vector<std::unique_ptr<Model3D>> objects_;
     engine::parallell::EngineParallell *proxy_parallell_{nullptr};
-    tbb::mutex collision_mutex_;
-    tbb::mutex genobject_mutex_;
+    tbb::mutex room_mutex_;
 
     void GenerateObjects();
     void GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale);

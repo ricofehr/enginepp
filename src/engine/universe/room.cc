@@ -56,8 +56,62 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
     using engine::helpers::ProxyConfig;
     nbobjects_ = ProxyConfig::getSetting<int>("objects_count");
 
+    ReinitGrid();
     if (!ProxyConfig::getSetting<bool>("load_objects_seq"))
         GenerateObjects();
+}
+
+/*
+*   Recompute the placement grid for the room
+*   TODO: TO Optimize, too many loops
+*/
+void Room::ReinitGrid()
+{
+    cilk_for (auto i = 0; i < 5; i++) {
+        cilk_for (auto j = 0; j < 15; j++) {
+            cilk_for (auto k = 0; k < 15; k++) {
+                grid_[i][j][k] = false;
+            }
+        }
+    }
+
+    /* Prepare an unique objects collection for grid positions */
+    auto cnt = 0;
+    std::vector<Model3D*> room_objects(1 + objects_.size());
+    room_objects[cnt++] = cam_;
+    for (auto &obj : objects_)
+        room_objects[cnt++] = obj.get();
+
+    cilk_for (auto o = 0; o < room_objects.size(); o++) {
+        /* check grid collision */
+        engine::geometry::Box border = room_objects[o]->border();
+        std::vector<glm::vec3> coords = border.ComputeCoords();
+        auto x1 = coords.at(0)[0];
+        auto y1 = coords.at(0)[1];
+        auto z1 = coords.at(0)[2];
+        auto h1 = coords.at(3)[1] - y1;
+        auto w1 = coords.at(1)[0] - x1;
+        auto d1 = coords.at(4)[2] - z1;
+
+        cilk_for (auto i = 0; i < 5; i++) {
+            auto y2 = (-5.0f + i*2) + location_[1] + 2.0f;
+            cilk_for (auto j = 0; j < 15; j++) {
+                auto x2 = (-15.0f + j*2) + location_[0];
+                cilk_for (auto k = 0; k < 15; k++) {
+                    auto z2 = (-15.0f + k*2) + location_[2] + 2.0f;
+                    auto h2 = -2.0f;
+                    auto w2 = 2.0f;
+                    auto d2 = -2.0f;
+
+                    if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
+                        y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
+                        tbb::mutex::scoped_lock lock(room_mutex_);
+                        grid_[i][j][k] = true;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* Generates Random bricks into Room */
@@ -67,7 +121,7 @@ void Room::GenerateObjects()
     srand (time(NULL));
 
     /* Parallell objects generation with cilkplus */
-    cilk_for (auto i = 0; i < nbobjects_; i++) {
+    for (auto i = 0; i < nbobjects_; i++) {
         GenerateRandomObject();
     }
 }
@@ -75,13 +129,15 @@ void Room::GenerateObjects()
 /* Generates Random bricks into Room */
 void Room::GenerateRandomObject()
 {
-    int r = 0, index = objects_.size();
+    int index = objects_.size();
     float x = 0.0f, y = 0.0f, z = 0.0f;
     float scale = 1.0f;
     int x0 = 0, z0 = 0;
 
     /* Entropy value */
-    r = rand();
+    auto r = rand();
+    auto s = rand();
+    auto t = rand();
     /* For sizes available */
     scale = 1.0f / (float)(index % 4 + 1.0);
 
@@ -110,8 +166,28 @@ void Room::GenerateRandomObject()
     z0 = rand() % 15;
     z0 = (z0 % 2 == 0) ? -z0 : z0;
 
-    GenerateObject(Model3D::kMODEL3D_BRICK, glm::vec4(x0, -4.8f + (r%8), z0, 0.0f),
-                   glm::vec4(x, y, z, 0.0f), scale);
+    /* Generate and place randomly object into room grid */
+    for (auto i = 0; i < 5; i++) {
+        auto l = r % 5;
+        auto y2 = (-5.0f + l*2) + location_[1] + 1.0f;
+        for (auto j = 0; j < 15; j++) {
+           auto m = s % 15;
+           auto x2 = (-15.0f + m*2) + location_[0] + 1.0f;
+           for (auto k = 0; k < 15; k++) {
+               auto n = t % 15;
+               auto z2 = (-15.0f + n*2) + location_[2] + 1.0f;
+               if (!grid_[l][m][n]) {
+                   grid_[l][m][n] = true;
+                   GenerateObject(Model3D::kMODEL3D_BRICK, glm::vec4(x2, y2, z2, 0.0f),
+                                  glm::vec4(x, y, z, 0.0f), scale);
+                   return;
+                }
+            t++;
+            }
+        s++;
+        }
+    r++;
+    }
 }
 
 void Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale)
@@ -122,11 +198,7 @@ void Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, f
     if (type_object == Model3D::kMODEL3D_BRICK)
         obj_ptr = std::make_unique<Brick>(scale, location_ + location, move);
 
-    /* Ensure that only one push_back at same time */
-    {
-        tbb::mutex::scoped_lock lock(genobject_mutex_);
-        objects_.push_back(std::move(obj_ptr));
-    }
+    objects_.push_back(std::move(obj_ptr));
 }
 
 /* Draw room and all objects inside it */
@@ -157,8 +229,6 @@ void Room::Draw()
 /* Detect collisions inside current room */
 void Room::DetectCollision()
 {
-    /* Record moving orders for camera */
-    cam_->Move();
     /* First check camera collision */
     if (cam_->IsMoved()) {
         PivotCollision(cam_);
@@ -195,7 +265,7 @@ void Room::PivotCollision(Model3D *object)
     /* Parallell collision loop for objects with cilkplus */
     cilk_for (auto i = 0; i < room_objects.size(); i++) {
         if (*object != *room_objects[i]) {
-            recompute = object->DetectCollision(room_objects[i], collision_mutex_, proxy_parallell_);
+            recompute = object->DetectCollision(room_objects[i], room_mutex_, proxy_parallell_);
             for (auto &r : recompute) {
                 cilk_spawn PivotCollision(r);
             }

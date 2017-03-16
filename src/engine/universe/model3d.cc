@@ -83,7 +83,7 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &co
     std::vector<float> distances;
     int fact = 1, fact2 = 0;
     std::vector<Model3D*> recompute;
-    Model3D *oldobstacle1, *oldobstacle2;
+    Model3D *oldobstacle1{nullptr}, *oldobstacle2{nullptr};
 
     engine::geometry::Box border2 = obstacle->border();
     std::vector<glm::vec3> coords1 = border_.ComputeCoords();
@@ -158,9 +158,6 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &co
                     oldobstacle2->set_obstacle(nullptr);
                     recompute.push_back(std::move(oldobstacle2));
                 }
-
-                oldobstacle1 = nullptr;
-                oldobstacle2 = nullptr;
         }
     }
 
