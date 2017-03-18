@@ -61,8 +61,8 @@ void ProxyConfig::DefaultValues()
         setValue("objects_count", libconfig::Setting::TypeInt, 16);
     }
 
-    if (!exists("load_objects_seq")) {
-        setValue("load_objects_seq", libconfig::Setting::TypeBoolean, false);
+    if (!exists("load_objects_freq")) {
+        setValue("load_objects_freq", libconfig::Setting::TypeFloat, 0.0f);
     }
 
     if (!exists("rooms_count")) {

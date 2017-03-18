@@ -116,7 +116,9 @@ void Universe::NextHop()
         for (auto &r : rooms_) {
             if (cam_->IsInRoom(*r)) {
                 active_room_ = r.get();
-                break;
+                r->setActive(true);
+            } else {
+                r->setActive(false);
             }
         }
     }
@@ -128,22 +130,26 @@ void Universe::NextHop()
         rooms_[cnt]->DetectCollision();
     }
 
+    /* Compute View Coordinates for camera before draw room */
     cam_->PrepareDraw(cam_.get());
+    /* Draw only active room */
     active_room_->Draw();
 
-    double current_time = glfwGetTime();
+    /* Recompute grid */
     cilk_for (auto cnt = 0; cnt < rooms_.size(); cnt++) {
         rooms_[cnt]->ReinitGrid();
     }
 
     /* GL functions during object generate, then needs serial execution */
-    if (ProxyConfig::getSetting<bool>("load_objects_seq")) {
+    float freq = 0.0f;
+    if ((freq = ProxyConfig::getSetting<float>("load_objects_freq")) > 0.0f) {
+        double current_time = glfwGetTime();
         for (auto &r : rooms_) {
-            if (!r->IsFull() && current_time - kLastTime >= 0.5f)
+            if (!r->IsFull() && current_time - kLastTime >= freq)
                 r->GenerateRandomObject();
         }
 
-        if (current_time - kLastTime >= 0.5f)
+        if (current_time - kLastTime >= freq)
             kLastTime = current_time;
     }
 }
