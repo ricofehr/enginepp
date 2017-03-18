@@ -33,6 +33,9 @@ public:
     virtual void Draw() = 0;
 
     bool IsMoved() const { return move_[0] != 0.0f || move_[1] != 0.0f || move_[2] != 0.0f; }
+    bool IsMovedX() const { return move_[0] != 0.0f; }
+    bool IsMovedY() const { return move_[1] != 0.0f; }
+    bool IsMovedZ() const { return move_[2] != 0.0f; }
     float distance() const { return distance_; }
     glm::vec4 move() const { return move_; }
     glm::vec4 location() const { return location_; }

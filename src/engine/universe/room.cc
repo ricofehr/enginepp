@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 #include <iostream>
-#include <unistd.h>
+#include <map>
 #include <cilk/cilk.h>
 
 #include "engine/helpers/proxy_config.h"
@@ -57,7 +57,7 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
     nbobjects_ = ProxyConfig::getSetting<int>("objects_count");
 
     ReinitGrid();
-    if (!ProxyConfig::getSetting<bool>("load_objects_seq"))
+    if (ProxyConfig::getSetting<float>("load_objects_freq") == 0.0f)
         GenerateObjects();
 }
 
@@ -70,7 +70,7 @@ void Room::ReinitGrid()
     cilk_for (auto i = 0; i < 5; i++) {
         cilk_for (auto j = 0; j < 15; j++) {
             cilk_for (auto k = 0; k < 15; k++) {
-                grid_[i][j][k] = false;
+                grid_[i][j][k] = nullptr;
             }
         }
     }
@@ -93,6 +93,8 @@ void Room::ReinitGrid()
         auto w1 = coords.at(1)[0] - x1;
         auto d1 = coords.at(4)[2] - z1;
 
+        room_objects[o]->set_placement(-1, -1, -1);
+
         cilk_for (auto i = 0; i < 5; i++) {
             auto y2 = (-5.0f + i*2) + location_[1] + 2.0f;
             cilk_for (auto j = 0; j < 15; j++) {
@@ -106,7 +108,11 @@ void Room::ReinitGrid()
                     if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
                         y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
                         tbb::mutex::scoped_lock lock(room_mutex_);
-                        grid_[i][j][k] = true;
+
+                        if (room_objects[o]->get_placement(0) == -1) {
+                            room_objects[o]->set_placement(i, j, k);
+                            grid_[i][j][k] = room_objects[o];
+                        }
                     }
                 }
             }
@@ -177,9 +183,9 @@ void Room::GenerateRandomObject()
                auto n = t % 15;
                auto z2 = (-15.0f + n*2) + location_[2] + 1.0f;
                if (!grid_[l][m][n]) {
-                   grid_[l][m][n] = true;
-                   GenerateObject(Model3D::kMODEL3D_BRICK, glm::vec4(x2, y2, z2, 0.0f),
-                                  glm::vec4(x, y, z, 0.0f), scale);
+                   grid_[l][m][n] = GenerateObject(Model3D::kMODEL3D_BRICK, glm::vec4(x2, y2, z2, 0.0f),
+                                                   glm::vec4(x, y, z, 0.0f), scale);
+                   grid_[l][m][n]->set_placement(l, m, n);
                    return;
                 }
             t++;
@@ -190,8 +196,9 @@ void Room::GenerateRandomObject()
     }
 }
 
-void Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale)
+Model3D *Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale)
 {
+    int ind = objects_.size();
     std::unique_ptr<Model3D> obj_ptr;
 
     /* Create Brick object and add to the Current Room */
@@ -199,6 +206,7 @@ void Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, f
         obj_ptr = std::make_unique<Brick>(scale, location_ + location, move);
 
     objects_.push_back(std::move(obj_ptr));
+    return objects_[ind].get();
 }
 
 /* Draw room and all objects inside it */
@@ -230,7 +238,8 @@ void Room::Draw()
 void Room::DetectCollision()
 {
     /* First check camera collision */
-    if (cam_->IsMoved()) {
+    if (is_active_ &&
+        cam_->IsMoved()) {
         PivotCollision(cam_);
     }
 
@@ -245,31 +254,93 @@ void Room::DetectCollision()
 /* Detect all collision for one Object */
 void Room::PivotCollision(Model3D *object)
 {
-    /* If collisionsi, previously computed, are cancelled for an object,
-       we need to detect again for this one */
-    std::vector<Model3D*> recompute;
+    /* ensure that 2 same objects are not checked at the same time */
+    object->lock();
 
     /* Prepare an unique objects collection for collision detection */
-    auto cnt = 0;
-    std::vector<Model3D*> room_objects(1 + walls_.size() + windows_.size() + doors_.size() + objects_.size());
-    room_objects[cnt++] = cam_;
-    for (auto &o : walls_)
-        room_objects[cnt++] = o.get();
-    for (auto &o : windows_)
-        room_objects[cnt++] = o.get();
-    for (auto &o : doors_)
-        room_objects[cnt++] = o.get();
-    for (auto &o : objects_)
-        room_objects[cnt++] = o.get();
+    std::vector<Model3D*> room_objects;
+
+    /* Grid coordinates for current object */
+    auto y = object->get_placement(0);
+    auto x = object->get_placement(1);
+    auto z = object->get_placement(2);
+
+    if (y == 0 && object->IsMovedY())
+        room_objects.push_back(walls_[Wall::kWALL_BOTTOM].get());
+
+    if (y == 4 && object->IsMovedY())
+        room_objects.push_back(walls_[Wall::kWALL_TOP].get());
+
+    if (x == 0 && object->IsMovedX()) {
+        room_objects.push_back(walls_[Wall::kWALL_LEFT].get());
+        if (*object == *cam_) {
+            room_objects.push_back(doors_[Wall::kWALL_LEFT].get());
+        }
+    }
+
+    if (x == 14 && object->IsMovedX()) {
+        room_objects.push_back(walls_[Wall::kWALL_RIGHT].get());
+        if (*object == *cam_) {
+            room_objects.push_back(doors_[Wall::kWALL_RIGHT].get());
+        }
+    }
+
+    if (z == 0 && object->IsMovedZ()) {
+        room_objects.push_back(walls_[Wall::kWALL_BACK].get());
+        if (*object == *cam_) {
+            room_objects.push_back(doors_[Wall::kWALL_BACK].get());
+        }
+    }
+
+    if (z == 14 && object->IsMovedZ()) {
+        room_objects.push_back(walls_[Wall::kWALL_FRONT].get());
+        if (*object == *cam_) {
+            room_objects.push_back(doors_[Wall::kWALL_FRONT].get());
+        }
+    }
+
+    for (auto i = y-1; i <= y+1; i++) {
+        if (i < 0 || i >= 5)
+            continue;
+        for (auto j = x-1; j <= x+1; j++) {
+            if (j < 0 || j >= 15)
+                continue;
+            for (auto k = z-1; k <= z+1; k++) {
+                if (k < 0 || k >= 15 ||
+                    (i == y && j == x && k == z) ||
+                    grid_[i][j][k] == nullptr)
+                    continue;
+                room_objects.push_back(grid_[i][j][k]);
+            }
+        }
+    }
 
     /* Parallell collision loop for objects with cilkplus */
+    std::map<int, std::vector<Model3D*>> recompute;
     cilk_for (auto i = 0; i < room_objects.size(); i++) {
-        if (*object != *room_objects[i]) {
-            recompute = object->DetectCollision(room_objects[i], room_mutex_, proxy_parallell_);
-            for (auto &r : recompute) {
+        /* Abort program if object and room_object loop are same (must no happend) */
+        assert(*object != *room_objects[i]);
+
+        std::vector<Model3D*> collision_recompute = object->DetectCollision(room_objects[i], room_mutex_, proxy_parallell_);
+        if (collision_recompute.size() > 0)
+            recompute[room_objects[i]->id()] = collision_recompute;
+    }
+
+    /* end mutex lock */
+    object->unlock();
+
+    /* If collision detected, recompute older ones if exists */
+    if (object->obstacle() != nullptr ) {
+        try {
+            for (auto & r : recompute.at(object->obstacle()->id())) {
+                using engine::helpers::ProxyConfig;
+                if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION)
+                    std::cout << "Recompute " << object->id() << "::" << r->id() << std::endl;
                 cilk_spawn PivotCollision(r);
             }
         }
+        /* Silently catched out-of-range (not a problem) */
+        catch (const std::out_of_range& oor) {}
     }
 
     cilk_sync;

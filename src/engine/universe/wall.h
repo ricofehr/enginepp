@@ -16,6 +16,14 @@ namespace universe {
 class Wall : public Model3D {
 
 public:
+    /* Face number */
+    static const int kWALL_FRONT = 0;
+    static const int kWALL_RIGHT = 1;
+    static const int kWALL_BACK = 2;
+    static const int kWALL_LEFT = 3;
+    static const int kWALL_BOTTOM = 4;
+    static const int kWALL_TOP = 5;
+
     Wall();
     Wall(int face, float scale, glm::vec4 location);
 

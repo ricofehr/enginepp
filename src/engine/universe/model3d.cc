@@ -153,7 +153,9 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &co
                         recompute.push_back(std::move(oldobstacle1));
                 }
 
-                if (oldobstacle2 != nullptr && oldobstacle2->IsMoved()) {
+                if (oldobstacle2 != nullptr &&
+                    oldobstacle2->IsMoved() &&
+                    oldobstacle2->id() != id_) {
                     oldobstacle2->set_distance(-1);
                     oldobstacle2->set_obstacle(nullptr);
                     recompute.push_back(std::move(oldobstacle2));
