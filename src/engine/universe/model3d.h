@@ -49,7 +49,8 @@ public:
 
     void set_distance(float distance) { distance_ = distance; }
     void set_obstacle(Model3D *obstacle) { obstacle_ = obstacle; }
-    void set_placement(int i, int j, int k) { placement_[0] = i; placement_[1] = j; placement_[2] = k; }
+    void add_placement(int i, int j, int k) { placements_.push_back({i,j,k}); }
+    void clear_placements() { placements_.clear(); }
 
     bool IsMoved() const { return border_.IsMoved(); }
     bool IsMovedX() const { return border_.IsMovedX(); }
@@ -60,7 +61,7 @@ public:
     friend bool operator==(const Model3D &o1, const Model3D &o2);
     friend bool operator!=(const Model3D &o1, const Model3D &o2);
     int type() const { return type_; }
-    int get_placement(int index) const { return placement_[index]; }
+    std::vector<std::vector<int>> get_placements() const { return placements_; }
     void lock() { object_mutex_.lock(); }
     void unlock() { object_mutex_.unlock(); }
 
@@ -77,7 +78,7 @@ protected:
     int type_;
     bool is_crossed_;
     bool is_controlled_;
-    int placement_[3]{-1};
+    std::vector<std::vector<int>> placements_;
     tbb::mutex object_mutex_;
 };
 

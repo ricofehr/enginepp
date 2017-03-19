@@ -30,24 +30,24 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
     proxy_parallell_ = proxy_parallell;
     /* 4 walls, floor and roof */
     for (auto face = 0; face < 6; face++) {
-        auto wall_ptr{std::make_unique<Wall>(face, 15.0f, location_)};
+        auto wall_ptr{std::make_unique<Wall>(face, static_cast<float>(kROOM_SCALE), location_)};
         walls_.push_back(std::move(wall_ptr));
     }
 
     glm::vec4 location_center_face[4] = {
-        {0.0f, 0.0f, 14.95f, 0.0f},
-        {14.95f, 0.0f, 0.0f, 0.0f},
-        {0.0f, 0.0f, -14.95f, 0.0f},
-        {-14.95f, 0.0f, 0.0f, 0.0f}
+        {0.0f, 0.0f, (kGRID_Z*kGRID_UNIT/2)-0.05f, 0.0f},
+        {(kGRID_X*kGRID_UNIT/2)-0.05f, 0.0f, 0.0f, 0.0f},
+        {0.0f, 0.0f, -(kGRID_Z*kGRID_UNIT/2)+0.05f, 0.0f},
+        {-(kGRID_X*kGRID_UNIT)/2+0.05f, 0.0f, 0.0f, 0.0f}
     };
 
     /* On each room, 2 doors and 2 windows (windows are on face with no door) */
     for (auto face = 0; face < 4; face++) {
         if (is_doors[face]) {
-            auto door_ptr{std::make_unique<Door>(face, 15.0f, location_ + location_center_face[face])};
+            auto door_ptr{std::make_unique<Door>(face, static_cast<float>(kROOM_SCALE), location_ + location_center_face[face])};
             doors_.push_back(std::move(door_ptr));
         } else {
-            auto window_ptr{std::make_unique<WindowModel>(face, 15.0f, location_ + location_center_face[face])};
+            auto window_ptr{std::make_unique<WindowModel>(face, static_cast<float>(kROOM_SCALE), location_ + location_center_face[face])};
             windows_.push_back(std::move(window_ptr));
         }
     }
@@ -55,6 +55,9 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
     /* Check objects count into config file */
     using engine::helpers::ProxyConfig;
     nbobjects_ = ProxyConfig::getSetting<int>("objects_count");
+
+    /* Reset seed */
+    srand (time(NULL));
 
     ReinitGrid();
     if (ProxyConfig::getSetting<float>("load_objects_freq") == 0.0f)
@@ -67,10 +70,10 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
 */
 void Room::ReinitGrid()
 {
-    cilk_for (auto i = 0; i < 5; i++) {
-        cilk_for (auto j = 0; j < 15; j++) {
-            cilk_for (auto k = 0; k < 15; k++) {
-                grid_[i][j][k] = nullptr;
+    cilk_for (auto i = 0; i < kGRID_Y; i++) {
+        cilk_for (auto j = 0; j < kGRID_X; j++) {
+            cilk_for (auto k = 0; k < kGRID_Z; k++) {
+                grid_[i][j][k].clear();
             }
         }
     }
@@ -93,26 +96,23 @@ void Room::ReinitGrid()
         auto w1 = coords.at(1)[0] - x1;
         auto d1 = coords.at(4)[2] - z1;
 
-        room_objects[o]->set_placement(-1, -1, -1);
+        room_objects[o]->clear_placements();
 
-        cilk_for (auto i = 0; i < 5; i++) {
-            auto y2 = (-5.0f + i*2) + location_[1] + 2.0f;
-            cilk_for (auto j = 0; j < 15; j++) {
-                auto x2 = (-15.0f + j*2) + location_[0];
-                cilk_for (auto k = 0; k < 15; k++) {
-                    auto z2 = (-15.0f + k*2) + location_[2] + 2.0f;
-                    auto h2 = -2.0f;
-                    auto w2 = 2.0f;
-                    auto d2 = -2.0f;
+        cilk_for (auto i = 0; i < kGRID_Y; i++) {
+            auto y2 = (-kGRID_Y + i*2) * kGRID_UNIT/2 + location_[1] + kGRID_UNIT;
+            cilk_for (auto j = 0; j < kGRID_X; j++) {
+                auto x2 = (-kGRID_X + j*2) * kGRID_UNIT/2 + location_[0];
+                cilk_for (auto k = 0; k < kGRID_Z; k++) {
+                    auto z2 = (-kGRID_Z + k*2) * kGRID_UNIT/2 + location_[2] + kGRID_UNIT;
+                    auto h2 = -kGRID_UNIT;
+                    auto w2 = kGRID_UNIT;
+                    auto d2 = -kGRID_UNIT;
 
                     if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
                         y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
                         tbb::mutex::scoped_lock lock(room_mutex_);
-
-                        if (room_objects[o]->get_placement(0) == -1) {
-                            room_objects[o]->set_placement(i, j, k);
-                            grid_[i][j][k] = room_objects[o];
-                        }
+                        room_objects[o]->add_placement(i, j, k);
+                        grid_[i][j][k].push_back(room_objects[o]);
                     }
                 }
             }
@@ -123,9 +123,6 @@ void Room::ReinitGrid()
 /* Generates Random bricks into Room */
 void Room::GenerateObjects()
 {
-    /* Reset seed */
-    srand (time(NULL));
-
     /* Parallell objects generation with cilkplus */
     for (auto i = 0; i < nbobjects_; i++) {
         GenerateRandomObject();
@@ -145,7 +142,7 @@ void Room::GenerateRandomObject()
     auto s = rand();
     auto t = rand();
     /* For sizes available */
-    scale = 1.0f / (float)(index % 4 + 1.0);
+    scale = 1.0f / (float)(index % 3 + 2.0);
 
     /* 1/10 are static */
     if (index % 10 == 0) {
@@ -166,26 +163,21 @@ void Room::GenerateRandomObject()
         y = 0.0f;
     }
 
-    /* Initial x and z coordinates */
-    x0 = rand() % 10;
-    x0 = (x0 % 2 == 0) ? -x0 : x0;
-    z0 = rand() % 15;
-    z0 = (z0 % 2 == 0) ? -z0 : z0;
-
     /* Generate and place randomly object into room grid */
-    for (auto i = 0; i < 5; i++) {
-        auto l = r % 5;
-        auto y2 = (-5.0f + l*2) + location_[1] + 1.0f;
-        for (auto j = 0; j < 15; j++) {
-           auto m = s % 15;
-           auto x2 = (-15.0f + m*2) + location_[0] + 1.0f;
-           for (auto k = 0; k < 15; k++) {
-               auto n = t % 15;
-               auto z2 = (-15.0f + n*2) + location_[2] + 1.0f;
-               if (!grid_[l][m][n]) {
-                   grid_[l][m][n] = GenerateObject(Model3D::kMODEL3D_BRICK, glm::vec4(x2, y2, z2, 0.0f),
-                                                   glm::vec4(x, y, z, 0.0f), scale);
-                   grid_[l][m][n]->set_placement(l, m, n);
+    for (auto i = 0; i < kGRID_Y; i++) {
+        auto l = r % kGRID_Y;
+        auto y2 = (-kGRID_Y + l*2) * kGRID_UNIT/2 + location_[1] + kGRID_UNIT/2;
+        for (auto j = 0; j < kGRID_X; j++) {
+           auto m = s % kGRID_X;
+           auto x2 = (-kGRID_X + m*2) * kGRID_UNIT/2 + location_[0] + kGRID_UNIT/2;
+           for (auto k = 0; k < kGRID_Z; k++) {
+               auto n = t % kGRID_Z;
+               auto z2 = (-kGRID_Z + n*2) * kGRID_UNIT/2 + location_[2] + kGRID_UNIT/2;
+               if (grid_[l][m][n].size() == 0) {
+                   Model3D *obj = GenerateObject(Model3D::kMODEL3D_BRICK, glm::vec4(x2, y2, z2, 0.0f),
+                                                 glm::vec4(x, y, z, 0.0f), scale);
+                   obj->add_placement(l, m, n);
+                   grid_[l][m][n].push_back(obj);
                    return;
                 }
             t++;
@@ -258,62 +250,92 @@ void Room::PivotCollision(Model3D *object)
     object->lock();
 
     /* Prepare an unique objects collection for collision detection */
-    std::vector<Model3D*> room_objects;
+    std::map<int, Model3D*> grid_objects;
 
     /* Grid coordinates for current object */
-    auto y = object->get_placement(0);
-    auto x = object->get_placement(1);
-    auto z = object->get_placement(2);
+    std::vector<std::vector<int>> placements = object->get_placements();
 
-    if (y == 0 && object->IsMovedY())
-        room_objects.push_back(walls_[Wall::kWALL_BOTTOM].get());
+    /* Check all grid placements for current object and select other objects near this one */
+    for (auto &p : placements) {
+        auto y = p[0];
+        auto x = p[1];
+        auto z = p[2];
+        Model3D *obj = nullptr;
 
-    if (y == 4 && object->IsMovedY())
-        room_objects.push_back(walls_[Wall::kWALL_TOP].get());
-
-    if (x == 0 && object->IsMovedX()) {
-        room_objects.push_back(walls_[Wall::kWALL_LEFT].get());
-        if (*object == *cam_) {
-            room_objects.push_back(doors_[Wall::kWALL_LEFT].get());
+        /* Roof / Top adding */
+        if (y == 0 && object->IsMovedY()) {
+            obj = walls_[Wall::kWALL_BOTTOM].get();
+            grid_objects[obj->id()] = obj;
         }
-    }
 
-    if (x == 14 && object->IsMovedX()) {
-        room_objects.push_back(walls_[Wall::kWALL_RIGHT].get());
-        if (*object == *cam_) {
-            room_objects.push_back(doors_[Wall::kWALL_RIGHT].get());
+        if (y == (kGRID_Y-1) && object->IsMovedY()) {
+            obj = walls_[Wall::kWALL_TOP].get();
+            grid_objects[obj->id()] = obj;
         }
-    }
 
-    if (z == 0 && object->IsMovedZ()) {
-        room_objects.push_back(walls_[Wall::kWALL_BACK].get());
-        if (*object == *cam_) {
-            room_objects.push_back(doors_[Wall::kWALL_BACK].get());
+        /* 4 Walls adding */
+        if (x == 0 && object->IsMovedX()) {
+            obj = walls_[Wall::kWALL_LEFT].get();
+            grid_objects[obj->id()] = obj;
+            if (*object == *cam_) {
+                obj = doors_[Wall::kWALL_LEFT].get();
+                grid_objects[obj->id()] = obj;
+            }
         }
-    }
 
-    if (z == 14 && object->IsMovedZ()) {
-        room_objects.push_back(walls_[Wall::kWALL_FRONT].get());
-        if (*object == *cam_) {
-            room_objects.push_back(doors_[Wall::kWALL_FRONT].get());
+        if (x == (kGRID_X-1) && object->IsMovedX()) {
+            obj = walls_[Wall::kWALL_RIGHT].get();
+            grid_objects[obj->id()] = obj;
+            if (*object == *cam_) {
+                obj = doors_[Wall::kWALL_RIGHT].get();
+                grid_objects[obj->id()] = obj;
+            }
         }
-    }
 
-    for (auto i = y-1; i <= y+1; i++) {
-        if (i < 0 || i >= 5)
-            continue;
-        for (auto j = x-1; j <= x+1; j++) {
-            if (j < 0 || j >= 15)
+        if (z == 0 && object->IsMovedZ()) {
+            obj = walls_[Wall::kWALL_BACK].get();
+            grid_objects[obj->id()] = obj;
+            if (*object == *cam_) {
+                obj = doors_[Wall::kWALL_BACK].get();
+                grid_objects[obj->id()] = obj;
+            }
+        }
+
+        if (z == (kGRID_Z-1) && object->IsMovedZ()) {
+            obj = walls_[Wall::kWALL_FRONT].get();
+            grid_objects[obj->id()] = obj;
+            if (*object == *cam_) {
+                obj = doors_[Wall::kWALL_FRONT].get();
+                grid_objects[obj->id()] = obj;
+            }
+        }
+
+        /* Other room objects adding */
+        for (auto i = y-1; i <= y+1; i++) {
+            if (i < 0 || i >= kGRID_Y)
                 continue;
-            for (auto k = z-1; k <= z+1; k++) {
-                if (k < 0 || k >= 15 ||
-                    (i == y && j == x && k == z) ||
-                    grid_[i][j][k] == nullptr)
+            for (auto j = x-1; j <= x+1; j++) {
+                if (j < 0 || j >= kGRID_X)
                     continue;
-                room_objects.push_back(grid_[i][j][k]);
+                for (auto k = z-1; k <= z+1; k++) {
+                    if (k < 0 || k >= kGRID_Z ||
+                        grid_[i][j][k].size() == 0)
+                        continue;
+
+                    for (auto &obj : grid_[i][j][k]) {
+                        if (*obj == *object)
+                            continue;
+                        grid_objects[obj->id()] = obj;
+                    }
+                }
             }
         }
     }
+
+    /* Prepare vector for collision compute */
+    std::vector<Model3D*> room_objects;
+    for (auto & obj_pair : grid_objects)
+        room_objects.push_back(obj_pair.second);
 
     /* Parallell collision loop for objects with cilkplus */
     std::map<int, std::vector<Model3D*>> recompute;
@@ -341,9 +363,9 @@ void Room::PivotCollision(Model3D *object)
         }
         /* Silently catched out-of-range (not a problem) */
         catch (const std::out_of_range& oor) {}
-    }
 
-    cilk_sync;
+        cilk_sync;
+    }
 }
 
 }//namespace universe

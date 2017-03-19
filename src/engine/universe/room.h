@@ -41,10 +41,16 @@ public:
     void ReinitGrid();
 
 private:
+    static constexpr int kGRID_Y = 5;
+    static constexpr int kGRID_X = 15;
+    static constexpr int kGRID_Z = 15;
+    static constexpr float kROOM_SCALE = 15.0f;
+    static constexpr float kGRID_UNIT = 2.0f;
+
     glm::vec4 location_;
     int nbobjects_{33};
     Camera *cam_{nullptr};
-    Model3D *grid_[5][15][15]{nullptr};
+    std::vector<Model3D*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
     std::vector<std::unique_ptr<Wall>> walls_;
     std::vector<std::unique_ptr<Door>> doors_;
     std::vector<std::unique_ptr<WindowModel>> windows_;
