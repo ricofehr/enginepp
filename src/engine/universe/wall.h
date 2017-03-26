@@ -13,9 +13,15 @@
 namespace engine {
 namespace universe {
 
+/* Wall 3d model, inherit Model3D class */
 class Wall : public Model3D {
 
 public:
+    /* Face texture */
+    static constexpr int kTEXTURE_TOP = 0;
+    static constexpr int kTEXTURE_WALL = 1;
+    static constexpr int kTEXTURE_FLOOR = 2;
+
     /* Face number */
     static const int kWALL_FRONT = 0;
     static const int kWALL_RIGHT = 1;
@@ -25,7 +31,7 @@ public:
     static const int kWALL_TOP = 5;
 
     Wall();
-    Wall(int face, float scale, glm::vec4 location);
+    Wall(glm::vec3 scale, glm::vec4 location, int face);
 
     /* Default move and copy constructor / operator */
     Wall(Wall&&) = default;
@@ -34,11 +40,10 @@ public:
     Wall(const Wall&) = default;
     Wall& operator=(const Wall&) = default;
 
+    static void CreateBuffers();
+
     /* Default destructor */
     ~Wall() override = default;
-
-private:
-    int face_;
 };
 
 }//namespace geometry

@@ -48,12 +48,6 @@ bool operator!=(const Model3D& o1, const Model3D& o2)
 /* Compute coords and move for the model */
 void Model3D::PrepareDraw(Camera *cam)
 {
-    /* if we can cross into object, make distance to 15 */
-    if (obstacle_ != nullptr && obstacle_->IsCrossed()) {
-        distance_ = 15.0f;
-        obstacle_ = nullptr;
-    }
-
     border_.set_distance(distance_);
     border_.MoveCoords();
     for (auto &element : elements_) {

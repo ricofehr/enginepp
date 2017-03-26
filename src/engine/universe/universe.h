@@ -9,6 +9,9 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <map>
+#include <cilk/cilk.h>
+#include <cilk/reducer_opadd.h>
 
 #include "engine/universe/room.h"
 #include "engine/universe/camera.h"
@@ -21,24 +24,68 @@ namespace universe {
 class Universe {
 
 public:
-
+    /* Constructor */
     Universe();
 
+    /* Compute new hop */
     void NextHop();
 
-    const Camera *cam() const { return cam_.get(); }
-    int countObjects() const { return active_room_->countObjects(); }
+    /* Accessors */
+    const Camera *cam() const { return cam_; }
+    const bool ready() const { return ready_ >= 10; }
+
+    inline int countRooms(bool display) const {
+        if (display)
+            return display_rooms_.size();
+        return rooms_.size();
+    }
+
+    inline int countObjects(bool display) const {
+        cilk::reducer<cilk::op_add<int>> count_sum(0);
+        if (display) {
+            cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
+                *count_sum += rooms_[cnt]->countObjects();
+            }
+        } else {
+            cilk_for(auto cnt = 0; cnt < rooms_.size(); cnt++) {
+                *count_sum += rooms_[cnt]->countObjects();
+            }
+        }
+        return count_sum.get_value();
+    }
 
 private:
-    void InitRooms();
-    void InitCamera();
-    void InitProxyParallell();
+    /* Constants */
+    static constexpr int kGRID_Y = 4;
+    static constexpr int kGRID_X = 8;
+    static constexpr int kGRID_Z = 8;
+    static constexpr float kGRID_UNIT_X = 16.0f;
+    static constexpr float kGRID_UNIT_Y = 12.0f;
+    static constexpr float kGRID_UNIT_Z = 16.0f;
 
+    /* Init Universe */
+    void InitRooms();
+    void InitProxyParallell();
+    void CreateGLBuffers();
+    /* Grid compute & display */
+    void ReinitGrid();
+    void DisplayGrid();
+    /* Generate room(s) function */
+    void GenerateRooms();
+    void GenerateRandomRoom();
+    Room *GenerateRoom(glm::vec4 location);
+    void GenerateWalls();
+    /* Compute neighbors */
+    std::vector<Room*> GetOrderNeighbors(Room *r);
+    std::map<int, Room*> GetNeighbors(Room *r, int level);
+
+    /* Universe attributes */
+    Camera *cam_{nullptr};
+    std::vector<Room*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
     std::unique_ptr<engine::parallell::EngineParallell> proxy_parallell_;
-    std::unique_ptr<Camera> cam_;
     std::vector<std::unique_ptr<Room>> rooms_;
-    Room *active_room_;
-    int nbrooms_{4};
+    int ready_{0};
+    std::vector<Room*> display_rooms_;
 };
 
 }//namespace universe

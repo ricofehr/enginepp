@@ -55,40 +55,6 @@ const GLfloat g_buffer_data[192] = {
     -1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
 };
 
-const std::vector<glm::vec3> coords = {
-    /* Front */
-    {-1.0f,  1.0f,  1.0f},
-    { 1.0f,  1.0f,  1.0f},
-    { 1.0f, -1.0f,  1.0f},
-    {-1.0f, -1.0f,  1.0f},
-    /* Back */
-    {-1.0f,  1.0f, -1.0f},
-    { 1.0f,  1.0f, -1.0f},
-    { 1.0f, -1.0f, -1.0f},
-    {-1.0f, -1.0f, -1.0f},
-    /* Left */
-    {-1.0f,  1.0f,  1.0f},
-    {-1.0f,  1.0f, -1.0f},
-    {-1.0f, -1.0f, -1.0f},
-    {-1.0f, -1.0f,  1.0f},
-    /* Right */
-    { 1.0f,  1.0f,  1.0f},
-    { 1.0f,  1.0f, -1.0f},
-    { 1.0f, -1.0f, -1.0f},
-    { 1.0f, -1.0f,  1.0f},
-    /* Top */
-    {-1.0f,  1.0f,  1.0f},
-    {-1.0f,  1.0f, -1.0f},
-    { 1.0f,  1.0f, -1.0f},
-    { 1.0f,  1.0f,  1.0f},
-    /* Bottom */
-    {-1.0f, -1.0f,  1.0f},
-    {-1.0f, -1.0f, -1.0f},
-    { 1.0f, -1.0f, -1.0f},
-    { 1.0f, -1.0f,  1.0f},
-
-};
-
 /* Fill vertex buffer */
 void CreateVertexBuffer() {
     glGenBuffers(1, &vertexbuffer);
@@ -133,16 +99,25 @@ Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
     using engine::geometry::Box;
     using engine::geometry::Cube;
 
+    /* No thread safe execution */
     if (vertexbuffer == 0) {
         CreateVertexBuffer();
         CreateTextureBuffer();
     }
 
     type_ = kMODEL3D_BRICK;
-    border_ = Box(scale, location, move, coords);
+    border_ = Box(scale, location, move);
     auto cube_ptr {std::make_unique<Cube>(scale, location, move,
                                           vertexbuffer, texturebuffer)};
     elements_.push_back(std::move(cube_ptr));
+}
+
+void Brick::CreateBuffers()
+{
+    if (vertexbuffer == 0) {
+        CreateVertexBuffer();
+        CreateTextureBuffer();
+    }
 }
 
 }//namespace geometry

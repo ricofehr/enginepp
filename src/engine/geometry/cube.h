@@ -20,8 +20,12 @@ class Cube : public Shape3D {
 public:
     Cube(float scale, glm::vec4 location);
     Cube(float scale, glm::vec4 location, glm::vec4 move);
+    Cube(glm::vec3 scale, glm::vec4 location);
+    Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move);
     Cube(float scale, glm::vec4 location, GLuint vertexbuffer, GLuint texturebuffer);
     Cube(float scale, glm::vec4 location, glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer);
+    Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer);
+
     /* Default move and copy constructor / operator */
     Cube(Cube&&) = default;
     Cube& operator=(Cube&&) = default;

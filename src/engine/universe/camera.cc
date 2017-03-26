@@ -34,35 +34,35 @@ static float scroll_y = 0.0f;
 
 const std::vector<glm::vec3> coords = {
     /* Back */
-    {-1.0f,  2.5f,  1.0f},
-    { 1.0f,  2.5f,  1.0f},
-    { 1.0f, -2.5f,  1.0f},
-    {-1.0f, -2.5f,  1.0f},
+    {-0.25f,  0.5f,  0.25f},
+    { 0.25f,  0.5f,  0.25f},
+    { 0.25f, -0.5f,  0.25f},
+    {-0.25f, -0.5f,  0.25f},
     /* Front */
-    {-1.0f,  2.5f, -1.0f},
-    { 1.0f,  2.5f, -1.0f},
-    { 1.0f, -2.5f, -1.0f},
-    {-1.0f, -2.5f, -1.0f},
+    {-0.25f,  0.5f, -0.25f},
+    { 0.25f,  0.5f, -0.25f},
+    { 0.25f, -0.5f, -0.25f},
+    {-0.25f, -0.5f, -0.25f},
     /* Left */
-    {-1.0f,  2.5f,  1.0f},
-    {-1.0f,  2.5f, -1.0f},
-    {-1.0f, -2.5f, -1.0f},
-    {-1.0f, -2.5f,  1.0f},
+    {-0.25f,  0.5f,  0.25f},
+    {-0.25f,  0.5f, -0.25f},
+    {-0.25f, -0.5f, -0.25f},
+    {-0.25f, -0.5f,  0.25f},
     /* Right */
-    { 1.0f,  2.5f,  1.0f},
-    { 1.0f,  2.5f, -1.0f},
-    { 1.0f, -2.5f, -1.0f},
-    { 1.0f, -2.5f,  1.0f},
+    { 0.25f,  0.5f,  0.25f},
+    { 0.25f,  0.5f, -0.25f},
+    { 0.25f, -0.5f, -0.25f},
+    { 0.25f, -0.5f,  0.25f},
     /* Top */
-    {-1.0f,  2.5f,  1.0f},
-    {-1.0f,  2.5f, -1.0f},
-    { 1.0f,  2.5f, -1.0f},
-    { 1.0f,  2.5f,  1.0f},
+    {-0.25f,  0.5f,  0.25f},
+    {-0.25f,  0.5f, -0.25f},
+    { 0.25f,  0.5f, -0.25f},
+    { 0.25f,  0.5f,  0.25f},
     /* Roof */
-    {-1.0f, -2.5f,  1.0f},
-    {-1.0f, -2.5f, -1.0f},
-    { 1.0f, -2.5f, -1.0f},
-    { 1.0f, -2.5f,  1.0f},
+    {-0.25f, -0.5f,  0.25f},
+    {-0.25f, -0.5f, -0.25f},
+    { 0.25f, -0.5f, -0.25f},
+    { 0.25f, -0.5f,  0.25f},
 };
 
 double last_time = 0;
@@ -107,7 +107,7 @@ void Camera::Move()
     float window_height = ProxyConfig::getSetting<float>("width");
 
     const float zoom_sensitivity = -0.2f;
-    float speed = 4.0f;
+    float speed = 3.0f;
     const float mouse_speed = 0.1f;
 
     double current_time = glfwGetTime();
@@ -177,24 +177,6 @@ void Camera::Move()
     fov_ = fov_ < 5.0f ? 5.0f : fov_;
     fov_ = fov_ > 130.0f ? 130.0f : fov_;
     scroll_y = 0.0f;
-}
-
-/* Test if camera is inside Room */
-bool Camera::IsInRoom (const Room &room) const
-{
-    glm::vec3 location_camera = location();
-    glm::vec4 location_room = room.location();
-
-
-    if (location_camera[0] < location_room[0] + 15.0f
-        && location_camera[0] > location_room[0] - 15.0f
-        && location_camera[1] < location_room[1] + 4.0f
-        && location_camera[1] > location_room[1] - 4.0f
-        && location_camera[2] < location_room[2] + 15.0f
-        && location_camera[2] > location_room[2] - 15.0f)
-            return true;
-
-    return false;
 }
 
 }//namespace universe

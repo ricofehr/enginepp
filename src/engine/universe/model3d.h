@@ -23,6 +23,7 @@ class Camera;
 class Model3D {
 
 public:
+    static const int kMODEL3D_ROOM = 0;
     static const int kMODEL3D_CAMERA = 1;
     static const int kMODEL3D_WALL = 2;
     static const int kMODEL3D_WINDOW = 3;
@@ -56,10 +57,16 @@ public:
     bool IsMovedX() const { return border_.IsMovedX(); }
     bool IsMovedY() const { return border_.IsMovedY(); }
     bool IsMovedZ() const { return border_.IsMovedZ(); }
+    inline void InverseMove() {
+        border_.InverseMove();
+        for (auto &e : elements_)
+            e->InverseMove();
+    }
     bool IsCrossed() const { return is_crossed_; }
     bool IsControlled() const { return is_controlled_; }
     friend bool operator==(const Model3D &o1, const Model3D &o2);
     friend bool operator!=(const Model3D &o1, const Model3D &o2);
+    glm::vec3 location() const { return glm::vec3(border_.location()); }
     int type() const { return type_; }
     std::vector<std::vector<int>> get_placements() const { return placements_; }
     void lock() { object_mutex_.lock(); }

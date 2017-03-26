@@ -24,8 +24,14 @@ class Box : public Cube {
 
 public:
     Box();
+    Box(float scale, glm::vec4 location);
+    Box(glm::vec3 scale, glm::vec4 location);
+    Box(float scale, glm::vec4 location, glm::vec4 move);
+    Box(glm::vec3 scale, glm::vec4 location, glm::vec4 move);
     Box(float scale, glm::vec4 location, std::vector<glm::vec3> coords);
+    Box(glm::vec3 scale, glm::vec4 location, std::vector<glm::vec3> coords);
     Box(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
+    Box(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
 
     /* Default move and copy constructor / operator */
     Box(Box&&) = default;

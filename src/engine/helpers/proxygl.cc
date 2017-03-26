@@ -23,6 +23,8 @@ GLFWwindow* kGLWindow = nullptr;
 GLuint kProgramId = -1;
 GLuint kMatrixId = -1;
 
+double kBeginTime = 0.0f;
+
 namespace {
 
 static engine::universe::Universe *universe = nullptr;
@@ -166,14 +168,22 @@ int Fps(double &last_time, int &nb_frames)
         int debug = ProxyConfig::getSetting<int>("debug");
         /* Print if debug */
         if (debug == ProxyConfig::kDEBUG_ALL)
-            std::cout << 1000.0 / static_cast<double>(nb_frames) << " ms/frame" << std::endl;
-        if (debug == ProxyConfig::kDEBUG_PERF || debug == ProxyConfig::kDEBUG_ALL)
-            std::cout << nb_frames << " fps, " << universe->countObjects() << " objects" << std::endl;
+            std::cout << 1000.0 / static_cast<double>(nb_frames) << " ms/frame - ";
+        if (debug == ProxyConfig::kDEBUG_PERF || debug == ProxyConfig::kDEBUG_ALL) {
+            std::cout << nb_frames << " fps - ";
+            std::cout << universe->countObjects(false) << " objects (" << universe->countObjects(true) << " displayed) in ";
+            std::cout << universe->countRooms(false) << " rooms (" << universe->countRooms(true) << " displayed)";
+            std::cout << std::endl;
+         }
         /* Reset timer */
         ret = nb_frames;
         nb_frames = 0;
         last_time += 1.0;
     }
+
+    int end_time = ProxyConfig::getSetting<int>("execution_time");
+    if (end_time && current_time - kBeginTime >= end_time)
+        exit(0);
 
     return ret;
 }
@@ -251,13 +261,14 @@ void SettingsGL(engine::universe::Universe *uni)
     assert(kMatrixId != -1);
     assert(kProgramId != -1);
 
-    double last_time = glfwGetTime();
+    kBeginTime = glfwGetTime();
+    double last_time = kBeginTime;
     int nb_frames = 0;
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
-        Fps(last_time, nb_frames);
         Draw();
+        Fps(last_time, nb_frames);
     }
     while (glfwGetKey(kGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
            && glfwWindowShouldClose(kGLWindow) == 0);

@@ -16,17 +16,68 @@
 namespace engine {
 namespace geometry {
 
-/* Constructors */
-Box::Box()
-    :Box(1.0f, glm::vec4(0.0f), {{}}) {}
+namespace {
+const std::vector<glm::vec3> coords_default = {
+    /* Front */
+    {-1.0f,  1.0f,  1.0f},
+    { 1.0f,  1.0f,  1.0f},
+    { 1.0f, -1.0f,  1.0f},
+    {-1.0f, -1.0f,  1.0f},
+    /* Back */
+    {-1.0f,  1.0f, -1.0f},
+    { 1.0f,  1.0f, -1.0f},
+    { 1.0f, -1.0f, -1.0f},
+    {-1.0f, -1.0f, -1.0f},
+    /* Left */
+    {-1.0f,  1.0f,  1.0f},
+    {-1.0f,  1.0f, -1.0f},
+    {-1.0f, -1.0f, -1.0f},
+    {-1.0f, -1.0f,  1.0f},
+    /* Right */
+    { 1.0f,  1.0f,  1.0f},
+    { 1.0f,  1.0f, -1.0f},
+    { 1.0f, -1.0f, -1.0f},
+    { 1.0f, -1.0f,  1.0f},
+    /* Top */
+    {-1.0f,  1.0f,  1.0f},
+    {-1.0f,  1.0f, -1.0f},
+    { 1.0f,  1.0f, -1.0f},
+    { 1.0f,  1.0f,  1.0f},
+    /* Bottom */
+    {-1.0f, -1.0f,  1.0f},
+    {-1.0f, -1.0f, -1.0f},
+    { 1.0f, -1.0f, -1.0f},
+    { 1.0f, -1.0f,  1.0f},
 
-Box::Box(float scale, glm::vec4 location, std::vector<glm::vec3> coords)
-        : Cube(scale, location)
-{
-    coords_ = coords;
+};
 }
 
+/* Constructors */
+Box::Box()
+    :Box(1.0f, glm::vec4(0.0f), coords_default) {}
+
+Box::Box(float scale, glm::vec4 location)
+    :Box(glm::vec3(scale), location) {}
+
+Box::Box(glm::vec3 scale, glm::vec4 location)
+    :Box(scale, location, glm::vec4(0.0f), coords_default) {}
+
+Box::Box(float scale, glm::vec4 location, glm::vec4 move)
+    :Box(glm::vec3(scale), location, move) {}
+
+Box::Box(glm::vec3 scale, glm::vec4 location, glm::vec4 move)
+    :Box(scale, location, move, coords_default) {}
+
+Box::Box(float scale, glm::vec4 location, std::vector<glm::vec3> coords)
+        : Box(glm::vec3(scale), location, glm::vec4(0.0f), coords) {}
+
+Box::Box(glm::vec3 scale, glm::vec4 location, std::vector<glm::vec3> coords)
+        : Box(scale, location, glm::vec4(0.0f), coords) {}
+
 Box::Box(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
+        : Box(glm::vec3(scale), location, move, coords) {}
+
+Box::Box(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
         : Cube(scale, location, move)
 {
     coords_ = coords;
@@ -54,14 +105,7 @@ void Box::MoveCoords()
         return;
     }
 
-    /* if distance_ is 15, we change room.
-       Dont change Y, because we dont move beside or below room.
-       Ugly stuff: to be improved */
-    if (distance_ == 15.0f) {
-        location_[0] += move_[0] * distance_;
-        location_[2] += move_[2] * distance_;
-    }
-    else if (distance_ != -1.0f) {
+    if (distance_ != -1.0f) {
         location_ += distance_ * move_;
         move_ = -move_;
     } else {

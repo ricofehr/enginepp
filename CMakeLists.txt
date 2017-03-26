@@ -30,8 +30,6 @@ set(universe_SRCS
     src/engine/universe/camera.cc
     src/engine/universe/model3d.cc
     src/engine/universe/wall.cc
-    src/engine/universe/window_model.cc
-    src/engine/universe/door.cc
     src/engine/universe/brick.cc
     src/engine/universe/room.cc
     src/engine/universe/universe.cc)
@@ -63,8 +61,6 @@ set(universe_HDRS
     src/engine/universe/camera.h
     src/engine/universe/model3d.h
     src/engine/universe/wall.h
-    src/engine/universe/window_model.h
-    src/engine/universe/door.h
     src/engine/universe/brick.h
     src/engine/universe/room.h
     src/engine/universe/universe.h)

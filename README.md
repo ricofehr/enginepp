@@ -3,7 +3,7 @@
 A 3d engine at very early stage and in working progress.
 (C++ version of https://github.com/ricofehr/engine, with improved features)
 
-The program generates 4 rooms with some bricks created and moved randomly,
+The program generates randomly rooms with some randomly moving objects.
 The camera can move with mouse (head orientation) and arrow keys (camera direction).
 
 ## Prerequisites
@@ -91,20 +91,22 @@ Step3, compile program
 ```
 $ make
 Scanning dependencies of target engine
-[  6%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/shape3d.cc.o
-[ 13%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/quad.cc.o
-[ 20%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/cube.cc.o
-[ 26%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/box.cc.o
-[ 33%] Building CXX object CMakeFiles/engine.dir/src/engine/helpers/proxygl.cc.o
-[ 40%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/camera.cc.o
-[ 46%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/model3d.cc.o
-[ 53%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/wall.cc.o
-[ 60%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/window_model.cc.o
-[ 66%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/door.cc.o
-[ 73%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/brick.cc.o
-[ 80%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/room.cc.o
-[ 86%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/universe.cc.o
-[ 93%] Building CXX object CMakeFiles/engine.dir/src/engine.cc.o
+[  5%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/shape3d.cc.o
+[ 11%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/quad.cc.o
+[ 17%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/cube.cc.o
+[ 23%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/box.cc.o
+[ 29%] Building CXX object CMakeFiles/engine.dir/src/engine/helpers/proxy_config.cc.o
+[ 35%] Building CXX object CMakeFiles/engine.dir/src/engine/helpers/proxygl.cc.o
+[ 41%] Building CXX object CMakeFiles/engine.dir/src/engine/parallell/cl_parallell.cc.o
+[ 47%] Building CXX object CMakeFiles/engine.dir/src/engine/parallell/cilk_parallell.cc.o
+[ 52%] Building CXX object CMakeFiles/engine.dir/src/engine/parallell/serial_parallell.cc.o
+[ 58%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/camera.cc.o
+[ 64%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/model3d.cc.o
+[ 70%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/wall.cc.o
+[ 76%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/brick.cc.o
+[ 82%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/room.cc.o
+[ 88%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/universe.cc.o
+[ 94%] Building CXX object CMakeFiles/engine.dir/src/engine.cc.o
 [100%] Linking CXX executable bin/engine
 [100%] Built target engine
 ```
@@ -146,7 +148,6 @@ It's also possible to change mostly setting on the fly with program parameters (
 ## Run
 
 Use mouse for head orientation and arrow keys for camera move.
-When we cross a door, we change room (4 rooms).
 
 Before run, we need init env for cilkplus use.
 On Linux
@@ -165,7 +166,9 @@ bin/./engine  # Use settings as setted in config file (config/enginepp.ini or co
 
 Program accept options who can override config settings
 ```
+-c n  Clipping, 0: no clipping, 1: low clipping, 2: high clipping
 -d n  Debug mode, 0: no debug, 1: performance debug, 2: collision debug, 3: all debug
+-e n  Execution Time, 0: no limit
 -g n  Granularity on collision computes
 -h    Display help
 -l    Display config

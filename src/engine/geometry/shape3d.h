@@ -43,6 +43,7 @@ public:
     void set_distance(float distance) { distance_ = distance; }
     void set_move(glm::vec4 move) { move_ = move; }
     void set_move(glm::vec3 move) { move_ = glm::vec4(move, 0.0f); }
+    void InverseMove() { move_ = -move_; }
 
     /* Abstract class, so vietual destructor */
     virtual ~Shape3D() = default;

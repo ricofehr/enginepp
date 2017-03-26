@@ -6,168 +6,89 @@
 #include "engine/universe/wall.h"
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <SOIL/SOIL.h>
 
 #include <iostream>
 #include <memory>
 
-#include "engine/geometry/quad.h"
+#include "engine/geometry/box.h"
+#include "engine/geometry/cube.h"
 
 namespace engine {
 namespace universe {
 
 namespace {
-GLuint vertexbuffer[6] = {0,0,0,0,0,0};
-GLuint texturebuffer[6] = {0,0,0,0,0,0};
+GLuint texturebuffer[3] = {0,0,0};
+GLuint vertexbuffer[3] = {0,0,0};
 
-const GLfloat g_buffer_data[6][32] = {
-   /* Position            Color              Texcoords */
-{   /* Front */
-    -1.0f, -0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     1.0f, -0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  0.0f,
-     1.0f,  0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  4.0f,
-    -1.0f,  0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  4.0f,
-},
-
-{    /* Right */
-     1.0f, -0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     1.0f, -0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  0.0f,
-     1.0f,  0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  4.0f,
-     1.0f,  0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  4.0f,
-},
-
-{   /* Back */
-    -1.0f,  0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     1.0f,  0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  0.0f,
-     1.0f, -0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  4.0f,
-    -1.0f, -0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  4.0f,
-},
-
-{   /* Left */
-    -1.0f, -0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-    -1.0f, -0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  0.0f,
-    -1.0f,  0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  4.0f,  4.0f,
-    -1.0f,  0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  4.0f,
-},
-
-{   /* Bottom (!floor is a wall object) */
-    -1.0f, -0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     1.0f, -0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  10.0f, 0.0f,
-     1.0f, -0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  10.0f, 10.0f,
-    -1.0f, -0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  10.0f,
-},
-
-{  /* Top (!roof is a wall object) */
-    -1.0f,  0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     1.0f,  0.4f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
-     1.0f,  0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
-    -1.0f,  0.4f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
-},
-
-};
-
-
-const std::vector<glm::vec3> coords[6] = {
-/* Front Border */
-{
-    {-1.0f,  0.4f,  1.1f},
-    { 1.0f,  0.4f,  1.1f},
-    { 1.0f, -0.4f,  1.1f},
-    {-1.0f, -0.4f,  1.1f},
-
-    {-1.0f,  0.4f,  1.0f},
-    { 1.0f,  0.4f,  1.0f},
-    { 1.0f, -0.4f,  1.0f},
-    {-1.0f, -0.4f,  1.0f},
-},
-/* Right border */
-{
-    {1.0f,  0.4f, 1.0f},
-    {1.1f,  0.4f, 1.0f},
-    {1.1f, -0.4f, 1.0f},
-    {1.0f, -0.4f, 1.0f},
-
-    {1.0f,  0.4f, -1.0f},
-    {1.1f,  0.4f, -1.0f},
-    {1.1f, -0.4f, -1.0f},
-    {1.0f, -0.4f, -1.0f},
-},
-/* Back border */
-{
-    {-1.0f,  0.4f, -1.0f},
-    { 1.0f,  0.4f, -1.0f},
-    { 1.0f, -0.4f, -1.0f},
-    {-1.0f, -0.4f, -1.0f},
-
-    {-1.0f,  0.4f, -1.1f},
-    { 1.0f,  0.4f, -1.1f},
-    { 1.0f, -0.4f, -1.1f},
-    {-1.0f, -0.4f, -1.1f}
-},
-/* Left border */
-{
-    {-1.1f,  0.4f, 1.0f},
-    {-1.0f,  0.4f, 1.0f},
-    {-1.0f, -0.4f, 1.0f},
-    {-1.1f, -0.4f, 1.0f},
-
-    {-1.1f,  0.4f, -1.0f},
-    {-1.0f,  0.4f, -1.0f},
-    {-1.0f, -0.4f, -1.0f},
-    {-1.1f, -0.4f, -1.0f},
-},
-/* Bottom border */
-{
-    {-1.0f, -0.4f, 1.0f},
-    { 1.0f, -0.4f, 1.0f},
-    { 1.0f, -0.9f, 1.0f},
-    {-1.0f, -0.9f, 1.0f},
-
-    {-1.0f, -0.4f, -1.0f},
-    { 1.0f, -0.4f, -1.0f},
-    { 1.0f, -0.9f, -1.0f},
-    {-1.0f, -0.9f, -1.0f},
-},
-/* Top border */
-{
-    {-1.0f,  0.9f,  1.0f},
-    { 1.0f,  0.9f,  1.0f},
-    { 1.0f,  0.4f,  1.0f},
-    {-1.0f,  0.4f,  1.0f},
-
-    {-1.0f,  0.9f, -1.0f},
-    { 1.0f,  0.9f, -1.0f},
-    { 1.0f,  0.4f, -1.0f},
-    {-1.0f,  0.4f, -1.0f},
-}
-
+const GLfloat g_buffer_data[192] = {
+  /* Position            Color              Texcoords */
+    /* Front */
+    -1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
+    /* Right */
+     1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     1.0f, -1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
+     1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
+    /* Back */
+    -1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
+     1.0f, -1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
+    -1.0f, -1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
+    /* Left */
+    -1.0f, -1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+    -1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
+    -1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
+    /* Bottom */
+    -1.0f, -1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     1.0f, -1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
+     1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
+    /* Top */
+    -1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
+     1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
 };
 
 /* Fill vertex buffer */
 void CreateVertexBuffer() {
-    glGenBuffers(6, vertexbuffer);
-    for (auto face = 0; face < 6; face++) {
+    glGenBuffers(3, vertexbuffer);
+
+    GLfloat buffer_data[192];
+    for (auto i = 0; i < 192; i++)
+        buffer_data[i] = g_buffer_data[i];
+
+    for (auto face = 0; face < 3; face++) {
+        /*
+        if (face) {
+            for (auto i = 6; i < 192; i+=8) {
+                buffer_data[i] = g_buffer_data[i] * face * 4.0f;
+                buffer_data[i+1] = g_buffer_data[i+1] * face * 4.0f;
+            }
+        }
+        */
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[face]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(g_buffer_data[face]), g_buffer_data[face], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
     }
 }
 
 /* Fill texture buffer */
 void CreateTextureBuffer() {
     const char* sources[]= {
+            "assets/sky.png",
             "assets/wall.png",
-            "assets/wall.png",
-            "assets/wall.png",
-            "assets/wall.png",
-            "assets/floor.png",
-            "assets/sky.png"
+            "assets/floor.png"
     };
     int width, height;
     unsigned char* image;
 
-    glGenTextures(6, texturebuffer);
-    for (auto face = 0; face < 6; face++) {
+    glGenTextures(3, texturebuffer);
+    for (auto face = 0; face < 3; face++) {
         glActiveTexture(GL_TEXTURE0 + texturebuffer[face]);
         glBindTexture(GL_TEXTURE_2D, texturebuffer[face]);
 
@@ -184,26 +105,34 @@ void CreateTextureBuffer() {
 
 }//namespace
 
-
 /* Constructors */
 Wall::Wall()
-     :Wall(0, 1.0f, glm::vec4(glm::vec3(0.0f), 1.0f)) {}
+      :Wall(glm::vec3(1.0f), glm::vec4(glm::vec3(0.0f), 1.0f), 1) {}
 
-Wall::Wall(int face, float scale, glm::vec4 location)
+Wall::Wall(glm::vec3 scale, glm::vec4 location, int face)
 {
-    glm::vec4 move = glm::vec4(0.0f);
+    using engine::geometry::Box;
+    using engine::geometry::Cube;
 
+    /* No thread safe execution */
     if (vertexbuffer[0] == 0) {
         CreateVertexBuffer();
         CreateTextureBuffer();
     }
 
-    face_ = face;
     type_ = kMODEL3D_WALL;
-    border_ = engine::geometry::Box(scale, location, move, coords[face_]);
+    border_ = Box(scale, location);
+    auto cube_ptr {std::make_unique<Cube>(scale, location, glm::vec4(0.0f),
+                                          vertexbuffer[face], texturebuffer[face])};
+    elements_.push_back(std::move(cube_ptr));
+}
 
-    auto quad_ptr{std::make_unique<engine::geometry::Quad>(face_, scale, location, move,vertexbuffer[face_], texturebuffer[face_])};
-    elements_.push_back(std::move(quad_ptr));
+void Wall::CreateBuffers()
+{
+    if (vertexbuffer[0] == 0) {
+        CreateVertexBuffer();
+        CreateTextureBuffer();
+    }
 }
 
 }//namespace geometry

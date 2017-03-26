@@ -46,26 +46,22 @@ static void CreateElementBuffer() {
 /* Constructors */
 Quad::Quad(int face, float scale, glm::vec4 location, GLuint vertexbuffer,
            GLuint texturebuffer)
-{
-    face_ = face;
-    location_ = location;
-    scale_ = glm::vec3(scale, scale, scale);
-    move_ = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    vertexbuffer_ = vertexbuffer;
-    texturebuffer_ = texturebuffer;
-    distance_ = -1;
-
-    if (elementbuffer == 0) {
-        CreateElementBuffer();
-    }
-}
+     :Quad(face, scale, location, glm::vec4(0.0f), vertexbuffer, texturebuffer) {}
 
 Quad::Quad(int face, float scale, glm::vec4 location,
+           glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer)
+     :Quad(face, glm::vec3(scale), location, move, vertexbuffer, texturebuffer) {}
+
+Quad::Quad(int face, glm::vec3 scale, glm::vec4 location, GLuint vertexbuffer,
+           GLuint texturebuffer)
+     :Quad(face, scale, location, glm::vec4(0.0f), vertexbuffer, texturebuffer) {}
+
+Quad::Quad(int face, glm::vec3 scale, glm::vec4 location,
            glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer)
 {
     face_ = face;
     location_ = location;
-    scale_ = glm::vec3(scale, scale, scale);
+    scale_ = scale;
     move_ = move;
     vertexbuffer_ = vertexbuffer;
     texturebuffer_ = texturebuffer;

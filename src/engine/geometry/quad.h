@@ -22,6 +22,10 @@ public:
          GLuint vertexbuffer, GLuint texturebuffer);
     Quad(int face, float scale, glm::vec4 location,
          glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer);
+    Quad(int face, glm::vec3 scale, glm::vec4 location,
+         GLuint vertexbuffer, GLuint texturebuffer);
+    Quad(int face, glm::vec3 scale, glm::vec4 location,
+         glm::vec4 move, GLuint vertexbuffer, GLuint texturebuffer);
 
     /* Default move and copy constructor / operator */
     Quad(Quad&&) = default;

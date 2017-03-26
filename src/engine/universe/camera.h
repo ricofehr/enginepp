@@ -37,11 +37,9 @@ public:
 
     glm::vec3 direction() const { return direction_; }
     glm::vec3 head() const { return head_; }
-    glm::vec3 location() const { return glm::vec3(border_.location()); }
     float fov() const { return fov_; }
 
     void Move();
-    bool IsInRoom (const Room &room) const;
 
 private:
     glm::vec3 direction_;

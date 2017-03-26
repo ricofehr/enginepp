@@ -7,13 +7,12 @@
 #define ENGINE_UNIVERSE_ROOM_H_
 
 #include <vector>
+#include <memory>
 #include <tbb/mutex.h>
 
 #include "engine/universe/model3d.h"
 #include "engine/parallell/engine_parallell.h"
 #include "engine/universe/wall.h"
-#include "engine/universe/window_model.h"
-#include "engine/universe/door.h"
 #include "engine/universe/brick.h"
 #include "engine/universe/camera.h"
 
@@ -21,47 +20,70 @@ namespace engine {
 namespace universe {
 
 /* Define a Room (with walls and moving objects) in the 3d universe */
-class Room {
+class Room : public Model3D {
 
 public:
+    /* Grid Constants */
+    static constexpr int kGRID_Y = 6;
+    static constexpr int kGRID_X = 8;
+    static constexpr int kGRID_Z = 8;
+    static constexpr float kGRID_UNIT = 2.0f;
+    /* Room Side Constants */
+    static constexpr int kFLOOR = 0;
+    static constexpr int kROOF = 1;
+    static constexpr int kLEFT = 2;
+    static constexpr int kRIGHT = 3;
+    static constexpr int kFRONT = 4;
+    static constexpr int kBACK = 5;
+
+    /* Constructors */
     Room();
     Room(glm::vec4 location);
-    Room(glm::vec4 location, std::vector<bool> is_doors, Camera *cam,
-         engine::parallell::EngineParallell *proxy_parallell);
+    Room(glm::vec4 location, std::unique_ptr<Camera> cam, engine::parallell::EngineParallell *proxy_parallell);
+    Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows,
+         std::unique_ptr<Camera> cam, engine::parallell::EngineParallell *proxy_parallell);
 
+    /* Accessors */
     glm::vec4 location() const { return location_; }
+    Camera * cam() const { return cam_; }
     int countObjects() const { return objects_.size(); }
-    bool IsFull() const { return objects_.size() >= nbobjects_; }
-    bool IsActive() const { return is_active_; }
-    void setActive(bool is_active) { is_active_ = is_active; }
+    bool IsFull() const { return nbobjects_ <= 0; }
+    std::vector<Model3D*> getObjects(int i, int j, int k) const { return grid_[i][j][k]; }
+    /* Mutators */
+    void addDoor(int ind) { doors_[ind] = true; }
+    void addWindow(int ind) { windows_[ind] = true; }
 
-    void Draw();
-    void DetectCollision();
+    /* New hop functions */
+    void Draw(Camera *cam);
+    void DetectCollision(std::vector<Room*> neighbors);
+    /* Object Generation functions */
     void GenerateRandomObject();
-    void ReinitGrid();
+    void GenerateWalls();
+    void GenerateObjects();
+    /* Grid state functions */
+    std::vector<std::unique_ptr<Model3D>> ReinitGrid();
+    std::unique_ptr<Model3D> TransfertObject(std::unique_ptr<Model3D> obj, bool force);
+    std::vector<std::unique_ptr<Model3D>> ListOutsideObjects();
+    void MoveCamera() { if (cam_ != nullptr) cam_->Move(); };
 
 private:
-    static constexpr int kGRID_Y = 5;
-    static constexpr int kGRID_X = 15;
-    static constexpr int kGRID_Z = 15;
-    static constexpr float kROOM_SCALE = 15.0f;
-    static constexpr float kGRID_UNIT = 2.0f;
-
+    /* Room attributes */
     glm::vec4 location_;
     int nbobjects_{33};
     Camera *cam_{nullptr};
     std::vector<Model3D*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
-    std::vector<std::unique_ptr<Wall>> walls_;
-    std::vector<std::unique_ptr<Door>> doors_;
-    std::vector<std::unique_ptr<WindowModel>> windows_;
     std::vector<std::unique_ptr<Model3D>> objects_;
     engine::parallell::EngineParallell *proxy_parallell_{nullptr};
     tbb::mutex room_mutex_;
-    bool is_active_{false};
+    tbb::mutex grid_mutex_;
+    std::vector<bool> doors_{false, false, false, false, false, false};
+    std::vector<bool> windows_{false, false, false, false, false, false};
 
-    void GenerateObjects();
+    /* Some internal functions */
     Model3D *GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale);
-    void PivotCollision(Model3D *object);
+    void PivotCollision(Model3D *object, std::vector<Room*> neighbors);
+    void DisplayGrid();
+    bool IsInRoom (glm::vec3 location_object) const;
 };
 
 }//namespace universe

@@ -28,6 +28,8 @@ public:
     Brick(const Brick&) = default;
     Brick& operator=(const Brick&) = default;
 
+    static void CreateBuffers();
+
     /* Default destructor */
     ~Brick() override = default;
 };

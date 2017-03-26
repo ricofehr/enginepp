@@ -1,19 +1,23 @@
 // 1 => serial, 2 => cilkplus, 3 => opencl
 parallell = 2
 // count of objects generated inside rooms
-objects_count = 32
+objects_count = 8
 // load objects every Ns => 0 display all objects at start
 load_objects_freq = 0.0
 // number of rooms
-rooms_count = 4
+rooms_count = 24
 // accuracy for collision (higher is better accurate but need more cpu use)
-granularity = 16
+granularity = 64
+// 0 => no clipping, 1 => low clipping, 2 => high clipping
+clipping = 1
 // window width / height
 width = 1200.0
 height = 740.0
 // true => limit fps to screen display
-vsync = false
+vsync = true
 // 0 => no debug, 1 => perf debug, 2 => collision debug, 3 => all debug
 debug = 1
 // true => mode grid, false => fill polygons
 grid = false
+// execution time in seconds (0 => no limit)
+execution_time = 0
