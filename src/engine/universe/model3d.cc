@@ -56,6 +56,7 @@ void Model3D::PrepareDraw(Camera *cam)
     }
     distance_ = -1.0f;
     /* An object cant touch same object twice, except camera */
+    id_last_collision_ = -1;
     if (!is_controlled_ && obstacle_ != nullptr)
         id_last_collision_ = obstacle_->id();
     obstacle_ = nullptr;
