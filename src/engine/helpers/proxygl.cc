@@ -155,7 +155,6 @@ void Draw()
 
     /* Swap buffers and poll */
     glfwSwapBuffers(kGLWindow);
-    glfwPollEvents();
 }
 
 int Fps(double &last_time, int &nb_frames)
@@ -264,11 +263,26 @@ void SettingsGL(engine::universe::Universe *uni)
     kBeginTime = glfwGetTime();
     double last_time = kBeginTime;
     int nb_frames = 0;
+    bool is_draw = true;
+    bool is_released = true;
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
-        Draw();
-        Fps(last_time, nb_frames);
+        /* Pause button */
+        if (glfwGetKey(kGLWindow, GLFW_KEY_P) == GLFW_PRESS) {
+            if (is_released)
+                is_draw = is_draw ? false : true;
+            is_released = false;
+        } else {
+            is_released = true;
+        }
+
+        if (is_draw) {
+            Draw();
+            Fps(last_time, nb_frames);
+        }
+
+        glfwPollEvents();
     }
     while (glfwGetKey(kGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
            && glfwWindowShouldClose(kGLWindow) == 0);

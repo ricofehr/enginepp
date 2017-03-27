@@ -148,6 +148,9 @@ It's also possible to change mostly setting on the fly with program parameters (
 ## Run
 
 Use mouse for head orientation and arrow keys for camera move.
+And following keys are used
+- 'p': pause / unpause
+- 'esc': exit
 
 Before run, we need init env for cilkplus use.
 On Linux
