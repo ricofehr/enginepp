@@ -134,15 +134,11 @@ std::vector<std::unique_ptr<Model3D>> Room::ReinitGrid()
 {
     std::vector<std::unique_ptr<Model3D>> ret;
 
-    cilk_for (auto i = 0; i < kGRID_Y; i++) {
-        cilk_for (auto j = 0; j < kGRID_X; j++) {
-            cilk_for (auto k = 0; k < kGRID_Z; k++) {
-                grid_[i][j][k].clear();
-            }
-        }
-    }
-
     for (auto o = 0; o < objects_.size();) {
+        if (!objects_[o]->IsMoved() && objects_[o]->get_placements().size() > 0) {
+            ++o;
+            continue;
+        }
         /* check grid collision */
         engine::geometry::Box border = objects_[o]->border();
         std::vector<glm::vec3> coords = border.ComputeCoords();
@@ -153,8 +149,19 @@ std::vector<std::unique_ptr<Model3D>> Room::ReinitGrid()
         auto w1 = coords.at(1)[0] - x1;
         auto d1 = coords.at(4)[2] - z1;
 
-        objects_[o]->clear_placements();
+        for (auto &p : objects_[o]->get_placements()) {
+            tbb::mutex::scoped_lock lock(grid_mutex_);
 
+            auto pi = p[0];
+            auto pj = p[1];
+            auto pk = p[2];
+
+            auto it = std::find(grid_[pi][pj][pk].begin(), grid_[pi][pj][pk].end(), objects_[o].get());
+            if(it != grid_[pi][pj][pk].end())
+                grid_[pi][pj][pk].erase(it);
+        }
+
+        objects_[o]->clear_placements();
         auto grid_0 = location_ - glm::vec4(kGRID_X*kGRID_UNIT/2, kGRID_Y*kGRID_UNIT/2, kGRID_Z*kGRID_UNIT/2, 0.0f);
 
         cilk_for (auto i = 0; i < kGRID_Y; i++) {
@@ -187,7 +194,6 @@ std::vector<std::unique_ptr<Model3D>> Room::ReinitGrid()
             o++;
         }
     }
-
 
     return ret;
 }
@@ -263,10 +269,10 @@ void Room::GenerateRandomObject()
     auto k = t;
     auto cnt = 0;
     /* Generate and place randomly object into room grid */
-    while (cnt++ < kGRID_Y * kGRID_X * kGRID_Z) {
-        auto l = r % kGRID_Y;
-        auto m = s % kGRID_X;
-        auto n = t % kGRID_Z;
+    while (cnt++ < (kGRID_Y-1) * (kGRID_X-1) * (kGRID_Z-1)) {
+        auto l = r % (kGRID_Y-1);
+        auto m = s % (kGRID_X-1);
+        auto n = t % (kGRID_Z-1);
 
         auto y2 = grid_0[1] + l * kGRID_UNIT + kGRID_UNIT/2;
         auto x2 = grid_0[0] + m * kGRID_UNIT + kGRID_UNIT/2;
@@ -279,7 +285,6 @@ void Room::GenerateRandomObject()
             obj->add_placement(l, m, n);
 
             /* Lock room for ensure only one change at same time on grid_ array */
-            //room_mutex_.lock();
             grid_[l][m][n].push_back(obj);
             --nbobjects_;
             grid_mutex_.unlock();
