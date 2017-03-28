@@ -182,7 +182,7 @@ void Universe::ReinitGrid()
     }
 
     using engine::helpers::ProxyConfig;
-    if (ProxyConfig::getSetting<int>("debug") > 0)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
         DisplayGrid();
 }
 

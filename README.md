@@ -132,6 +132,7 @@ Scanning dependencies of target engine
 +--glsl/    OpenGL Shaders folder
 +--scripts/ Bash scripts
 +--src/ 	Sources
++--tmp/     Temporary folder
 ```
 
 ## Settings
@@ -169,19 +170,21 @@ bin/./engine  # Use settings as setted in config file (config/enginepp.ini or co
 
 Program accept options who can override config settings
 ```
--c n  Clipping, 0: no clipping, 1: low clipping, 2: high clipping
--d n  Debug mode, 0: no debug, 1: performance debug, 2: collision debug, 3: all debug
--e n  Execution Time, 0: no limit
--g n  Granularity on collision computes
--h    Display help
--l    Display config
--o n  Count of objects in rooms
+-c n   Clipping, 0: no clipping, 1: low clipping, 2: high clipping
+-d n   Debug mode, 0: no debug, 1: test debug, 2: performance debug, 3: collision debug, 4: all debug
+-e n   Execution Time, 0: no limit
+-g n   Granularity on collision computes
+-h     Display help
+-l     Display config
+-o n   Count of objects in rooms
 -p serial|cilkplus|opencl
-      serial: no parallellism
-      cilkplus: use intel cilkplus library
-      opencl: intel cilkplus for all parallell computes but opencl for collision computes
--r n  Count of rooms
--w n  Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores
+       serial: no parallellism
+       cilkplus: use intel cilkplus library
+       opencl: intel cilkplus for all parallell computes but opencl for collision computes
+-r n   Count of rooms
+-s n.m Load objects frequency, 0: generates all objects at start
+-v 1|0 Enable/Disable vsync
+-w n   Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores
 ```
 
 For example
@@ -190,6 +193,21 @@ For example
 ```
 
 ![Engine](demos/enginepp.gif?raw=true)
+
+## Test
+
+A bash script can be used for performance test
+```
+Usage: ./scripts/./test_perf.sh [options]
+
+-h          Some help text.
+-e path     Report folder (default ./tmp/)
+-g n        Set granularity for collision computes (default is 64)
+-nocl       Disable tests using opencl for parallell collision computes
+-o n        Set count of moving objects into rooms (default is 32)
+-r n        Set count of rooms (default is 4)
+-w n        Set workers (cpu core) number (default is 0)
+```
 
 ## Documentation
 

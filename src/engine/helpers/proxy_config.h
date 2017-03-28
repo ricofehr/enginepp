@@ -41,9 +41,10 @@ public:
 
     static void ManageProgramParameters(int argc, char *argv[]);
 
-    static constexpr int kDEBUG_PERF = 1;
-    static constexpr int kDEBUG_COLLISION = 2;
-    static constexpr int kDEBUG_ALL = 3;
+    static constexpr int kDEBUG_TEST = 1;
+    static constexpr int kDEBUG_PERF = 2;
+    static constexpr int kDEBUG_COLLISION = 3;
+    static constexpr int kDEBUG_ALL = 4;
 
 private:
     libconfig::Config cfg;

@@ -8,6 +8,8 @@
 
 #include <vector>
 #include <memory>
+#include <cilk/cilk.h>
+#include <cilk/reducer_opadd.h>
 #include <tbb/mutex.h>
 
 #include "engine/universe/model3d.h"
@@ -47,6 +49,14 @@ public:
     glm::vec4 location() const { return location_; }
     Camera * cam() const { return cam_; }
     int countObjects() const { return objects_.size(); }
+    inline int countMovingObjects() const {
+        cilk::reducer<cilk::op_add<int>> count_sum(0);
+        cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
+            if (objects_[cnt]->IsMoved())
+                *count_sum += 1;
+        }
+        return count_sum.get_value();
+    }
     bool IsFull() const { return nbobjects_ <= 0; }
     std::vector<Model3D*> getObjects(int i, int j, int k) const { return grid_[i][j][k]; }
     /* Mutators */

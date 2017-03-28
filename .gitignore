@@ -45,3 +45,6 @@ bin/*
 
 # Config overridded
 config/enginepp.ini
+
+# tmp folder
+tmp

@@ -54,6 +54,20 @@ public:
         return count_sum.get_value();
     }
 
+    inline int countMovingObjects(bool display) const {
+        cilk::reducer<cilk::op_add<int>> count_sum(0);
+        if (display) {
+            cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
+                *count_sum += rooms_[cnt]->countMovingObjects();
+            }
+        } else {
+            cilk_for(auto cnt = 0; cnt < rooms_.size(); cnt++) {
+                *count_sum += rooms_[cnt]->countMovingObjects();
+            }
+        }
+        return count_sum.get_value();
+    }
+
 private:
     /* Constants */
     static constexpr int kGRID_Y = 4;

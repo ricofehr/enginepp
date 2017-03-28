@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <map>
-#include <cilk/cilk.h>
 
 #include "engine/helpers/proxy_config.h"
 

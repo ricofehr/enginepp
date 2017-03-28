@@ -71,7 +71,7 @@ void LoadShaders()
     int info_log_length;
 
     /* Compile Vertex Shader */
-    if (ProxyConfig::getSetting<int>("debug") > 0)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
         std::cout << "Compiling shader : " << vertex_file_path << std::endl;
     const char *vertexsource_pointer = vertexshader_code.c_str();
     glShaderSource(vertexshader_id, 1, &vertexsource_pointer , nullptr);
@@ -87,7 +87,7 @@ void LoadShaders()
     }
 
     /* Compile Fragment Shader */
-    if (ProxyConfig::getSetting<int>("debug") > 0)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
         std::cout << "Compiling shader : " << fragment_file_path << std::endl;
     const char *fragmentsource_pointer = fragmentshader_code.c_str();
     glShaderSource(fragmentshader_id, 1, &fragmentsource_pointer, nullptr);
@@ -103,7 +103,7 @@ void LoadShaders()
     }
 
     /* Link the program */
-    if (ProxyConfig::getSetting<int>("debug") > 0)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
         std::cout << "Linking program" << std::endl;
     kProgramId = glCreateProgram();
     glAttachShader(kProgramId, vertexshader_id);
@@ -162,9 +162,16 @@ int Fps(double &last_time, int &nb_frames)
     int ret = 0;
     /* Measure speed */
     double current_time = glfwGetTime();
+
     nb_frames++;
     if (current_time - last_time >= 1.0) {
         int debug = ProxyConfig::getSetting<int>("debug");
+
+        /* Header for test datas output */
+        if (kBeginTime == last_time &&
+            debug == ProxyConfig::kDEBUG_TEST)
+            std::cout << "TIME:FPS:NBOBJALL:NBOBJMOVE" << std::endl;
+
         /* Print if debug */
         if (debug == ProxyConfig::kDEBUG_ALL)
             std::cout << 1000.0 / static_cast<double>(nb_frames) << " ms/frame - ";
@@ -173,7 +180,14 @@ int Fps(double &last_time, int &nb_frames)
             std::cout << universe->countObjects(false) << " objects (" << universe->countObjects(true) << " displayed) in ";
             std::cout << universe->countRooms(false) << " rooms (" << universe->countRooms(true) << " displayed)";
             std::cout << std::endl;
-         }
+        }
+
+        /* Test datas output */
+        if (debug == ProxyConfig::kDEBUG_TEST) {
+            std::cout << static_cast<int>(current_time - kBeginTime) << ":" << nb_frames << ":";
+            std::cout << universe->countObjects(true) << ":" << universe->countMovingObjects(true) << std::endl;
+        }
+
         /* Reset timer */
         ret = nb_frames;
         nb_frames = 0;

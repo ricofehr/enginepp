@@ -15,8 +15,8 @@ width = 1200.0
 height = 740.0
 // true => limit fps to screen display
 vsync = true
-// 0 => no debug, 1 => perf debug, 2 => collision debug, 3 => all debug
-debug = 1
+// 0 => no debug, 1 => test debug, 2 => perf debug, 3 => collision debug, 4 => all debug
+debug = 2
 // true => mode grid, false => fill polygons
 grid = false
 // execution time in seconds (0 => no limit)
