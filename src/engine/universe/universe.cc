@@ -10,7 +10,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <string>
 #include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
 
 #include "engine/universe/wall.h"
 #include "engine/universe/brick.h"
@@ -37,8 +39,13 @@ Universe::Universe()
 void Universe::InitProxyParallell()
 {
     using engine::parallell::EngineParallell;
-    /* Get parallell type from config */
     using engine::helpers::ProxyConfig;
+
+    /* Define cpu cores number for parallell computes */
+    if (ProxyConfig::getSetting<int>("workers_count"))
+        __cilkrts_set_param("nworkers", std::to_string(ProxyConfig::getSetting<int>("workers_count")).c_str());
+
+    /* Get parallell type from config */
     int type_parallell = ProxyConfig::getSetting<int>("parallell");
 
     switch (type_parallell) {

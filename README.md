@@ -152,7 +152,7 @@ And following keys are used
 - 'p': pause / unpause
 - 'esc': exit
 
-Before run, we need init env for cilkplus use.
+Before run, we need init env for dynamic libraries path.
 On Linux
 ```
 source ./scripts/./cilk_vars_linux.sh
@@ -181,6 +181,7 @@ Program accept options who can override config settings
       cilkplus: use intel cilkplus library
       opencl: intel cilkplus for all parallell computes but opencl for collision computes
 -r n  Count of rooms
+-w n  Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores
 ```
 
 For example

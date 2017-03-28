@@ -9,7 +9,6 @@
 #include <string>
 
 #include <cilk/cilk.h>
-#include <cilk/cilk_api.h>
 #include <cilk/reducer_min.h>
 
 #include "engine/helpers/proxy_config.h"

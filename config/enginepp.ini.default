@@ -21,3 +21,5 @@ debug = 1
 grid = false
 // execution time in seconds (0 => no limit)
 execution_time = 0
+// cpu cores used (0 => total cores of system)
+workers_count = 0

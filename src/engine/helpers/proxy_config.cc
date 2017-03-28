@@ -92,6 +92,10 @@ void ProxyConfig::DefaultValues()
     if (!exists("execution_time")) {
         setValue("execution_time", libconfig::Setting::TypeInt, 0);
     }
+
+    if (!exists("workers_count")) {
+        setValue("workers_count", libconfig::Setting::TypeInt, 0);
+    }
 }
 
 /* Parse and display config */
@@ -105,6 +109,7 @@ void ProxyConfig::ParseConfig() const
     std::cout << "Rooms count: " << getValue<int>("rooms_count") << std::endl;
     std::cout << "Collision granularity: " << getValue<int>("granularity") << std::endl;
     std::cout << "Clipping (0 -> no clipping, 1 -> low clipping, 2 -> high clipping): " << getValue<int>("clipping") << std::endl;
+    std::cout << "Workers count (0 -> all system cpu cores): " << getValue<int>("workers_count") << std::endl;
     std::cout << "Execution Time (0 -> no limit): " << getValue<int>("execution_time") << std::endl;
     std::cout << "Vsync (limit framerate to monitor): " << getValue<bool>("vsync") << std::endl;
     std::cout << "Grid mode (not fill polygons): " << getValue<bool>("grid") << std::endl;
@@ -184,12 +189,19 @@ void ProxyConfig::ManageProgramParameters(int argc, char *argv[])
                       << "      cilkplus: use intel cilkplus library" << std::endl
                       << "      opencl: intel cilkplus for all parallell computes but opencl for collision computes" << std::endl;
             std::cout << "-r n  Count of rooms" << std::endl;
+            std::cout << "-w n  Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores" << std::endl;
             exit(0);
         }
 
         /* Display config values from file */
         if (arg == "-l") {
             is_display_config = true;
+        }
+
+        /* Workers count */
+        if (arg == "-w") {
+            const std::string arg2(argv[cnt++]);
+            ProxyConfig::setSetting("workers_count", libconfig::Setting::TypeInt, std::stoi(arg2));
         }
     }
 
