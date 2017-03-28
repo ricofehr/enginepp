@@ -253,7 +253,7 @@ void Universe::GenerateRandomRoom()
               (m != kGRID_X-1 && grid_[l][m+1][n].size() != 0) ||
               (n != kGRID_Z-1 && grid_[l][m][n+1].size() != 0)) &&
              grid_[l][m][n].size() == 0)) {
-            Room *obj = GenerateRoom(glm::vec4(x2, y2, z2, 0.0f));
+            auto obj = GenerateRoom(glm::vec4(x2, y2, z2, 0.0f));
             obj->add_placement(l, m, n);
             grid_[l][m][n].push_back(obj);
             return;
@@ -371,13 +371,13 @@ void Universe::NextHop()
     rooms_[active_index]->MoveCamera();
 
     /* Select displayed rooms: all rooms or 2 clipping levels */
-    display_rooms_.clear();
     if (ProxyConfig::getSetting<int>("clipping") > 0) {
+        display_rooms_.clear();
         auto map_rooms = GetNeighbors(rooms_[active_index].get(), ProxyConfig::getSetting<int>("clipping") % 2);
         map_rooms[rooms_[active_index]->id()] = rooms_[active_index].get();
         for (auto &r : map_rooms)
             display_rooms_.push_back(r.second);
-    } else {
+    } else if(display_rooms_.size() == 0) {
         for (auto &r : rooms_)
             display_rooms_.push_back(r.get());
     }
