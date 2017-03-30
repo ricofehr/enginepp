@@ -11,6 +11,7 @@
 
 #include <fstream>
 
+#include "engine/geometry/shape3d.h"
 #include "engine/universe/universe.h"
 #include "engine/helpers/proxy_config.h"
 
@@ -181,6 +182,10 @@ int Fps(double &last_time, int &nb_frames)
             std::cout << universe->countRooms(false) << " rooms (" << universe->countRooms(true) << " displayed)";
             std::cout << std::endl;
         }
+
+        /* Update movefactor for objects */
+        engine::geometry::Shape3D::kMoveFactor = 60.0f / nb_frames;
+        universe->toready();
 
         /* Test datas output */
         if (debug == ProxyConfig::kDEBUG_TEST) {

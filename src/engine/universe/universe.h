@@ -32,7 +32,7 @@ public:
 
     /* Accessors */
     const Camera *cam() const { return cam_; }
-    const bool ready() const { return ready_ >= 10; }
+    const bool ready() const { return ready_; }
 
     inline int countRooms(bool display) const {
         if (display)
@@ -68,6 +68,9 @@ public:
         return count_sum.get_value();
     }
 
+    /* Mutators */
+    const void toready() { ready_ = true; }
+
 private:
     /* Constants */
     static constexpr int kGRID_Y = 4;
@@ -98,7 +101,7 @@ private:
     std::vector<Room*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
     std::unique_ptr<engine::parallell::EngineParallell> proxy_parallell_;
     std::vector<std::unique_ptr<Room>> rooms_;
-    int ready_{0};
+    bool ready_{false};
     std::vector<Room*> display_rooms_;
 };
 

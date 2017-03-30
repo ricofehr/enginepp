@@ -15,6 +15,8 @@ namespace engine {
 
 namespace geometry {
 
+float Shape3D::kMoveFactor = 1.0f;
+
 /*
 *   ComputeMVP  -   Compute the ModelViewProjection matrix
 *                   for current object.
@@ -38,18 +40,11 @@ void Shape3D::ComputeMVP(engine::universe::Camera *cam)
         cam->head()
     );
 
-    /* if distance_ is 15, we change room.
-       Dont change Y, because we dont move beside or below room.
-       Ugly stuff: to be improved */
-    if (distance_ == 15.0f) {
-        location_[0] += move_[0] * distance_;
-        location_[2] += move_[2] * distance_;
-    }
-    else if (distance_ != -1.0f) {
-        location_ += move_ * distance_;
+    if (distance_ != -1.0f) {
+        location_ += move_ * distance_ * Shape3D::kMoveFactor;
         move_ = -move_;
     } else {
-        location_ += move_;
+        location_ += move_ * Shape3D::kMoveFactor;
     }
     distance_ = -1.0f;
 

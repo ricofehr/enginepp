@@ -21,6 +21,9 @@ namespace geometry {
 class Shape3D {
 
 public:
+    /* Define a move factore who depends on fps */
+    static float kMoveFactor;
+
     /* Default constructor, move and copy constructor / operator */
     Shape3D() = default;
     Shape3D(Shape3D&&) = default;
@@ -37,7 +40,7 @@ public:
     bool IsMovedY() const { return move_[1] != 0.0f; }
     bool IsMovedZ() const { return move_[2] != 0.0f; }
     float distance() const { return distance_; }
-    glm::vec4 move() const { return move_; }
+    glm::vec4 move() const { return move_ * kMoveFactor; }
     glm::vec4 location() const { return location_; }
 
     void set_distance(float distance) { distance_ = distance; }
@@ -55,6 +58,8 @@ protected:
     glm::mat4 mvp_;
     float distance_;
 };
+
+/* Define static var */
 
 }//namespace geometry
 }//namespace engine

@@ -249,13 +249,13 @@ void Room::GenerateRandomObject()
 
     /* 1/7 moves on y axis */
     if (index % 7 == 0) {
-        y = (rand() % 20 + 3) * 0.01f;
+        y = (rand() % 20 + 3) * 0.007f;
         x = 0.0f;
         z = 0.0f;
     } else {
-        x = (rand() % 20 + 3) * 0.01f;
+        x = (rand() % 20 + 3) * 0.007f;
         x = (r % 2 == 0) ? -x : x;
-        z = (rand() % 20 + 3) * 0.01f;
+        z = (rand() % 20 + 3) * 0.007f;
         z = (r % 3 == 0) ? -z : z;
         y = 0.0f;
     }

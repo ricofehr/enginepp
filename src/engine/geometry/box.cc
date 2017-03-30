@@ -106,10 +106,10 @@ void Box::MoveCoords()
     }
 
     if (distance_ != -1.0f) {
-        location_ += distance_ * move_;
+        location_ += distance_ * move_ * kMoveFactor;
         move_ = -move_;
     } else {
-        location_ += move_;
+        location_ += move_ * kMoveFactor;
     }
 
     distance_ = -1.0f;

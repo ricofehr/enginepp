@@ -101,13 +101,17 @@ Camera::Camera(float cx, float cy, float cz,
 void Camera::Move()
 {
     using engine::helpers::proxygl::kGLWindow;
+
     /* width and height config values */
     using engine::helpers::ProxyConfig;
     float window_width = ProxyConfig::getSetting<float>("width");
     float window_height = ProxyConfig::getSetting<float>("width");
 
+    /* Dont apply movefactor to camera */
+    using engine::geometry::Shape3D;
+    float speed = 3.0f * 1.0f / Shape3D::kMoveFactor;
+
     const float zoom_sensitivity = -0.2f;
-    float speed = 3.0f;
     const float mouse_speed = 0.1f;
 
     double current_time = glfwGetTime();

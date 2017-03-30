@@ -392,8 +392,6 @@ void Universe::NextHop()
         for (auto &r : display_rooms_) {
             r->Draw(cam_);
         }
-    } else {
-        ++ready_;
     }
 
     /* Recompute object grids for each active rooms and transfert boundary objects */
