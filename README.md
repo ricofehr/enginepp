@@ -179,8 +179,8 @@ Program accept options who can override config settings
 -o n   Count of objects in rooms
 -p serial|cilkplus|opencl
        serial: no parallellism
-       cilkplus: use intel cilkplus library
-       opencl: intel cilkplus for all parallell computes but opencl for collision computes
+       cilkplus: uses intel cilkplus library
+       opencl: uses opencl for collision computes
 -r n   Count of rooms
 -s n.m Load objects frequency, 0: generates all objects at start
 -v 1|0 Enable/Disable vsync
@@ -206,6 +206,7 @@ Usage: ./scripts/./test_perf.sh [options]
 -nocl       Disable tests using opencl for parallell collision computes
 -o n        Set count of moving objects into rooms (default is 32)
 -r n        Set count of rooms (default is 4)
+-t n        Select test(s) to execute (0 => no seq load and during 60s, 1 => seq load, 2 => both tests)
 -w n        Set workers (cpu core) number (default is 0)
 ```
 

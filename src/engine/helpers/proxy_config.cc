@@ -166,8 +166,8 @@ void ProxyConfig::ManageProgramParameters(int argc, char *argv[])
             std::cout << "-o n   Count of objects in rooms" << std::endl;
             std::cout << "-p serial|cilkplus|opencl" << std::endl
                       << "       serial: no parallellism" << std::endl
-                      << "       cilkplus: use intel cilkplus library" << std::endl
-                      << "       opencl: intel cilkplus for all parallell computes but opencl for collision computes" << std::endl;
+                      << "       cilkplus: uses intel cilkplus library" << std::endl
+                      << "       opencl: uses opencl for collision computes" << std::endl;
             std::cout << "-r n   Count of rooms" << std::endl;
             std::cout << "-s n.m Load objects frequency, 0: generates all objects at start" << std::endl;
             std::cout << "-v 1|0 Enable/Disable vsync" << std::endl;
