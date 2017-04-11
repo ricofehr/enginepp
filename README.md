@@ -127,9 +127,9 @@ Scanning dependencies of target engine
 +--cl/      OpenCL Kernels folder
 +--cmake/   Cmake modules folder
 +--config/  Config folder
-+--demos/	Demo gif animated files
 +--dia/     Uml and span diagrams
 +--glsl/    OpenGL Shaders folder
++--others/	Demo gif and others exported files
 +--scripts/ Bash scripts
 +--src/ 	Sources
 +--tmp/     Temporary folder
@@ -192,7 +192,7 @@ For example
 ./bin/./engine -d 0 -p serial -o 24 -g 32 # no debug, no parallellism, 24 objects, 32 computes for collision
 ```
 
-![Engine](demos/enginepp.gif?raw=true)
+![Engine](others/demo.gif?raw=true)
 
 ## Test
 
@@ -216,4 +216,33 @@ Doxy pages are available [here](http://oxy.enginepp.nextdeploy.io)
 
 ## UML
 
-![Class Diagram](dia/classes.png)
+![Class Diagram](others/classes.png)
+
+## Parallell Computes
+
+Below, the enginepp span graph (v0.1)
+![Span Diagram](others/parallell_span.png)
+
+During the test, Enginepp (v0.1) is started with the following parameters
+- granularity: 64
+- vsync: false
+- 4 rooms
+- 128 moving objects (32 per room)
+
+And hardware used during test
+- cpu: Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz (6 physical cores, 12 with intel ht)
+- ram: 32Go at 2100Mhz
+- cg: GeForce GTX 980 Ti (22 computes units)
+
+Test result showing fps sum according to the number of workers (active cpu cores)
+![Test Result](others/fpsbyworkers.png)
+
+From this graph, we deduce that the optimal number of workers is 10 on this cpu
+- speedup to 10 workers: 4,5
+- efficiency to 10 workers: 45%
+
+And going through opencl for collision calculation, the results provide an improvement only if the precision for the collisions is very important.
+Thus, with a granularity of 32768, one obtains a speedup of 2 and a efficiency of 10%.
+
+It is concluded that the CPU parallelism of cilkplus brings real gains on enginepp.
+On the other hand, OpenCL is only adapted from a high level of calculations sent to the kernel on the GPU.
