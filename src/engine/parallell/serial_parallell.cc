@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <string>
-#include <cilk/cilk.h>
 #include <cilk/cilk_api.h>
 
 #include "engine/helpers/proxy_config.h"

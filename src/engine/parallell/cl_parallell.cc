@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cilk/cilk_api.h>
 
 #include "engine/helpers/proxy_config.h"
 
@@ -19,6 +20,9 @@ void CLParallell::InitCollisionParallell() {
     cl::Device device_target;
     int max_cores = 0;
     size_t num;
+
+    /* Disable cilkplus parallell */
+    __cilkrts_set_param("nworkers", "1");
 
     using engine::helpers::ProxyConfig;
     granularity_ = ProxyConfig::getSetting<int>("granularity");
@@ -43,11 +47,9 @@ void CLParallell::InitCollisionParallell() {
             }
         }
 
-        std::cout << max_cores << std::endl;
         /* Ensure items size  are valid */
         size_t nums[3]{0};
         device_target.getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &nums);
-        std::cout << nums[0] << "::" << granularity_ << std::endl;
         while (nums[0] < granularity_)
             granularity_ /= 2;
 
@@ -78,10 +80,8 @@ void CLParallell::InitCollisionParallell() {
 
         /* Ensure items size and wkgroup size are valid */
         cl_kernel_.getWorkGroupInfo(device_target, CL_KERNEL_WORK_GROUP_SIZE, &num);
-        std::cout << num << "::" << wk_size_ << std::endl;
         while (num < wk_size_)
             wk_size_ /= 2;
-        std::cout << granularity_ << "::" << wk_size_ << std::endl;
     } catch(cl::Error error) {
         std::cout << error.what() << "(" << error.err() << ")" << std::endl;
         exit(1);
