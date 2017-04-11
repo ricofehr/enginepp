@@ -33,7 +33,7 @@ private:
     cl::CommandQueue cl_queue_;
     std::vector<cl::Buffer> bufferin_;
     std::vector<cl::Buffer> bufferout_;
-    int wk_size_{4};
+    int wk_size_{32};
     tbb::mutex collision_mutex_;
 };
 
