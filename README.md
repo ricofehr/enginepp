@@ -79,16 +79,13 @@ On MacOS
 source ./scripts/./cilk_vars_osx.sh
 ```
 
-Step2, generate MakeFiles and check prerequisites
+Step2, in build directory, generate MakeFiles and compile project
 ```
-$ cmake .
+$ cd build && cmake ../
 -- Configuring done
 -- Generating done
 -- Build files have been written to: ~/enginepp
-```
 
-Step3, compile program
-```
 $ make
 Scanning dependencies of target engine
 [  5%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/shape3d.cc.o
@@ -107,7 +104,7 @@ Scanning dependencies of target engine
 [ 82%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/room.cc.o
 [ 88%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/universe.cc.o
 [ 94%] Building CXX object CMakeFiles/engine.dir/src/engine.cc.o
-[100%] Linking CXX executable bin/engine
+[100%] Linking CXX executable ../bin/engine
 [100%] Built target engine
 ```
 
@@ -124,6 +121,7 @@ Scanning dependencies of target engine
 ```
 +--assets/  Texture files
 +--bin/		Binary folder where engine executable is written
++--build/   Build folder for compile stuffs
 +--cl/      OpenCL Kernels folder
 +--cmake/   Cmake modules folder
 +--config/  Config folder

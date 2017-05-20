@@ -43,6 +43,10 @@ bin/*
 !bin/.gitkeep
 .DS_Store
 
+# Build folder
+build/*
+!build/.gitkeep
+
 # Config overridded
 config/enginepp.ini
 
