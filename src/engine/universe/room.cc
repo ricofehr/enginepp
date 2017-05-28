@@ -67,10 +67,11 @@ void Room::GenerateWalls() {
                 if (!*it_doors || (j != 2*kGRID_X/4 && j != 3*kGRID_X/4) || (k != 2*kGRID_X/4 && k != 3*kGRID_X/4)) {
                     tbb::mutex::scoped_lock lock(room_mutex_);
                     location_w = location_0 + glm::vec4(scale_w[0], 0.0f, scale_w[2], 0.0f) + glm::vec4 {j*kGRID_UNIT, i*kGRID_UNIT, k*kGRID_UNIT, 0.0f};
-                    if (i == 0)
+                    if (i == 0) {
                         location_w[1] += kGRID_UNIT/4;
-                    else
+                    } else {
                         location_w[1] -= kGRID_UNIT/4;
+                    }
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, (i == 0) ? static_cast<int>(Wall::kTEXTURE_FLOOR): static_cast<int>(Wall::kTEXTURE_TOP))};
                     objects_.push_back(std::move(wall_ptr));
                  }
@@ -89,10 +90,11 @@ void Room::GenerateWalls() {
                     (!*it_windows || j != kGRID_Y/3 || (k != 2*kGRID_Z/4 && k != 3*kGRID_Z/4))) {
                     tbb::mutex::scoped_lock lock(room_mutex_);
                     location_w = location_0 + glm::vec4(0.0f, scale_w[1], scale_w[2], 0.0f) + glm::vec4 {i*kGRID_UNIT, j*kGRID_UNIT, k*kGRID_UNIT, 0.0f};
-                    if (i == 0)
+                    if (i == 0) {
                         location_w[0] += kGRID_UNIT/4;
-                    else
+                    } else {
                         location_w[0] -= kGRID_UNIT/4;
+                    }
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, static_cast<int>(Wall::kTEXTURE_WALL))};
                     objects_.push_back(std::move(wall_ptr));
                 }
@@ -111,10 +113,11 @@ void Room::GenerateWalls() {
                     (!*it_windows || j != kGRID_Y/3 || (k != 2*kGRID_X/4 && k != 3*kGRID_X/4))) {
                     tbb::mutex::scoped_lock lock(room_mutex_);
                     location_w = location_0 + glm::vec4(scale_w[0], scale_w[1], 0.0f, 0.0f) + glm::vec4 {k*kGRID_UNIT, j*kGRID_UNIT, i*kGRID_UNIT, 0.0f};
-                    if (i == 0)
+                    if (i == 0) {
                         location_w[2] += kGRID_UNIT/4;
-                    else
+                    } else {
                         location_w[2] -= kGRID_UNIT/4;
+                    }
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, static_cast<int>(Wall::kTEXTURE_WALL))};
                     objects_.push_back(std::move(wall_ptr));
                 }
@@ -156,8 +159,9 @@ std::vector<std::unique_ptr<Model3D>> Room::ReinitGrid()
             auto pk = p[2];
 
             auto it = std::find(grid_[pi][pj][pk].begin(), grid_[pi][pj][pk].end(), objects_[o].get());
-            if(it != grid_[pi][pj][pk].end())
+            if(it != grid_[pi][pj][pk].end()) {
                 grid_[pi][pj][pk].erase(it);
+            }
         }
 
         objects_[o]->clear_placements();
@@ -185,8 +189,9 @@ std::vector<std::unique_ptr<Model3D>> Room::ReinitGrid()
 
         if (objects_[o]->get_placements().size() == 0) {
             tbb::mutex::scoped_lock lock(room_mutex_);
-            if (objects_[o]->type() == Model3D::kMODEL3D_CAMERA)
+            if (objects_[o]->type() == Model3D::kMODEL3D_CAMERA) {
                 cam_ = nullptr;
+            }
             ret.push_back(std::move(objects_[o]));
             objects_.erase(objects_.begin() + o);
         } else {
@@ -205,10 +210,11 @@ void Room::DisplayGrid()
         std::cout << "=== Floor " << i << std::endl;
         for (auto k = 0; k < kGRID_Z; k++) {
             for (auto j = 0; j < kGRID_X; j++) {
-                if (grid_[i][j][k].size() >0)
+                if (grid_[i][j][k].size() >0) {
                     std::cout << "  o";
-                else
+                } else {
                     std::cout << "  x";
+                }
             }
 
             std::cout << std::endl;
@@ -224,8 +230,9 @@ void Room::GenerateObjects()
 
     /* If sequentially object creation, return */
     using engine::helpers::ProxyConfig;
-    if (ProxyConfig::getSetting<float>("load_objects_freq") != 0.0f)
+    if (ProxyConfig::getSetting<float>("load_objects_freq") != 0.0f) {
         return;
+    }
 
     while (nbobjects_) {
         GenerateRandomObject();
@@ -365,8 +372,9 @@ Model3D *Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 mov
     tbb::mutex::scoped_lock lock(room_mutex_);
 
     /* Create Brick object and add to the Current Room */
-    if (type_object == Model3D::kMODEL3D_BRICK)
+    if (type_object == Model3D::kMODEL3D_BRICK) {
         obj_ptr = std::make_unique<Brick>(scale, location, move);
+    }
 
     objects_.push_back(std::move(obj_ptr));
     return objects_[ind].get();
@@ -376,19 +384,22 @@ Model3D *Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 mov
 void Room::Draw(Camera *cam)
 {
     /* If current Room, compute new Camera GL Coords */
-    if (cam_ != nullptr)
+    if (cam_ != nullptr) {
         cam_->PrepareDraw(cam);
+    }
 
     /* Compute objects GL coords  */
     cilk_for (auto cnt = 0; cnt < objects_.size(); cnt++) {
-        if (objects_[cnt]->type() != Model3D::kMODEL3D_CAMERA)
+        if (objects_[cnt]->type() != Model3D::kMODEL3D_CAMERA) {
             objects_[cnt]->PrepareDraw(cam);
+        }
     }
 
     /* GL draw in serial (must be not parallell !) */
     for (auto &o: objects_) {
-        if (o->type() != Model3D::kMODEL3D_CAMERA)
+        if (o->type() != Model3D::kMODEL3D_CAMERA) {
             o->Draw();
+        }
     }
 }
 
@@ -404,8 +415,9 @@ void Room::DetectCollision(std::vector<Room*> neighbors)
     /* For all others moving objects
        Parallell loop with cilkplus */
     cilk_for (auto i = 0; i < objects_.size(); i++) {
-        if (objects_[i]->IsMoved() && objects_[i]->type() != Model3D::kMODEL3D_CAMERA)
+        if (objects_[i]->IsMoved() && objects_[i]->type() != Model3D::kMODEL3D_CAMERA) {
             PivotCollision(objects_[i].get(), neighbors);
+        }
     }
 }
 
@@ -439,23 +451,29 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
                             std::vector<Model3D*> targets;
 
                             if (i < 0) {
-                                if (neighbors[kFLOOR] != nullptr)
+                                if (neighbors[kFLOOR] != nullptr) {
                                     targets = neighbors[kFLOOR]->getObjects(kGRID_Y-1, j, k);
+                                }
                             } else if (i == kGRID_Y) {
-                                if (neighbors[kROOF] != nullptr)
+                                if (neighbors[kROOF] != nullptr) {
                                     targets = neighbors[kROOF]->getObjects(0, j, k);
+                                }
                             } else if (j < 0) {
-                                if (neighbors[kLEFT] != nullptr)
+                                if (neighbors[kLEFT] != nullptr) {
                                     targets = neighbors[kLEFT]->getObjects(i, kGRID_X-1, k);
+                                }
                             } else if (j == kGRID_X) {
-                                if (neighbors[kRIGHT] != nullptr)
+                                if (neighbors[kRIGHT] != nullptr) {
                                     targets = neighbors[kRIGHT]->getObjects(i, 0, k);
+                                }
                             } else if (k < 0) {
-                                if (neighbors[kFRONT] != nullptr)
+                                if (neighbors[kFRONT] != nullptr) {
                                     targets = neighbors[kFRONT]->getObjects(i, j, kGRID_Z-1);
+                                }
                             } else if (k == kGRID_Z) {
-                                if (neighbors[kBACK] != nullptr)
+                                if (neighbors[kBACK] != nullptr) {
                                     targets = neighbors[kBACK]->getObjects(i, j, 0);
+                                }
                             } else {
                                 targets = grid_[i][j][k];
                             }
@@ -476,8 +494,9 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
 
     /* Prepare vector for collision compute */
     std::vector<Model3D*> room_objects;
-    for (auto & obj_pair : grid_objects)
+    for (auto & obj_pair : grid_objects) {
         room_objects.push_back(obj_pair.second);
+    }
 
     /* Parallell collision loop for objects with cilkplus */
     std::map<int, std::vector<Model3D*>> recompute;
@@ -486,8 +505,9 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
         assert(*object != *room_objects[i]);
 
         std::vector<Model3D*> collision_recompute = object->DetectCollision(room_objects[i], room_mutex_, proxy_parallell_);
-        if (collision_recompute.size() > 0)
+        if (collision_recompute.size() > 0) {
             recompute[room_objects[i]->id()] = collision_recompute;
+        }
     }
 
     /* end mutex lock */
@@ -498,8 +518,9 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
         try {
             for (auto & r : recompute.at(object->obstacle()->id())) {
                 using engine::helpers::ProxyConfig;
-                if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION)
+                if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION) {
                     std::cout << "Recompute " << object->id() << "::" << r->id() << std::endl;
+                }
                 cilk_spawn PivotCollision(r, neighbors);
             }
         }
@@ -515,14 +536,17 @@ std::unique_ptr<Model3D> Room::TransfertObject(std::unique_ptr<Model3D> obj, boo
     if (force || IsInRoom(obj->location())) {
         /* Output if debug setted */
         using engine::helpers::ProxyConfig;
-        if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION && force)
+        if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION && force) {
             std::cout << "Transfert " << obj->id() << " to Room " << id() << " (forced: " << force << ")" << std::endl;
+        }
         /* Inverse object move if forced transfert */
-        if (force)
+        if (force) {
             obj->InverseMove();
+        }
         /* Set current room active if its camera object */
-        if (obj->type() == Model3D::kMODEL3D_CAMERA)
+        if (obj->type() == Model3D::kMODEL3D_CAMERA) {
             cam_ = (Camera *)obj.get();
+        }
 
         objects_.push_back(std::move(obj));
         return nullptr;
@@ -541,19 +565,22 @@ bool Room::IsInRoom (glm::vec3 location_object) const
         location_object[1] < location_0[1] + kGRID_Y * kGRID_UNIT &&
         location_object[1] >= location_0[1] &&
         location_object[2] < location_0[2] + kGRID_Z * kGRID_UNIT &&
-        location_object[2] >= location_0[2])
+        location_object[2] >= location_0[2]) {
             return true;
+    }
 
     return false;
 }
 
-/* List outside objects into room (function not used currently) */
+/* List outside objects into room (currently not used) */
 std::vector<std::unique_ptr<Model3D>> Room::ListOutsideObjects()
 {
     std::vector<std::unique_ptr<Model3D>> ret;
-    for (auto &o : objects_)
-        if (!IsInRoom(o->location()))
+    for (auto &o : objects_) {
+        if (!IsInRoom(o->location())) {
             ret.push_back(std::move(o));
+        }
+    }
 
     return ret;
 }

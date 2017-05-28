@@ -35,8 +35,9 @@ public:
     const bool ready() const { return ready_; }
 
     inline int countRooms(bool display) const {
-        if (display)
+        if (display) {
             return display_rooms_.size();
+        }
         return rooms_.size();
     }
 
@@ -92,6 +93,7 @@ private:
     void GenerateRandomRoom();
     Room *GenerateRoom(glm::vec4 location);
     void GenerateWalls();
+
     /* Compute neighbors */
     std::vector<Room*> GetOrderNeighbors(Room *r);
     std::map<int, Room*> GetNeighbors(Room *r, int level);

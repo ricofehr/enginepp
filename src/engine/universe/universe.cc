@@ -25,7 +25,8 @@ namespace engine {
 namespace universe {
 
 namespace {
-    double kLastTime = 0;
+    /* Used for delay between 2 objects creation */
+    double sLastTime = 0;
 }
 
 /* Constructor */
@@ -42,8 +43,9 @@ void Universe::InitProxyParallell()
     using engine::helpers::ProxyConfig;
 
     /* Define cpu cores number for parallell computes */
-    if (ProxyConfig::getSetting<int>("workers_count"))
+    if (ProxyConfig::getSetting<int>("workers_count")) {
         __cilkrts_set_param("nworkers", std::to_string(ProxyConfig::getSetting<int>("workers_count")).c_str());
+    }
 
     /* Get parallell type from config */
     int type_parallell = ProxyConfig::getSetting<int>("parallell");
@@ -182,8 +184,9 @@ void Universe::ReinitGrid()
     }
 
     using engine::helpers::ProxyConfig;
-    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST) {
         DisplayGrid();
+    }
 }
 
 /* Display Rooms grid for Universe */
@@ -194,10 +197,11 @@ void Universe::DisplayGrid()
         std::cout << "=== Floor " << i << std::endl;
         for (auto k = 0; k < kGRID_Z; k++) {
             for (auto j = 0; j < kGRID_X; j++) {
-                if (grid_[i][j][k].size() >0)
+                if (grid_[i][j][k].size() > 0) {
                     std::cout << "  o";
-                else
+                } else {
                     std::cout << "  x";
+                }
             }
 
             std::cout << std::endl;
@@ -360,12 +364,14 @@ void Universe::NextHop()
     /* Detect current room */
     int active_index = -1;
     cilk_for (auto cnt = 0; cnt < rooms_.size(); cnt++) {
-        if (rooms_[cnt]->cam() != nullptr)
+        if (rooms_[cnt]->cam() != nullptr) {
             active_index = cnt;
+        }
     }
 
-    if (active_index == -1)
+    if (active_index == -1) {
         return;
+    }
 
     /* Record moving orders for camera */
     rooms_[active_index]->MoveCamera();
@@ -375,11 +381,13 @@ void Universe::NextHop()
         display_rooms_.clear();
         auto map_rooms = GetNeighbors(rooms_[active_index].get(), ProxyConfig::getSetting<int>("clipping") % 2);
         map_rooms[rooms_[active_index]->id()] = rooms_[active_index].get();
-        for (auto &r : map_rooms)
+        for (auto &r : map_rooms) {
             display_rooms_.push_back(r.second);
+        }
     } else if(display_rooms_.size() == 0) {
-        for (auto &r : rooms_)
+        for (auto &r : rooms_) {
             display_rooms_.push_back(r.get());
+        }
     }
 
     /* Detect collision in active rooms */
@@ -412,13 +420,15 @@ void Universe::NextHop()
                 for (auto &r : GetNeighbors(objs.first, 0)) {
                     o = r.second->TransfertObject(std::move(o), false);
 
-                    if (o == nullptr)
+                    if (o == nullptr) {
                         break;
+                    }
                 }
 
                 /* No orphan object */
-                if (o != nullptr)
+                if (o != nullptr) {
                     objs.first->TransfertObject(std::move(o), true);
+                }
             }
         }
     }
@@ -428,12 +438,14 @@ void Universe::NextHop()
     if ((freq = ProxyConfig::getSetting<float>("load_objects_freq")) > 0.0f) {
         double current_time = glfwGetTime();
         for (auto &r : rooms_) {
-            if (!r->IsFull() && current_time - kLastTime >= freq)
+            if (!r->IsFull() && current_time - sLastTime >= freq) {
                 r->GenerateRandomObject();
+            }
         }
 
-        if (current_time - kLastTime >= freq)
-            kLastTime = current_time;
+        if (current_time - sLastTime >= freq) {
+            sLastTime = current_time;
+        }
     }
 }
 

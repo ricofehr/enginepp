@@ -15,6 +15,7 @@
 namespace engine {
 namespace parallell {
 
+/* Init opencl parallell context */
 void CLParallell::InitCollisionParallell() {
     cl::Platform platform_target;
     cl::Device device_target;
@@ -50,8 +51,9 @@ void CLParallell::InitCollisionParallell() {
         /* Ensure items size  are valid */
         size_t nums[3]{0};
         device_target.getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &nums);
-        while (nums[0] < granularity_)
+        while (nums[0] < granularity_) {
             granularity_ /= 2;
+        }
 
         /* Create a context for the devices */
         cl::Context context(device_target);
@@ -80,8 +82,9 @@ void CLParallell::InitCollisionParallell() {
 
         /* Ensure items size and wkgroup size are valid */
         cl_kernel_.getWorkGroupInfo(device_target, CL_KERNEL_WORK_GROUP_SIZE, &num);
-        while (num < wk_size_)
+        while (num < wk_size_) {
             wk_size_ /= 2;
+        }
     } catch(cl::Error error) {
         std::cout << error.what() << "(" << error.err() << ")" << std::endl;
         exit(1);
@@ -94,31 +97,28 @@ float CLParallell::ComputeCollisionParallell(float box1[], float box2[])
     std::vector<float> distances(granularity_, 1.0f);
     float *distances_ptr = distances.data();
 
-    /* Protect shared opencl vars with mutex (because cilkplus parallell with objects loop) */
-    {
-        tbb::mutex::scoped_lock lock(collision_mutex_);
-        /* Copy the input data to the input buffer */
-        cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
-        cl_queue_.enqueueWriteBuffer(bufferin_[1], CL_TRUE, 0, 9 * sizeof(float), box2);
-        cl_queue_.enqueueWriteBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
+    /* Copy the input data to the input buffer */
+    cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
+    cl_queue_.enqueueWriteBuffer(bufferin_[1], CL_TRUE, 0, 9 * sizeof(float), box2);
+    cl_queue_.enqueueWriteBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
 
-        /* Set kernel arguments */
-        cl_kernel_.setArg(0, bufferin_[0]);
-        cl_kernel_.setArg(1, bufferin_[1]);
-        cl_kernel_.setArg(2, bufferout_[0]);
+    /* Set kernel arguments */
+    cl_kernel_.setArg(0, bufferin_[0]);
+    cl_kernel_.setArg(1, bufferin_[1]);
+    cl_kernel_.setArg(2, bufferout_[0]);
 
-        /* Execute the kernel (1 workitem in 10 workgroup => compute distance for the 10 fact) */
-        cl::NDRange global(granularity_);
-        cl::NDRange local(wk_size_);
-        cl_queue_.enqueueNDRangeKernel(cl_kernel_, cl::NullRange, global, local);
+    /* Execute the kernel (1 workitem in 10 workgroup => compute distance for the 10 fact) */
+    cl::NDRange global(granularity_);
+    cl::NDRange local(wk_size_);
+    cl_queue_.enqueueNDRangeKernel(cl_kernel_, cl::NullRange, global, local);
 
-        /* Copy the output data back to the host */
-        cl_queue_.enqueueReadBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
-    }
+    /* Copy the output data back to the host */
+    cl_queue_.enqueueReadBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
 
     for (auto i = 0; i < granularity_; i++) {
-        if (distances[i] != 1.0f)
+        if (distances[i] != 1.0f) {
             return distances[i];
+        }
     }
 
     return 1.0f;

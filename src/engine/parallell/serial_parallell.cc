@@ -14,10 +14,12 @@
 namespace engine {
 namespace parallell {
 
+/* Init serial parallell context */
 void SerialParallell::InitCollisionParallell() {
     using engine::helpers::ProxyConfig;
     granularity_ = ProxyConfig::getSetting<int>("granularity");
 
+    /* Disable cilkplus parallell */
     __cilkrts_set_param("nworkers", "1");
 }
 

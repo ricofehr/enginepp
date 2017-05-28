@@ -15,13 +15,11 @@ namespace engine {
 
 namespace geometry {
 
-float Shape3D::kMoveFactor = 1.0f;
+float Shape3D::sMoveFactor = 1.0f;
 
 /*
 *   ComputeMVP  -   Compute the ModelViewProjection matrix
 *                   for current object.
-*
-*   Return a mvp mat4 matrix
 */
 void Shape3D::ComputeMVP(engine::universe::Camera *cam)
 {
@@ -41,10 +39,10 @@ void Shape3D::ComputeMVP(engine::universe::Camera *cam)
     );
 
     if (distance_ != -1.0f) {
-        location_ += move_ * distance_ * Shape3D::kMoveFactor;
+        location_ += move_ * distance_ * Shape3D::sMoveFactor;
         move_ = -move_;
     } else {
-        location_ += move_ * Shape3D::kMoveFactor;
+        location_ += move_ * Shape3D::sMoveFactor;
     }
     distance_ = -1.0f;
 

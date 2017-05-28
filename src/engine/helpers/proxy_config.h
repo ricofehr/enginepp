@@ -76,8 +76,9 @@ private:
     void setValue(std::string key, libconfig::Setting::Type setting_type, T value)
     {
         libconfig::Setting &root = cfg.getRoot();
-        if (root.exists(key))
+        if (root.exists(key)) {
             root.remove(key);
+        }
         root.add(key, setting_type) = value;
     }
 };

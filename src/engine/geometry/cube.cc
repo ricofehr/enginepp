@@ -17,8 +17,8 @@ namespace engine {
 /* Use of global variables defined in proxygl namespace */
 namespace helpers {
 namespace proxygl {
-    extern GLuint kProgramId;
-    extern GLuint kMatrixId;
+    extern GLuint gProgramId;
+    extern GLuint gMatrixId;
 }//namespace proxygl
 }//namespace helpers
 
@@ -26,11 +26,10 @@ namespace geometry {
 
 namespace {
 
-
-static GLuint elementbuffer = 0;
+static GLuint sElementBuffer = 0;
 
 /* Load element coordinates in buffer */
-void CreateElementBuffer() {
+static void CreateElementBuffer() {
     GLuint elements[] = {
         /* front */
 		0, 1, 2,
@@ -52,10 +51,10 @@ void CreateElementBuffer() {
 		22, 23, 20,
     };
 
-    glGenBuffers(1, &elementbuffer);
-    assert(elementbuffer != 0);
+    glGenBuffers(1, &sElementBuffer);
+    assert(sElementBuffer != 0);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sElementBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STREAM_DRAW);
 }
 
@@ -92,7 +91,7 @@ Cube::Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move,
     texturebuffer_ = texturebuffer;
     distance_ = -1;
 
-    if (elementbuffer == 0) {
+    if (sElementBuffer == 0) {
         CreateElementBuffer();
     }
 }
@@ -100,16 +99,16 @@ Cube::Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move,
 /* Draw the cube */
 void Cube::Draw()
 {
-    /* kProgramId and kMatrixId global fixed values */
-    using engine::helpers::proxygl::kMatrixId;
-    using engine::helpers::proxygl::kProgramId;
+    /* gProgramId and gMatrixId global fixed values */
+    using engine::helpers::proxygl::gMatrixId;
+    using engine::helpers::proxygl::gProgramId;
 
     if (vertexbuffer_ == 0) {
         return;
     }
 
     glEnable(GL_CULL_FACE);
-    glUniformMatrix4fv(kMatrixId, 1, GL_FALSE, &mvp_[0][0]);
+    glUniformMatrix4fv(gMatrixId, 1, GL_FALSE, &mvp_[0][0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
@@ -129,8 +128,8 @@ void Cube::Draw()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
                           8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-    glUniform1i(glGetUniformLocation(kProgramId, "tex"), texturebuffer_);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+    glUniform1i(glGetUniformLocation(gProgramId, "tex"), texturebuffer_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sElementBuffer);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);

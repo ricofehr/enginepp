@@ -23,12 +23,12 @@ public:
     static constexpr int kTEXTURE_FLOOR = 2;
 
     /* Face number */
-    static const int kWALL_FRONT = 0;
-    static const int kWALL_RIGHT = 1;
-    static const int kWALL_BACK = 2;
-    static const int kWALL_LEFT = 3;
-    static const int kWALL_BOTTOM = 4;
-    static const int kWALL_TOP = 5;
+    static constexpr int kWALL_FRONT = 0;
+    static constexpr int kWALL_RIGHT = 1;
+    static constexpr int kWALL_BACK = 2;
+    static constexpr int kWALL_LEFT = 3;
+    static constexpr int kWALL_BOTTOM = 4;
+    static constexpr int kWALL_TOP = 5;
 
     Wall();
     Wall(glm::vec3 scale, glm::vec4 location, int face);

@@ -20,11 +20,11 @@ namespace helpers {
 namespace proxygl {
 
 /* Global variables */
-GLFWwindow* kGLWindow = nullptr;
-GLuint kProgramId = -1;
-GLuint kMatrixId = -1;
+GLFWwindow* gGLWindow = nullptr;
+GLuint gProgramId = -1;
+GLuint gMatrixId = -1;
 
-double kBeginTime = 0.0f;
+double gBeginTime = 0.0f;
 
 namespace {
 
@@ -32,7 +32,6 @@ static engine::universe::Universe *universe = nullptr;
 
 /**
 *   LoadShaders - Compile and Load shader from files to ram
-*
 *   Currently, 2 shaders are compiled: vertex and fragment shaders.
 */
 void LoadShaders()
@@ -49,8 +48,9 @@ void LoadShaders()
     std::ifstream vertexshader_stream(vertex_file_path, std::ios::in);
     if (vertexshader_stream.is_open()) {
         std::string line = "";
-        while(getline(vertexshader_stream, line))
+        while(getline(vertexshader_stream, line)) {
             vertexshader_code += "\n" + line;
+        }
         vertexshader_stream.close();
     } else {
         std::cerr << "Impossible to open " << vertex_file_path << std::endl;
@@ -63,8 +63,9 @@ void LoadShaders()
     std::ifstream fragmentshader_stream(fragment_file_path, std::ios::in);
     if(fragmentshader_stream.is_open()){
         std::string line = "";
-        while(getline(fragmentshader_stream, line))
+        while(getline(fragmentshader_stream, line)) {
             fragmentshader_code += "\n" + line;
+        }
         fragmentshader_stream.close();
     }
 
@@ -72,8 +73,9 @@ void LoadShaders()
     int info_log_length;
 
     /* Compile Vertex Shader */
-    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST) {
         std::cout << "Compiling shader : " << vertex_file_path << std::endl;
+    }
     const char *vertexsource_pointer = vertexshader_code.c_str();
     glShaderSource(vertexshader_id, 1, &vertexsource_pointer , nullptr);
     glCompileShader(vertexshader_id);
@@ -88,8 +90,9 @@ void LoadShaders()
     }
 
     /* Compile Fragment Shader */
-    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST) {
         std::cout << "Compiling shader : " << fragment_file_path << std::endl;
+    }
     const char *fragmentsource_pointer = fragmentshader_code.c_str();
     glShaderSource(fragmentshader_id, 1, &fragmentsource_pointer, nullptr);
     glCompileShader(fragmentshader_id);
@@ -104,24 +107,25 @@ void LoadShaders()
     }
 
     /* Link the program */
-    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST)
+    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST) {
         std::cout << "Linking program" << std::endl;
-    kProgramId = glCreateProgram();
-    glAttachShader(kProgramId, vertexshader_id);
-    glAttachShader(kProgramId, fragmentshader_id);
-    glLinkProgram(kProgramId);
+    }
+    gProgramId = glCreateProgram();
+    glAttachShader(gProgramId, vertexshader_id);
+    glAttachShader(gProgramId, fragmentshader_id);
+    glLinkProgram(gProgramId);
 
     /* Check the program */
-    glGetProgramiv(kProgramId, GL_LINK_STATUS, &result);
-    glGetProgramiv(kProgramId, GL_INFO_LOG_LENGTH, &info_log_length);
+    glGetProgramiv(gProgramId, GL_LINK_STATUS, &result);
+    glGetProgramiv(gProgramId, GL_INFO_LOG_LENGTH, &info_log_length);
     if (info_log_length > 0) {
         std::vector<char> program_error_message(info_log_length + 1);
-        glGetProgramInfoLog(kProgramId, info_log_length, nullptr, &program_error_message[0]);
+        glGetProgramInfoLog(gProgramId, info_log_length, nullptr, &program_error_message[0]);
         std::cerr << &program_error_message[0];
     }
 
-    glDetachShader(kProgramId, vertexshader_id);
-    glDetachShader(kProgramId, fragmentshader_id);
+    glDetachShader(gProgramId, vertexshader_id);
+    glDetachShader(gProgramId, fragmentshader_id);
 
     glDeleteShader(vertexshader_id);
     glDeleteShader(fragmentshader_id);
@@ -129,7 +133,6 @@ void LoadShaders()
 
 /**
 *    draw - Main display function
-*
 *    Display function triggered when opengl must display again all polygons
 */
 void Draw()
@@ -144,20 +147,24 @@ void Draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* Use defined shaders */
-    glUseProgram(kProgramId);
+    glUseProgram(gProgramId);
 
     /* Fill polygon */
-    if (ProxyConfig::getSetting<bool>("grid"))
+    if (ProxyConfig::getSetting<bool>("grid")) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    else
+    } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 
     universe->NextHop();
 
     /* Swap buffers and poll */
-    glfwSwapBuffers(kGLWindow);
+    glfwSwapBuffers(gGLWindow);
 }
 
+/*
+*   Compute current fps and display it
+*/
 int Fps(double &last_time, int &nb_frames)
 {
     int ret = 0;
@@ -169,13 +176,15 @@ int Fps(double &last_time, int &nb_frames)
         int debug = ProxyConfig::getSetting<int>("debug");
 
         /* Header for test datas output */
-        if (kBeginTime == last_time &&
-            debug == ProxyConfig::kDEBUG_TEST)
+        if (gBeginTime == last_time &&
+            debug == ProxyConfig::kDEBUG_TEST) {
             std::cout << "TIME:FPS:NBOBJALL:NBOBJMOVE" << std::endl;
-
+        }
         /* Print if debug */
-        if (debug == ProxyConfig::kDEBUG_ALL)
+        if (debug == ProxyConfig::kDEBUG_ALL) {
             std::cout << 1000.0 / static_cast<double>(nb_frames) << " ms/frame - ";
+        }
+
         if (debug == ProxyConfig::kDEBUG_PERF || debug == ProxyConfig::kDEBUG_ALL) {
             std::cout << nb_frames << " fps - ";
             std::cout << universe->countObjects(false) << " objects (" << universe->countObjects(true) << " displayed) in ";
@@ -184,12 +193,12 @@ int Fps(double &last_time, int &nb_frames)
         }
 
         /* Update movefactor for objects */
-        engine::geometry::Shape3D::kMoveFactor = 60.0f / nb_frames;
+        engine::geometry::Shape3D::sMoveFactor = 60.0f / nb_frames;
         universe->toready();
 
         /* Test datas output */
         if (debug == ProxyConfig::kDEBUG_TEST) {
-            std::cout << static_cast<int>(current_time - kBeginTime) << ":" << nb_frames << ":";
+            std::cout << static_cast<int>(current_time - gBeginTime) << ":" << nb_frames << ":";
             std::cout << universe->countObjects(true) << ":" << universe->countMovingObjects(true) << std::endl;
         }
 
@@ -200,8 +209,9 @@ int Fps(double &last_time, int &nb_frames)
     }
 
     int end_time = ProxyConfig::getSetting<int>("execution_time");
-    if (end_time && current_time - kBeginTime >= end_time)
+    if (end_time && current_time - gBeginTime >= end_time) {
         exit(0);
+    }
 
     return ret;
 }
@@ -216,8 +226,7 @@ void InitGL()
     float window_height = 740.0f;
 
     /* Initialise GLFW */
-    if (!glfwInit())
-    {
+    if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW\n";
         exit(-1);
     }
@@ -234,14 +243,14 @@ void InitGL()
     glfwWindowHint(GLFW_RESIZABLE, false);
 
     /* Open a window and create its OpenGL context (use glfwGetPrimaryMonitor() on third parameter for FS) */
-    kGLWindow = glfwCreateWindow(window_width, window_height, "=== Engine ===", nullptr, nullptr);
-    if(kGLWindow == nullptr) {
+    gGLWindow = glfwCreateWindow(window_width, window_height, "=== Engine ===", nullptr, nullptr);
+    if(gGLWindow == nullptr) {
         std::cerr << "Failed to open GLFW window\n";
         glfwTerminate();
         exit(-1);
     }
-    glfwSetInputMode(kGLWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwMakeContextCurrent(kGLWindow);
+    glfwSetInputMode(gGLWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwMakeContextCurrent(gGLWindow);
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW\n";
@@ -262,25 +271,26 @@ void SettingsGL(engine::universe::Universe *uni)
     universe = uni;
 
     /* Ensure we can capture keys being pressed below */
-    glfwSetInputMode(kGLWindow, GLFW_STICKY_KEYS, GL_TRUE);
+    glfwSetInputMode(gGLWindow, GLFW_STICKY_KEYS, GL_TRUE);
 
     /* Vsync Setting (default is enable) */
-    if (!ProxyConfig::getSetting<bool>("vsync"))
+    if (!ProxyConfig::getSetting<bool>("vsync")) {
         glfwSwapInterval(0);
+    }
 
     /* Create and compile our GLSL program from the shader */
     LoadShaders();
 
     /* Get a handle for our "MVP" uniform */
-    kMatrixId = glGetUniformLocation(kProgramId, "MVP");
+    gMatrixId = glGetUniformLocation(gProgramId, "MVP");
 
     /* Ensure prerequisite */
     assert(universe != nullptr);
-    assert(kMatrixId != -1);
-    assert(kProgramId != -1);
+    assert(gMatrixId != -1);
+    assert(gProgramId != -1);
 
-    kBeginTime = glfwGetTime();
-    double last_time = kBeginTime;
+    gBeginTime = glfwGetTime();
+    double last_time = gBeginTime;
     int nb_frames = 0;
     bool is_draw = true;
     bool is_released = true;
@@ -288,9 +298,10 @@ void SettingsGL(engine::universe::Universe *uni)
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
         /* Pause button */
-        if (glfwGetKey(kGLWindow, GLFW_KEY_P) == GLFW_PRESS) {
-            if (is_released)
+        if (glfwGetKey(gGLWindow, GLFW_KEY_P) == GLFW_PRESS) {
+            if (is_released) {
                 is_draw = is_draw ? false : true;
+            }
             is_released = false;
         } else {
             is_released = true;
@@ -303,8 +314,8 @@ void SettingsGL(engine::universe::Universe *uni)
 
         glfwPollEvents();
     }
-    while (glfwGetKey(kGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
-           && glfwWindowShouldClose(kGLWindow) == 0);
+    while (glfwGetKey(gGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
+           && glfwWindowShouldClose(gGLWindow) == 0);
 }
 
 }//namespace proxygl

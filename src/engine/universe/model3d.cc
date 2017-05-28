@@ -20,13 +20,13 @@ namespace universe {
 
 namespace {
     /* Unique id for object */
-    static int objectid = 1;
+    static int sObjectId = 1;
 }
 
 /* Constructor */
 Model3D::Model3D()
 {
-    id_ = objectid++;
+    id_ = sObjectId++;
     distance_ = -1.0f;
     obstacle_ = nullptr;
     id_last_collision_ = 0;
@@ -57,8 +57,9 @@ void Model3D::PrepareDraw(Camera *cam)
     distance_ = -1.0f;
     /* An object cant touch same object twice, except camera */
     id_last_collision_ = -1;
-    if (!is_controlled_ && obstacle_ != nullptr)
+    if (!is_controlled_ && obstacle_ != nullptr) {
         id_last_collision_ = obstacle_->id();
+    }
     obstacle_ = nullptr;
 }
 
@@ -91,8 +92,9 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &co
 
 
     /* Cant touch same object twice in short time */
-    if (obstacle->id() == id_last_collision_)
+    if (obstacle->id() == id_last_collision_) {
         return recompute;
+    }
 
     x1 = coords1.at(0)[0];
     y1 = coords1.at(0)[1];
@@ -129,8 +131,9 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &co
             (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
                 /* Print debug if setting */
                 using engine::helpers::ProxyConfig;
-                if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION)
+                if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION) {
                     std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
+                }
 
                 oldobstacle1 = obstacle_;
                 oldobstacle2 = obstacle->obstacle();
@@ -144,8 +147,9 @@ std::vector<Model3D*> Model3D::DetectCollision(Model3D *obstacle, tbb::mutex &co
                 if (oldobstacle1 != nullptr) {
                     oldobstacle1->set_distance(-1);
                     oldobstacle1->set_obstacle(nullptr);
-                    if (oldobstacle1->IsMoved())
+                    if (oldobstacle1->IsMoved()) {
                         recompute.push_back(oldobstacle1);
+                    }
                 }
 
                 if (oldobstacle2 != nullptr &&

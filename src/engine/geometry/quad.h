@@ -42,9 +42,9 @@ public:
     int face() const { return face_; }
 
 private:
-    int face_; /* 6 type of quad: back, front, left, right, top, roof */
     GLuint vertexbuffer_;
     GLuint texturebuffer_;
+    int face_; /* 6 type of quad: back, front, left, right, top, roof */
 };
 
 }//namespace geometry

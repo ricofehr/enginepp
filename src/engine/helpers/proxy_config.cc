@@ -189,12 +189,17 @@ void ProxyConfig::ManageProgramParameters(int argc, char *argv[])
         /* parallell type */
         if (arg == "-p") {
             const std::string arg2(argv[cnt++]);
-            if (arg2 == "serial")
+            if (arg2 == "serial") {
                 ProxyConfig::setSetting("parallell", libconfig::Setting::TypeInt, EngineParallell::kPARALLELL_SERIAL);
-            if (arg2 == "cilkplus")
+            }
+
+            if (arg2 == "cilkplus") {
                 ProxyConfig::setSetting("parallell", libconfig::Setting::TypeInt, EngineParallell::kPARALLELL_CILK);
-            if (arg2 == "opencl")
+            }
+
+            if (arg2 == "opencl") {
                 ProxyConfig::setSetting("parallell", libconfig::Setting::TypeInt, EngineParallell::kPARALLELL_CL);
+            }
         }
 
         /* Count of rooms */

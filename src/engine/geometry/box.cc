@@ -17,7 +17,7 @@ namespace engine {
 namespace geometry {
 
 namespace {
-const std::vector<glm::vec3> coords_default = {
+static const std::vector<glm::vec3> sDefaultCoords = {
     /* Front */
     {-1.0f,  1.0f,  1.0f},
     { 1.0f,  1.0f,  1.0f},
@@ -54,19 +54,19 @@ const std::vector<glm::vec3> coords_default = {
 
 /* Constructors */
 Box::Box()
-    :Box(1.0f, glm::vec4(0.0f), coords_default) {}
+    :Box(1.0f, glm::vec4(0.0f), sDefaultCoords) {}
 
 Box::Box(float scale, glm::vec4 location)
     :Box(glm::vec3(scale), location) {}
 
 Box::Box(glm::vec3 scale, glm::vec4 location)
-    :Box(scale, location, glm::vec4(0.0f), coords_default) {}
+    :Box(scale, location, glm::vec4(0.0f), sDefaultCoords) {}
 
 Box::Box(float scale, glm::vec4 location, glm::vec4 move)
     :Box(glm::vec3(scale), location, move) {}
 
 Box::Box(glm::vec3 scale, glm::vec4 location, glm::vec4 move)
-    :Box(scale, location, move, coords_default) {}
+    :Box(scale, location, move, sDefaultCoords) {}
 
 Box::Box(float scale, glm::vec4 location, std::vector<glm::vec3> coords)
         : Box(glm::vec3(scale), location, glm::vec4(0.0f), coords) {}
@@ -106,10 +106,10 @@ void Box::MoveCoords()
     }
 
     if (distance_ != -1.0f) {
-        location_ += distance_ * move_ * kMoveFactor;
+        location_ += distance_ * move_ * sMoveFactor;
         move_ = -move_;
     } else {
-        location_ += move_ * kMoveFactor;
+        location_ += move_ * sMoveFactor;
     }
 
     distance_ = -1.0f;

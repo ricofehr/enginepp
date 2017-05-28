@@ -22,7 +22,7 @@ class Shape3D {
 
 public:
     /* Define a move factore who depends on fps */
-    static float kMoveFactor;
+    static float sMoveFactor;
 
     /* Default constructor, move and copy constructor / operator */
     Shape3D() = default;
@@ -40,7 +40,7 @@ public:
     bool IsMovedY() const { return move_[1] != 0.0f; }
     bool IsMovedZ() const { return move_[2] != 0.0f; }
     float distance() const { return distance_; }
-    glm::vec4 move() const { return move_ * kMoveFactor; }
+    glm::vec4 move() const { return move_ * sMoveFactor; }
     glm::vec4 location() const { return location_; }
 
     void set_distance(float distance) { distance_ = distance; }
@@ -48,18 +48,16 @@ public:
     void set_move(glm::vec3 move) { move_ = glm::vec4(move, 0.0f); }
     void InverseMove() { move_ = -move_; }
 
-    /* Abstract class, so vietual destructor */
+    /* Abstract class, so virtual destructor */
     virtual ~Shape3D() = default;
 
 protected:
+    glm::mat4 mvp_;
     glm::vec4 location_;
     glm::vec4 move_;
     glm::vec3 scale_;
-    glm::mat4 mvp_;
     float distance_;
 };
-
-/* Define static var */
 
 }//namespace geometry
 }//namespace engine

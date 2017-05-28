@@ -52,8 +52,9 @@ public:
     inline int countMovingObjects() const {
         cilk::reducer<cilk::op_add<int>> count_sum(0);
         cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
-            if (objects_[cnt]->IsMoved())
+            if (objects_[cnt]->IsMoved()) {
                 *count_sum += 1;
+            }
         }
         return count_sum.get_value();
     }
@@ -79,8 +80,6 @@ public:
 private:
     /* Room attributes */
     glm::vec4 location_;
-    int nbobjects_{33};
-    Camera *cam_{nullptr};
     std::vector<Model3D*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
     std::vector<std::unique_ptr<Model3D>> objects_;
     engine::parallell::EngineParallell *proxy_parallell_{nullptr};
@@ -88,6 +87,8 @@ private:
     tbb::mutex grid_mutex_;
     std::vector<bool> doors_{false, false, false, false, false, false};
     std::vector<bool> windows_{false, false, false, false, false, false};
+    int nbobjects_{33};
+    Camera *cam_{nullptr};
 
     /* Some internal functions */
     Model3D *GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale);

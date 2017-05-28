@@ -12,7 +12,6 @@ public:
     void InitCollisionParallell() override final;
     float ComputeCollisionParallell(float box1[], float box2[]) override final;
     ~CilkParallell() override = default;
-
 };
 
 }//namespace parallell

@@ -18,10 +18,11 @@ namespace engine {
 namespace universe {
 
 namespace {
-GLuint texturebuffer[3] = {0,0,0};
-GLuint vertexbuffer[3] = {0,0,0};
 
-const GLfloat g_buffer_data[192] = {
+static GLuint sTextureBuffer[3] = {0,0,0};
+static GLuint sVertexBuffer[3] = {0,0,0};
+
+static const GLfloat sBufferData[192] = {
   /* Position            Color              Texcoords */
     /* Front */
     -1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
@@ -57,23 +58,11 @@ const GLfloat g_buffer_data[192] = {
 
 /* Fill vertex buffer */
 void CreateVertexBuffer() {
-    glGenBuffers(3, vertexbuffer);
-
-    GLfloat buffer_data[192];
-    for (auto i = 0; i < 192; i++)
-        buffer_data[i] = g_buffer_data[i];
+    glGenBuffers(3, sVertexBuffer);
 
     for (auto face = 0; face < 3; face++) {
-        /*
-        if (face) {
-            for (auto i = 6; i < 192; i+=8) {
-                buffer_data[i] = g_buffer_data[i] * face * 4.0f;
-                buffer_data[i+1] = g_buffer_data[i+1] * face * 4.0f;
-            }
-        }
-        */
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[face]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, sVertexBuffer[face]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(sBufferData), sBufferData, GL_STATIC_DRAW);
     }
 }
 
@@ -87,10 +76,10 @@ void CreateTextureBuffer() {
     int width, height;
     unsigned char* image;
 
-    glGenTextures(3, texturebuffer);
+    glGenTextures(3, sTextureBuffer);
     for (auto face = 0; face < 3; face++) {
-        glActiveTexture(GL_TEXTURE0 + texturebuffer[face]);
-        glBindTexture(GL_TEXTURE_2D, texturebuffer[face]);
+        glActiveTexture(GL_TEXTURE0 + sTextureBuffer[face]);
+        glBindTexture(GL_TEXTURE_2D, sTextureBuffer[face]);
 
         image = SOIL_load_image(sources[face], &width, &height, 0, SOIL_LOAD_RGB);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -114,8 +103,8 @@ Wall::Wall(glm::vec3 scale, glm::vec4 location, int face)
     using engine::geometry::Box;
     using engine::geometry::Cube;
 
-    /* No thread safe execution */
-    if (vertexbuffer[0] == 0) {
+    /* Must be created before with static CreateBuffers function */
+    if (sVertexBuffer[0] == 0) {
         CreateVertexBuffer();
         CreateTextureBuffer();
     }
@@ -123,13 +112,14 @@ Wall::Wall(glm::vec3 scale, glm::vec4 location, int face)
     type_ = kMODEL3D_WALL;
     border_ = Box(scale, location);
     auto cube_ptr {std::make_unique<Cube>(scale, location, glm::vec4(0.0f),
-                                          vertexbuffer[face], texturebuffer[face])};
+                                          sVertexBuffer[face], sTextureBuffer[face])};
     elements_.push_back(std::move(cube_ptr));
 }
 
+/* Create global vertex and texture buffers */
 void Wall::CreateBuffers()
 {
-    if (vertexbuffer[0] == 0) {
+    if (sVertexBuffer[0] == 0) {
         CreateVertexBuffer();
         CreateTextureBuffer();
     }

@@ -19,7 +19,7 @@ namespace engine {
 
 namespace helpers {
 namespace proxygl {
-    extern GLFWwindow* kGLWindow;
+    extern GLFWwindow* gGLWindow;
 }//namespace proxygl
 }//namespace helpers
 
@@ -28,11 +28,11 @@ namespace universe {
 namespace {
 
 /* Start record camera position after 10 drawing scene */
-static int skip_time = 0;
+static int sSkipTime = 0;
 /* Record mouse wheel scroll */
-static float scroll_y = 0.0f;
+static float sScrollY = 0.0f;
 
-const std::vector<glm::vec3> coords = {
+static const std::vector<glm::vec3> sCameraCoords = {
     /* Back */
     {-0.25f,  0.5f,  0.25f},
     { 0.25f,  0.5f,  0.25f},
@@ -65,12 +65,12 @@ const std::vector<glm::vec3> coords = {
     { 0.25f, -0.5f,  0.25f},
 };
 
-double last_time = 0;
+static double sLastTime = 0;
 
 /*  OnScroll - callback function who record wheel change */
-void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
+static void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
 {
-    scroll_y += delta_y;
+    sScrollY += delta_y;
 }
 
 }//namespace
@@ -91,7 +91,7 @@ Camera::Camera(float cx, float cy, float cz,
     border_ = engine::geometry::Box(1.0f,
                 glm::vec4(cx, cy, cz, 1.0f),
                 glm::vec4(0.0f),
-                coords);
+                sCameraCoords);
 
     type_ = kMODEL3D_CAMERA;
     is_controlled_ = true;
@@ -100,7 +100,7 @@ Camera::Camera(float cx, float cy, float cz,
 /*  Move() - Compute Camera move */
 void Camera::Move()
 {
-    using engine::helpers::proxygl::kGLWindow;
+    using engine::helpers::proxygl::gGLWindow;
 
     /* width and height config values */
     using engine::helpers::ProxyConfig;
@@ -109,25 +109,25 @@ void Camera::Move()
 
     /* Dont apply movefactor to camera */
     using engine::geometry::Shape3D;
-    float speed = 3.0f * 1.0f / Shape3D::kMoveFactor;
+    float speed = 3.0f * 1.0f / Shape3D::sMoveFactor;
 
     const float zoom_sensitivity = -0.2f;
     const float mouse_speed = 0.1f;
 
     double current_time = glfwGetTime();
-    float delta_time = float(current_time - last_time);
+    float delta_time = float(current_time - sLastTime);
 
     /* Get mouse position */
     double xpos = 0, ypos = 0;
 
-    last_time = current_time;
+    sLastTime = current_time;
     /* Ensure cursor is well centered before record move */
-    if (skip_time++ < 10) {
-        glfwSetCursorPos(kGLWindow, window_width/2 , window_height/2);
+    if (sSkipTime++ < 10) {
+        glfwSetCursorPos(gGLWindow, window_width/2 , window_height/2);
         return;
     }
 
-    glfwGetCursorPos(kGLWindow, &xpos, &ypos);
+    glfwGetCursorPos(gGLWindow, &xpos, &ypos);
 
     /* Compute new orientation */
     horizontal_angle_ += mouse_speed * delta_time * static_cast<float>(window_width/2 - xpos);
@@ -152,35 +152,36 @@ void Camera::Move()
     border_.set_move(glm::vec3(0.0f));
 
     /* If shift is pressed => run */
-    if (glfwGetKey(kGLWindow, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+    if (glfwGetKey(gGLWindow, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
         speed *= 2.5f;
+    }
 
     /* Move forward */
-    if (glfwGetKey(kGLWindow, GLFW_KEY_UP) == GLFW_PRESS){
+    if (glfwGetKey(gGLWindow, GLFW_KEY_UP) == GLFW_PRESS) {
         border_.set_move(direction_ * delta_time * speed);
     }
     /* Move backward */
-    if (glfwGetKey(kGLWindow, GLFW_KEY_DOWN) == GLFW_PRESS){
+    if (glfwGetKey(gGLWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
         border_.set_move(-direction_ * delta_time * speed);
     }
     /* Strafe right */
-    if (glfwGetKey(kGLWindow, GLFW_KEY_RIGHT) == GLFW_PRESS){
+    if (glfwGetKey(gGLWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
         border_.set_move(right * delta_time * speed);
     }
     /* Strafe left */
-    if (glfwGetKey(kGLWindow, GLFW_KEY_LEFT) == GLFW_PRESS){
+    if (glfwGetKey(gGLWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
         border_.set_move(-right * delta_time * speed);
     }
 
     /* Reset Cursor position at center of screen */
-    glfwSetCursorPos(kGLWindow, window_width/2, window_height/2);
+    glfwSetCursorPos(gGLWindow, window_width/2, window_height/2);
 
     /* Manage Field of View with mouse wheel */
-    glfwSetScrollCallback(kGLWindow, OnScroll);
-    fov_ = fov_ + zoom_sensitivity * scroll_y;
+    glfwSetScrollCallback(gGLWindow, OnScroll);
+    fov_ = fov_ + zoom_sensitivity * sScrollY;
     fov_ = fov_ < 5.0f ? 5.0f : fov_;
     fov_ = fov_ > 130.0f ? 130.0f : fov_;
-    scroll_y = 0.0f;
+    sScrollY = 0.0f;
 }
 
 }//namespace universe

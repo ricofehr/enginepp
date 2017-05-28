@@ -23,12 +23,12 @@ class Camera;
 class Model3D {
 
 public:
-    static const int kMODEL3D_ROOM = 0;
-    static const int kMODEL3D_CAMERA = 1;
-    static const int kMODEL3D_WALL = 2;
-    static const int kMODEL3D_WINDOW = 3;
-    static const int kMODEL3D_DOOR = 4;
-    static const int kMODEL3D_BRICK = 5;
+    static constexpr int kMODEL3D_ROOM = 0;
+    static constexpr int kMODEL3D_CAMERA = 1;
+    static constexpr int kMODEL3D_WALL = 2;
+    static constexpr int kMODEL3D_WINDOW = 3;
+    static constexpr int kMODEL3D_DOOR = 4;
+    static constexpr int kMODEL3D_BRICK = 5;
 
     Model3D();
     /* Default move and copy constructor / operator */
@@ -59,8 +59,9 @@ public:
     bool IsMovedZ() const { return border_.IsMovedZ(); }
     inline void InverseMove() {
         border_.InverseMove();
-        for (auto &e : elements_)
+        for (auto &e : elements_) {
             e->InverseMove();
+        }
     }
     bool IsCrossed() const { return is_crossed_; }
     bool IsControlled() const { return is_controlled_; }
@@ -78,6 +79,8 @@ public:
 protected:
     std::vector<std::unique_ptr<engine::geometry::Shape3D>> elements_;
     engine::geometry::Box border_;
+    std::vector<std::vector<int>> placements_;
+    tbb::mutex object_mutex_;
     Model3D *obstacle_;
     float distance_;
     int id_;
@@ -85,8 +88,6 @@ protected:
     int type_;
     bool is_crossed_;
     bool is_controlled_;
-    std::vector<std::vector<int>> placements_;
-    tbb::mutex object_mutex_;
 };
 
 }//namespace geometry

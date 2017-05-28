@@ -18,10 +18,11 @@ namespace engine {
 namespace universe {
 
 namespace {
-GLuint texturebuffer = 0;
-GLuint vertexbuffer = 0;
 
-const GLfloat g_buffer_data[192] = {
+static GLuint sTextureBuffer = 0;
+static GLuint sVertexBuffer = 0;
+
+const GLfloat sBufferData[192] = {
   /* Position            Color              Texcoords */
     /* Front */
     -1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
@@ -57,11 +58,11 @@ const GLfloat g_buffer_data[192] = {
 
 /* Fill vertex buffer */
 void CreateVertexBuffer() {
-    glGenBuffers(1, &vertexbuffer);
-    assert(vertexbuffer != 0);
+    glGenBuffers(1, &sVertexBuffer);
+    assert(sVertexBuffer != 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_buffer_data), g_buffer_data, GL_STREAM_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, sVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(sBufferData), sBufferData, GL_STREAM_DRAW);
 }
 
 /* Fill texture buffer */
@@ -69,11 +70,11 @@ void CreateTextureBuffer() {
     int width, height;
     unsigned char* image;
 
-    glGenTextures(1, &texturebuffer);
-    assert(texturebuffer != 0);
+    glGenTextures(1, &sTextureBuffer);
+    assert(sTextureBuffer != 0);
 
-    glActiveTexture(GL_TEXTURE0 + texturebuffer);
-    glBindTexture(GL_TEXTURE_2D, texturebuffer);
+    glActiveTexture(GL_TEXTURE0 + sTextureBuffer);
+    glBindTexture(GL_TEXTURE_2D, sTextureBuffer);
 
     image = SOIL_load_image("assets/brique.png", &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -99,8 +100,8 @@ Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
     using engine::geometry::Box;
     using engine::geometry::Cube;
 
-    /* No thread safe execution */
-    if (vertexbuffer == 0) {
+    /* Must be created before with static CreateBuffers function */
+    if (sVertexBuffer == 0) {
         CreateVertexBuffer();
         CreateTextureBuffer();
     }
@@ -108,13 +109,14 @@ Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
     type_ = kMODEL3D_BRICK;
     border_ = Box(scale, location, move);
     auto cube_ptr {std::make_unique<Cube>(scale, location, move,
-                                          vertexbuffer, texturebuffer)};
+                                          sVertexBuffer, sTextureBuffer)};
     elements_.push_back(std::move(cube_ptr));
 }
 
+/* Create global vertex and texture buffers */
 void Brick::CreateBuffers()
 {
-    if (vertexbuffer == 0) {
+    if (sVertexBuffer == 0) {
         CreateVertexBuffer();
         CreateTextureBuffer();
     }
