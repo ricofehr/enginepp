@@ -1,33 +1,39 @@
 /*
-* No (serial) parallelisation class
+* cilkplus version for CollisionEngine
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#include "engine/parallell/serial_parallell.h"
+#include "engine/physics/cilk_collision_engine.h"
 
 #include <iostream>
 #include <string>
-#include <cilk/cilk_api.h>
 
-#include "engine/helpers/proxy_config.h"
+#include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
+#include <cilk/reducer_min.h>
+
+#include "engine/core/config_engine.h"
 
 namespace engine {
-namespace parallell {
+namespace physics {
 
-/* Init serial parallell context */
-void SerialParallell::InitCollisionParallell() {
-    using engine::helpers::ProxyConfig;
-    granularity_ = ProxyConfig::getSetting<int>("granularity");
+/* Ensure nworkers are setted to core number, not ht number */
+void CilkCollisionEngine::InitCollisionEngine() {
+    using engine::core::ConfigEngine;
+    granularity_ = ConfigEngine::getSetting<int>("granularity");
 
-    /* Disable cilkplus parallell */
-    __cilkrts_set_param("nworkers", "1");
+    /* Define cpu cores number for parallell computes */
+    if (ConfigEngine::getSetting<int>("workers_count")) {
+        __cilkrts_set_param("nworkers", std::to_string(ConfigEngine::getSetting<int>("workers_count")).c_str());
+    }
 }
 
 /* Init cl collision kernel */
-float SerialParallell::ComputeCollisionParallell(float box1[], float box2[])
+float CilkCollisionEngine::ComputeCollision(float box1[], float box2[])
 {
     float x1, y1, z1, w1, h1, d1, move1x, move1y, move1z;
     float x2, y2, z2, w2, h2, d2, move2x, move2y, move2z;
+    cilk::reducer_min<float> distance(1.0f);
 
     x1 = box1[0];
     y1 = box1[1];
@@ -48,7 +54,7 @@ float SerialParallell::ComputeCollisionParallell(float box1[], float box2[])
     move2y = box2[7] / granularity_;
     move2z = box2[8] / granularity_;
 
-    for (auto fact = 0.0f; fact < granularity_; fact += 1.0f) {
+    cilk_for (auto fact = 0; fact < granularity_; fact++) {
         x1 += move1x;
         y1 += move1y;
         z1 += move1z;
@@ -58,11 +64,11 @@ float SerialParallell::ComputeCollisionParallell(float box1[], float box2[])
 
         if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
             y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
-            return fact / granularity_;
+                distance.calc_min(static_cast<float>(fact) / granularity_);
         }
     }
 
-    return 1.0f;
+    return distance->get_value();
 }
 
 }//namespace helpers

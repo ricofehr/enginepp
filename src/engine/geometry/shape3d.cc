@@ -9,7 +9,7 @@
 #include <glm/gtx/transform.hpp>
 
 #include "engine/universe/camera.h"
-#include "engine/helpers/proxy_config.h"
+#include "engine/core/config_engine.h"
 
 namespace engine {
 
@@ -24,9 +24,9 @@ float Shape3D::sMoveFactor = 1.0f;
 void Shape3D::ComputeMVP(engine::universe::Camera *cam)
 {
     /* width and height config values */
-    using engine::helpers::ProxyConfig;
-    float window_width = ProxyConfig::getSetting<float>("width");
-    float window_height = ProxyConfig::getSetting<float>("height");
+    using engine::core::ConfigEngine;
+    float window_width = ConfigEngine::getSetting<float>("width");
+    float window_height = ConfigEngine::getSetting<float>("height");
 
     glm::mat4 projection = glm::perspective(glm::radians(cam->fov()),
                                             window_width / window_height,

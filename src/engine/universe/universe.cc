@@ -12,57 +12,23 @@
 #include <iostream>
 #include <string>
 #include <cilk/cilk.h>
-#include <cilk/cilk_api.h>
 
 #include "engine/universe/wall.h"
 #include "engine/universe/brick.h"
-#include "engine/parallell/cl_parallell.h"
-#include "engine/parallell/serial_parallell.h"
-#include "engine/parallell/cilk_parallell.h"
-#include "engine/helpers/proxy_config.h"
+#include "engine/core/config_engine.h"
 
 namespace engine {
 namespace universe {
 
 namespace {
     /* Used for delay between 2 objects creation */
-    double sLastTime = 0;
+    static double sLastTime = 0;
 }
 
 /* Constructor */
 Universe::Universe()
 {
-    InitProxyParallell();
     InitRooms();
-}
-
-/* Init parallell proxy pointer */
-void Universe::InitProxyParallell()
-{
-    using engine::parallell::EngineParallell;
-    using engine::helpers::ProxyConfig;
-
-    /* Define cpu cores number for parallell computes */
-    if (ProxyConfig::getSetting<int>("workers_count")) {
-        __cilkrts_set_param("nworkers", std::to_string(ProxyConfig::getSetting<int>("workers_count")).c_str());
-    }
-
-    /* Get parallell type from config */
-    int type_parallell = ProxyConfig::getSetting<int>("parallell");
-
-    switch (type_parallell) {
-        case EngineParallell::kPARALLELL_CILK:
-            proxy_parallell_ = std::make_unique<engine::parallell::CilkParallell>();
-            break;
-        case EngineParallell::kPARALLELL_CL:
-            proxy_parallell_ = std::make_unique<engine::parallell::CLParallell>();
-            break;
-        default:
-            proxy_parallell_ = std::make_unique<engine::parallell::SerialParallell>();
-            break;
-    }
-
-    proxy_parallell_->InitCollisionParallell();
 }
 
 /* Create Rooms for gl scene */
@@ -71,17 +37,12 @@ void Universe::InitRooms()
     /* Reset seed */
     srand (time(NULL));
 
-    CreateGLBuffers();
+    Brick::CreateBuffers();
+    Wall::CreateBuffers();
+
     GenerateRooms();
     ReinitGrid();
     GenerateWalls();
-}
-
-/* Create Universe Objects buffers before using them */
-void Universe::CreateGLBuffers()
-{
-    Brick::CreateBuffers();
-    Wall::CreateBuffers();
 }
 
 /*   Recompute the placement grid for the room
@@ -183,8 +144,8 @@ void Universe::ReinitGrid()
         }
     }
 
-    using engine::helpers::ProxyConfig;
-    if (ProxyConfig::getSetting<int>("debug") > ProxyConfig::kDEBUG_TEST) {
+    using engine::core::ConfigEngine;
+    if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
         DisplayGrid();
     }
 }
@@ -214,8 +175,8 @@ void Universe::DisplayGrid()
 void Universe::GenerateRooms()
 {
     /* Check objects count into config file */
-    using engine::helpers::ProxyConfig;
-    auto nbrooms = ProxyConfig::getSetting<int>("rooms_count");
+    using engine::core::ConfigEngine;
+    auto nbrooms = ConfigEngine::getSetting<int>("rooms_count");
 
     while (nbrooms--) {
         GenerateRandomRoom();
@@ -341,7 +302,7 @@ Room *Universe::GenerateRoom(glm::vec4 location)
         cam_ = cam.get();
     }
 
-    auto room_ptr{std::make_unique<Room>(location, std::move(cam), proxy_parallell_.get())};
+    auto room_ptr{std::make_unique<Room>(location, std::move(cam))};
     rooms_.push_back(std::move(room_ptr));
 
     return rooms_[ind].get();
@@ -357,9 +318,9 @@ void Universe::GenerateWalls()
 }
 
 /* Compute and draw next hop for the gl scene */
-void Universe::NextHop()
+void Universe::Draw()
 {
-    using engine::helpers::ProxyConfig;
+    using engine::core::ConfigEngine;
 
     /* Detect current room */
     int active_index = -1;
@@ -377,9 +338,9 @@ void Universe::NextHop()
     rooms_[active_index]->MoveCamera();
 
     /* Select displayed rooms: all rooms or 2 clipping levels */
-    if (ProxyConfig::getSetting<int>("clipping") > 0) {
+    if (ConfigEngine::getSetting<int>("clipping") > 0) {
         display_rooms_.clear();
-        auto map_rooms = GetNeighbors(rooms_[active_index].get(), ProxyConfig::getSetting<int>("clipping") % 2);
+        auto map_rooms = GetNeighbors(rooms_[active_index].get(), ConfigEngine::getSetting<int>("clipping") % 2);
         map_rooms[rooms_[active_index]->id()] = rooms_[active_index].get();
         for (auto &r : map_rooms) {
             display_rooms_.push_back(r.second);
@@ -435,7 +396,7 @@ void Universe::NextHop()
 
     /* GL functions during object generate, then needs serial execution */
     float freq = 0.0f;
-    if ((freq = ProxyConfig::getSetting<float>("load_objects_freq")) > 0.0f) {
+    if ((freq = ConfigEngine::getSetting<float>("load_objects_freq")) > 0.0f) {
         double current_time = glfwGetTime();
         for (auto &r : rooms_) {
             if (!r->IsFull() && current_time - sLastTime >= freq) {

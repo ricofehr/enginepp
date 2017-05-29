@@ -8,7 +8,7 @@
 #include <iostream>
 #include <map>
 
-#include "engine/helpers/proxy_config.h"
+#include "engine/core/config_engine.h"
 
 namespace engine {
 namespace universe {
@@ -18,17 +18,14 @@ Room::Room()
      :Room(glm::vec4(1.0f)) {}
 
 Room::Room(glm::vec4 location)
-     :Room(location, nullptr, nullptr){}
+     :Room(location, nullptr){}
 
-Room::Room(glm::vec4 location, std::unique_ptr<Camera> cam,
-           engine::parallell::EngineParallell *proxy_parallell)
-     :Room(location, std::vector<bool>(6, false), std::vector<bool>(6, false), std::move(cam), proxy_parallell){}
+Room::Room(glm::vec4 location, std::unique_ptr<Camera> cam)
+     :Room(location, std::vector<bool>(6, false), std::vector<bool>(6, false), std::move(cam)){}
 
 Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows,
-           std::unique_ptr<Camera> cam, engine::parallell::EngineParallell *proxy_parallell) {
+           std::unique_ptr<Camera> cam) {
     location_ = location;
-    proxy_parallell_ = proxy_parallell;
-
     type_ = kMODEL3D_ROOM;
     using engine::geometry::Box;
     border_ = Box(glm::vec3(kGRID_X*kGRID_UNIT/2, kGRID_Y*kGRID_UNIT/2, kGRID_Z*kGRID_UNIT/2), location);
@@ -36,8 +33,8 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_
     windows_ = is_windows;
 
     /* Check objects count into config file */
-    using engine::helpers::ProxyConfig;
-    nbobjects_ = ProxyConfig::getSetting<int>("objects_count");
+    using engine::core::ConfigEngine;
+    nbobjects_ = ConfigEngine::getSetting<int>("objects_count");
 
     /* Push cam in objects_ array */
     if (cam != nullptr) {
@@ -229,8 +226,8 @@ void Room::GenerateObjects()
     ReinitGrid();
 
     /* If sequentially object creation, return */
-    using engine::helpers::ProxyConfig;
-    if (ProxyConfig::getSetting<float>("load_objects_freq") != 0.0f) {
+    using engine::core::ConfigEngine;
+    if (ConfigEngine::getSetting<float>("load_objects_freq") != 0.0f) {
         return;
     }
 
@@ -504,7 +501,7 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
         /* Abort program if object and room_object loop are same (must no happend) */
         assert(*object != *room_objects[i]);
 
-        std::vector<Model3D*> collision_recompute = object->DetectCollision(room_objects[i], room_mutex_, proxy_parallell_);
+        std::vector<Model3D*> collision_recompute = collision_engine_->DetectCollision(object, room_objects[i], room_mutex_);
         if (collision_recompute.size() > 0) {
             recompute[room_objects[i]->id()] = collision_recompute;
         }
@@ -517,8 +514,8 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
     if (object->obstacle() != nullptr ) {
         try {
             for (auto & r : recompute.at(object->obstacle()->id())) {
-                using engine::helpers::ProxyConfig;
-                if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION) {
+                using engine::core::ConfigEngine;
+                if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION) {
                     std::cout << "Recompute " << object->id() << "::" << r->id() << std::endl;
                 }
                 cilk_spawn PivotCollision(r, neighbors);
@@ -535,8 +532,8 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
 std::unique_ptr<Model3D> Room::TransfertObject(std::unique_ptr<Model3D> obj, bool force) {
     if (force || IsInRoom(obj->location())) {
         /* Output if debug setted */
-        using engine::helpers::ProxyConfig;
-        if (ProxyConfig::getSetting<int>("debug") >= ProxyConfig::kDEBUG_COLLISION && force) {
+        using engine::core::ConfigEngine;
+        if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION && force) {
             std::cout << "Transfert " << obj->id() << " to Room " << id() << " (forced: " << force << ")" << std::endl;
         }
         /* Inverse object move if forced transfert */

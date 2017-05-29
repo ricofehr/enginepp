@@ -17,14 +17,17 @@ set(geometry_SRCS
     src/engine/geometry/cube.cc
     src/engine/geometry/box.cc)
 
-set(helpers_SRCS
-    src/engine/helpers/proxy_config.cc
-    src/engine/helpers/proxygl.cc)
+set(core_SRCS
+    src/engine/core/config_engine.cc)
 
-set(parallell_SRCS
-    src/engine/parallell/cl_parallell.cc
-    src/engine/parallell/cilk_parallell.cc
-    src/engine/parallell/serial_parallell.cc)
+set(renderer_SRCS
+    src/engine/renderer/loopgl.cc)
+
+set(physics_SRCS
+    src/engine/physics/collision_engine.cc
+    src/engine/physics/cl_collision_engine.cc
+    src/engine/physics/cilk_collision_engine.cc
+    src/engine/physics/serial_collision_engine.cc)
 
 set(universe_SRCS
     src/engine/universe/camera.cc
@@ -36,8 +39,9 @@ set(universe_SRCS
 
 set(engine_SRCS
     ${geometry_SRCS}
-    ${helpers_SRCS}
-    ${parallell_SRCS}
+    ${core_SRCS}
+    ${renderer_SRCS}
+    ${physics_SRCS}
     ${universe_SRCS}
     src/engine.cc)
 
@@ -47,15 +51,17 @@ set(geometry_HDRS
     src/engine/geometry/cube.h
     src/engine/geometry/box.h)
 
-set(helpers_HDRS
-    src/engine/helpers/proxy_config.h
-    src/engine/helpers/proxygl.h)
+set(core_HDRS
+    src/engine/core/config_engine.h)
 
-set(parallell_HDRS
-    src/engine/parallell/engine_parallell.h
-    src/engine/parallell/cl_parallell.h
-    src/engine/parallell/cilk_parallell.h
-    src/engine/parallell/serial_parallell.h)
+set(renderer_HDRS
+    src/engine/renderer/loopgl.h)
+
+set(physics_HDRS
+    src/engine/physics/collision_engine.h
+    src/engine/physics/cl_collision_engine.h
+    src/engine/physics/cilk_collision_engine.h
+    src/engine/physics/serial_collision_engine.h)
 
 set(universe_HDRS
     src/engine/universe/camera.h
@@ -67,8 +73,9 @@ set(universe_HDRS
 
 set(engine_HDRS
     ${geometry_HDRS}
-    ${helpers_HDRS}
-    ${parallell_HDRS}
+    ${core_HDRS}
+    ${renderer_HDRS}
+    ${physics_HDRS}
     ${universe_HDRS})
 
 add_executable(engine ${engine_SRCS} ${engine_HDRS})

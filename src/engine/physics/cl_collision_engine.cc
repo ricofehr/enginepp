@@ -1,22 +1,22 @@
 /*
-* OpenCL parallelisation class
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ * opencl version for CollisionEngine
+ * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
-#include "engine/parallell/cl_parallell.h"
+#include "engine/physics/cl_collision_engine.h"
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cilk/cilk_api.h>
 
-#include "engine/helpers/proxy_config.h"
+#include "engine/core/config_engine.h"
 
 namespace engine {
-namespace parallell {
+namespace physics {
 
 /* Init opencl parallell context */
-void CLParallell::InitCollisionParallell() {
+void CLCollisionEngine::InitCollisionEngine() {
     cl::Platform platform_target;
     cl::Device device_target;
     int max_cores = 0;
@@ -25,8 +25,8 @@ void CLParallell::InitCollisionParallell() {
     /* Disable cilkplus parallell */
     __cilkrts_set_param("nworkers", "1");
 
-    using engine::helpers::ProxyConfig;
-    granularity_ = ProxyConfig::getSetting<int>("granularity");
+    using engine::core::ConfigEngine;
+    granularity_ = ConfigEngine::getSetting<int>("granularity");
 
     try {
         /* Query for platforms */
@@ -92,7 +92,7 @@ void CLParallell::InitCollisionParallell() {
  }
 
 /* Init cl collision kernel */
-float CLParallell::ComputeCollisionParallell(float box1[], float box2[])
+float CLCollisionEngine::ComputeCollision(float box1[], float box2[])
 {
     std::vector<float> distances(granularity_, 1.0f);
     float *distances_ptr = distances.data();

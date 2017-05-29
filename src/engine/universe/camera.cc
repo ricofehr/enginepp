@@ -12,16 +12,10 @@
 #include <iostream>
 
 #include "engine/universe/room.h"
-#include "engine/helpers/proxy_config.h"
-#include "engine/helpers/proxygl.h"
+#include "engine/core/config_engine.h"
+#include "engine/renderer/loopgl.h"
 
 namespace engine {
-
-namespace helpers {
-namespace proxygl {
-    extern GLFWwindow* gGLWindow;
-}//namespace proxygl
-}//namespace helpers
 
 namespace universe {
 
@@ -100,12 +94,12 @@ Camera::Camera(float cx, float cy, float cz,
 /*  Move() - Compute Camera move */
 void Camera::Move()
 {
-    using engine::helpers::proxygl::gGLWindow;
+    using engine::renderer::LoopGL;
 
     /* width and height config values */
-    using engine::helpers::ProxyConfig;
-    float window_width = ProxyConfig::getSetting<float>("width");
-    float window_height = ProxyConfig::getSetting<float>("width");
+    using engine::core::ConfigEngine;
+    float window_width = ConfigEngine::getSetting<float>("width");
+    float window_height = ConfigEngine::getSetting<float>("width");
 
     /* Dont apply movefactor to camera */
     using engine::geometry::Shape3D;
@@ -123,11 +117,11 @@ void Camera::Move()
     sLastTime = current_time;
     /* Ensure cursor is well centered before record move */
     if (sSkipTime++ < 10) {
-        glfwSetCursorPos(gGLWindow, window_width/2 , window_height/2);
+        glfwSetCursorPos(LoopGL::sGLWindow, window_width/2 , window_height/2);
         return;
     }
 
-    glfwGetCursorPos(gGLWindow, &xpos, &ypos);
+    glfwGetCursorPos(LoopGL::sGLWindow, &xpos, &ypos);
 
     /* Compute new orientation */
     horizontal_angle_ += mouse_speed * delta_time * static_cast<float>(window_width/2 - xpos);
@@ -152,32 +146,32 @@ void Camera::Move()
     border_.set_move(glm::vec3(0.0f));
 
     /* If shift is pressed => run */
-    if (glfwGetKey(gGLWindow, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
+    if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
         speed *= 2.5f;
     }
 
     /* Move forward */
-    if (glfwGetKey(gGLWindow, GLFW_KEY_UP) == GLFW_PRESS) {
+    if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_UP) == GLFW_PRESS) {
         border_.set_move(direction_ * delta_time * speed);
     }
     /* Move backward */
-    if (glfwGetKey(gGLWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
+    if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
         border_.set_move(-direction_ * delta_time * speed);
     }
     /* Strafe right */
-    if (glfwGetKey(gGLWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
         border_.set_move(right * delta_time * speed);
     }
     /* Strafe left */
-    if (glfwGetKey(gGLWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
+    if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
         border_.set_move(-right * delta_time * speed);
     }
 
     /* Reset Cursor position at center of screen */
-    glfwSetCursorPos(gGLWindow, window_width/2, window_height/2);
+    glfwSetCursorPos(LoopGL::sGLWindow, window_width/2, window_height/2);
 
     /* Manage Field of View with mouse wheel */
-    glfwSetScrollCallback(gGLWindow, OnScroll);
+    glfwSetScrollCallback(LoopGL::sGLWindow, OnScroll);
     fov_ = fov_ + zoom_sensitivity * sScrollY;
     fov_ = fov_ < 5.0f ? 5.0f : fov_;
     fov_ = fov_ > 130.0f ? 130.0f : fov_;

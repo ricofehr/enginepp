@@ -10,17 +10,9 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-#include "engine/helpers/proxygl.h"
+#include "engine/renderer/loopgl.h"
 
 namespace engine {
-
-/* Use of global variables defined in proxygl namespace */
-namespace helpers {
-namespace proxygl {
-    extern GLuint gProgramId;
-    extern GLuint gMatrixId;
-}//namespace proxygl
-}//namespace helpers
 
 namespace geometry {
 
@@ -75,9 +67,7 @@ Quad::Quad(int face, glm::vec3 scale, glm::vec4 location,
 /* Draw the Quad on the scene */
 void Quad::Draw()
 {
-    /* gMatrixId and gProgramId constants */
-    using engine::helpers::proxygl::gMatrixId;
-    using engine::helpers::proxygl::gProgramId;
+    using engine::renderer::LoopGL;
 
     if (vertexbuffer_ == 0) {
         return;
@@ -85,7 +75,7 @@ void Quad::Draw()
 
     /* lock for ensure only one object draw buffer in same time */
     glDisable(GL_CULL_FACE);
-    glUniformMatrix4fv(gMatrixId, 1, GL_FALSE, &mvp_[0][0]);
+    glUniformMatrix4fv(LoopGL::sMatrixId, 1, GL_FALSE, &mvp_[0][0]);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
     /* 3 attributes: vertex, color, and textures */
@@ -101,7 +91,7 @@ void Quad::Draw()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
                           8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-    glUniform1i(glGetUniformLocation(gProgramId, "tex"), texturebuffer_);
+    glUniform1i(glGetUniformLocation(LoopGL::sProgramId, "tex"), texturebuffer_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sElementBuffer);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glDisableVertexAttribArray(0);

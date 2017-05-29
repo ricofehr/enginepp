@@ -13,7 +13,7 @@
 #include <tbb/mutex.h>
 
 #include "engine/universe/model3d.h"
-#include "engine/parallell/engine_parallell.h"
+#include "engine/physics/collision_engine.h"
 #include "engine/universe/wall.h"
 #include "engine/universe/brick.h"
 #include "engine/universe/camera.h"
@@ -41,9 +41,9 @@ public:
     /* Constructors */
     Room();
     Room(glm::vec4 location);
-    Room(glm::vec4 location, std::unique_ptr<Camera> cam, engine::parallell::EngineParallell *proxy_parallell);
+    Room(glm::vec4 location, std::unique_ptr<Camera> cam);
     Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows,
-         std::unique_ptr<Camera> cam, engine::parallell::EngineParallell *proxy_parallell);
+         std::unique_ptr<Camera> cam);
 
     /* Accessors */
     glm::vec4 location() const { return location_; }
@@ -82,7 +82,6 @@ private:
     glm::vec4 location_;
     std::vector<Model3D*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
     std::vector<std::unique_ptr<Model3D>> objects_;
-    engine::parallell::EngineParallell *proxy_parallell_{nullptr};
     tbb::mutex room_mutex_;
     tbb::mutex grid_mutex_;
     std::vector<bool> doors_{false, false, false, false, false, false};

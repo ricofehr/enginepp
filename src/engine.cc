@@ -2,24 +2,23 @@
 #include <string>
 
 #include "engine/universe/universe.h"
-#include "engine/helpers/proxy_config.h"
-#include "engine/helpers/proxygl.h"
+#include "engine/core/config_engine.h"
+#include "engine/renderer/loopgl.h"
 
 int main(int argc, char *argv[])
 {
     using engine::universe::Universe;
-    using engine::helpers::proxygl::InitGL;
-    using engine::helpers::proxygl::SettingsGL;
-    using engine::helpers::ProxyConfig;
+    using engine::renderer::LoopGL;
+    using engine::core::ConfigEngine;
 
     /* Init Config */
-    ProxyConfig::InitConfig();
+    ConfigEngine::InitConfig();
 
     /* Manage program parameters */
-    ProxyConfig::ManageProgramParameters(argc, argv);
+    ConfigEngine::ManageProgramParameters(argc, argv);
 
 	/* Init world */
-    InitGL();
+    LoopGL::Instance().InitGL();
     auto engine_universe{std::make_unique<Universe>()};
-    SettingsGL(engine_universe.get());
+    LoopGL::Instance().Loop(engine_universe.get());
 }

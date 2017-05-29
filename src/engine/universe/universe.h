@@ -15,20 +15,20 @@
 
 #include "engine/universe/room.h"
 #include "engine/universe/camera.h"
-#include "engine/parallell/engine_parallell.h"
+#include "engine/physics/collision_engine.h"
 
 namespace engine {
 namespace universe {
 
 /* Define the global universe */
-class Universe {
+class Universe : public Model3D {
 
 public:
     /* Constructor */
     Universe();
 
     /* Compute new hop */
-    void NextHop();
+    void Draw();
 
     /* Accessors */
     const Camera *cam() const { return cam_; }
@@ -83,7 +83,6 @@ private:
 
     /* Init Universe */
     void InitRooms();
-    void InitProxyParallell();
     void CreateGLBuffers();
     /* Grid compute & display */
     void ReinitGrid();
@@ -101,7 +100,6 @@ private:
     /* Universe attributes */
     Camera *cam_{nullptr};
     std::vector<Room*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
-    std::unique_ptr<engine::parallell::EngineParallell> proxy_parallell_;
     std::vector<std::unique_ptr<Room>> rooms_;
     bool ready_{false};
     std::vector<Room*> display_rooms_;

@@ -11,7 +11,7 @@
 
 #include "engine/geometry/shape3d.h"
 #include "engine/geometry/box.h"
-#include "engine/parallell/engine_parallell.h"
+#include "engine/physics/collision_engine.h"
 
 namespace engine {
 namespace universe {
@@ -40,11 +40,10 @@ public:
 
     void PrepareDraw(Camera *cam);
     void Draw();
-    std::vector<Model3D*> DetectCollision(Model3D *obstacle, tbb::mutex &collision_mutex,
-                                          engine::parallell::EngineParallell *proxy_parallell);
 
     int id() const { return id_; }
     float distance() const { return distance_; }
+    int id_last_collision() const { return id_last_collision_; }
     Model3D *obstacle() { return obstacle_; }
     engine::geometry::Box border() const { return border_; }
 
@@ -77,6 +76,9 @@ public:
     virtual ~Model3D() = default;
 
 protected:
+    void InitCollisionEngine();
+
+    engine::physics::CollisionEngine *collision_engine_;
     std::vector<std::unique_ptr<engine::geometry::Shape3D>> elements_;
     engine::geometry::Box border_;
     std::vector<std::vector<int>> placements_;
