@@ -21,8 +21,6 @@ namespace geometry {
 class Shape3D {
 
 public:
-    /* Define a move factore who depends on fps */
-    static float sMoveFactor;
 
     /* Default constructor, move and copy constructor / operator */
     Shape3D() = default;
@@ -31,6 +29,9 @@ public:
 
     Shape3D(const Shape3D&) = default;
     Shape3D& operator=(const Shape3D&) = default;
+
+    /* Abstract class, so virtual destructor */
+    virtual ~Shape3D() = default;
 
     void ComputeMVP(engine::universe::Camera *cam);
     virtual void Draw() = 0;
@@ -48,8 +49,8 @@ public:
     void set_move(glm::vec3 move) { move_ = glm::vec4(move, 0.0f); }
     void InverseMove() { move_ = -move_; }
 
-    /* Abstract class, so virtual destructor */
-    virtual ~Shape3D() = default;
+    /* Define a move factore who depends on fps */
+    static float sMoveFactor;
 
 protected:
     glm::mat4 mvp_;

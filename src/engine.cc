@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     ConfigEngine::ManageProgramParameters(argc, argv);
 
 	/* Init world */
-    LoopGL::Instance().InitGL();
+    LoopGL::Instance()->InitGL();
     auto engine_universe{std::make_unique<Universe>()};
-    LoopGL::Instance().Loop(engine_universe.get());
+    LoopGL::Instance()->Loop(engine_universe.get());
 }

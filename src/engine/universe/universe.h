@@ -38,18 +38,18 @@ public:
         if (display) {
             return display_rooms_.size();
         }
-        return rooms_.size();
+        return objects_.size();
     }
 
     inline int countObjects(bool display) const {
         cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
             cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-                *count_sum += rooms_[cnt]->countObjects();
+                *count_sum += display_rooms_[cnt]->countObjects();
             }
         } else {
-            cilk_for(auto cnt = 0; cnt < rooms_.size(); cnt++) {
-                *count_sum += rooms_[cnt]->countObjects();
+            cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
+                *count_sum += objects_[cnt]->countObjects();
             }
         }
         return count_sum.get_value();
@@ -59,11 +59,11 @@ public:
         cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
             cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-                *count_sum += rooms_[cnt]->countMovingObjects();
+                *count_sum += display_rooms_[cnt]->countMovingObjects();
             }
         } else {
-            cilk_for(auto cnt = 0; cnt < rooms_.size(); cnt++) {
-                *count_sum += rooms_[cnt]->countMovingObjects();
+            cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
+                *count_sum += objects_[cnt]->countMovingObjects();
             }
         }
         return count_sum.get_value();
@@ -71,6 +71,9 @@ public:
 
     /* Mutators */
     const void toready() { ready_ = true; }
+
+    /* Grid compute & display */
+    std::vector<std::unique_ptr<Model3D>> ReinitGrid() override final;
 
 private:
     /* Constants */
@@ -84,9 +87,7 @@ private:
     /* Init Universe */
     void InitRooms();
     void CreateGLBuffers();
-    /* Grid compute & display */
-    void ReinitGrid();
-    void DisplayGrid();
+
     /* Generate room(s) function */
     void GenerateRooms();
     void GenerateRandomRoom();
@@ -100,7 +101,7 @@ private:
     /* Universe attributes */
     Camera *cam_{nullptr};
     std::vector<Room*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
-    std::vector<std::unique_ptr<Room>> rooms_;
+
     bool ready_{false};
     std::vector<Room*> display_rooms_;
 };

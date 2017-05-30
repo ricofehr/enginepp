@@ -11,83 +11,87 @@
 #include <libconfig.h++>
 
 namespace engine {
-    namespace core {
+namespace core {
 
-        class ConfigEngine {
+class ConfigEngine {
 
-        public:
-            static ConfigEngine& Instance()
-            {
-                static ConfigEngine instance_;
-                return instance_;
-            }
+public:
 
-            static void InitConfig()
-            {
-                Instance().ParseFile();
-                Instance().DefaultValues();
-            }
+    static constexpr int kDEBUG_TEST = 1;
+    static constexpr int kDEBUG_PERF = 2;
+    static constexpr int kDEBUG_COLLISION = 3;
+    static constexpr int kDEBUG_ALL = 4;
 
-            inline static bool IsExist(std::string key) { return Instance().exists(key); }
+    static ConfigEngine *Instance()
+    {
+        /* Raw pointer because static var */
+        static auto *instance = new ConfigEngine;
+        return instance;
+    }
 
-            template<typename T>
-            static T getSetting(std::string key)
-            {
-                return Instance().getValue<T>(key);
-            }
+    static void InitConfig()
+    {
+        Instance()->ParseFile();
+        Instance()->DefaultValues();
+    }
 
-            template<typename T>
-            static void setSetting(std::string key, libconfig::Setting::Type setting_type, T value)
-            {
-                Instance().setValue(key, setting_type, value);
-            }
+    inline static bool IsExist(std::string key) { return Instance()->exists(key); }
 
-            static void DisplayConfig()
-            {
-                Instance().ParseConfig();
-            }
+    template<typename T>
+    static T getSetting(std::string key)
+    {
+        return Instance()->getValue<T>(key);
+    }
 
-            static void ManageProgramParameters(int argc, char *argv[]);
+    template<typename T>
+    static void setSetting(std::string key, libconfig::Setting::Type setting_type, T value)
+    {
+        Instance()->setValue(key, setting_type, value);
+    }
 
-            static constexpr int kDEBUG_TEST = 1;
-            static constexpr int kDEBUG_PERF = 2;
-            static constexpr int kDEBUG_COLLISION = 3;
-            static constexpr int kDEBUG_ALL = 4;
+    static void DisplayConfig()
+    {
+        Instance()->ParseConfig();
+    }
 
-        protected:
-            ConfigEngine(){};
-            ConfigEngine(const ConfigEngine&) = default;
-            ConfigEngine& operator=(const ConfigEngine&) = default;
+    static void ManageProgramParameters(int argc, char *argv[]);
 
-        private:
-            libconfig::Config cfg;
+protected:
 
-            void ParseFile();
-            void ParseConfig() const;
-            void DefaultValues();
+    ConfigEngine(){};
+    ConfigEngine(const ConfigEngine&) = default;
+    ConfigEngine& operator=(const ConfigEngine&) = default;
 
-            inline bool exists(std::string key) { return cfg.exists(key); }
+private:
 
-            template<typename T>
-            T getValue(std::string key) const
-            {
-                T ret;
-                cfg.lookupValue(key, ret);
-                return ret;
-            }
+    void ParseFile();
+    void ParseConfig() const;
+    void DefaultValues();
 
-            template<typename T>
-            void setValue(std::string key, libconfig::Setting::Type setting_type, T value)
-            {
-                libconfig::Setting &root = cfg.getRoot();
-                if (root.exists(key)) {
-                    root.remove(key);
-                }
-                root.add(key, setting_type) = value;
-            }
-        };
+    inline bool exists(std::string key) { return cfg.exists(key); }
 
-    }//namespace core
+    template<typename T>
+    T getValue(std::string key) const
+    {
+        T ret;
+        cfg.lookupValue(key, ret);
+        return ret;
+    }
+
+    template<typename T>
+    void setValue(std::string key, libconfig::Setting::Type setting_type, T value)
+    {
+        libconfig::Setting &root = cfg.getRoot();
+        if (root.exists(key)) {
+            root.remove(key);
+        }
+        root.add(key, setting_type) = value;
+    }
+
+    libconfig::Config cfg;
+};
+
+}//namespace core
 }//namespace engine
 
 #endif //ENGINE_CORE_ConfigEngine_H_

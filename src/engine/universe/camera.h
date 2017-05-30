@@ -20,6 +20,7 @@ class Room;
 class Camera : public Model3D {
 
 public:
+
     Camera();
     Camera(float cx, float cy, float cz,
            float vx, float vy, float vz,
@@ -42,6 +43,7 @@ public:
     void Move();
 
 private:
+
     glm::vec3 direction_;
     glm::vec3 head_;
     float horizontal_angle_;

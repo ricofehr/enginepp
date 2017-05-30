@@ -23,6 +23,7 @@ namespace geometry {
 class Box : public Cube {
 
 public:
+
     Box();
     Box(float scale, glm::vec4 location);
     Box(glm::vec3 scale, glm::vec4 location);
@@ -47,6 +48,7 @@ public:
     void MoveCoords();
 
 private:
+
     std::vector<glm::vec3> coords_;
 };
 

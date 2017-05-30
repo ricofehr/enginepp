@@ -18,6 +18,7 @@ namespace geometry {
 class Quad : public Shape3D {
 
 public:
+
     Quad(int face, float scale, glm::vec4 location,
          GLuint vertexbuffer, GLuint texturebuffer);
     Quad(int face, float scale, glm::vec4 location,
@@ -42,6 +43,7 @@ public:
     int face() const { return face_; }
 
 private:
+
     GLuint vertexbuffer_;
     GLuint texturebuffer_;
     int face_; /* 6 type of quad: back, front, left, right, top, roof */

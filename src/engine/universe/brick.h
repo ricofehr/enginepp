@@ -17,6 +17,7 @@ namespace universe {
 class Brick : public Model3D {
 
 public:
+
     Brick();
     Brick(float scale, glm::vec4 location);
     Brick(float scale, glm::vec4 location, glm::vec4 move);
@@ -28,10 +29,10 @@ public:
     Brick(const Brick&) = default;
     Brick& operator=(const Brick&) = default;
 
-    static void CreateBuffers();
-
     /* Default destructor */
     ~Brick() override = default;
+
+    static void CreateBuffers();
 };
 
 }//namespace geometry

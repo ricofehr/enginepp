@@ -17,6 +17,7 @@ namespace universe {
 class Wall : public Model3D {
 
 public:
+
     /* Face texture */
     static constexpr int kTEXTURE_TOP = 0;
     static constexpr int kTEXTURE_WALL = 1;
@@ -40,10 +41,10 @@ public:
     Wall(const Wall&) = default;
     Wall& operator=(const Wall&) = default;
 
-    static void CreateBuffers();
-
     /* Default destructor */
     ~Wall() override = default;
+
+    static void CreateBuffers();
 };
 
 }//namespace geometry

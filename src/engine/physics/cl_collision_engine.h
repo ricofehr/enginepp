@@ -31,41 +31,44 @@ namespace physics {
 class CLCollisionEngine : public CollisionEngine {
 
 public:
+
+    ~CLCollisionEngine() override = default;
+
     float ComputeCollision(float box1[], float box2[]) override final;
 
     inline static CLCollisionEngine *Instance() {
-        static auto sInstance = std::unique_ptr<CLCollisionEngine>(new CLCollisionEngine);
         static bool sIsInit = false;
-        static tbb::mutex collision_mutex;
+        /* Raw pointers because static vars */
+        static auto sInstance = new CLCollisionEngine;
+        static auto collision_mutex = new tbb::mutex;
 
         /*
          *  Init the engine if not already done
          */
-        collision_mutex.lock();
+        collision_mutex->lock();
         if (!sIsInit) {
             sInstance->InitCollisionEngine();
             sIsInit = true;
         }
-        collision_mutex.unlock();
+        collision_mutex->unlock();
 
-        return sInstance.get();
+        return sInstance;
     }
 
-    ~CLCollisionEngine() override = default;
-
 protected:
-    void InitCollisionEngine() override final;
 
     CLCollisionEngine(){};
     CLCollisionEngine(const CLCollisionEngine&) = default;
     CLCollisionEngine& operator=(const CLCollisionEngine&) = default;
 
+    void InitCollisionEngine() override final;
+
     cl::Kernel cl_kernel_;
     cl::CommandQueue cl_queue_;
     std::vector<cl::Buffer> bufferin_;
     std::vector<cl::Buffer> bufferout_;
-    int wk_size_{32};
     tbb::mutex collision_mutex_;
+    int wk_size_{32};
 };
 
 }//namespace parallell

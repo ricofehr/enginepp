@@ -18,33 +18,36 @@ namespace physics {
 class SerialCollisionEngine : public CollisionEngine {
 
 public:
+    
+    ~SerialCollisionEngine() override = default;
+
     float ComputeCollision(float box1[], float box2[]) override final;
 
     inline static SerialCollisionEngine *Instance() {
-        static auto sInstance = std::unique_ptr<SerialCollisionEngine>(new SerialCollisionEngine);
         static bool sIsInit = false;
-        static tbb::mutex collision_mutex;
+        /* Raw pointers because static vars */
+        static auto sInstance = new SerialCollisionEngine;
+        static auto collision_mutex = new tbb::mutex;
 
         /* Init the engine if not already done */
-        collision_mutex.lock();
+        collision_mutex->lock();
         if (!sIsInit) {
             sInstance->InitCollisionEngine();
             sIsInit = true;
         }
-        collision_mutex.unlock();
+        collision_mutex->unlock();
 
-        return sInstance.get();
+        return sInstance;
     }
 
-    ~SerialCollisionEngine() override = default;
 
 protected:
-    void InitCollisionEngine() override final;
 
     SerialCollisionEngine(){};
     SerialCollisionEngine(const SerialCollisionEngine&) = default;
     SerialCollisionEngine& operator=(const SerialCollisionEngine&) = default;
 
+    void InitCollisionEngine() override final;
 };
 
 }//namespace parallell

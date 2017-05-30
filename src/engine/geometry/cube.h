@@ -18,6 +18,7 @@ namespace geometry {
 class Cube : public Shape3D {
 
 public:
+
     Cube(float scale, glm::vec4 location);
     Cube(float scale, glm::vec4 location, glm::vec4 move);
     Cube(glm::vec3 scale, glm::vec4 location);
@@ -39,6 +40,7 @@ public:
     void Draw() override;
 
 private:
+
     GLuint vertexbuffer_;
     GLuint texturebuffer_;
 };

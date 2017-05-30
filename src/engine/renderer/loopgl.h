@@ -13,36 +13,40 @@
 
 namespace engine {
 
-    /* Forward declaration of class Universe */
-    namespace universe {
-        class Universe;
-    }//namespace universe
+/* Forward declaration of class Universe */
+namespace universe {
+    class Universe;
+}//namespace universe
 
-    namespace renderer {
-        class LoopGL {
+namespace renderer {
 
-        public:
-            /* Global Static variables */
-            static GLFWwindow *sGLWindow;
-            static GLuint sProgramId;
-            static GLuint sMatrixId;
+class LoopGL {
 
-            void InitGL();
-            void Loop(engine::universe::Universe *universe);
+public:
 
-            static LoopGL Instance()
-            {
-                static LoopGL instance_;
-                return instance_;
-            }
+    void InitGL();
+    void Loop(engine::universe::Universe *universe);
 
-        protected:
-            LoopGL(){};
-            LoopGL(const LoopGL&) = default;
-            LoopGL& operator=(const LoopGL&) = default;
-        };
+    static LoopGL *Instance()
+    {
+        /* Raw pointer because static var */
+        static auto *instance = new LoopGL;
+        return instance;
+    }
 
-    }//namespace renderer
+    /* Global Static variables */
+    static GLFWwindow *sGLWindow;
+    static GLuint sProgramId;
+    static GLuint sMatrixId;
+
+protected:
+
+    LoopGL(){};
+    LoopGL(const LoopGL&) = default;
+    LoopGL& operator=(const LoopGL&) = default;
+};
+
+}//namespace renderer
 }//namespace engine
 
 #endif //ENGINE_RENDERER_LOOPGL_H_

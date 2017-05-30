@@ -48,9 +48,9 @@ void Universe::InitRooms()
 /*   Recompute the placement grid for the room
 *   TODO: TO Optimize, too many loops
 */
-void Universe::ReinitGrid()
+std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid()
 {
-    std::vector<std::unique_ptr<Room>> ret;
+    std::vector<std::unique_ptr<Model3D>> ret;
 
     cilk_for (auto i = 0; i < kGRID_Y; i++) {
         cilk_for (auto j = 0; j < kGRID_X; j++) {
@@ -60,9 +60,9 @@ void Universe::ReinitGrid()
         }
     }
 
-    for (auto o = 0; o < rooms_.size();) {
+    for (auto o = 0; o < objects_.size();) {
         /* check grid collision */
-        engine::geometry::Box border = rooms_[o]->border();
+        engine::geometry::Box border = objects_[o]->border();
         std::vector<glm::vec3> coords = border.ComputeCoords();
         auto x1 = coords.at(0)[0];
         auto y1 = coords.at(0)[1];
@@ -71,7 +71,7 @@ void Universe::ReinitGrid()
         auto w1 = coords.at(1)[0] - x1;
         auto d1 = coords.at(4)[2] - z1;
 
-        rooms_[o]->clear_placements();
+        objects_[o]->clear_placements();
 
         auto grid_0 = glm::vec4(0.0f) - glm::vec4(kGRID_X*kGRID_UNIT_X/2, kGRID_Y*kGRID_UNIT_Y/2, kGRID_Z*kGRID_UNIT_Z/2, 0.0f);
 
@@ -87,21 +87,23 @@ void Universe::ReinitGrid()
 
                     if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
                         y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
-                        rooms_[o]->add_placement(i, j, k);
-                        grid_[i][j][k].push_back(rooms_[o].get());
+                        objects_[o]->add_placement(i, j, k);
+                        grid_[i][j][k].push_back((Room*)objects_[o].get());
                     }
                 }
             }
         }
 
-        if (rooms_[o]->get_placements().size() == 0) {
-            rooms_.erase(rooms_.begin() + o);
+        if (objects_[o]->get_placements().size() == 0) {
+            objects_.erase(objects_.begin() + o);
         } else {
             o++;
         }
     }
 
-    for (auto &r : rooms_) {
+    //for (auto &r : objects_) {
+    for (auto cnt=0; cnt < objects_.size(); cnt++) {
+        auto r = (Room*) objects_[cnt].get();
         auto i = r->get_placements()[0][0];
         auto j = r->get_placements()[0][1];
         auto k = r->get_placements()[0][2];
@@ -148,27 +150,8 @@ void Universe::ReinitGrid()
     if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
         DisplayGrid();
     }
-}
 
-/* Display Rooms grid for Universe */
-void Universe::DisplayGrid()
-{
-    std::cout << "=== ROOMS GRID ===" << std::endl << std::endl;
-    for (auto i = 0; i < kGRID_Y; i++) {
-        std::cout << "=== Floor " << i << std::endl;
-        for (auto k = 0; k < kGRID_Z; k++) {
-            for (auto j = 0; j < kGRID_X; j++) {
-                if (grid_[i][j][k].size() > 0) {
-                    std::cout << "  o";
-                } else {
-                    std::cout << "  x";
-                }
-            }
-
-            std::cout << std::endl;
-        }
-        std::cout << std::endl << std::endl;
-    }
+    return ret;
 }
 
 /* Generates Random rooms into Universe */
@@ -210,7 +193,7 @@ void Universe::GenerateRandomRoom()
         auto z2 = grid_0[2] + n * kGRID_UNIT_Z + kGRID_UNIT_Z/2;
 
         /* 2 cases: grid is empty or another room nearest */
-        if (rooms_.size() == 0 ||
+        if (objects_.size() == 0 ||
             (((l != 0 && grid_[l-1][m][n].size() != 0) ||
               (m != 0 && grid_[l][m-1][n].size() != 0) ||
               (n != 0 && grid_[l][m][n-1].size() != 0) ||
@@ -292,28 +275,28 @@ void Universe::GenerateRandomRoom()
 /* Create Room Object */
 Room *Universe::GenerateRoom(glm::vec4 location)
 {
-    int ind = rooms_.size();
+    int ind = objects_.size();
 
     /* Init Camera for the first room */
     std::unique_ptr<Camera> cam{nullptr};
-    if (rooms_.size() == 0) {
+    if (objects_.size() == 0) {
         cam = std::make_unique<Camera>(location[0], location[1] + 1.0f, location[2] + 5.0f,
                                        location[0], location[1] + 1.0f, location[2], 0.0f, 1.0f, 0.0f);
         cam_ = cam.get();
     }
 
     auto room_ptr{std::make_unique<Room>(location, std::move(cam))};
-    rooms_.push_back(std::move(room_ptr));
+    objects_.push_back(std::move(room_ptr));
 
-    return rooms_[ind].get();
+    return (Room*)objects_[ind].get();
 }
 
 /* Generates Walls and Objects  into Room */
 void Universe::GenerateWalls()
 {
-    for (auto &r : rooms_) {
-        r->GenerateWalls();
-        r->GenerateObjects();
+    for (auto &r : objects_) {
+        ((Room*)r.get())->GenerateWalls();
+        ((Room*)r.get())->GenerateObjects();
     }
 }
 
@@ -324,8 +307,8 @@ void Universe::Draw()
 
     /* Detect current room */
     int active_index = -1;
-    cilk_for (auto cnt = 0; cnt < rooms_.size(); cnt++) {
-        if (rooms_[cnt]->cam() != nullptr) {
+    cilk_for (auto cnt = 0; cnt < objects_.size(); cnt++) {
+        if (objects_[cnt]->cam() != nullptr) {
             active_index = cnt;
         }
     }
@@ -335,19 +318,19 @@ void Universe::Draw()
     }
 
     /* Record moving orders for camera */
-    rooms_[active_index]->MoveCamera();
+    ((Room*)objects_[active_index].get())->MoveCamera();
 
     /* Select displayed rooms: all rooms or 2 clipping levels */
     if (ConfigEngine::getSetting<int>("clipping") > 0) {
         display_rooms_.clear();
-        auto map_rooms = GetNeighbors(rooms_[active_index].get(), ConfigEngine::getSetting<int>("clipping") % 2);
-        map_rooms[rooms_[active_index]->id()] = rooms_[active_index].get();
+        auto map_rooms = GetNeighbors((Room*)objects_[active_index].get(), ConfigEngine::getSetting<int>("clipping") % 2);
+        map_rooms[objects_[active_index]->id()] = (Room*)objects_[active_index].get();
         for (auto &r : map_rooms) {
             display_rooms_.push_back(r.second);
         }
     } else if(display_rooms_.size() == 0) {
-        for (auto &r : rooms_) {
-            display_rooms_.push_back(r.get());
+        for (auto &r : objects_) {
+            display_rooms_.push_back((Room*)r.get());
         }
     }
 
@@ -398,9 +381,9 @@ void Universe::Draw()
     float freq = 0.0f;
     if ((freq = ConfigEngine::getSetting<float>("load_objects_freq")) > 0.0f) {
         double current_time = glfwGetTime();
-        for (auto &r : rooms_) {
+        for (auto &r : objects_) {
             if (!r->IsFull() && current_time - sLastTime >= freq) {
-                r->GenerateRandomObject();
+                ((Room*)r.get())->GenerateRandomObject();
             }
         }
 
