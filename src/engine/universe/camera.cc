@@ -11,7 +11,6 @@
 
 #include <iostream>
 
-#include "engine/universe/room.h"
 #include "engine/core/config_engine.h"
 #include "engine/renderer/loopgl.h"
 

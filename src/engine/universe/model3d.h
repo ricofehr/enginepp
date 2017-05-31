@@ -34,12 +34,6 @@ public:
     static constexpr int kMODEL3D_DOOR = 4;
     static constexpr int kMODEL3D_BRICK = 5;
 
-    /* Grid Constants */
-    static constexpr int kGRID_Y = 6;
-    static constexpr int kGRID_X = 8;
-    static constexpr int kGRID_Z = 8;
-    static constexpr float kGRID_UNIT = 2.0f;
-
     Model3D();
     /* Default move and copy constructor / assignments */
     Model3D(Model3D&&) = default;
@@ -48,8 +42,7 @@ public:
     Model3D(const Model3D&) = default;
     Model3D& operator=(const Model3D&) = default;
 
-    /* Default destructor */
-    virtual ~Model3D() = default;
+    virtual ~Model3D();
 
     /* Draw functions */
     void PrepareDraw(Camera *cam);
@@ -110,16 +103,25 @@ public:
     }
     void lock() { object_mutex_.lock(); }
     void unlock() { object_mutex_.unlock(); }
+    void MoveCamera();
 
 protected:
+    /* Grid settings */
+    int grid_x_{0};
+    int grid_y_{0};
+    int grid_z_{0};
+    float grid_unit_x_{0.0f};
+    float grid_unit_y_{0.0f};
+    float grid_unit_z_{0.0f};
 
     void InitCollisionEngine();
+    void InitGrid();
     void DisplayGrid();
     bool IsInside (glm::vec3 location_object) const;
 
     std::vector<std::unique_ptr<engine::geometry::Shape3D>> elements_;
     engine::geometry::Box border_;
-    std::vector<Model3D*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
+    std::vector<Model3D*> ***grid_{nullptr};
     std::vector<std::unique_ptr<Model3D>> objects_;
     std::vector<std::vector<int>> placements_;
     tbb::mutex object_mutex_;
@@ -127,7 +129,6 @@ protected:
     Model3D *obstacle_;
     engine::physics::CollisionEngine *collision_engine_;
     Camera *cam_{nullptr};
-    glm::vec4 location_;
     float distance_;
     int id_;
     int id_last_collision_;

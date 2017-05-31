@@ -13,9 +13,6 @@
 namespace engine {
 namespace universe {
 
-/* Forward declaration of class Room */
-class Room;
-
 /* Manage 3d Camera */
 class Camera : public Model3D {
 

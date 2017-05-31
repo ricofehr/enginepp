@@ -35,7 +35,7 @@ public:
     static void CreateBuffers();
 };
 
-}//namespace geometry
+}//namespace universe
 }//namespace engine
 
 #endif //ENGINE_UNIVERSE_BRICK_H_

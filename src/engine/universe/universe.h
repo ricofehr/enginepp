@@ -76,7 +76,8 @@ public:
     std::vector<std::unique_ptr<Model3D>> ReinitGrid() override final;
 
 private:
-    /* Constants */
+
+    /* Constants For Grid Settings */
     static constexpr int kGRID_Y = 4;
     static constexpr int kGRID_X = 8;
     static constexpr int kGRID_Z = 8;
@@ -97,10 +98,6 @@ private:
     /* Compute neighbors */
     std::vector<Room*> GetOrderNeighbors(Room *r);
     std::map<int, Room*> GetNeighbors(Room *r, int level);
-
-    /* Universe attributes */
-    Camera *cam_{nullptr};
-    std::vector<Room*> grid_[kGRID_Y][kGRID_X][kGRID_Z];
 
     bool ready_{false};
     std::vector<Room*> display_rooms_;

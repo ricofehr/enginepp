@@ -13,6 +13,7 @@
 #include <string>
 #include <cilk/cilk.h>
 
+#include "engine/universe/camera.h"
 #include "engine/physics/cl_collision_engine.h"
 #include "engine/physics/serial_collision_engine.h"
 #include "engine/physics/cilk_collision_engine.h"
@@ -106,13 +107,25 @@ void Model3D::Draw()
 }
 
 /*
+ * Allocate grid array dynamically
+ */
+void Model3D::InitGrid()
+{
+    grid_ = new std::vector<Model3D*> **[grid_y_];
+    for (auto i = 0; i < grid_y_; i++) {
+        grid_[i] = new std::vector<Model3D*> *[grid_x_];
+        for (auto j = 0; j < grid_x_; j++) {
+            grid_[i][j] = new std::vector<Model3D*>[grid_z_]();
+        }
+    }
+}
+
+/*
  *   Recompute the placement grid for objects into the room
- *   TODO: TO Optimize, too many loops
  */
 std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
 {
     std::vector<std::unique_ptr<Model3D>> ret;
-
     for (auto o = 0; o < objects_.size();) {
         if (!objects_[o]->IsMoved() && objects_[o]->get_placements().size() > 0) {
             ++o;
@@ -142,17 +155,17 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
         }
 
         objects_[o]->clear_placements();
-        auto grid_0 = location_ - glm::vec4(kGRID_X*kGRID_UNIT/2, kGRID_Y*kGRID_UNIT/2, kGRID_Z*kGRID_UNIT/2, 0.0f);
+        auto grid_0 = location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
 
-        cilk_for (auto i = 0; i < kGRID_Y; i++) {
-            auto y2 = grid_0[1] + (i+1) * kGRID_UNIT;
-            cilk_for (auto j = 0; j < kGRID_X; j++) {
-                auto x2 = grid_0[0] + j * kGRID_UNIT;
-                cilk_for (auto k = 0; k < kGRID_Z; k++) {
-                    auto z2 = grid_0[2] + (k+1) * kGRID_UNIT;
-                    auto h2 = -kGRID_UNIT;
-                    auto w2 = kGRID_UNIT;
-                    auto d2 = -kGRID_UNIT;
+        cilk_for (auto i = 0; i < grid_y_; i++) {
+            auto y2 = grid_0[1] + (i+1) * grid_unit_y_;
+            cilk_for (auto j = 0; j < grid_x_; j++) {
+                auto x2 = grid_0[0] + j * grid_unit_x_;
+                cilk_for (auto k = 0; k < grid_z_; k++) {
+                    auto z2 = grid_0[2] + (k+1) * grid_unit_z_;
+                    auto h2 = -grid_unit_y_;
+                    auto w2 = grid_unit_x_;
+                    auto d2 = -grid_unit_z_;
 
                     if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
                         y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
@@ -182,11 +195,11 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
 /* Display Placement Grid */
 void Model3D::DisplayGrid()
 {
-    std::cout << "=== OBJECTS GRID FOR ROOM " << id_ << " ===" << std::endl << std::endl;
-    for (auto i = 0; i < kGRID_Y; i++) {
+    std::cout << "=== GRID FOR ID " << id_ << " ===" << std::endl << std::endl;
+    for (auto i = 0; i < grid_y_; i++) {
         std::cout << "=== Floor " << i << std::endl;
-        for (auto k = 0; k < kGRID_Z; k++) {
-            for (auto j = 0; j < kGRID_X; j++) {
+        for (auto k = 0; k < grid_z_; k++) {
+            for (auto j = 0; j < grid_x_; j++) {
                 if (grid_[i][j][k].size() >0) {
                     std::cout << "  o";
                 } else {
@@ -227,13 +240,13 @@ std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> obj, 
 /* Test if object is inside Room */
 bool Model3D::IsInside(glm::vec3 location_object) const
 {
-    auto location_0 = location_ - glm::vec4(kGRID_X*kGRID_UNIT/2, kGRID_Y*kGRID_UNIT/2, kGRID_Z*kGRID_UNIT/2, 0.0f);
+    auto location_0 = location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
 
-    if (location_object[0] < location_0[0] + kGRID_X * kGRID_UNIT &&
+    if (location_object[0] < location_0[0] + grid_x_ * grid_unit_x_ &&
         location_object[0] >= location_0[0] &&
-        location_object[1] < location_0[1] + kGRID_Y * kGRID_UNIT &&
+        location_object[1] < location_0[1] + grid_y_ * grid_unit_y_ &&
         location_object[1] >= location_0[1] &&
-        location_object[2] < location_0[2] + kGRID_Z * kGRID_UNIT &&
+        location_object[2] < location_0[2] + grid_z_ * grid_unit_z_ &&
         location_object[2] >= location_0[2]) {
         return true;
     }
@@ -252,6 +265,28 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects()
     }
     
     return ret;
+}
+
+/* Move camera associated to current object */
+void Model3D::MoveCamera()
+{
+    if (cam_ != nullptr) {
+        cam_->Move();
+    }
+}
+
+/* Destructor, empty grid_ array */
+Model3D::~Model3D()
+{
+    if (grid_ != nullptr) {
+        for (auto i = 0; i < grid_y_; i++) {
+            for (auto j = 0; j < grid_x_; j++) {
+                delete [] grid_[i][j];
+            }
+            delete [] grid_[i];
+        }
+        delete [] grid_;
+    }
 }
 
 }//namespace geometry

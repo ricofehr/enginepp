@@ -25,12 +25,21 @@ Room::Room(glm::vec4 location, std::unique_ptr<Camera> cam)
 
 Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows,
            std::unique_ptr<Camera> cam) {
-    location_ = location;
     type_ = kMODEL3D_ROOM;
-    using engine::geometry::Box;
-    border_ = Box(glm::vec3(kGRID_X*kGRID_UNIT/2, kGRID_Y*kGRID_UNIT/2, kGRID_Z*kGRID_UNIT/2), location);
     doors_ = is_doors;
     windows_ = is_windows;
+
+    /* Init Grid Settings */
+    grid_x_ = kGRID_X;
+    grid_y_ = kGRID_Y;
+    grid_z_ = kGRID_Z;
+    grid_unit_x_ = kGRID_UNIT_X;
+    grid_unit_y_ = kGRID_UNIT_Y;
+    grid_unit_z_ = kGRID_UNIT_Z;
+    InitGrid();
+
+    using engine::geometry::Box;
+    border_ = Box(glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2), location);
 
     /* Check objects count into config file */
     using engine::core::ConfigEngine;
@@ -46,28 +55,30 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_
 /* Create 3D walls for Room */
 void Room::GenerateWalls() {
     glm::vec3 scale_w = {1.0f, 1.0f, 1.0f};
-    glm::vec4 location_0 {0.0f};
+    glm::vec3 location_0 {0.0f};
     glm::vec4 location_w {0.0f};
 
     /* First Room 3D Point */
-    location_0 = location_ - glm::vec4(kGRID_X*kGRID_UNIT/2, kGRID_Y*kGRID_UNIT/2, kGRID_Z*kGRID_UNIT/2, 0.0f);
+    location_0 = location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
 
     auto it_doors = doors_.begin();
     auto it_windows = windows_.begin();
 
     /* Top and Roof */
-    scale_w = {(kGRID_X/8)*kGRID_UNIT, kGRID_UNIT/4, (kGRID_Z/8)*kGRID_UNIT};
-    for (auto i = 0; i < kGRID_Y+1; i+=(kGRID_Y)) {
-        cilk_for (auto j = 0; j < kGRID_X; j+=kGRID_X/4) {
-            cilk_for (auto k = 0; k < kGRID_Z; k+=kGRID_Z/4) {
+    scale_w = {(grid_x_/8)*grid_unit_x_, grid_unit_y_/4, (grid_z_/8)*grid_unit_z_};
+    for (auto i = 0; i < grid_y_+1; i+=(grid_y_)) {
+        cilk_for (auto j = 0; j < grid_x_; j+=grid_x_/4) {
+            cilk_for (auto k = 0; k < grid_z_; k+=grid_z_/4) {
                 /* No brick floor/roof if trapdoor */
-                if (!*it_doors || (j != 2*kGRID_X/4 && j != 3*kGRID_X/4) || (k != 2*kGRID_X/4 && k != 3*kGRID_X/4)) {
+                if (!*it_doors || (j != 2*grid_x_/4 && j != 3*grid_x_/4) || (k != 2*grid_x_/4 && k != 3*grid_x_/4)) {
                     tbb::mutex::scoped_lock lock(room_mutex_);
-                    location_w = location_0 + glm::vec4(scale_w[0], 0.0f, scale_w[2], 0.0f) + glm::vec4 {j*kGRID_UNIT, i*kGRID_UNIT, k*kGRID_UNIT, 0.0f};
+                    location_w = glm::vec4(location_0, 0.0f)
+                                 + glm::vec4(scale_w[0], 0.0f, scale_w[2], 0.0f)
+                                 + glm::vec4 {j*grid_unit_x_, i*grid_unit_y_, k*grid_unit_z_, 0.0f};
                     if (i == 0) {
-                        location_w[1] += kGRID_UNIT/4;
+                        location_w[1] += grid_unit_y_/4;
                     } else {
-                        location_w[1] -= kGRID_UNIT/4;
+                        location_w[1] -= grid_unit_y_/4;
                     }
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, (i == 0) ? static_cast<int>(Wall::kTEXTURE_FLOOR): static_cast<int>(Wall::kTEXTURE_TOP))};
                     objects_.push_back(std::move(wall_ptr));
@@ -78,19 +89,21 @@ void Room::GenerateWalls() {
         ++it_windows;
     }
 
-    scale_w = {kGRID_UNIT/4, (kGRID_Y/6)*kGRID_UNIT, (kGRID_Z/8)*kGRID_UNIT};
-    for (auto i = 0; i < kGRID_X+1; i+=(kGRID_X)) {
-        cilk_for (auto j = 0; j < kGRID_Y; j+=kGRID_Y/3) {
-            cilk_for (auto k = 0; k < kGRID_Z; k+=kGRID_Z/4) {
+    scale_w = {grid_unit_x_/4, (grid_y_/6)*grid_unit_y_, (grid_z_/8)*grid_unit_z_};
+    for (auto i = 0; i < grid_x_+1; i+=(grid_x_)) {
+        cilk_for (auto j = 0; j < grid_y_; j+=grid_y_/3) {
+            cilk_for (auto k = 0; k < grid_z_; k+=grid_z_/4) {
                 /* No brick wall if Doors or Windows */
-                if ((!*it_doors || j > kGRID_Y/3 || k != 0) &&
-                    (!*it_windows || j != kGRID_Y/3 || (k != 2*kGRID_Z/4 && k != 3*kGRID_Z/4))) {
+                if ((!*it_doors || j > grid_y_/3 || k != 0) &&
+                    (!*it_windows || j != grid_y_/3 || (k != 2*grid_z_/4 && k != 3*grid_z_/4))) {
                     tbb::mutex::scoped_lock lock(room_mutex_);
-                    location_w = location_0 + glm::vec4(0.0f, scale_w[1], scale_w[2], 0.0f) + glm::vec4 {i*kGRID_UNIT, j*kGRID_UNIT, k*kGRID_UNIT, 0.0f};
+                    location_w = glm::vec4(location_0, 0.0f)
+                                 + glm::vec4(0.0f, scale_w[1], scale_w[2], 0.0f)
+                                 + glm::vec4 {i*grid_unit_x_, j*grid_unit_y_, k*grid_unit_z_, 0.0f};
                     if (i == 0) {
-                        location_w[0] += kGRID_UNIT/4;
+                        location_w[0] += grid_unit_x_/4;
                     } else {
-                        location_w[0] -= kGRID_UNIT/4;
+                        location_w[0] -= grid_unit_x_/4;
                     }
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, static_cast<int>(Wall::kTEXTURE_WALL))};
                     objects_.push_back(std::move(wall_ptr));
@@ -101,19 +114,21 @@ void Room::GenerateWalls() {
         ++it_windows;
     }
 
-    scale_w = {(kGRID_X/8)*kGRID_UNIT, (kGRID_Y/6)*kGRID_UNIT, kGRID_UNIT/4};
-    for (auto i = 0; i < kGRID_Z+1; i+=(kGRID_Z)) {
-        cilk_for (auto j = 0; j < kGRID_Y; j+=kGRID_Y/3) {
-            cilk_for (auto k = 0; k < kGRID_X; k+=kGRID_X/4) {
+    scale_w = {(grid_x_/8)*grid_unit_x_, (grid_y_/6)*grid_unit_y_, grid_unit_z_/4};
+    for (auto i = 0; i < grid_z_+1; i+=(grid_z_)) {
+        cilk_for (auto j = 0; j < grid_y_; j+=grid_y_/3) {
+            cilk_for (auto k = 0; k < grid_x_; k+=grid_x_/4) {
                 /* No brick wall if Doors or Windows */
-                if ((!*it_doors || j > kGRID_Y/3 || k != 0) &&
-                    (!*it_windows || j != kGRID_Y/3 || (k != 2*kGRID_X/4 && k != 3*kGRID_X/4))) {
+                if ((!*it_doors || j > grid_y_/3 || k != 0) &&
+                    (!*it_windows || j != grid_y_/3 || (k != 2*grid_x_/4 && k != 3*grid_x_/4))) {
                     tbb::mutex::scoped_lock lock(room_mutex_);
-                    location_w = location_0 + glm::vec4(scale_w[0], scale_w[1], 0.0f, 0.0f) + glm::vec4 {k*kGRID_UNIT, j*kGRID_UNIT, i*kGRID_UNIT, 0.0f};
+                    location_w = glm::vec4(location_0, 0.0f)
+                                 + glm::vec4(scale_w[0], scale_w[1], 0.0f, 0.0f)
+                                 + glm::vec4 {k*grid_unit_x_, j*grid_unit_y_, i*grid_unit_z_, 0.0f};
                     if (i == 0) {
-                        location_w[2] += kGRID_UNIT/4;
+                        location_w[2] += grid_unit_z_/4;
                     } else {
-                        location_w[2] -= kGRID_UNIT/4;
+                        location_w[2] -= grid_unit_z_/4;
                     }
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, static_cast<int>(Wall::kTEXTURE_WALL))};
                     objects_.push_back(std::move(wall_ptr));
@@ -170,21 +185,21 @@ void Room::GenerateRandomObject()
     }
 
     /* First 3D point into Room */
-    auto grid_0 = location_ - glm::vec4(kGRID_X*kGRID_UNIT/2, kGRID_Y*kGRID_UNIT/2, kGRID_Z*kGRID_UNIT/2, 0.0f);
+    auto grid_0 = location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
 
     auto i = r;
     auto j = s;
     auto k = t;
     auto cnt = 0;
     /* Generate and place randomly object into room grid */
-    while (cnt++ < (kGRID_Y-1) * (kGRID_X-1) * (kGRID_Z-1)) {
-        auto l = r % (kGRID_Y-1);
-        auto m = s % (kGRID_X-1);
-        auto n = t % (kGRID_Z-1);
+    while (cnt++ < (grid_y_-1) * (grid_x_-1) * (grid_z_-1)) {
+        auto l = r % (grid_y_-1);
+        auto m = s % (grid_x_-1);
+        auto n = t % (grid_z_-1);
 
-        auto y2 = grid_0[1] + l * kGRID_UNIT + kGRID_UNIT/2;
-        auto x2 = grid_0[0] + m * kGRID_UNIT + kGRID_UNIT/2;
-        auto z2 = grid_0[2] + n * kGRID_UNIT + kGRID_UNIT/2;
+        auto y2 = grid_0[1] + l * grid_unit_y_ + grid_unit_y_/2;
+        auto x2 = grid_0[0] + m * grid_unit_x_ + grid_unit_x_/2;
+        auto z2 = grid_0[2] + n * grid_unit_z_ + grid_unit_z_/2;
 
         grid_mutex_.lock();
         if (grid_[l][m][n].size() == 0) {
@@ -202,9 +217,9 @@ void Room::GenerateRandomObject()
 
         switch (i % 6) {
         case 0:
-            if (++t - k == kGRID_Z) {
+            if (++t - k == grid_z_) {
                 t = k;
-                if (++s - j == kGRID_X) {
+                if (++s - j == grid_x_) {
                     s = j;
                     r++;
                 }
@@ -212,9 +227,9 @@ void Room::GenerateRandomObject()
             break;
 
         case 1:
-            if (++s - j == kGRID_Z) {
+            if (++s - j == grid_z_) {
                 s = j;
-                if (++r - i == kGRID_Y) {
+                if (++r - i == grid_y_) {
                     r = i;
                     t++;
                 }
@@ -222,9 +237,9 @@ void Room::GenerateRandomObject()
             break;
 
         case 2:
-            if (++t - k == kGRID_Z) {
+            if (++t - k == grid_z_) {
                 t = k;
-                if (++r - i == kGRID_Y) {
+                if (++r - i == grid_y_) {
                     r = i;
                     s++;
                 }
@@ -232,9 +247,9 @@ void Room::GenerateRandomObject()
             break;
 
         case 3:
-            if (++s - j == kGRID_X) {
+            if (++s - j == grid_x_) {
                 s = j;
-                if (++t - k == kGRID_Z) {
+                if (++t - k == grid_z_) {
                     t = k;
                     r++;
                 }
@@ -242,9 +257,9 @@ void Room::GenerateRandomObject()
             break;
 
         case 4:
-            if (++r - i == kGRID_Y) {
+            if (++r - i == grid_y_) {
                 r = i;
-                if (++t - k == kGRID_Z) {
+                if (++t - k == grid_z_) {
                     t = k;
                     s++;
                 }
@@ -252,9 +267,9 @@ void Room::GenerateRandomObject()
             break;
 
         case 5:
-            if (++r - i == kGRID_Y) {
+            if (++r - i == grid_y_) {
                 r = i;
-                if (++s - j == kGRID_X) {
+                if (++s - j == grid_x_) {
                     s = j;
                     t++;
                 }
@@ -345,34 +360,34 @@ void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
         /* Other room objects adding */
         cilk_for (auto i = y-1; i <= y+1; i++) {
             cilk_for (auto j = x-1; j <= x+1; j++) {
-                if ((i != -1 && i != kGRID_Y) || (j != -1 && j != kGRID_X)) {
+                if ((i != -1 && i != grid_y_) || (j != -1 && j != grid_x_)) {
                     cilk_for (auto k = z-1; k <= z+1; k++) {
-                        if (((i != -1 && i != kGRID_Y) || (k != -1 && k != kGRID_Z)) &&
-                            ((j != -1 && j != kGRID_X) || (k != -1 && k != kGRID_Z))) {
+                        if (((i != -1 && i != grid_y_) || (k != -1 && k != grid_z_)) &&
+                            ((j != -1 && j != grid_x_) || (k != -1 && k != grid_z_))) {
 
                             std::vector<Model3D*> targets;
 
                             if (i < 0) {
                                 if (neighbors[kFLOOR] != nullptr) {
-                                    targets = neighbors[kFLOOR]->getObjects(kGRID_Y-1, j, k);
+                                    targets = neighbors[kFLOOR]->getObjects(grid_y_-1, j, k);
                                 }
-                            } else if (i == kGRID_Y) {
+                            } else if (i == grid_y_) {
                                 if (neighbors[kROOF] != nullptr) {
                                     targets = neighbors[kROOF]->getObjects(0, j, k);
                                 }
                             } else if (j < 0) {
                                 if (neighbors[kLEFT] != nullptr) {
-                                    targets = neighbors[kLEFT]->getObjects(i, kGRID_X-1, k);
+                                    targets = neighbors[kLEFT]->getObjects(i, grid_x_-1, k);
                                 }
-                            } else if (j == kGRID_X) {
+                            } else if (j == grid_x_) {
                                 if (neighbors[kRIGHT] != nullptr) {
                                     targets = neighbors[kRIGHT]->getObjects(i, 0, k);
                                 }
                             } else if (k < 0) {
                                 if (neighbors[kFRONT] != nullptr) {
-                                    targets = neighbors[kFRONT]->getObjects(i, j, kGRID_Z-1);
+                                    targets = neighbors[kFRONT]->getObjects(i, j, grid_z_-1);
                                 }
-                            } else if (k == kGRID_Z) {
+                            } else if (k == grid_z_) {
                                 if (neighbors[kBACK] != nullptr) {
                                     targets = neighbors[kBACK]->getObjects(i, j, 0);
                                 }

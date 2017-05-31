@@ -25,6 +25,7 @@ namespace universe {
 class Room : public Model3D {
 
 public:
+
     /* Room Side Constants */
     static constexpr int kFLOOR = 0;
     static constexpr int kROOF = 1;
@@ -51,10 +52,17 @@ public:
     void GenerateRandomObject();
     void GenerateWalls();
     void GenerateObjects();
-    
-    void MoveCamera() { if (cam_ != nullptr) cam_->Move(); };
 
 private:
+
+    /* Grid Constants For Romm Setting */
+    static constexpr int kGRID_Y = 6;
+    static constexpr int kGRID_X = 8;
+    static constexpr int kGRID_Z = 8;
+    static constexpr float kGRID_UNIT_Y = 2.0f;
+    static constexpr float kGRID_UNIT_X = 2.0f;
+    static constexpr float kGRID_UNIT_Z = 2.0f;
+
     /* Some internal functions */
     Model3D *GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale);
     void PivotCollision(Model3D *object, std::vector<Room*> neighbors);
