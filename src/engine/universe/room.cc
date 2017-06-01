@@ -6,7 +6,6 @@
 #include "engine/universe/room.h"
 
 #include <iostream>
-#include <map>
 
 #include "engine/core/config_engine.h"
 
@@ -18,13 +17,9 @@ Room::Room()
      :Room(glm::vec4(1.0f)) {}
 
 Room::Room(glm::vec4 location)
-     :Room(location, nullptr){}
+     :Room(location, std::vector<bool>(6, false), std::vector<bool>(6, false)){}
 
-Room::Room(glm::vec4 location, std::unique_ptr<Camera> cam)
-     :Room(location, std::vector<bool>(6, false), std::vector<bool>(6, false), std::move(cam)){}
-
-Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows,
-           std::unique_ptr<Camera> cam) {
+Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows) {
     type_ = kMODEL3D_ROOM;
     doors_ = is_doors;
     windows_ = is_windows;
@@ -44,12 +39,6 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_
     /* Check objects count into config file */
     using engine::core::ConfigEngine;
     nbobjects_ = ConfigEngine::getSetting<int>("objects_count");
-
-    /* Push cam in objects_ array */
-    if (cam != nullptr) {
-        cam_ = cam.get();
-        objects_.push_back(std::move(cam));
-    }
 }
 
 /* Create 3D walls for Room */
@@ -301,8 +290,8 @@ Model3D *Room::GenerateObject(int type_object, glm::vec4 location, glm::vec4 mov
 void Room::Draw(Camera *cam)
 {
     /* If current Room, compute new Camera GL Coords */
-    if (cam_ != nullptr) {
-        cam_->PrepareDraw(cam);
+    if (get_camera() != nullptr) {
+        objects_[0]->PrepareDraw(cam);
     }
 
     /* Compute objects GL coords  */
@@ -317,134 +306,6 @@ void Room::Draw(Camera *cam)
         if (o->type() != Model3D::kMODEL3D_CAMERA) {
             o->Draw();
         }
-    }
-}
-
-/* Detect collisions inside current room */
-void Room::DetectCollision(std::vector<Room*> neighbors)
-{
-    /* First check camera collision */
-    if (cam_ != nullptr &&
-        cam_->IsMoved()) {
-        PivotCollision(cam_, neighbors);
-    }
-
-    /* For all others moving objects
-       Parallell loop with cilkplus */
-    cilk_for (auto i = 0; i < objects_.size(); i++) {
-        if (objects_[i]->IsMoved() && objects_[i]->type() != Model3D::kMODEL3D_CAMERA) {
-            PivotCollision(objects_[i].get(), neighbors);
-        }
-    }
-}
-
-/* Detect all collision for one Object */
-void Room::PivotCollision(Model3D *object, std::vector<Room*> neighbors)
-{
-    tbb::mutex pivot_mutex;
-    /* ensure that 2 same objects are not checked at the same time */
-    object->lock();
-
-    /* Prepare an unique objects collection for collision detection */
-    std::map<int, Model3D*> grid_objects;
-
-    /* Grid coordinates for current object */
-    std::vector<std::vector<int>> placements = object->get_placements();
-
-    /* Check all grid placements for current object and select other objects near this one */
-    cilk_for (auto p = 0; p < placements.size(); p++) {
-        auto y = placements[p][0];
-        auto x = placements[p][1];
-        auto z = placements[p][2];
-
-        /* Other room objects adding */
-        cilk_for (auto i = y-1; i <= y+1; i++) {
-            cilk_for (auto j = x-1; j <= x+1; j++) {
-                if ((i != -1 && i != grid_y_) || (j != -1 && j != grid_x_)) {
-                    cilk_for (auto k = z-1; k <= z+1; k++) {
-                        if (((i != -1 && i != grid_y_) || (k != -1 && k != grid_z_)) &&
-                            ((j != -1 && j != grid_x_) || (k != -1 && k != grid_z_))) {
-
-                            std::vector<Model3D*> targets;
-
-                            if (i < 0) {
-                                if (neighbors[kFLOOR] != nullptr) {
-                                    targets = neighbors[kFLOOR]->getObjects(grid_y_-1, j, k);
-                                }
-                            } else if (i == grid_y_) {
-                                if (neighbors[kROOF] != nullptr) {
-                                    targets = neighbors[kROOF]->getObjects(0, j, k);
-                                }
-                            } else if (j < 0) {
-                                if (neighbors[kLEFT] != nullptr) {
-                                    targets = neighbors[kLEFT]->getObjects(i, grid_x_-1, k);
-                                }
-                            } else if (j == grid_x_) {
-                                if (neighbors[kRIGHT] != nullptr) {
-                                    targets = neighbors[kRIGHT]->getObjects(i, 0, k);
-                                }
-                            } else if (k < 0) {
-                                if (neighbors[kFRONT] != nullptr) {
-                                    targets = neighbors[kFRONT]->getObjects(i, j, grid_z_-1);
-                                }
-                            } else if (k == grid_z_) {
-                                if (neighbors[kBACK] != nullptr) {
-                                    targets = neighbors[kBACK]->getObjects(i, j, 0);
-                                }
-                            } else {
-                                targets = grid_[i][j][k];
-                            }
-
-                            /* Merge targets with collisions array */
-                            for (auto &obj : targets) {
-                                if (*obj != *object) {
-                                    tbb::mutex::scoped_lock lock_map(pivot_mutex);
-                                    grid_objects[obj->id()] = obj;
-                                }
-                            }
-                        } //fi: test on i and k, j and k
-                    } //cilk_for k
-                } //fi: test on i and j
-            } //cilk_for j
-        } //cilk_for i
-    } //cilk_for placements
-
-    /* Prepare vector for collision compute */
-    std::vector<Model3D*> room_objects;
-    for (auto & obj_pair : grid_objects) {
-        room_objects.push_back(obj_pair.second);
-    }
-
-    /* Parallell collision loop for objects with cilkplus */
-    std::map<int, std::vector<Model3D*>> recompute;
-    cilk_for (auto i = 0; i < room_objects.size(); i++) {
-        /* Abort program if object and room_object loop are same (must no happend) */
-        assert(*object != *room_objects[i]);
-
-        std::vector<Model3D*> collision_recompute = collision_engine_->DetectCollision(object, room_objects[i], room_mutex_);
-        if (collision_recompute.size() > 0) {
-            recompute[room_objects[i]->id()] = collision_recompute;
-        }
-    }
-
-    /* end mutex lock */
-    object->unlock();
-
-    /* If collision detected, recompute older ones if exists */
-    if (object->obstacle() != nullptr ) {
-        try {
-            for (auto & r : recompute.at(object->obstacle()->id())) {
-                using engine::core::ConfigEngine;
-                if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION) {
-                    std::cout << "Recompute " << object->id() << "::" << r->id() << std::endl;
-                }
-                cilk_spawn PivotCollision(r, neighbors);
-            }
-        }
-        /* Silently catched out-of-range (not a problem) */
-        catch (const std::out_of_range& oor) {}
-
-        cilk_sync;
     }
 }
 

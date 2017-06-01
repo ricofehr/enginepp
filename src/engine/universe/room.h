@@ -16,7 +16,6 @@
 #include "engine/physics/collision_engine.h"
 #include "engine/universe/wall.h"
 #include "engine/universe/brick.h"
-#include "engine/universe/camera.h"
 
 namespace engine {
 namespace universe {
@@ -26,20 +25,10 @@ class Room : public Model3D {
 
 public:
 
-    /* Room Side Constants */
-    static constexpr int kFLOOR = 0;
-    static constexpr int kROOF = 1;
-    static constexpr int kLEFT = 2;
-    static constexpr int kRIGHT = 3;
-    static constexpr int kFRONT = 4;
-    static constexpr int kBACK = 5;
-
     /* Constructors */
     Room();
     Room(glm::vec4 location);
-    Room(glm::vec4 location, std::unique_ptr<Camera> cam);
-    Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows,
-         std::unique_ptr<Camera> cam);
+    Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows);
 
     /* Mutators */
     void addDoor(int ind) { doors_[ind] = true; }
@@ -47,7 +36,6 @@ public:
 
     /* New hop functions */
     void Draw(Camera *cam);
-    void DetectCollision(std::vector<Room*> neighbors);
     /* Object Generation functions */
     void GenerateRandomObject();
     void GenerateWalls();
@@ -65,7 +53,6 @@ private:
 
     /* Some internal functions */
     Model3D *GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale);
-    void PivotCollision(Model3D *object, std::vector<Room*> neighbors);
 
     /* Room attributes */
     tbb::mutex room_mutex_;

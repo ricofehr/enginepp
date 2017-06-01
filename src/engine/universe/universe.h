@@ -31,7 +31,6 @@ public:
     void Draw();
 
     /* Accessors */
-    const Camera *cam() const { return cam_; }
     const bool ready() const { return ready_; }
 
     inline int countRooms(bool display) const {
@@ -94,10 +93,6 @@ private:
     void GenerateRandomRoom();
     Room *GenerateRoom(glm::vec4 location);
     void GenerateWalls();
-
-    /* Compute neighbors */
-    std::vector<Room*> GetOrderNeighbors(Room *r);
-    std::map<int, Room*> GetNeighbors(Room *r, int level);
 
     bool ready_{false};
     std::vector<Room*> display_rooms_;

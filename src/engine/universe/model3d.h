@@ -7,6 +7,8 @@
 #define ENGINE_UNIVERSE_MODEL3D_H_
 
 #include <memory>
+#include <vector>
+#include <map>
 #include <tbb/mutex.h>
 #include <cilk/cilk.h>
 #include <cilk/reducer_opadd.h>
@@ -27,12 +29,21 @@ class Model3D {
 public:
 
     /* Object Type Constants */
-    static constexpr int kMODEL3D_ROOM = 0;
-    static constexpr int kMODEL3D_CAMERA = 1;
-    static constexpr int kMODEL3D_WALL = 2;
-    static constexpr int kMODEL3D_WINDOW = 3;
-    static constexpr int kMODEL3D_DOOR = 4;
-    static constexpr int kMODEL3D_BRICK = 5;
+    static constexpr int kMODEL3D_UNIVERSE = 0;
+    static constexpr int kMODEL3D_ROOM = 1;
+    static constexpr int kMODEL3D_CAMERA = 2;
+    static constexpr int kMODEL3D_WALL = 3;
+    static constexpr int kMODEL3D_WINDOW = 4;
+    static constexpr int kMODEL3D_DOOR = 5;
+    static constexpr int kMODEL3D_BRICK = 6;
+
+    /* Border Side Constants */
+    static constexpr int kFLOOR = 0;
+    static constexpr int kROOF = 1;
+    static constexpr int kLEFT = 2;
+    static constexpr int kRIGHT = 3;
+    static constexpr int kFRONT = 4;
+    static constexpr int kBACK = 5;
 
     Model3D();
     /* Default move and copy constructor / assignments */
@@ -53,6 +64,9 @@ public:
     std::unique_ptr<Model3D> TransfertObject(std::unique_ptr<Model3D> obj, bool force);
     std::vector<std::unique_ptr<Model3D>> ListOutsideObjects();
 
+    /* Collision Function */
+    void DetectCollision(std::vector<Model3D*> neighbors);
+
     /* Operators */
     friend bool operator==(const Model3D &o1, const Model3D &o2);
     friend bool operator!=(const Model3D &o1, const Model3D &o2);
@@ -67,7 +81,6 @@ public:
     bool IsControlled() const { return is_controlled_; }
     int type() const { return type_; }
     std::vector<std::vector<int>> get_placements() const { return placements_; }
-    Camera * cam() const { return cam_; }
     virtual int countObjects() const { return objects_.size(); }
     inline virtual int countMovingObjects() const {
         cilk::reducer<cilk::op_add<int>> count_sum(0);
@@ -79,6 +92,15 @@ public:
         return count_sum.get_value();
     }
     bool IsFull() const { return nbobjects_ <= 0; }
+    bool IsCamera() const { return type_ == kMODEL3D_CAMERA; }
+    Model3D *get_camera()
+    {
+        if (objects_[0]->IsCamera()) {
+            return objects_[0].get();
+        }
+
+        return nullptr;
+    }
     std::vector<Model3D*> getObjects(int i, int j, int k) const { return grid_[i][j][k]; }
 
     /* Delegate Accessors */
@@ -93,6 +115,7 @@ public:
     void set_obstacle(Model3D *obstacle) { obstacle_ = obstacle; }
     void add_placement(int i, int j, int k) { placements_.push_back({i,j,k}); }
     void clear_placements() { placements_.clear(); }
+    void set_camera(std::unique_ptr<Model3D> cam) { objects_.insert(objects_.begin(), std::move(cam)); }
 
     /* Delegate Mutators */
     inline void InverseMove() {
@@ -117,7 +140,12 @@ protected:
     void InitCollisionEngine();
     void InitGrid();
     void DisplayGrid();
+    void PivotCollision(Model3D *object, std::vector<Model3D*> neighbors);
     bool IsInside (glm::vec3 location_object) const;
+
+    /* Compute neighbors */
+    std::vector<Model3D*> GetOrderNeighbors(Model3D *r);
+    std::map<int, Model3D*> GetNeighbors(Model3D *r, int level);
 
     std::vector<std::unique_ptr<engine::geometry::Shape3D>> elements_;
     engine::geometry::Box border_;
@@ -128,11 +156,11 @@ protected:
     tbb::mutex grid_mutex_;
     Model3D *obstacle_;
     engine::physics::CollisionEngine *collision_engine_;
-    Camera *cam_{nullptr};
+
     float distance_;
     int id_;
     int id_last_collision_;
-    int type_;
+    int type_{10000};
     int nbobjects_{33};
     bool is_crossed_;
     bool is_controlled_;

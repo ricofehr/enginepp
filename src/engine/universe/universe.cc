@@ -28,6 +28,8 @@ namespace {
 /* Constructor */
 Universe::Universe()
 {
+    type_ = kMODEL3D_UNIVERSE;
+
     /* Init Grid Settings */
     grid_x_ = kGRID_X;
     grid_y_ = kGRID_Y;
@@ -228,17 +230,22 @@ void Universe::GenerateRandomRoom()
 /* Create Room Object */
 Room *Universe::GenerateRoom(glm::vec4 location)
 {
-    int ind = objects_.size();
+    auto room_ptr{std::make_unique<Room>(location)};
+
+    auto ind = objects_.size();
 
     /* Init Camera for the first room */
-    std::unique_ptr<Camera> cam{nullptr};
     if (objects_.size() == 0) {
-        cam = std::make_unique<Camera>(location[0], location[1] + 1.0f, location[2] + 5.0f,
-                                       location[0], location[1] + 1.0f, location[2], 0.0f, 1.0f, 0.0f);
-        cam_ = cam.get();
+        auto cam = std::make_unique<Camera>(location[0],
+                                            location[1] + 1.0f,
+                                            location[2] + 5.0f,
+                                            location[0],
+                                            location[1] + 1.0f,
+                                            location[2],
+                                            0.0f, 1.0f, 0.0f);
+        room_ptr->set_camera(std::move(cam));
     }
 
-    auto room_ptr{std::make_unique<Room>(location, std::move(cam))};
     objects_.push_back(std::move(room_ptr));
 
     return dynamic_cast<Room*>(objects_[ind].get());
@@ -262,7 +269,7 @@ void Universe::Draw()
     /* Detect current room */
     int active_index = -1;
     cilk_for (auto cnt = 0; cnt < objects_.size(); cnt++) {
-        if (objects_[cnt]->cam() != nullptr) {
+        if (objects_[cnt]->get_camera() != nullptr) {
             active_index = cnt;
         }
     }
@@ -277,10 +284,11 @@ void Universe::Draw()
     /* Select displayed rooms: all rooms or 2 clipping levels */
     if (ConfigEngine::getSetting<int>("clipping") > 0) {
         display_rooms_.clear();
-        auto map_rooms = GetNeighbors((Room*)objects_[active_index].get(), ConfigEngine::getSetting<int>("clipping") % 2);
-        map_rooms[objects_[active_index]->id()] = (Room*)objects_[active_index].get();
+        auto map_rooms = GetNeighbors(objects_[active_index].get(),
+                                      ConfigEngine::getSetting<int>("clipping") % 2);
+        map_rooms[objects_[active_index]->id()] = dynamic_cast<Room*>(objects_[active_index].get());
         for (auto &r : map_rooms) {
-            display_rooms_.push_back(r.second);
+            display_rooms_.push_back(dynamic_cast<Room*>(r.second));
         }
     } else if(display_rooms_.size() == 0) {
         for (auto &o : objects_) {
@@ -297,7 +305,7 @@ void Universe::Draw()
     /* Universe is only ready after 10 hops */
     if (ready()) {
         for (auto &r : display_rooms_) {
-            r->Draw(cam_);
+            r->Draw(dynamic_cast<Camera*>(objects_[active_index]->get_camera()));
         }
     }
 
@@ -346,93 +354,6 @@ void Universe::Draw()
             sLastTime = current_time;
         }
     }
-}
-
-/* Return a group of rooms near each other with a deeping level */
-std::map<int, Room*> Universe::GetNeighbors(Room *r, int level)
-{
-    std::map<int, Room*> neighbors;
-    Room *tmp;
-
-    auto i = r->get_placements()[0][0];
-    auto j = r->get_placements()[0][1];
-    auto k = r->get_placements()[0][2];
-
-    if (i != 0 && grid_[i-1][j][k].size() != 0) {
-        tmp = dynamic_cast<Room*>(grid_[i-1][j][k][0]);
-        neighbors[tmp->id()] = tmp;
-    }
-
-    if (i != grid_y_-1 && grid_[i+1][j][k].size() != 0) {
-        tmp = dynamic_cast<Room*>(grid_[i+1][j][k][0]);
-        neighbors[tmp->id()] = tmp;
-    }
-
-    if (j != 0 && grid_[i][j-1][k].size() != 0) {
-        tmp = dynamic_cast<Room*>(grid_[i][j-1][k][0]);
-        neighbors[tmp->id()] = tmp;
-    }
-
-    if (j != grid_x_-1 && grid_[i][j+1][k].size() != 0) {
-        tmp = dynamic_cast<Room*>(grid_[i][j+1][k][0]);
-        neighbors[tmp->id()] = tmp;
-    }
-
-    if (k != 0 && grid_[i][j][k-1].size() != 0) {
-        tmp = dynamic_cast<Room*>(grid_[i][j][k-1][0]);
-        neighbors[tmp->id()] = tmp;
-    }
-
-    if (k != grid_z_-1 && grid_[i][j][k+1].size() != 0) {
-        tmp = dynamic_cast<Room*>(grid_[i][j][k+1][0]);
-        neighbors[tmp->id()] = tmp;
-    }
-
-    if (level) {
-        std::map<int, Room*> neighbors_recur_merge;
-        for (auto &n : neighbors) {
-            auto neighbors_recur = GetNeighbors(n.second, level-1);
-            neighbors_recur_merge.insert(neighbors_recur.begin(), neighbors_recur.end());
-        }
-        neighbors.insert(neighbors_recur_merge.begin(), neighbors_recur_merge.end());
-    }
-
-    return neighbors;
-}
-
-/* Return the 6 rooms (if all exists) near the targetting room (order by common side) */
-std::vector<Room*> Universe::GetOrderNeighbors(Room *r)
-{
-    std::vector<Room*> neighbors(6, nullptr);
-    auto i = r->get_placements()[0][0];
-    auto j = r->get_placements()[0][1];
-    auto k = r->get_placements()[0][2];
-
-    if (i != 0 && grid_[i-1][j][k].size() != 0) {
-        neighbors[Room::kFLOOR] = dynamic_cast<Room*>(grid_[i-1][j][k][0]);
-    }
-
-    if (i != grid_y_-1 && grid_[i+1][j][k].size() != 0) {
-        neighbors[Room::kROOF] = dynamic_cast<Room*>(grid_[i+1][j][k][0]);
-    }
-
-    if (j != 0 && grid_[i][j-1][k].size() != 0) {
-        neighbors[Room::kLEFT] = dynamic_cast<Room*>(grid_[i][j-1][k][0]);
-    }
-
-    if (j != grid_x_-1 && grid_[i][j+1][k].size() != 0) {
-        neighbors[Room::kRIGHT] = dynamic_cast<Room*>(grid_[i][j+1][k][0]);
-    }
-
-    if (k != 0 && grid_[i][j][k-1].size() != 0) {
-        neighbors[Room::kFRONT] = dynamic_cast<Room*>(grid_[i][j][k-1][0]);
-    }
-
-    if (k != grid_z_-1 && grid_[i][j][k+1].size() != 0) {
-        neighbors[Room::kBACK] = dynamic_cast<Room*>(grid_[i][j][k+1][0]);
-    }
-
-    return neighbors;
 }
 
 }//namespace universe
