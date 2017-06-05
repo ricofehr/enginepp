@@ -6,7 +6,6 @@
 #include "engine/physics/collision_engine.h"
 
 #include <iostream>
-#include <string>
 #include <vector>
 
 #include "engine/universe/model3d.h"

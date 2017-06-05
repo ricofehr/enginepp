@@ -57,7 +57,7 @@ const GLfloat sBufferData[192] = {
 };
 
 /* Fill vertex buffer */
-void CreateVertexBuffer() {
+void CreateVertexBuffer() noexcept {
     glGenBuffers(1, &sVertexBuffer);
     assert(sVertexBuffer != 0);
 
@@ -66,7 +66,7 @@ void CreateVertexBuffer() {
 }
 
 /* Fill texture buffer */
-void CreateTextureBuffer() {
+void CreateTextureBuffer() noexcept {
     int width, height;
     unsigned char* image;
 
@@ -114,7 +114,7 @@ Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
 }
 
 /* Create global vertex and texture buffers */
-void Brick::CreateBuffers()
+void Brick::CreateBuffers() noexcept
 {
     if (sVertexBuffer == 0) {
         CreateVertexBuffer();

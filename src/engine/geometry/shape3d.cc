@@ -21,12 +21,15 @@ float Shape3D::sMoveFactor = 1.0f;
 *   ComputeMVP  -   Compute the ModelViewProjection matrix
 *                   for current object.
 */
-void Shape3D::ComputeMVP(engine::universe::Camera *cam)
+void Shape3D::ComputeMVP()
 {
     /* width and height config values */
     using engine::core::ConfigEngine;
     float window_width = ConfigEngine::getSetting<float>("width");
     float window_height = ConfigEngine::getSetting<float>("height");
+
+    /* Get active Camera */
+    auto cam = engine::universe::Camera::active();
 
     glm::mat4 projection = glm::perspective(glm::radians(cam->fov()),
                                             window_width / window_height,

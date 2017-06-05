@@ -12,7 +12,6 @@
 #include <string>
 #include <cilk/cilk.h>
 
-#include "engine/universe/camera.h"
 #include "engine/physics/cl_collision_engine.h"
 #include "engine/physics/serial_collision_engine.h"
 #include "engine/physics/cilk_collision_engine.h"
@@ -20,8 +19,6 @@
 
 namespace engine {
 namespace universe {
-
-//std::unique_ptr<engine::physics::CollisionEngine> Model3D::collision_engine_ = nullptr;
 
 namespace {
     /* Unique id for object */
@@ -74,13 +71,13 @@ void Model3D::InitCollisionEngine()
 }
 
 /* Compute coords and move for the model */
-void Model3D::PrepareDraw(Camera *cam)
+void Model3D::Move() noexcept
 {
     border_.set_distance(distance_);
     border_.MoveCoords();
     for (auto &element : elements_) {
         element->set_distance(distance_);
-        element->ComputeMVP(cam);
+        element->ComputeMVP();
     }
     distance_ = -1.0f;
     /* An object cant touch same object twice, except camera */
@@ -89,20 +86,17 @@ void Model3D::PrepareDraw(Camera *cam)
         id_last_collision_ = obstacle_->id();
     }
     obstacle_ = nullptr;
-}
 
-/* Draw the model */
-void Model3D::Draw()
-{
-    /* Draw current object */
-    for (auto &element : elements_) {
-        element->Draw();
+    if (countChilds() == 0) {
+        return;
     }
+    /* Compute coords for first child object. Important if this one is camera */
+    objects_[0]->Move();
 
-    /* Draw associated objects ? */
-//    for (auto &object : objects_) {
-//        object->Draw();
-//    }
+    /* Compute objects GL coords  */
+    cilk_for (auto cnt = 1; cnt < objects_.size(); cnt++) {
+        objects_[cnt]->Move();
+    }
 }
 
 /*
@@ -122,14 +116,17 @@ void Model3D::InitGrid()
 /*
  *   Recompute the placement grid for objects into the room
  */
-std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
+std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid() noexcept
 {
     std::vector<std::unique_ptr<Model3D>> ret;
     for (auto o = 0; o < objects_.size();) {
-        if (!objects_[o]->IsMoved() && objects_[o]->get_placements().size() > 0) {
+
+        if (!objects_[o]->IsMoved() &&
+            objects_[o]->placements().size() > 0) {
             ++o;
             continue;
         }
+
         /* check grid collision */
         engine::geometry::Box border = objects_[o]->border();
         std::vector<glm::vec3> coords = border.ComputeCoords();
@@ -140,8 +137,8 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
         auto w1 = coords.at(1)[0] - x1;
         auto d1 = coords.at(4)[2] - z1;
 
-        for (auto &p : objects_[o]->get_placements()) {
-            tbb::mutex::scoped_lock lock(grid_mutex_);
+        for (auto &p : objects_[o]->placements()) {
+            tbb::mutex::scoped_lock lock(object_mutex_);
 
             auto pi = p[0];
             auto pj = p[1];
@@ -168,7 +165,7 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
 
                     if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
                         y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
-                        tbb::mutex::scoped_lock lock(grid_mutex_);
+                        tbb::mutex::scoped_lock lock(object_mutex_);
                         objects_[o]->add_placement(i, j, k);
                         grid_[i][j][k].push_back(objects_[o].get());
                     }
@@ -176,7 +173,7 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
             }
         }
 
-        if (objects_[o]->get_placements().size() == 0) {
+        if (objects_[o]->placements().size() == 0) {
             tbb::mutex::scoped_lock lock(object_mutex_);
             ret.push_back(std::move(objects_[o]));
             objects_.erase(objects_.begin() + o);
@@ -189,9 +186,17 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid()
 }
 
 /* Display Placement Grid */
-void Model3D::DisplayGrid()
+void Model3D::DisplayGrid() noexcept
 {
-    std::cout << "=== GRID FOR ID " << id_ << " ===" << std::endl << std::endl;
+    std::string object_type{"MODEL3D"};
+    if (type_ == kMODEL3D_UNIVERSE) {
+        object_type = "UNIVERSE";
+    }
+    else if (type_ == kMODEL3D_ROOM) {
+        object_type = "ROOM";
+    }
+
+    std::cout << "=== GRID FOR " << object_type << " ID " << id_ << " ===" << std::endl << std::endl;
     for (auto i = 0; i < grid_y_; i++) {
         std::cout << "=== Floor " << i << std::endl;
         for (auto k = 0; k < grid_z_; k++) {
@@ -210,7 +215,7 @@ void Model3D::DisplayGrid()
 }
 
 /* Change object room */
-std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> obj, bool force) {
+std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> obj, bool force) noexcept {
     if (force || IsInside(obj->location())) {
         /* Output if debug setted */
         using engine::core::ConfigEngine;
@@ -252,7 +257,7 @@ bool Model3D::IsInside(glm::vec3 location_object) const
 }
 
 /* List outside objects into room (currently not used) */
-std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects()
+std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects() noexcept
 {
     std::vector<std::unique_ptr<Model3D>> ret;
     for (auto &o : objects_) {
@@ -265,7 +270,7 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects()
 }
 
 /* Detect collisions inside current room */
-void Model3D::DetectCollision(std::vector<Model3D*> neighbors)
+void Model3D::DetectCollision(std::vector<Model3D*> neighbors) noexcept
 {
     /* For all others moving objects
      Parallell loop with cilkplus */
@@ -277,7 +282,7 @@ void Model3D::DetectCollision(std::vector<Model3D*> neighbors)
 }
 
 /* Detect all collision for one Object */
-void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors)
+void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors) noexcept
 {
     tbb::mutex pivot_mutex;
     /* ensure that 2 same objects are not checked at the same time */
@@ -287,7 +292,7 @@ void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors)
     std::map<int, Model3D*> grid_objects;
 
     /* Grid coordinates for current object */
-    std::vector<std::vector<int>> placements = object->get_placements();
+    std::vector<std::vector<int>> placements = object->placements();
 
     /* Check all grid placements for current object and select other objects near this one */
     cilk_for (auto p = 0; p < placements.size(); p++) {
@@ -307,27 +312,27 @@ void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors)
 
                             if (i < 0) {
                                 if (neighbors[kFLOOR] != nullptr) {
-                                    targets = neighbors[kFLOOR]->getObjects(grid_y_-1, j, k);
+                                    targets = neighbors[kFLOOR]->getPlacementObjects(grid_y_-1, j, k);
                                 }
                             } else if (i == grid_y_) {
                                 if (neighbors[kROOF] != nullptr) {
-                                    targets = neighbors[kROOF]->getObjects(0, j, k);
+                                    targets = neighbors[kROOF]->getPlacementObjects(0, j, k);
                                 }
                             } else if (j < 0) {
                                 if (neighbors[kLEFT] != nullptr) {
-                                    targets = neighbors[kLEFT]->getObjects(i, grid_x_-1, k);
+                                    targets = neighbors[kLEFT]->getPlacementObjects(i, grid_x_-1, k);
                                 }
                             } else if (j == grid_x_) {
                                 if (neighbors[kRIGHT] != nullptr) {
-                                    targets = neighbors[kRIGHT]->getObjects(i, 0, k);
+                                    targets = neighbors[kRIGHT]->getPlacementObjects(i, 0, k);
                                 }
                             } else if (k < 0) {
                                 if (neighbors[kFRONT] != nullptr) {
-                                    targets = neighbors[kFRONT]->getObjects(i, j, grid_z_-1);
+                                    targets = neighbors[kFRONT]->getPlacementObjects(i, j, grid_z_-1);
                                 }
                             } else if (k == grid_z_) {
                                 if (neighbors[kBACK] != nullptr) {
-                                    targets = neighbors[kBACK]->getObjects(i, j, 0);
+                                    targets = neighbors[kBACK]->getPlacementObjects(i, j, 0);
                                 }
                             } else {
                                 targets = grid_[i][j][k];
@@ -387,14 +392,14 @@ void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors)
 }
 
 /* Return a group of rooms near each other with a deeping level */
-std::map<int, Model3D*> Model3D::GetNeighbors(Model3D *r, int level)
+std::map<int, Model3D*> Model3D::GetNeighbors(Model3D *r, int level) noexcept
 {
     std::map<int, Model3D*> neighbors;
     Model3D *tmp;
 
-    auto i = r->get_placements()[0][0];
-    auto j = r->get_placements()[0][1];
-    auto k = r->get_placements()[0][2];
+    auto i = r->placements()[0][0];
+    auto j = r->placements()[0][1];
+    auto k = r->placements()[0][2];
 
     if (i != 0 && grid_[i-1][j][k].size() != 0) {
         tmp = grid_[i-1][j][k][0];
@@ -439,12 +444,12 @@ std::map<int, Model3D*> Model3D::GetNeighbors(Model3D *r, int level)
 }
 
 /* Return the 6 rooms (if all exists) near the targetting room (order by common side) */
-std::vector<Model3D*> Model3D::GetOrderNeighbors(Model3D *r)
+std::vector<Model3D*> Model3D::GetOrderNeighbors(Model3D *r) noexcept
 {
     std::vector<Model3D*> neighbors(6, nullptr);
-    auto i = r->get_placements()[0][0];
-    auto j = r->get_placements()[0][1];
-    auto k = r->get_placements()[0][2];
+    auto i = r->placements()[0][0];
+    auto j = r->placements()[0][1];
+    auto k = r->placements()[0][2];
 
     if (i != 0 && grid_[i-1][j][k].size() != 0) {
         neighbors[kFLOOR] = grid_[i-1][j][k][0];
@@ -474,10 +479,10 @@ std::vector<Model3D*> Model3D::GetOrderNeighbors(Model3D *r)
 }
 
 /* Move camera associated to current object */
-void Model3D::MoveCamera()
+void Model3D::RecordHID()
 {
     if (get_camera() != nullptr) {
-        dynamic_cast<Camera*>(objects_[0].get())->Move();
+        objects_[0]->RecordHID();
     }
 }
 

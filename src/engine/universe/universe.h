@@ -6,16 +6,12 @@
 #ifndef ENGINE_UNIVERSE_UNIVERSE_H_
 #define ENGINE_UNIVERSE_UNIVERSE_H_
 
-#include <iostream>
 #include <memory>
 #include <vector>
-#include <map>
 #include <cilk/cilk.h>
 #include <cilk/reducer_opadd.h>
 
-#include "engine/universe/room.h"
-#include "engine/universe/camera.h"
-#include "engine/physics/collision_engine.h"
+#include "engine/universe/model3d.h"
 
 namespace engine {
 namespace universe {
@@ -28,51 +24,51 @@ public:
     Universe();
 
     /* Compute new hop */
-    void Draw();
+    void Draw() noexcept override final;
 
     /* Accessors */
     const bool ready() const { return ready_; }
 
-    inline int countRooms(bool display) const {
+    inline const int countRooms(bool display) const {
         if (display) {
             return display_rooms_.size();
         }
-        return objects_.size();
+        return countChilds();
     }
 
-    inline int countObjects(bool display) const {
+    inline const int countRoomsChilds(bool display) const {
         cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
             cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-                *count_sum += display_rooms_[cnt]->countObjects();
+                *count_sum += display_rooms_[cnt]->countChilds();
             }
         } else {
             cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
-                *count_sum += objects_[cnt]->countObjects();
+                *count_sum += objects_[cnt]->countChilds();
             }
         }
         return count_sum.get_value();
     }
 
-    inline int countMovingObjects(bool display) const {
+    inline const int countRoomsMovingChilds(bool display) const {
         cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
             cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-                *count_sum += display_rooms_[cnt]->countMovingObjects();
+                *count_sum += display_rooms_[cnt]->countMovingChilds();
             }
         } else {
             cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
-                *count_sum += objects_[cnt]->countMovingObjects();
+                *count_sum += objects_[cnt]->countMovingChilds();
             }
         }
         return count_sum.get_value();
     }
 
     /* Mutators */
-    const void toready() { ready_ = true; }
+    void toready() { ready_ = true; }
 
     /* Grid compute & display */
-    std::vector<std::unique_ptr<Model3D>> ReinitGrid() override final;
+    std::vector<std::unique_ptr<Model3D>> ReinitGrid() noexcept override final;
 
 private:
 
@@ -84,18 +80,8 @@ private:
     static constexpr float kGRID_UNIT_Y = 12.0f;
     static constexpr float kGRID_UNIT_Z = 16.0f;
 
-    /* Init Universe */
-    void InitRooms();
-    void CreateGLBuffers();
-
-    /* Generate room(s) function */
-    void GenerateRooms();
-    void GenerateRandomRoom();
-    Room *GenerateRoom(glm::vec4 location);
-    void GenerateWalls();
-
     bool ready_{false};
-    std::vector<Room*> display_rooms_;
+    std::vector<Model3D*> display_rooms_;
 };
 
 }//namespace universe

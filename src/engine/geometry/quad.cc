@@ -5,11 +5,6 @@
 
 #include "engine/geometry/quad.h"
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <iostream>
-
 #include "engine/renderer/loopgl.h"
 
 namespace engine {

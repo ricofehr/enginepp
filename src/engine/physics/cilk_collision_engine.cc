@@ -5,9 +5,6 @@
 
 #include "engine/physics/cilk_collision_engine.h"
 
-#include <iostream>
-#include <string>
-
 #include <cilk/cilk.h>
 #include <cilk/cilk_api.h>
 #include <cilk/reducer_min.h>

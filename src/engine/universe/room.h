@@ -7,15 +7,9 @@
 #define ENGINE_UNIVERSE_ROOM_H_
 
 #include <vector>
-#include <memory>
-#include <cilk/cilk.h>
-#include <cilk/reducer_opadd.h>
-#include <tbb/mutex.h>
+#include <glm/glm.hpp>
 
 #include "engine/universe/model3d.h"
-#include "engine/physics/collision_engine.h"
-#include "engine/universe/wall.h"
-#include "engine/universe/brick.h"
 
 namespace engine {
 namespace universe {
@@ -30,16 +24,13 @@ public:
     Room(glm::vec4 location);
     Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows);
 
+    /* Accessors */
+    const std::vector<bool> doors() const { return doors_; }
+    const std::vector<bool> windows() const { return windows_; }
+
     /* Mutators */
     void addDoor(int ind) { doors_[ind] = true; }
     void addWindow(int ind) { windows_[ind] = true; }
-
-    /* New hop functions */
-    void Draw(Camera *cam);
-    /* Object Generation functions */
-    void GenerateRandomObject();
-    void GenerateWalls();
-    void GenerateObjects();
 
 private:
 
@@ -51,11 +42,7 @@ private:
     static constexpr float kGRID_UNIT_X = 2.0f;
     static constexpr float kGRID_UNIT_Z = 2.0f;
 
-    /* Some internal functions */
-    Model3D *GenerateObject(int type_object, glm::vec4 location, glm::vec4 move, float scale);
-
     /* Room attributes */
-    tbb::mutex room_mutex_;
     std::vector<bool> doors_{false, false, false, false, false, false};
     std::vector<bool> windows_{false, false, false, false, false, false};
 };

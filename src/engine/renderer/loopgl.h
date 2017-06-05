@@ -11,13 +11,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "engine/universe/universe.h"
+
 namespace engine {
-
-/* Forward declaration of class Universe */
-namespace universe {
-    class Universe;
-}//namespace universe
-
 namespace renderer {
 
 class LoopGL {

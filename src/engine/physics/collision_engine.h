@@ -10,7 +10,6 @@
 #ifndef PHYSICS_COLLISIONENGINE_H_
 #define PHYSICS_COLLISIONENGINE_H_
 
-#include <iostream>
 #include <tbb/mutex.h>
 
 namespace engine {

@@ -5,13 +5,9 @@
 
 #include "engine/geometry/box.h"
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <cilk/cilk.h>
-
-#include <iostream>
-#include <vector>
 
 namespace engine {
 namespace geometry {

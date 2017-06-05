@@ -30,6 +30,7 @@ set(physics_SRCS
     src/engine/physics/serial_collision_engine.cc)
 
 set(universe_SRCS
+    src/engine/universe/random_universe_factory.cc
     src/engine/universe/camera.cc
     src/engine/universe/model3d.cc
     src/engine/universe/wall.cc
@@ -64,6 +65,8 @@ set(physics_HDRS
     src/engine/physics/serial_collision_engine.h)
 
 set(universe_HDRS
+    src/engine/universe/random_universe_factory.h
+    src/engine/universe/universe_factory.h
     src/engine/universe/camera.h
     src/engine/universe/model3d.h
     src/engine/universe/wall.h

@@ -33,11 +33,17 @@ public:
     /* Default destructor */
     ~Camera() override = default;
 
+    /* Accessors */
     glm::vec3 direction() const { return direction_; }
     glm::vec3 head() const { return head_; }
     float fov() const { return fov_; }
+    static Camera* active() { return active_; }
 
-    void Move();
+    /* Mutators */
+    void set_active() { active_ = this; }
+
+    /* Camera Move Detect */
+    void RecordHID() noexcept override final;
 
 private:
 
@@ -46,6 +52,9 @@ private:
     float horizontal_angle_;
     float vertical_angle_;
     float fov_;
+
+    /* Only one current active Camera and there must be Always at least one */
+    static Camera *active_;
 };
 
 }//namespace universe

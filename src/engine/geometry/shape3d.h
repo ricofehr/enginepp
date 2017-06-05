@@ -10,11 +10,6 @@
 #include <glm/glm.hpp>
 
 namespace engine {
-/* Forward declaration of class Camera */
-namespace universe {
-    class Camera;
-}//namespace universe
-
 namespace geometry {
 
 /* 3d object base class */
@@ -33,7 +28,7 @@ public:
     /* Abstract class, so virtual destructor */
     virtual ~Shape3D() = default;
 
-    void ComputeMVP(engine::universe::Camera *cam);
+    void ComputeMVP();
     virtual void Draw() = 0;
 
     bool IsMoved() const { return move_[0] != 0.0f || move_[1] != 0.0f || move_[2] != 0.0f; }

@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <cilk/cilk_api.h>
 
 #include "engine/core/config_engine.h"
@@ -86,7 +85,7 @@ void CLCollisionEngine::InitCollisionEngine() {
             wk_size_ /= 2;
         }
     } catch(cl::Error error) {
-        std::cout << error.what() << "(" << error.err() << ")" << std::endl;
+        std::cerr << error.what() << "(" << error.err() << ")" << std::endl;
         exit(1);
     }
  }

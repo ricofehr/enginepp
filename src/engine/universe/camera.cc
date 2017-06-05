@@ -68,6 +68,9 @@ static void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
 
 }//namespace
 
+/* Define static active_ */
+Camera *Camera::active_ = nullptr;
+
 /* Constructors */
 Camera::Camera()
        :Camera(15.0f, 100.0f, 15.0f, 15.0f, 0.0f, 15.0f, 0.0f, 0.0f, 1.0f) {}
@@ -88,10 +91,14 @@ Camera::Camera(float cx, float cy, float cz,
 
     type_ = kMODEL3D_CAMERA;
     is_controlled_ = true;
+
+    if (active_ == nullptr) {
+        set_active();
+    }
 }
 
 /*  Move() - Compute Camera move */
-void Camera::Move()
+void Camera::RecordHID() noexcept
 {
     using engine::renderer::LoopGL;
 

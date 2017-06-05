@@ -5,8 +5,6 @@
 
 #include "engine/physics/serial_collision_engine.h"
 
-#include <iostream>
-#include <string>
 #include <cilk/cilk_api.h>
 
 #include "engine/core/config_engine.h"

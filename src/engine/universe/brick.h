@@ -32,7 +32,7 @@ public:
     /* Default destructor */
     ~Brick() override = default;
 
-    static void CreateBuffers();
+    static void CreateBuffers() noexcept;
 };
 
 }//namespace universe
