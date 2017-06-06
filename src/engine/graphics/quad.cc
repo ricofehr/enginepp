@@ -60,7 +60,7 @@ Quad::Quad(int face, glm::vec3 scale, glm::vec4 location,
 }
 
 /* Draw the Quad on the scene */
-void Quad::Draw()
+void Quad::Draw() noexcept
 {
     using engine::renderer::LoopGL;
 

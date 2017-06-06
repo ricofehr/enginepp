@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 
 #include <vector>
+#include <memory>
 
 #include "engine/graphics/cube.h"
 
@@ -16,14 +17,14 @@ namespace engine {
 namespace graphics {
 
 /**
-*    Each 3d model in the scene must be fill into a box.
+*    Each 3d model in the scene must be fill into a border like a cubed box.
 *    Uses for coordinates and collision compute.
-*    A box is a cube with additional properties
 **/
-class Border : public Cube {
+class Border {
 
 public:
 
+    /* Constructors */
     Border();
     Border(float scale, glm::vec4 location);
     Border(glm::vec3 scale, glm::vec4 location);
@@ -34,21 +35,41 @@ public:
     Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
     Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
 
-    /* Default move and copy constructor / operator */
+    /* Default move constructor / assignment */
     Border(Border&&) = default;
     Border& operator=(Border&&) = default;
 
-    Border(const Border&) = default;
-    Border& operator=(const Border&) = default;
+    /* Delete copy constructor / assignment because cube_ is unique_ptr */
+    Border(const Border&) = delete;
+    Border& operator=(const Border&) = delete;
 
     /* Default destructor */
-    ~Border() override = default;
+    ~Border() = default;
 
+    /* Coords Computes */
     std::vector<glm::vec3> ComputeCoords() const;
     void MoveCoords();
 
+    /* Delegate Move */
+    void MoveLocation() { cube_->MoveLocation(); }
+
+    /* Delegate Accessors */
+    bool IsMoved() const { return cube_->IsMoved(); }
+    bool IsMovedX() const { return cube_->IsMovedX(); }
+    bool IsMovedY() const { return cube_->IsMovedY(); }
+    bool IsMovedZ() const { return cube_->IsMovedZ(); }
+    glm::vec4 location() const { return cube_->location(); }
+    glm::vec3 scale() const { return cube_->scale(); }
+    glm::vec4 move() const { return cube_->move(); }
+
+    /* Delegate Mutators */
+    void set_distance(float distance) { cube_->set_distance(distance); }
+    void set_move(glm::vec3 move) { cube_->set_move(move); }
+    void InverseMove() { cube_->InverseMove(); }
+
 private:
 
+    std::unique_ptr<Cube> cube_{nullptr};
     std::vector<glm::vec3> coords_;
 };
 

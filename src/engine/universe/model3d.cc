@@ -73,8 +73,8 @@ void Model3D::InitCollisionEngine()
 /* Compute coords and move for the model */
 void Model3D::Move() noexcept
 {
-    border_.set_distance(distance_);
-    border_.MoveCoords();
+    border_->set_distance(distance_);
+    border_->MoveCoords();
     for (auto &element : elements_) {
         element->set_distance(distance_);
         element->ComputeMVP();
@@ -128,8 +128,8 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid() noexcept
         }
 
         /* check grid collision */
-        engine::graphics::Border border = objects_[o]->border();
-        std::vector<glm::vec3> coords = border.ComputeCoords();
+        auto border = objects_[o]->border();
+        std::vector<glm::vec3> coords = border->ComputeCoords();
         auto x1 = coords.at(0)[0];
         auto y1 = coords.at(0)[1];
         auto z1 = coords.at(0)[2];

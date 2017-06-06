@@ -107,7 +107,7 @@ Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
     }
 
     type_ = kMODEL3D_BRICK;
-    border_ = Border(scale, location, move);
+    border_ = std::make_unique<Border>(scale, location, move);
     auto cube_ptr {std::make_unique<Cube>(scale, location, move,
                                           sVertexBuffer, sTextureBuffer)};
     elements_.push_back(std::move(cube_ptr));

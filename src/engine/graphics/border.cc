@@ -74,8 +74,8 @@ Border::Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm:
         : Border(glm::vec3(scale), location, move, coords) {}
 
 Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
-        : Cube(scale, location, move)
 {
+    cube_ = std::make_unique<Cube>(scale, location, move);
     coords_ = coords;
 }
 
@@ -83,7 +83,7 @@ Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<
 std::vector<glm::vec3> Border::ComputeCoords() const
 {
     std::vector<glm::vec3> ret(coords_.size());
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location_)) * glm::scale(scale_);
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location())) * glm::scale(scale());
 
     /* Parallell coords compute with cilkplus */
     cilk_for (auto i = 0; i < coords_.size(); i++) {
@@ -97,18 +97,12 @@ std::vector<glm::vec3> Border::ComputeCoords() const
 void Border::MoveCoords()
 {
     if (!IsMoved()) {
-        distance_ = -1.0f;
+        set_distance(-1.0f);
         return;
     }
 
-    if (distance_ != -1.0f) {
-        location_ += distance_ * move_ * sMoveFactor;
-        move_ = -move_;
-    } else {
-        location_ += move_ * sMoveFactor;
-    }
-
-    distance_ = -1.0f;
+    /* Compute new location coords for border */
+    MoveLocation();
 }
 
 }//namespace graphics

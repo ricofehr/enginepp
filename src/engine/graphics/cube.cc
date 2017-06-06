@@ -84,7 +84,7 @@ Cube::Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move,
 }
 
 /* Draw the cube */
-void Cube::Draw()
+void Cube::Draw() noexcept
 {
     /* sProgramId and sMatrixId global fixed values */
     using engine::renderer::LoopGL;

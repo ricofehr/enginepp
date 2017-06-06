@@ -37,7 +37,7 @@ public:
     /* Default destructor */
     virtual ~Cube() override = default;
 
-    void Draw() override;
+    void Draw() noexcept override final;
 
 private:
 

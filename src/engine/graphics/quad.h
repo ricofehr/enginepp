@@ -38,7 +38,7 @@ public:
     /* Default destructor */
     ~Quad() override = default;
 
-    void Draw() override;
+    void Draw() noexcept override final;
 
     int face() const { return face_; }
 

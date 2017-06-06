@@ -86,7 +86,7 @@ public:
     float distance() const { return distance_; }
     int id_last_collision() const { return id_last_collision_; }
     Model3D* obstacle() { return obstacle_; }
-    engine::graphics::Border border() const { return border_; }
+    engine::graphics::Border* border() const { return border_.get(); }
     bool IsCrossed() const { return is_crossed_; }
     bool IsControlled() const { return is_controlled_; }
     int type() const { return type_; }
@@ -122,11 +122,11 @@ public:
     std::vector<Model3D*> getPlacementObjects(int i, int j, int k) const { return grid_[i][j][k]; }
 
     /* Delegate Accessors */
-    glm::vec3 location() const { return glm::vec3(border_.location()); }
-    bool IsMoved() const { return border_.IsMoved(); }
-    bool IsMovedX() const { return border_.IsMovedX(); }
-    bool IsMovedY() const { return border_.IsMovedY(); }
-    bool IsMovedZ() const { return border_.IsMovedZ(); }
+    glm::vec3 location() const { return glm::vec3(border_->location()); }
+    bool IsMoved() const { return border_->IsMoved(); }
+    bool IsMovedX() const { return border_->IsMovedX(); }
+    bool IsMovedY() const { return border_->IsMovedY(); }
+    bool IsMovedZ() const { return border_->IsMovedZ(); }
 
     /* Mutators */
     inline Model3D* add_object(std::unique_ptr<Model3D> obj) noexcept {
@@ -157,7 +157,7 @@ public:
 
     /* Delegate Mutators */
     inline void InverseMove() {
-        border_.InverseMove();
+        border_->InverseMove();
         for (auto &e : elements_) {
             e->InverseMove();
         }
@@ -186,7 +186,7 @@ protected:
 
     /* Model3D attributes */
     std::vector<std::unique_ptr<engine::graphics::Shape3D>> elements_;
-    engine::graphics::Border border_;
+    std::unique_ptr<engine::graphics::Border> border_{nullptr};
     std::vector<Model3D*> ***grid_{nullptr};
     std::vector<std::unique_ptr<Model3D>> objects_;
     std::vector<std::vector<int>> placements_;

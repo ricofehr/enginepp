@@ -84,7 +84,9 @@ Camera::Camera(float cx, float cy, float cz,
     horizontal_angle_ = 3.14f;
     vertical_angle_ = 0.0;
     fov_ = 45.0f;
-    border_ = engine::graphics::Border(1.0f,
+
+    using engine::graphics::Border;
+    border_ = std::make_unique<Border>(1.0f,
                 glm::vec4(cx, cy, cz, 1.0f),
                 glm::vec4(0.0f),
                 sCameraCoords);
@@ -149,7 +151,7 @@ void Camera::RecordHID() noexcept
     head_ = glm::cross(right, direction_);
 
     /* Reset move translate */
-    border_.set_move(glm::vec3(0.0f));
+    border_->set_move(glm::vec3(0.0f));
 
     /* If shift is pressed => run */
     if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
@@ -158,19 +160,19 @@ void Camera::RecordHID() noexcept
 
     /* Move forward */
     if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_UP) == GLFW_PRESS) {
-        border_.set_move(direction_ * delta_time * speed);
+        border_->set_move(direction_ * delta_time * speed);
     }
     /* Move backward */
     if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        border_.set_move(-direction_ * delta_time * speed);
+        border_->set_move(-direction_ * delta_time * speed);
     }
     /* Strafe right */
     if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        border_.set_move(right * delta_time * speed);
+        border_->set_move(right * delta_time * speed);
     }
     /* Strafe left */
     if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
-        border_.set_move(-right * delta_time * speed);
+        border_->set_move(-right * delta_time * speed);
     }
 
     /* Reset Cursor position at center of screen */

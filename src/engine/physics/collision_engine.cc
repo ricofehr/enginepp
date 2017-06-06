@@ -28,10 +28,10 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     std::vector<engine::universe::Model3D*> recompute;
     engine::universe::Model3D *oldobstacle1{nullptr}, *oldobstacle2{nullptr};
 
-    engine::graphics::Border border1 = object->border();
-    engine::graphics::Border border2 = obstacle->border();
-    std::vector<glm::vec3> coords1 = border1.ComputeCoords();
-    std::vector<glm::vec3> coords2 = border2.ComputeCoords();
+    engine::graphics::Border *border1 = object->border();
+    engine::graphics::Border *border2 = obstacle->border();
+    std::vector<glm::vec3> coords1 = border1->ComputeCoords();
+    std::vector<glm::vec3> coords2 = border2->ComputeCoords();
 
     /* First polygon point (x,y,z) and dimensions (h,w,d) */
     GLfloat x1, y1, z1, h1, w1, d1;
@@ -58,12 +58,12 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     w2 = coords2.at(1)[0] - x2;
     d2 = coords2.at(4)[2] - z2;
 
-    move1x = border1.move()[0];
-    move1y = border1.move()[1];
-    move1z = border1.move()[2];
-    move2x = border2.move()[0];
-    move2y = border2.move()[1];
-    move2z = border2.move()[2];
+    move1x = border1->move()[0];
+    move1y = border1->move()[1];
+    move1z = border1->move()[2];
+    move2x = border2->move()[0];
+    move2y = border2->move()[1];
+    move2z = border2->move()[2];
 
     float box1[9] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
     float box2[9] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};

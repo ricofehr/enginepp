@@ -30,7 +30,10 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_
     InitGrid();
 
     using engine::graphics::Border;
-    border_ = Border(glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2), location);
+    border_ = std::make_unique<Border>(glm::vec3(grid_x_*grid_unit_x_/2,
+                                                 grid_y_*grid_unit_y_/2,
+                                                 grid_z_*grid_unit_z_/2),
+                                       location);
 }
 
 }//namespace universe

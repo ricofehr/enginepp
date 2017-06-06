@@ -110,7 +110,7 @@ Wall::Wall(glm::vec3 scale, glm::vec4 location, int face)
     }
 
     type_ = kMODEL3D_WALL;
-    border_ = Border(scale, location);
+    border_ = std::make_unique<Border>(scale, location);
     auto cube_ptr {std::make_unique<Cube>(scale, location, glm::vec4(0.0f),
                                           sVertexBuffer[face], sTextureBuffer[face])};
     elements_.push_back(std::move(cube_ptr));
