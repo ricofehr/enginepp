@@ -1,6 +1,8 @@
 /*
  * Random World Factory Class for universe objects
  * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *
+ * Generate Objects For Universe in Random manner
  */
 
 #ifndef ENGINE_UNIVERSE_RANDOMUNIVERSEFACTORY_H_

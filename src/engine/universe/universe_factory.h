@@ -1,6 +1,8 @@
 /*
  * Abstract Factory Class for universe objects
  * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *
+ * Implements Factory Pattern for Universe Objects
  */
 
 #ifndef ENGINE_UNIVERSE_UNIVERSEFACTORY_H_

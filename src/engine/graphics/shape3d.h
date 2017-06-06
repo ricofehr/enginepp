@@ -3,14 +3,14 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#ifndef ENGINE_GEOMETRY_SHAPE3D_H_
-#define ENGINE_GEOMETRY_SHAPE3D_H_
+#ifndef ENGINE_GRAPHICS_SHAPE3D_H_
+#define ENGINE_GRAPHICS_SHAPE3D_H_
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
 namespace engine {
-namespace geometry {
+namespace graphics {
 
 /* 3d object base class */
 class Shape3D {
@@ -55,7 +55,7 @@ protected:
     float distance_;
 };
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine
 
-#endif //ENGINE_GEOMETRY_SHAPE3D_H_
+#endif //ENGINE_GRAPHICS_SHAPE3D_H_

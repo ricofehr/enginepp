@@ -3,16 +3,16 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#ifndef ENGINE_GEOMETRY_QUAD_H_
-#define ENGINE_GEOMETRY_QUAD_H_
+#ifndef ENGINE_GRAPHICS_QUAD_H_
+#define ENGINE_GRAPHICS_QUAD_H_
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "engine/geometry/shape3d.h"
+#include "engine/graphics/shape3d.h"
 
 namespace engine {
-namespace geometry {
+namespace graphics {
 
 /* Quad 3d object, inherit Shape3D */
 class Quad : public Shape3D {
@@ -49,8 +49,8 @@ private:
     int face_; /* 6 type of quad: back, front, left, right, top, roof */
 };
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine
 
-#endif //ENGINE_GEOMETRY_QUAD_H_
+#endif //ENGINE_GRAPHICS_QUAD_H_
 

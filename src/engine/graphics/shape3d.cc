@@ -3,7 +3,7 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#include "engine/geometry/shape3d.h"
+#include "engine/graphics/shape3d.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -13,7 +13,7 @@
 
 namespace engine {
 
-namespace geometry {
+namespace graphics {
 
 float Shape3D::sMoveFactor = 1.0f;
 
@@ -55,5 +55,5 @@ void Shape3D::ComputeMVP()
     mvp_ = projection * view * model * glm::scale(scale_);
 }
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine

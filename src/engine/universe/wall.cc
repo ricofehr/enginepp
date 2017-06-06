@@ -11,8 +11,8 @@
 #include <iostream>
 #include <memory>
 
-#include "engine/geometry/box.h"
-#include "engine/geometry/cube.h"
+#include "engine/graphics/border.h"
+#include "engine/graphics/cube.h"
 
 namespace engine {
 namespace universe {
@@ -100,8 +100,8 @@ Wall::Wall()
 
 Wall::Wall(glm::vec3 scale, glm::vec4 location, int face)
 {
-    using engine::geometry::Box;
-    using engine::geometry::Cube;
+    using engine::graphics::Border;
+    using engine::graphics::Cube;
 
     /* Must be created before with static CreateBuffers function */
     if (sVertexBuffer[0] == 0) {
@@ -110,7 +110,7 @@ Wall::Wall(glm::vec3 scale, glm::vec4 location, int face)
     }
 
     type_ = kMODEL3D_WALL;
-    border_ = Box(scale, location);
+    border_ = Border(scale, location);
     auto cube_ptr {std::make_unique<Cube>(scale, location, glm::vec4(0.0f),
                                           sVertexBuffer[face], sTextureBuffer[face])};
     elements_.push_back(std::move(cube_ptr));
@@ -125,5 +125,5 @@ void Wall::CreateBuffers()
     }
 }
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine

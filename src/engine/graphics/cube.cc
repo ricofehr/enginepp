@@ -3,13 +3,13 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#include "engine/geometry/cube.h"
+#include "engine/graphics/cube.h"
 
 #include "engine/renderer/loopgl.h"
 
 namespace engine {
 
-namespace geometry {
+namespace graphics {
 
 namespace {
 
@@ -122,5 +122,5 @@ void Cube::Draw()
     glDisableVertexAttribArray(2);
 }
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine

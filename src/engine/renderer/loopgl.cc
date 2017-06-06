@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "engine/geometry/shape3d.h"
+#include "engine/graphics/shape3d.h"
 #include "engine/core/config_engine.h"
 
 namespace engine {
@@ -189,7 +189,7 @@ int Fps(double &last_time, int &nb_frames)
         }
 
         /* Update movefactor for objects */
-        engine::geometry::Shape3D::sMoveFactor = 60.0f / nb_frames;
+        engine::graphics::Shape3D::sMoveFactor = 60.0f / nb_frames;
         sUniverse->toready();
 
         /* Test datas output */

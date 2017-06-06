@@ -3,16 +3,16 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#ifndef ENGINE_GEOMETRY_CUBE_H_
-#define ENGINE_GEOMETRY_CUBE_H_
+#ifndef ENGINE_GRAPHICS_CUBE_H_
+#define ENGINE_GRAPHICS_CUBE_H_
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "engine/geometry/shape3d.h"
+#include "engine/graphics/shape3d.h"
 
 namespace engine {
-namespace geometry {
+namespace graphics {
 
 /* Cube 3d object, inherit Shape3D */
 class Cube : public Shape3D {
@@ -45,7 +45,7 @@ private:
     GLuint texturebuffer_;
 };
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine
 
-#endif //ENGINE_GEOMETRY_CUBE_H_
+#endif //ENGINE_GRAPHICS_CUBE_H_

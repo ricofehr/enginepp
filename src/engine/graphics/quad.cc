@@ -3,13 +3,13 @@
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#include "engine/geometry/quad.h"
+#include "engine/graphics/quad.h"
 
 #include "engine/renderer/loopgl.h"
 
 namespace engine {
 
-namespace geometry {
+namespace graphics {
 
 namespace {
 
@@ -94,5 +94,5 @@ void Quad::Draw()
     glDisableVertexAttribArray(2);
 }
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine

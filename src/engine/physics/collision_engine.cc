@@ -28,8 +28,8 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     std::vector<engine::universe::Model3D*> recompute;
     engine::universe::Model3D *oldobstacle1{nullptr}, *oldobstacle2{nullptr};
 
-    engine::geometry::Box border1 = object->border();
-    engine::geometry::Box border2 = obstacle->border();
+    engine::graphics::Border border1 = object->border();
+    engine::graphics::Border border2 = obstacle->border();
     std::vector<glm::vec3> coords1 = border1.ComputeCoords();
     std::vector<glm::vec3> coords2 = border2.ComputeCoords();
 

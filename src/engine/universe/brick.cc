@@ -11,8 +11,8 @@
 #include <iostream>
 #include <memory>
 
-#include "engine/geometry/box.h"
-#include "engine/geometry/cube.h"
+#include "engine/graphics/border.h"
+#include "engine/graphics/cube.h"
 
 namespace engine {
 namespace universe {
@@ -97,8 +97,8 @@ Brick::Brick(float scale, glm::vec4 location)
 
 Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
 {
-    using engine::geometry::Box;
-    using engine::geometry::Cube;
+    using engine::graphics::Border;
+    using engine::graphics::Cube;
 
     /* Must be created before with static CreateBuffers function */
     if (sVertexBuffer == 0) {
@@ -107,7 +107,7 @@ Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
     }
 
     type_ = kMODEL3D_BRICK;
-    border_ = Box(scale, location, move);
+    border_ = Border(scale, location, move);
     auto cube_ptr {std::make_unique<Cube>(scale, location, move,
                                           sVertexBuffer, sTextureBuffer)};
     elements_.push_back(std::move(cube_ptr));
@@ -122,5 +122,5 @@ void Brick::CreateBuffers() noexcept
     }
 }
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine

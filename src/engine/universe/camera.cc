@@ -84,7 +84,7 @@ Camera::Camera(float cx, float cy, float cz,
     horizontal_angle_ = 3.14f;
     vertical_angle_ = 0.0;
     fov_ = 45.0f;
-    border_ = engine::geometry::Box(1.0f,
+    border_ = engine::graphics::Border(1.0f,
                 glm::vec4(cx, cy, cz, 1.0f),
                 glm::vec4(0.0f),
                 sCameraCoords);
@@ -108,7 +108,7 @@ void Camera::RecordHID() noexcept
     float window_height = ConfigEngine::getSetting<float>("width");
 
     /* Dont apply movefactor to camera */
-    using engine::geometry::Shape3D;
+    using engine::graphics::Shape3D;
     float speed = 3.0f * 1.0f / Shape3D::sMoveFactor;
 
     const float zoom_sensitivity = -0.2f;

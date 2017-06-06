@@ -14,8 +14,8 @@
 #include <cilk/reducer_opadd.h>
 #include <glm/glm.hpp>
 
-#include "engine/geometry/shape3d.h"
-#include "engine/geometry/box.h"
+#include "engine/graphics/shape3d.h"
+#include "engine/graphics/border.h"
 #include "engine/physics/collision_engine.h"
 
 namespace engine {
@@ -86,7 +86,7 @@ public:
     float distance() const { return distance_; }
     int id_last_collision() const { return id_last_collision_; }
     Model3D* obstacle() { return obstacle_; }
-    engine::geometry::Box border() const { return border_; }
+    engine::graphics::Border border() const { return border_; }
     bool IsCrossed() const { return is_crossed_; }
     bool IsControlled() const { return is_controlled_; }
     int type() const { return type_; }
@@ -185,8 +185,8 @@ protected:
     std::map<int, Model3D*> GetNeighbors(Model3D *r, int level) noexcept;
 
     /* Model3D attributes */
-    std::vector<std::unique_ptr<engine::geometry::Shape3D>> elements_;
-    engine::geometry::Box border_;
+    std::vector<std::unique_ptr<engine::graphics::Shape3D>> elements_;
+    engine::graphics::Border border_;
     std::vector<Model3D*> ***grid_{nullptr};
     std::vector<std::unique_ptr<Model3D>> objects_;
     std::vector<std::vector<int>> placements_;
@@ -203,7 +203,7 @@ protected:
     bool is_controlled_;
 };
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine
 
 #endif //ENGINE_UNIVERSE_MODEL3D_H_

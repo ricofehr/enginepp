@@ -1,16 +1,16 @@
 /*
-* Box class file
+* Border class file
 * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
-#include "engine/geometry/box.h"
+#include "engine/graphics/border.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <cilk/cilk.h>
 
 namespace engine {
-namespace geometry {
+namespace graphics {
 
 namespace {
 static const std::vector<glm::vec3> sDefaultCoords = {
@@ -49,38 +49,38 @@ static const std::vector<glm::vec3> sDefaultCoords = {
 }
 
 /* Constructors */
-Box::Box()
-    :Box(1.0f, glm::vec4(0.0f), sDefaultCoords) {}
+Border::Border()
+    :Border(1.0f, glm::vec4(0.0f), sDefaultCoords) {}
 
-Box::Box(float scale, glm::vec4 location)
-    :Box(glm::vec3(scale), location) {}
+Border::Border(float scale, glm::vec4 location)
+    :Border(glm::vec3(scale), location) {}
 
-Box::Box(glm::vec3 scale, glm::vec4 location)
-    :Box(scale, location, glm::vec4(0.0f), sDefaultCoords) {}
+Border::Border(glm::vec3 scale, glm::vec4 location)
+    :Border(scale, location, glm::vec4(0.0f), sDefaultCoords) {}
 
-Box::Box(float scale, glm::vec4 location, glm::vec4 move)
-    :Box(glm::vec3(scale), location, move) {}
+Border::Border(float scale, glm::vec4 location, glm::vec4 move)
+    :Border(glm::vec3(scale), location, move) {}
 
-Box::Box(glm::vec3 scale, glm::vec4 location, glm::vec4 move)
-    :Box(scale, location, move, sDefaultCoords) {}
+Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move)
+    :Border(scale, location, move, sDefaultCoords) {}
 
-Box::Box(float scale, glm::vec4 location, std::vector<glm::vec3> coords)
-        : Box(glm::vec3(scale), location, glm::vec4(0.0f), coords) {}
+Border::Border(float scale, glm::vec4 location, std::vector<glm::vec3> coords)
+        : Border(glm::vec3(scale), location, glm::vec4(0.0f), coords) {}
 
-Box::Box(glm::vec3 scale, glm::vec4 location, std::vector<glm::vec3> coords)
-        : Box(scale, location, glm::vec4(0.0f), coords) {}
+Border::Border(glm::vec3 scale, glm::vec4 location, std::vector<glm::vec3> coords)
+        : Border(scale, location, glm::vec4(0.0f), coords) {}
 
-Box::Box(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
-        : Box(glm::vec3(scale), location, move, coords) {}
+Border::Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
+        : Border(glm::vec3(scale), location, move, coords) {}
 
-Box::Box(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
+Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
         : Cube(scale, location, move)
 {
     coords_ = coords;
 }
 
 /* Compute coordinates for current box */
-std::vector<glm::vec3> Box::ComputeCoords() const
+std::vector<glm::vec3> Border::ComputeCoords() const
 {
     std::vector<glm::vec3> ret(coords_.size());
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location_)) * glm::scale(scale_);
@@ -94,7 +94,7 @@ std::vector<glm::vec3> Box::ComputeCoords() const
 }
 
 /* Compute new location for current box on the next move */
-void Box::MoveCoords()
+void Border::MoveCoords()
 {
     if (!IsMoved()) {
         distance_ = -1.0f;
@@ -111,5 +111,5 @@ void Box::MoveCoords()
     distance_ = -1.0f;
 }
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine

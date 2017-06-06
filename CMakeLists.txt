@@ -11,11 +11,11 @@ set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-set(geometry_SRCS
-    src/engine/geometry/shape3d.cc
-    src/engine/geometry/quad.cc
-    src/engine/geometry/cube.cc
-    src/engine/geometry/box.cc)
+set(graphics_SRCS
+    src/engine/graphics/shape3d.cc
+    src/engine/graphics/quad.cc
+    src/engine/graphics/cube.cc
+    src/engine/graphics/border.cc)
 
 set(core_SRCS
     src/engine/core/config_engine.cc)
@@ -39,18 +39,18 @@ set(universe_SRCS
     src/engine/universe/universe.cc)
 
 set(engine_SRCS
-    ${geometry_SRCS}
+    ${graphics_SRCS}
     ${core_SRCS}
     ${renderer_SRCS}
     ${physics_SRCS}
     ${universe_SRCS}
     src/engine.cc)
 
-set(geometry_HDRS
-    src/engine/geometry/shape3d.h
-    src/engine/geometry/quad.h
-    src/engine/geometry/cube.h
-    src/engine/geometry/box.h)
+set(graphics_HDRS
+    src/engine/graphics/shape3d.h
+    src/engine/graphics/quad.h
+    src/engine/graphics/cube.h
+    src/engine/graphics/border.h)
 
 set(core_HDRS
     src/engine/core/config_engine.h)
@@ -75,7 +75,7 @@ set(universe_HDRS
     src/engine/universe/universe.h)
 
 set(engine_HDRS
-    ${geometry_HDRS}
+    ${graphics_HDRS}
     ${core_HDRS}
     ${renderer_HDRS}
     ${physics_HDRS}

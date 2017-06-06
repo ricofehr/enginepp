@@ -47,7 +47,7 @@ public:
     static void CreateBuffers();
 };
 
-}//namespace geometry
+}//namespace graphics
 }//namespace engine
 
 #endif //ENGINE_UNIVERSE_WALL_H_
