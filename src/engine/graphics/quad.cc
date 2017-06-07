@@ -1,7 +1,7 @@
 /*
-* Quad class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Quad class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/graphics/quad.h"
 
@@ -15,6 +15,7 @@ namespace {
 
 static GLuint sElementBuffer = 0;
 
+/* Load element coordinates into buffer */
 static void CreateElementBuffer() {
     GLuint elements[] = {
         0, 1, 2,
@@ -28,9 +29,8 @@ static void CreateElementBuffer() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 }
 
-}//namespace
+} // anonymous namespace
 
-/* Constructors */
 Quad::Quad(int face, float scale, glm::vec4 location,
            GLuint vertexbuffer, GLuint texturebuffer)
      :Quad(face, scale, location, glm::vec4(0.0f), vertexbuffer, texturebuffer) {}
@@ -59,7 +59,6 @@ Quad::Quad(int face, glm::vec3 scale, glm::vec4 location,
     }
 }
 
-/* Draw the Quad on the scene */
 void Quad::Draw() noexcept
 {
     using engine::renderer::LoopGL;
@@ -68,7 +67,6 @@ void Quad::Draw() noexcept
         return;
     }
 
-    /* lock for ensure only one object draw buffer in same time */
     glDisable(GL_CULL_FACE);
     glUniformMatrix4fv(LoopGL::sMatrixId, 1, GL_FALSE, &mvp_[0][0]);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
@@ -94,5 +92,6 @@ void Quad::Draw() noexcept
     glDisableVertexAttribArray(2);
 }
 
-}//namespace graphics
-}//namespace engine
+} //namespace graphics
+
+} //namespace engine

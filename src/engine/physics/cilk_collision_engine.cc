@@ -1,7 +1,7 @@
 /*
-* cilkplus version for CollisionEngine
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   cilkplus version for CollisionEngine
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/physics/cilk_collision_engine.h"
 
@@ -12,9 +12,9 @@
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace physics {
 
-/* Ensure nworkers are setted to core number, not ht number */
 void CilkCollisionEngine::InitCollisionEngine() {
     using engine::core::ConfigEngine;
     granularity_ = ConfigEngine::getSetting<int>("granularity");
@@ -25,7 +25,6 @@ void CilkCollisionEngine::InitCollisionEngine() {
     }
 }
 
-/* Init cl collision kernel */
 float CilkCollisionEngine::ComputeCollision(float box1[], float box2[])
 {
     float x1, y1, z1, w1, h1, d1, move1x, move1y, move1z;
@@ -68,5 +67,6 @@ float CilkCollisionEngine::ComputeCollision(float box1[], float box2[])
     return distance->get_value();
 }
 
-}//namespace helpers
-}//namespace engine
+} // namespace helpers
+
+} // namespace engine

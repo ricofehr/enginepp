@@ -1,7 +1,9 @@
 /*
-* Universe class header
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *  Universe class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *
+ *  Define an Universe (with rooms inside), inherits Model3D abstract class
+ */
 
 #ifndef ENGINE_UNIVERSE_UNIVERSE_H_
 #define ENGINE_UNIVERSE_UNIVERSE_H_
@@ -20,15 +22,26 @@ namespace universe {
 class Universe : public Model3D {
 
 public:
-    /* Constructor */
+
+    /*
+     *  Constructor
+     */
     Universe();
 
-    /* Compute new hop */
+    /* 
+     *  Override the Model3D version
+     *  Displays only childs (Rooms) filtered by clipping level
+     */
     void Draw() noexcept override final;
 
-    /* Accessors */
+    /*
+     *  Accessors
+     */
     const bool ready() const { return ready_; }
 
+    /*
+     *  Return number of Rooms follow displayed state or not
+     */
     inline const int countRooms(bool display) const {
         if (display) {
             return display_rooms_.size();
@@ -36,6 +49,9 @@ public:
         return countChilds();
     }
 
+    /*
+     *  Return number of Obects inside Rooms follow displayed state or not
+     */
     inline const int countRoomsChilds(bool display) const {
         cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
@@ -50,6 +66,9 @@ public:
         return count_sum.get_value();
     }
 
+    /*
+     *  Return number of Moving Obects inside Rooms follow displayed state or not
+     */
     inline const int countRoomsMovingChilds(bool display) const {
         cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
@@ -64,15 +83,22 @@ public:
         return count_sum.get_value();
     }
 
-    /* Mutators */
+    /*
+     *  Mutators
+     */
     void toready() { ready_ = true; }
 
-    /* Grid compute & display */
+    /*
+     *   Override Model3D Reinitgrid function
+     *   Add Doors and Windows for Rooms object
+     */
     std::vector<std::unique_ptr<Model3D>> ReinitGrid() noexcept override final;
 
 private:
 
-    /* Constants For Grid Settings */
+    /*
+     *  Constants For Grid Settings
+     */
     static constexpr int kGRID_Y = 4;
     static constexpr int kGRID_X = 8;
     static constexpr int kGRID_Z = 8;
@@ -80,12 +106,18 @@ private:
     static constexpr float kGRID_UNIT_Y = 12.0f;
     static constexpr float kGRID_UNIT_Z = 16.0f;
 
+    /*
+     *  Universe Attributes
+     *      ready_: turn to true after 10 firt frames
+     *      display_rooms_: filtering only rooms with display state
+     */
     bool ready_{false};
     std::vector<Model3D*> display_rooms_;
 };
 
-}//namespace universe
-}//namespace engine
+} // namespace universe
 
-#endif //ENGINE_UNIVERSE_UNIVERSE_H_
+} // namespace engine
+
+#endif // ENGINE_UNIVERSE_UNIVERSE_H_
 

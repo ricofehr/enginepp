@@ -1,7 +1,7 @@
 /*
-* Universe class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *  Universe class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/universe/universe.h"
 
@@ -15,14 +15,14 @@
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace universe {
 
 namespace {
     /* Used for delay between 2 objects creation */
     static double sLastTime = 0;
-}
+} // anonymous namespace
 
-/* Constructor */
 Universe::Universe()
 {
     type_ = kMODEL3D_UNIVERSE;
@@ -37,16 +37,12 @@ Universe::Universe()
     InitGrid();
 }
 
-/*
-*   Override default reinitgrid function
-*   Add Doors and Windows for Rooms object
-*/
 std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid() noexcept
 {
     std::vector<std::unique_ptr<Model3D>> ret = Model3D::ReinitGrid();
 
     for (auto &o : objects_) {
-        /* Objects contained in Universe are Rooms with Doors and Windows */
+        /* Objects contained in Universe are Rooms, with Doors and Windows */
         auto r = dynamic_cast<Room*>(o.get());
 
         auto i = r->placements()[0][0];
@@ -87,7 +83,6 @@ std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid() noexcept
     return ret;
 }
 
-/* Compute and draw next hop for the gl scene */
 void Universe::Draw() noexcept
 {
     using engine::core::ConfigEngine;
@@ -190,5 +185,6 @@ void Universe::Draw() noexcept
     }
 }
 
-}//namespace universe
-}//namespace engine
+} // namespace universe
+
+} // namespace engine

@@ -1,6 +1,6 @@
 /*
- * serial version for CollisionEngine
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  serial version for CollisionEngine
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  */
 
 #include "engine/physics/serial_collision_engine.h"
@@ -10,9 +10,9 @@
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace physics {
 
-/* Init serial parallell context */
 void SerialCollisionEngine::InitCollisionEngine() {
     using engine::core::ConfigEngine;
     granularity_ = ConfigEngine::getSetting<int>("granularity");
@@ -21,7 +21,6 @@ void SerialCollisionEngine::InitCollisionEngine() {
     __cilkrts_set_param("nworkers", "1");
 }
 
-/* Init cl collision kernel */
 float SerialCollisionEngine::ComputeCollision(float box1[], float box2[])
 {
     float x1, y1, z1, w1, h1, d1, move1x, move1y, move1z;
@@ -63,5 +62,6 @@ float SerialCollisionEngine::ComputeCollision(float box1[], float box2[])
     return 1.0f;
 }
 
-}//namespace helpers
-}//namespace engine
+} // namespace helpers
+
+} // namespace engine

@@ -1,7 +1,7 @@
 /*
-* Brick class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Brick class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/universe/brick.h"
 
@@ -15,6 +15,7 @@
 #include "engine/graphics/cube.h"
 
 namespace engine {
+
 namespace universe {
 
 namespace {
@@ -22,6 +23,7 @@ namespace {
 static GLuint sTextureBuffer = 0;
 static GLuint sVertexBuffer = 0;
 
+/* Brick vertex / color / texture coordinates */
 const GLfloat sBufferData[192] = {
   /* Position            Color              Texcoords */
     /* Front */
@@ -56,7 +58,9 @@ const GLfloat sBufferData[192] = {
     -1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
 };
 
-/* Fill vertex buffer */
+/*
+ *  Fill vertex buffer 
+ */
 void CreateVertexBuffer() noexcept {
     glGenBuffers(1, &sVertexBuffer);
     assert(sVertexBuffer != 0);
@@ -65,7 +69,9 @@ void CreateVertexBuffer() noexcept {
     glBufferData(GL_ARRAY_BUFFER, sizeof(sBufferData), sBufferData, GL_STREAM_DRAW);
 }
 
-/* Fill texture buffer */
+/*
+ *  Fill texture buffer
+ */
 void CreateTextureBuffer() noexcept {
     int width, height;
     unsigned char* image;
@@ -86,9 +92,8 @@ void CreateTextureBuffer() noexcept {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
 
-}//namespace
+} // anonymous namespace
 
-/* Constructors */
 Brick::Brick()
       :Brick(1.0f, glm::vec4(glm::vec3(0.0f), 1.0f), glm::vec4(0.0f)) {}
 
@@ -113,7 +118,6 @@ Brick::Brick(float scale, glm::vec4 location, glm::vec4 move)
     elements_.push_back(std::move(cube_ptr));
 }
 
-/* Create global vertex and texture buffers */
 void Brick::CreateBuffers() noexcept
 {
     if (sVertexBuffer == 0) {
@@ -122,5 +126,6 @@ void Brick::CreateBuffers() noexcept
     }
 }
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
+
+} // namespace engine

@@ -1,8 +1,8 @@
 /*
- * SerialCollisionEngine class header
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  SerialCollisionEngine class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  *
- * Use of Singleton pattern because need a sole CollisionEngine for program.
+ *  Implements Serial algorithm for collision computes.
  */
 
 #ifndef PHYSICS_SERIALCOLLISIONENGINE_H_
@@ -13,17 +13,29 @@
 #include "engine/physics/collision_engine.h"
 
 namespace engine {
+
 namespace physics {
 
 class SerialCollisionEngine : public CollisionEngine {
 
 public:
-    
+
+    /*
+     *  Default destructor
+     */
     ~SerialCollisionEngine() override = default;
 
+    /*
+     *  Compute collision distance between 2 borders (box1 and box2)
+     *  Thanks to a serial compute in only one cpu core.
+     */
     float ComputeCollision(float box1[], float box2[]) override final;
 
-    inline static SerialCollisionEngine *Instance() {
+    /*
+     *  Return (and allocates if needed) sole Instance
+     */
+    inline static SerialCollisionEngine* Instance()
+    {
         static bool sIsInit = false;
         /* Raw pointers because static vars */
         static auto sInstance = new SerialCollisionEngine;
@@ -43,14 +55,22 @@ public:
 
 protected:
 
+    /*
+     *  Constructor
+     *  Protected scope ensure sole instance
+     */
     SerialCollisionEngine(){};
     SerialCollisionEngine(const SerialCollisionEngine&) = default;
     SerialCollisionEngine& operator=(const SerialCollisionEngine&) = default;
 
+    /*
+     *  Init serial context
+     */
     void InitCollisionEngine() override final;
 };
 
-}//namespace parallell
-}//namespace engine
+} // namespace parallell
 
-#endif //PHYSICS_SERIALCOLLISIONENGINE_H_
+} // namespace engine
+
+#endif // PHYSICS_SERIALCOLLISIONENGINE_H_

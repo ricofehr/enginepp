@@ -1,7 +1,7 @@
 /*
-* Border class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Border class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/graphics/border.h"
 
@@ -10,6 +10,7 @@
 #include <cilk/cilk.h>
 
 namespace engine {
+
 namespace graphics {
 
 namespace {
@@ -46,9 +47,8 @@ static const std::vector<glm::vec3> sDefaultCoords = {
     { 1.0f, -1.0f,  1.0f},
 
 };
-}
+} // anonymous namespace
 
-/* Constructors */
 Border::Border()
     :Border(1.0f, glm::vec4(0.0f), sDefaultCoords) {}
 
@@ -79,7 +79,6 @@ Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<
     coords_ = coords;
 }
 
-/* Compute coordinates for current box */
 std::vector<glm::vec3> Border::ComputeCoords() const
 {
     std::vector<glm::vec3> ret(coords_.size());
@@ -93,7 +92,6 @@ std::vector<glm::vec3> Border::ComputeCoords() const
     return ret;
 }
 
-/* Compute new location for current box on the next move */
 void Border::MoveCoords()
 {
     if (!IsMoved()) {
@@ -105,5 +103,6 @@ void Border::MoveCoords()
     MoveLocation();
 }
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
+
+} // namespace engine

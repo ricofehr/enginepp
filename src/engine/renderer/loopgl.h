@@ -1,8 +1,14 @@
 /*
- * LoopGL class header
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  LoopGL class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  *
- * Implement Singleton Design Pattern which ensure a sole LoopGL object for the program
+ *  LoopGL manage the lifetime of the opengl scene: 
+ *      Create the scene
+ *      Manages shaders
+ *      Loop for display frames
+ *      Exit if interrupted by user
+ *
+ *  Implement Singleton Design Pattern which ensure a sole LoopGL object for the program
  */
 
 #ifndef ENGINE_RENDERER_LOOPGL_H_
@@ -14,35 +20,56 @@
 #include "engine/universe/universe.h"
 
 namespace engine {
+
 namespace renderer {
 
 class LoopGL {
 
 public:
 
+    /*
+     *  Setup the GL Scene
+     */
     void InitGL();
-    void Loop(engine::universe::Universe *universe);
 
-    static LoopGL *Instance()
+    /*
+     *  Loop and Record Events
+     */
+    void Loop(engine::universe::Universe* universe);
+
+    /*
+     *  Return sole Instance
+     */
+    static LoopGL* Instance()
     {
         /* Raw pointer because static var */
-        static auto *instance = new LoopGL;
+        static auto instance = new LoopGL;
         return instance;
     }
 
-    /* Global Static variables */
-    static GLFWwindow *sGLWindow;
+    /* 
+     *  Global variables
+     *      GL Window
+     *      GL Program
+     *      GL Matrix
+     */
+    static GLFWwindow* sGLWindow;
     static GLuint sProgramId;
     static GLuint sMatrixId;
 
 protected:
 
+    /*
+     *  Standard Constructors and Assignments
+     *  Protected scope beacause singleton class
+     */
     LoopGL(){};
     LoopGL(const LoopGL&) = default;
     LoopGL& operator=(const LoopGL&) = default;
 };
 
-}//namespace renderer
-}//namespace engine
+} // namespace renderer
 
-#endif //ENGINE_RENDERER_LOOPGL_H_
+} // namespace engine
+
+#endif // ENGINE_RENDERER_LOOPGL_H_

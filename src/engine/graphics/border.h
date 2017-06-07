@@ -1,7 +1,11 @@
 /*
-* Border class header
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *  Border class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *
+ *  Each 3d model in the scene must be fill into a border.
+ *  This border is represented by a Cube object with a Delegator scheme.
+ *  Used for 3d objects coordinates and collision compute.
+ */
 
 #ifndef ENGINE_GRAPHICS_BORDER_H_
 #define ENGINE_GRAPHICS_BORDER_H_
@@ -14,17 +18,16 @@
 #include "engine/graphics/cube.h"
 
 namespace engine {
+
 namespace graphics {
 
-/**
-*    Each 3d model in the scene must be fill into a border like a cubed box.
-*    Uses for coordinates and collision compute.
-**/
 class Border {
 
 public:
 
-    /* Constructors */
+    /*
+     *  Constructors
+     */
     Border();
     Border(float scale, glm::vec4 location);
     Border(glm::vec3 scale, glm::vec4 location);
@@ -35,25 +38,42 @@ public:
     Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
     Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
 
-    /* Default move constructor / assignment */
+    /*
+     *  Default move constructor and assignment
+     */
     Border(Border&&) = default;
     Border& operator=(Border&&) = default;
 
-    /* Delete copy constructor / assignment because cube_ is unique_ptr */
+    /*
+     *  Delete copy constructor / assignment
+     *  Because cube_ is unique_ptr
+     */
     Border(const Border&) = delete;
     Border& operator=(const Border&) = delete;
 
-    /* Default destructor */
+    /*
+     *  Default destructor
+     */
     ~Border() = default;
 
-    /* Coords Computes */
+    /*
+     *  Return coords computed for the current state
+     */
     std::vector<glm::vec3> ComputeCoords() const;
+
+    /* 
+     *  Compute new location for the next move
+     */
     void MoveCoords();
 
-    /* Delegate Move */
+    /*
+     *  Delegate Move 
+     */
     void MoveLocation() { cube_->MoveLocation(); }
 
-    /* Delegate Accessors */
+    /*
+     *  Delegate Accessors 
+     */
     bool IsMoved() const { return cube_->IsMoved(); }
     bool IsMovedX() const { return cube_->IsMovedX(); }
     bool IsMovedY() const { return cube_->IsMovedY(); }
@@ -62,7 +82,9 @@ public:
     glm::vec3 scale() const { return cube_->scale(); }
     glm::vec4 move() const { return cube_->move(); }
 
-    /* Delegate Mutators */
+    /*
+     *  Delegate Mutators
+     */
     void set_distance(float distance) { cube_->set_distance(distance); }
     void set_move(glm::vec3 move) { cube_->set_move(move); }
     void InverseMove() { cube_->InverseMove(); }
@@ -73,8 +95,9 @@ private:
     std::vector<glm::vec3> coords_;
 };
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
 
-#endif //ENGINE_GRAPHICS_BORDER_H_
+} // namespace engine
+
+#endif // ENGINE_GRAPHICS_BORDER_H_
 

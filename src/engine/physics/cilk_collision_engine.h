@@ -1,8 +1,8 @@
 /*
- * CilkCollisionEngine class header
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  CilkCollisionEngine class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  *
- * Use of Singleton pattern because need a sole CollisionEngine for program.
+ *  Implements intelcilkplus algorithm for collision computes.
  */
 
 #ifndef PHYSICS_CILKCOLLISIONENGINE_H_
@@ -13,17 +13,29 @@
 #include "engine/physics/collision_engine.h"
 
 namespace engine {
+
 namespace physics {
 
 class CilkCollisionEngine : public CollisionEngine {
 
 public:
 
+    /*
+     *  Default destructor
+     */
     ~CilkCollisionEngine() override = default;
 
+    /*
+     *  Compute collision distance between 2 borders (box1 and box2)
+     *  Thanks to cilkplus paralell processing
+     */
     float ComputeCollision(float box1[], float box2[]) override final;
 
-    inline static CilkCollisionEngine *Instance() {
+    /*
+     *  Return (and allocates if needed) sole Instance
+     */
+    inline static CilkCollisionEngine* Instance()
+    {
         static bool sIsInit = false;
         /* Raw pointers because static vars */
         static auto sInstance = new CilkCollisionEngine;
@@ -44,14 +56,22 @@ public:
 
 protected:
 
+    /*
+     *  Constructor
+     *  Protected scope ensure sole instance
+     */
     CilkCollisionEngine(){};
     CilkCollisionEngine(const CilkCollisionEngine&) = default;
     CilkCollisionEngine& operator=(const CilkCollisionEngine&) = default;
 
+    /*
+     *  Init cilkplus parallell context
+     */
     void InitCollisionEngine() override final;
 };
 
-}//namespace parallell
-}//namespace engine
+} // namespace parallell
 
-#endif //PHYSICS_CILKCOLLISIONENGINE_H_
+} // namespace engine
+
+#endif // PHYSICS_CILKCOLLISIONENGINE_H_

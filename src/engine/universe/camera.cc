@@ -1,7 +1,7 @@
 /*
-* Camera class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Camera class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/universe/camera.h"
 
@@ -22,9 +22,11 @@ namespace {
 
 /* Start record camera position after 10 drawing scene */
 static int sSkipTime = 0;
+
 /* Record mouse wheel scroll */
 static float sScrollY = 0.0f;
 
+/* Camera coords, used for collision computes */
 static const std::vector<glm::vec3> sCameraCoords = {
     /* Back */
     {-0.25f,  0.5f,  0.25f},
@@ -58,20 +60,22 @@ static const std::vector<glm::vec3> sCameraCoords = {
     { 0.25f, -0.5f,  0.25f},
 };
 
+/* Record a time */
 static double sLastTime = 0;
 
-/*  OnScroll - callback function who record wheel change */
+/*  
+ *  OnScroll - callback function who record wheel change 
+ */
 static void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
 {
     sScrollY += delta_y;
 }
 
-}//namespace
+} // anonymous namespace
 
-/* Define static active_ */
-Camera *Camera::active_ = nullptr;
+/* Define global active camera */
+Camera* Camera::active_ = nullptr;
 
-/* Constructors */
 Camera::Camera()
        :Camera(15.0f, 100.0f, 15.0f, 15.0f, 0.0f, 15.0f, 0.0f, 0.0f, 1.0f) {}
 
@@ -186,5 +190,6 @@ void Camera::RecordHID() noexcept
     sScrollY = 0.0f;
 }
 
-}//namespace universe
-}//namespace engine
+} // namespace universe
+
+} // namespace engine

@@ -1,6 +1,6 @@
 /*
-* Wall class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+*   Wall class file
+*   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
 */
 
 #include "engine/universe/wall.h"
@@ -15,6 +15,7 @@
 #include "engine/graphics/cube.h"
 
 namespace engine {
+
 namespace universe {
 
 namespace {
@@ -22,6 +23,7 @@ namespace {
 static GLuint sTextureBuffer[3] = {0,0,0};
 static GLuint sVertexBuffer[3] = {0,0,0};
 
+/* Wall vertex / color / texture coordinates */
 static const GLfloat sBufferData[192] = {
   /* Position            Color              Texcoords */
     /* Front */
@@ -56,7 +58,9 @@ static const GLfloat sBufferData[192] = {
     -1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
 };
 
-/* Fill vertex buffer */
+/*
+ *  Fill vertex buffer
+ */
 void CreateVertexBuffer() {
     glGenBuffers(3, sVertexBuffer);
 
@@ -66,7 +70,9 @@ void CreateVertexBuffer() {
     }
 }
 
-/* Fill texture buffer */
+/*
+ *  Fill texture buffer
+ */
 void CreateTextureBuffer() {
     const char* sources[]= {
             "assets/sky.png",
@@ -92,9 +98,8 @@ void CreateTextureBuffer() {
     }
 }
 
-}//namespace
+} // anonymous namespace
 
-/* Constructors */
 Wall::Wall()
       :Wall(glm::vec3(1.0f), glm::vec4(glm::vec3(0.0f), 1.0f), 1) {}
 
@@ -116,7 +121,6 @@ Wall::Wall(glm::vec3 scale, glm::vec4 location, int face)
     elements_.push_back(std::move(cube_ptr));
 }
 
-/* Create global vertex and texture buffers */
 void Wall::CreateBuffers()
 {
     if (sVertexBuffer[0] == 0) {
@@ -125,5 +129,6 @@ void Wall::CreateBuffers()
     }
 }
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
+
+} // namespace engine

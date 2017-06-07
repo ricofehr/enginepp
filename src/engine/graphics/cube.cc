@@ -1,7 +1,7 @@
 /*
-* Cube class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Cube class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/graphics/cube.h"
 
@@ -15,7 +15,7 @@ namespace {
 
 static GLuint sElementBuffer = 0;
 
-/* Load element coordinates in buffer */
+/* Load element coordinates into buffer */
 static void CreateElementBuffer() {
     GLuint elements[] = {
         /* front */
@@ -45,9 +45,8 @@ static void CreateElementBuffer() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STREAM_DRAW);
 }
 
-}//namespace
+} // anonymous namespace
 
-/* Constructors */
 Cube::Cube(float scale, glm::vec4 location)
      :Cube(scale, location, glm::vec4(0.0f), 0, 0) {}
 
@@ -83,10 +82,8 @@ Cube::Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move,
     }
 }
 
-/* Draw the cube */
 void Cube::Draw() noexcept
 {
-    /* sProgramId and sMatrixId global fixed values */
     using engine::renderer::LoopGL;
 
     if (vertexbuffer_ == 0) {
@@ -122,5 +119,6 @@ void Cube::Draw() noexcept
     glDisableVertexAttribArray(2);
 }
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
+
+} // namespace engine

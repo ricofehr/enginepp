@@ -1,7 +1,7 @@
 /*
-* Shape3D class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Shape3D class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/graphics/shape3d.h"
 
@@ -17,10 +17,6 @@ namespace graphics {
 
 float Shape3D::sMoveFactor = 1.0f;
 
-/*
-*   ComputeMVP  -   Compute the ModelViewProjection matrix
-*                   for current object.
-*/
 void Shape3D::ComputeMVP()
 {
     /* width and height config values */
@@ -53,5 +49,6 @@ void Shape3D::ComputeMVP()
     mvp_ = projection * view * model * glm::scale(scale_);
 }
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
+
+} // namespace engine

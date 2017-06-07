@@ -1,7 +1,7 @@
 /*
-* Model3d class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Model3d class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/universe/model3d.h"
 
@@ -18,14 +18,14 @@
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace universe {
 
 namespace {
     /* Unique id for object */
     static int sObjectId = 1;
-}
+} // anonymous namespace
 
-/* Constructor */
 Model3D::Model3D()
 {
     id_ = sObjectId++;
@@ -37,7 +37,6 @@ Model3D::Model3D()
     InitCollisionEngine();
 }
 
-/* Comparaison operator */
 bool operator==(const Model3D& o1, const Model3D& o2)
 {
     return o1.id() == o2.id();
@@ -48,7 +47,6 @@ bool operator!=(const Model3D& o1, const Model3D& o2)
     return o1.id() != o2.id();
 }
 
-/* Init CollisionEngine pointer */
 void Model3D::InitCollisionEngine()
 {
     using engine::physics::CollisionEngine;
@@ -70,7 +68,6 @@ void Model3D::InitCollisionEngine()
     }
 }
 
-/* Compute coords and move for the model */
 void Model3D::Move() noexcept
 {
     border_->set_distance(distance_);
@@ -99,9 +96,6 @@ void Model3D::Move() noexcept
     }
 }
 
-/*
- * Allocate grid array dynamically
- */
 void Model3D::InitGrid()
 {
     grid_ = new std::vector<Model3D*> **[grid_y_];
@@ -113,9 +107,6 @@ void Model3D::InitGrid()
     }
 }
 
-/*
- *   Recompute the placement grid for objects into the room
- */
 std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid() noexcept
 {
     std::vector<std::unique_ptr<Model3D>> ret;
@@ -185,7 +176,6 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid() noexcept
     return ret;
 }
 
-/* Display Placement Grid */
 void Model3D::DisplayGrid() noexcept
 {
     std::string object_type{"MODEL3D"};
@@ -214,19 +204,22 @@ void Model3D::DisplayGrid() noexcept
     }
 }
 
-/* Change object room */
-std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> obj, bool force) noexcept {
+std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> obj, bool force) noexcept
+{
     if (force || IsInside(obj->location())) {
         /* Output if debug setted */
         using engine::core::ConfigEngine;
         if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION && force) {
             std::cout << "Transfert " << obj->id() << " to Room " << id() << " (forced: " << force << ")" << std::endl;
         }
+
         /* Inverse object move if forced transfert */
         if (force) {
             obj->InverseMove();
         }
-        /* Set current room active if its camera object */
+
+        /* If obj is Camera, insert into first child.
+           Else insert in last position. */
         if (obj->type() == Model3D::kMODEL3D_CAMERA) {
             objects_.insert(objects_.begin(), std::move(obj));
         } else {
@@ -239,7 +232,6 @@ std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> obj, 
     return obj;
 }
 
-/* Test if object is inside Room */
 bool Model3D::IsInside(glm::vec3 location_object) const
 {
     auto location_0 = location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
@@ -256,7 +248,6 @@ bool Model3D::IsInside(glm::vec3 location_object) const
     return false;
 }
 
-/* List outside objects into room (currently not used) */
 std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects() noexcept
 {
     std::vector<std::unique_ptr<Model3D>> ret;
@@ -269,11 +260,10 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects() noexcept
     return ret;
 }
 
-/* Detect collisions inside current room */
 void Model3D::DetectCollision(std::vector<Model3D*> neighbors) noexcept
 {
     /* For all others moving objects
-     Parallell loop with cilkplus */
+       Parallell loop with cilkplus */
     cilk_for (auto i = 0; i < objects_.size(); i++) {
         if (objects_[i]->IsMoved()) {
             PivotCollision(objects_[i].get(), neighbors);
@@ -281,18 +271,17 @@ void Model3D::DetectCollision(std::vector<Model3D*> neighbors) noexcept
     }
 }
 
-/* Detect all collision for one Object */
-void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors) noexcept
+void Model3D::PivotCollision(Model3D* target, std::vector<Model3D*> neighbors) noexcept
 {
     tbb::mutex pivot_mutex;
     /* ensure that 2 same objects are not checked at the same time */
-    object->lock();
+    target->lock();
 
     /* Prepare an unique objects collection for collision detection */
     std::map<int, Model3D*> grid_objects;
 
-    /* Grid coordinates for current object */
-    std::vector<std::vector<int>> placements = object->placements();
+    /* Grid coordinates for target */
+    std::vector<std::vector<int>> placements = target->placements();
 
     /* Check all grid placements for current object and select other objects near this one */
     cilk_for (auto p = 0; p < placements.size(); p++) {
@@ -308,80 +297,80 @@ void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors) n
                         if (((i != -1 && i != grid_y_) || (k != -1 && k != grid_z_)) &&
                             ((j != -1 && j != grid_x_) || (k != -1 && k != grid_z_))) {
 
-                            std::vector<Model3D*> targets;
+                            std::vector<Model3D*> brothers;
 
                             if (i < 0) {
                                 if (neighbors[kFLOOR] != nullptr) {
-                                    targets = neighbors[kFLOOR]->getPlacementObjects(grid_y_-1, j, k);
+                                    brothers = neighbors[kFLOOR]->getPlacementObjects(grid_y_-1, j, k);
                                 }
                             } else if (i == grid_y_) {
                                 if (neighbors[kROOF] != nullptr) {
-                                    targets = neighbors[kROOF]->getPlacementObjects(0, j, k);
+                                    brothers = neighbors[kROOF]->getPlacementObjects(0, j, k);
                                 }
                             } else if (j < 0) {
                                 if (neighbors[kLEFT] != nullptr) {
-                                    targets = neighbors[kLEFT]->getPlacementObjects(i, grid_x_-1, k);
+                                    brothers = neighbors[kLEFT]->getPlacementObjects(i, grid_x_-1, k);
                                 }
                             } else if (j == grid_x_) {
                                 if (neighbors[kRIGHT] != nullptr) {
-                                    targets = neighbors[kRIGHT]->getPlacementObjects(i, 0, k);
+                                    brothers = neighbors[kRIGHT]->getPlacementObjects(i, 0, k);
                                 }
                             } else if (k < 0) {
                                 if (neighbors[kFRONT] != nullptr) {
-                                    targets = neighbors[kFRONT]->getPlacementObjects(i, j, grid_z_-1);
+                                    brothers = neighbors[kFRONT]->getPlacementObjects(i, j, grid_z_-1);
                                 }
                             } else if (k == grid_z_) {
                                 if (neighbors[kBACK] != nullptr) {
-                                    targets = neighbors[kBACK]->getPlacementObjects(i, j, 0);
+                                    brothers = neighbors[kBACK]->getPlacementObjects(i, j, 0);
                                 }
                             } else {
-                                targets = grid_[i][j][k];
+                                brothers = grid_[i][j][k];
                             }
 
                             /* Merge targets with collisions array */
-                            for (auto &obj : targets) {
-                                if (*obj != *object) {
+                            for (auto &obj : brothers) {
+                                if (*obj != *target) {
                                     tbb::mutex::scoped_lock lock_map(pivot_mutex);
                                     grid_objects[obj->id()] = obj;
                                 }
-                            }
-                        } //fi: test on i and k, j and k
-                    } //cilk_for k
-                } //fi: test on i and j
-            } //cilk_for j
-        } //cilk_for i
-    } //cilk_for placements
+                            } // for
+                        } // fi
+                    } // cilk_for
+                } // fi
+            } // cilk_for
+        } // cilk_for
+    } // cilk_for
 
     /* Prepare vector for collision compute */
-    std::vector<Model3D*> room_objects;
+    std::vector<Model3D*> test_objects;
     for (auto & obj_pair : grid_objects) {
-        room_objects.push_back(obj_pair.second);
+        test_objects.push_back(obj_pair.second);
     }
 
     /* Parallell collision loop for objects with cilkplus */
     std::map<int, std::vector<Model3D*>> recompute;
-    cilk_for (auto i = 0; i < room_objects.size(); i++) {
+    cilk_for (auto i = 0; i < test_objects.size(); i++) {
         /* Abort program if object and room_object loop are same (must no happend) */
-        assert(*object != *room_objects[i]);
+        assert(*target != *test_objects[i]);
 
-        std::vector<Model3D*> collision_recompute = collision_engine_->DetectCollision(object, room_objects[i], object_mutex_);
+        std::vector<Model3D*> collision_recompute = collision_engine_->DetectCollision(target, test_objects[i], object_mutex_);
         if (collision_recompute.size() > 0) {
-            recompute[room_objects[i]->id()] = collision_recompute;
+            recompute[test_objects[i]->id()] = collision_recompute;
         }
     }
 
     /* end mutex lock */
-    object->unlock();
+    target->unlock();
 
     /* If collision detected, recompute older ones if exists */
-    if (object->obstacle() != nullptr ) {
+    if (target->obstacle() != nullptr ) {
         try {
-            for (auto & r : recompute.at(object->obstacle()->id())) {
+            for (auto &obj : recompute.at(target->obstacle()->id())) {
                 using engine::core::ConfigEngine;
                 if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION) {
-                    std::cout << "Recompute " << object->id() << "::" << r->id() << std::endl;
+                    std::cout << "Recompute " << target->id() << "::" << obj->id() << std::endl;
                 }
-                cilk_spawn PivotCollision(r, neighbors);
+                cilk_spawn PivotCollision(obj, neighbors);
             }
         }
         /* Silently catched out-of-range (not a problem) */
@@ -391,15 +380,14 @@ void Model3D::PivotCollision(Model3D *object, std::vector<Model3D*> neighbors) n
     }
 }
 
-/* Return a group of rooms near each other with a deeping level */
-std::map<int, Model3D*> Model3D::GetNeighbors(Model3D *r, int level) noexcept
+std::map<int, Model3D*> Model3D::GetNeighbors(Model3D* target, int level) noexcept
 {
     std::map<int, Model3D*> neighbors;
-    Model3D *tmp;
+    Model3D* tmp;
 
-    auto i = r->placements()[0][0];
-    auto j = r->placements()[0][1];
-    auto k = r->placements()[0][2];
+    auto i = target->placements()[0][0];
+    auto j = target->placements()[0][1];
+    auto k = target->placements()[0][2];
 
     if (i != 0 && grid_[i-1][j][k].size() != 0) {
         tmp = grid_[i-1][j][k][0];
@@ -443,13 +431,12 @@ std::map<int, Model3D*> Model3D::GetNeighbors(Model3D *r, int level) noexcept
     return neighbors;
 }
 
-/* Return the 6 rooms (if all exists) near the targetting room (order by common side) */
-std::vector<Model3D*> Model3D::GetOrderNeighbors(Model3D *r) noexcept
+std::vector<Model3D*> Model3D::GetOrderNeighbors(Model3D* target) noexcept
 {
     std::vector<Model3D*> neighbors(6, nullptr);
-    auto i = r->placements()[0][0];
-    auto j = r->placements()[0][1];
-    auto k = r->placements()[0][2];
+    auto i = target->placements()[0][0];
+    auto j = target->placements()[0][1];
+    auto k = target->placements()[0][2];
 
     if (i != 0 && grid_[i-1][j][k].size() != 0) {
         neighbors[kFLOOR] = grid_[i-1][j][k][0];
@@ -478,7 +465,6 @@ std::vector<Model3D*> Model3D::GetOrderNeighbors(Model3D *r) noexcept
     return neighbors;
 }
 
-/* Move camera associated to current object */
 void Model3D::RecordHID()
 {
     if (get_camera() != nullptr) {
@@ -486,7 +472,6 @@ void Model3D::RecordHID()
     }
 }
 
-/* Destructor, empty grid_ array */
 Model3D::~Model3D()
 {
     if (grid_ != nullptr) {
@@ -500,5 +485,6 @@ Model3D::~Model3D()
     }
 }
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
+
+} // namespace engine

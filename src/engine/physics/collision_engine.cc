@@ -1,6 +1,6 @@
 /*
- * CollisionEngine class file: Implements the default DectectCollision function
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  CollisionEngine class file: Implements the default DectectCollision function
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  */
 
 #include "engine/physics/collision_engine.h"
@@ -8,28 +8,31 @@
 #include <iostream>
 #include <vector>
 
+#include "engine/graphics/border.h"
 #include "engine/universe/model3d.h"
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace physics {
 
-/*
- *  Detect if obstacle is in collision with current object
- *  Return vector (empty by default) of Model3D who need a recompute for collision
- */
-std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine::universe::Model3D *object,
-                                                                         engine::universe::Model3D *obstacle,
-                                                                         tbb::mutex &collision_mutex)
+std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine::universe::Model3D* object,
+                                                                         engine::universe::Model3D* obstacle,
+                                                                         tbb::mutex& collision_mutex)
 {
+    using engine::universe::Model3D;
+    using engine::graphics::Border;
+
     float distance = 1.0f;
     std::vector<float> distances;
     int fact = 1, fact2 = 0;
-    std::vector<engine::universe::Model3D*> recompute;
-    engine::universe::Model3D *oldobstacle1{nullptr}, *oldobstacle2{nullptr};
 
-    engine::graphics::Border *border1 = object->border();
-    engine::graphics::Border *border2 = obstacle->border();
+    std::vector<Model3D*> recompute;
+    Model3D* oldobstacle1{nullptr};
+    Model3D* oldobstacle2{nullptr};
+
+    const Border* border1 = object->border();
+    const Border* border2 = obstacle->border();
     std::vector<glm::vec3> coords1 = border1->ComputeCoords();
     std::vector<glm::vec3> coords2 = border2->ComputeCoords();
 
@@ -113,5 +116,6 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     return recompute;
 }
 
-}//namespace helpers
-}//namespace engine
+} // namespace helpers
+
+} // namespace engine

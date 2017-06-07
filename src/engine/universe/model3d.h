@@ -1,7 +1,9 @@
 /*
-* Model3D class header
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *   Model3D class header
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *
+ *   Abstract class who defines generic 3d model which shall be inherited by all other 3d models
+ */
 
 #ifndef ENGINE_UNIVERSE_MODEL3D_H_
 #define ENGINE_UNIVERSE_MODEL3D_H_
@@ -19,14 +21,16 @@
 #include "engine/physics/collision_engine.h"
 
 namespace engine {
+
 namespace universe {
 
-/* Define a 3d model */
 class Model3D {
 
 public:
 
-    /* Object Type Constants */
+    /*
+     *  Model Type Constants
+     */
     static constexpr int kMODEL3D_UNIVERSE = 0;
     static constexpr int kMODEL3D_ROOM = 1;
     static constexpr int kMODEL3D_CAMERA = 2;
@@ -35,7 +39,9 @@ public:
     static constexpr int kMODEL3D_DOOR = 5;
     static constexpr int kMODEL3D_BRICK = 6;
 
-    /* Border Side Constants */
+    /*
+     *  Model Side Constants
+     */
     static constexpr int kFLOOR = 0;
     static constexpr int kROOF = 1;
     static constexpr int kLEFT = 2;
@@ -43,19 +49,25 @@ public:
     static constexpr int kFRONT = 4;
     static constexpr int kBACK = 5;
 
-    /* Constructors, Copy / Move assignments and Destructor */
-    Model3D();
-    Model3D(Model3D&&) = default;
-    Model3D& operator=(Model3D&&) = default;
-
-    Model3D(const Model3D&) = default;
-    Model3D& operator=(const Model3D&) = default;
-
+    /*
+     *  Destructor
+     *  Deallocates grid_ raw pointers array
+     */
     virtual ~Model3D();
 
-    /* Draw and Move functions */
+    /*
+     *  Record HID events
+     */
     virtual void RecordHID();
+
+    /*
+     *  Proceed to move Model (if movable)
+     */
     virtual void Move() noexcept;
+
+    /*
+     *  Draw the model and models inside
+     */
     inline virtual void Draw() noexcept {
         /* Draw current object */
         for (auto &element : elements_) {
@@ -68,20 +80,43 @@ public:
         }
     }
 
-    /* Grid placements functions */
+    /*
+     *   Compute again all placement coordinates for childs into the Grid
+     */
     virtual std::vector<std::unique_ptr<Model3D>> ReinitGrid() noexcept;
+
+    /*
+     *
+     */
     std::unique_ptr<Model3D> TransfertObject(std::unique_ptr<Model3D> obj, bool force) noexcept;
+
+    /*
+     *  Return a list of Childs who were into the Grid
+     *  but now are outside of the current Model
+     */
     std::vector<std::unique_ptr<Model3D>> ListOutsideObjects() noexcept;
+
+    /*
+     *  Display the Grid into stdout for Debug purpose
+     */
     void DisplayGrid() noexcept;
 
-    /* Collision Function */
+    /*
+     *  Collision Function
+     *  Detect the nearest Collision between the Current 3d model
+     *  And the "neighbors" array in input
+     */
     void DetectCollision(std::vector<Model3D*> neighbors) noexcept;
 
-    /* Operators */
+    /*
+     *  (In)Equality Operators 
+     */
     friend bool operator==(const Model3D &o1, const Model3D &o2);
     friend bool operator!=(const Model3D &o1, const Model3D &o2);
 
-    /* Accessors */
+    /*
+     *  Accessors 
+     */
     int id() const { return id_; }
     float distance() const { return distance_; }
     int id_last_collision() const { return id_last_collision_; }
@@ -121,14 +156,18 @@ public:
     }
     std::vector<Model3D*> getPlacementObjects(int i, int j, int k) const { return grid_[i][j][k]; }
 
-    /* Delegate Accessors */
+    /*
+     *  Delegate Accessors 
+     */
     glm::vec3 location() const { return glm::vec3(border_->location()); }
     bool IsMoved() const { return border_->IsMoved(); }
     bool IsMovedX() const { return border_->IsMovedX(); }
     bool IsMovedY() const { return border_->IsMovedY(); }
     bool IsMovedZ() const { return border_->IsMovedZ(); }
 
-    /* Mutators */
+    /*
+     *  Mutators 
+     */
     inline Model3D* add_object(std::unique_ptr<Model3D> obj) noexcept {
         auto obj_raw = obj.get();
 
@@ -147,7 +186,7 @@ public:
         return obj_raw;
     }
     void set_distance(float distance) { distance_ = distance; }
-    void set_obstacle(Model3D *obstacle) { obstacle_ = obstacle; }
+    void set_obstacle(Model3D* obstacle) { obstacle_ = obstacle; }
     void add_placement(int i, int j, int k) { placements_.push_back({i,j,k}); }
     void clear_placements() { placements_.clear(); }
     void set_camera(std::unique_ptr<Model3D> cam) { objects_.insert(objects_.begin(), std::move(cam)); }
@@ -155,45 +194,135 @@ public:
     void set_missobjects(int missobjects) { missobjects_ = missobjects; }
     void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
 
-    /* Delegate Mutators */
+    /*
+     *  Delegate Mutators 
+     */
     inline void InverseMove() {
         border_->InverseMove();
         for (auto &e : elements_) {
             e->InverseMove();
         }
     }
+
+    /*
+     *  Lock / Unlock mutex of current model
+     */
     void lock() { object_mutex_.lock(); }
     void unlock() { object_mutex_.unlock(); }
 
 protected:
 
-    /* Grid settings */
-    int grid_x_{0};
-    int grid_y_{0};
-    int grid_z_{0};
+    /*
+     *  Constructors
+     *  Protected scope ensures Abstract Class Design
+     */
+    Model3D();
+
+    /*
+     *  Default move constructor and assignment
+     *  Protected scope ensures Abstract Class Design
+     */
+    Model3D(Model3D&&) = default;
+    Model3D& operator=(Model3D&&) = default;
+
+    /*
+     *  Delete copy constructor / assignment
+     *  Because border_ is unique_ptr
+     */
+    Model3D(const Model3D&) = delete;
+    Model3D& operator=(const Model3D&) = delete;
+
+    /*
+     *  Select the Collision Engine Algorithm
+     */
+    void InitCollisionEngine();
+
+    /*
+     *  Allocate grid array dynamically
+     *  Uses of raw pointers for 3d arrays
+     *  And performance
+     */
+    void InitGrid();
+
+    /*
+     *  Pivot around one child (parameter target) of the Current Model3D.
+     *  And compute collisions between this child and the other childs of 
+     *  current Model3D and his nearest "brothers" (neighbors parameter).
+     */
+    void PivotCollision(Model3D* target, std::vector<Model3D*> neighbors) noexcept;
+
+    /*
+     *  Check if location_object point is inside the current Model
+     */
+    bool IsInside (glm::vec3 location_object) const;
+
+    /* 
+     *  Return 6 side "brothers" (Model3D with same mother) of target if exists
+     *  Indexed by side constants
+     */
+    std::vector<Model3D*> GetOrderNeighbors(Model3D* target) noexcept;
+
+    /*
+     *  Return a group of 3d models near target with a deeping clipping level
+     */
+    std::map<int, Model3D*> GetNeighbors(Model3D* target, int level) noexcept;
+
+    /*
+     *  Model3D Composite attributes
+     *      elements_: 3d objects which composes the 3d model
+     *      border_: the "box" which defines the border of the 3d model
+     *      objects_: 3d models which are inside the current 3d model, as childs of this one
+     */
+    std::vector<std::unique_ptr<engine::graphics::Shape3D>> elements_;
+    std::unique_ptr<engine::graphics::Border> border_{nullptr};
+    std::vector<std::unique_ptr<Model3D>> objects_;
+
+    /*
+     *  Grid placements for the childs of the model
+     */
+    std::vector<Model3D*> ***grid_{nullptr};
+
+    /*
+     *  Placements coordinates into the grid
+     *  of the mother model for current model
+     */
+    std::vector<std::vector<int>> placements_;
+
+    /*
+     *  If defined, obestacle_ is the model collision partner
+     */
+    Model3D* obstacle_{nullptr};
+
+    /*
+     *  Mutex ensures thread safe
+     */
+    tbb::mutex object_mutex_;
+
+    /*
+     *  Engine used for collision computes
+     */
+    engine::physics::CollisionEngine* collision_engine_;
+
+    /*
+     *  Grid settings
+     *      grid_unit_(x|y|z)_: size in gl pixels for one unity and for the 3 dimensions
+     *      grid_(x|y|z)_: number of unities in the complete grid for the 3 dimensions
+     *      
+     *      And Finally
+     *           grid_x * grid_unit_x =~ width of the Model
+     *           grid_y * grid_unit_y =~ heigth of the Model
+     *           grid_z * grid_unit_z =~ depth of the Model
+     */
     float grid_unit_x_{0.0f};
     float grid_unit_y_{0.0f};
     float grid_unit_z_{0.0f};
+    int grid_x_{0};
+    int grid_y_{0};
+    int grid_z_{0};
 
-    void InitCollisionEngine();
-    void InitGrid();
-    void PivotCollision(Model3D *object, std::vector<Model3D*> neighbors) noexcept;
-    bool IsInside (glm::vec3 location_object) const;
-
-    /* Compute neighbors */
-    std::vector<Model3D*> GetOrderNeighbors(Model3D *r) noexcept;
-    std::map<int, Model3D*> GetNeighbors(Model3D *r, int level) noexcept;
-
-    /* Model3D attributes */
-    std::vector<std::unique_ptr<engine::graphics::Shape3D>> elements_;
-    std::unique_ptr<engine::graphics::Border> border_{nullptr};
-    std::vector<Model3D*> ***grid_{nullptr};
-    std::vector<std::unique_ptr<Model3D>> objects_;
-    std::vector<std::vector<int>> placements_;
-    tbb::mutex object_mutex_;
-    Model3D *obstacle_;
-    engine::physics::CollisionEngine *collision_engine_;
-
+    /*
+     *  Model3d Attributes
+     */
     float distance_;
     int id_;
     int id_last_collision_;
@@ -203,7 +332,8 @@ protected:
     bool is_controlled_;
 };
 
-}//namespace graphics
-}//namespace engine
+} // namespace graphics
 
-#endif //ENGINE_UNIVERSE_MODEL3D_H_
+} // namespace engine
+
+#endif // ENGINE_UNIVERSE_MODEL3D_H_

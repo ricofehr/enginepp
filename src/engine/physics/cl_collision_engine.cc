@@ -1,6 +1,6 @@
 /*
- * opencl version for CollisionEngine
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  opencl version for CollisionEngine
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  */
 
 #include "engine/physics/cl_collision_engine.h"
@@ -12,10 +12,11 @@
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace physics {
 
-/* Init opencl parallell context */
-void CLCollisionEngine::InitCollisionEngine() {
+void CLCollisionEngine::InitCollisionEngine()
+{
     cl::Platform platform_target;
     cl::Device device_target;
     int max_cores = 0;
@@ -88,13 +89,12 @@ void CLCollisionEngine::InitCollisionEngine() {
         std::cerr << error.what() << "(" << error.err() << ")" << std::endl;
         exit(1);
     }
- }
+}
 
-/* Init cl collision kernel */
 float CLCollisionEngine::ComputeCollision(float box1[], float box2[])
 {
     std::vector<float> distances(granularity_, 1.0f);
-    float *distances_ptr = distances.data();
+    float* distances_ptr = distances.data();
 
     /* Copy the input data to the input buffer */
     cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
@@ -123,5 +123,6 @@ float CLCollisionEngine::ComputeCollision(float box1[], float box2[])
     return 1.0f;
 }
 
-}//namespace helpers
-}//namespace engine
+} // namespace helpers
+
+} // namespace engine

@@ -1,8 +1,8 @@
 /*
- * CLCollisionEngine class header
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  CLCollisionEngine class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  *
- * Use of Singleton pattern because need a sole CollisionEngine for program.
+ *  Implements opencl algorithm for collision computes.
  */
 
 #ifndef PHYSICS_CLCOLLISIONENGINE_H_
@@ -26,24 +26,36 @@
 #include "engine/physics/collision_engine.h"
 
 namespace engine {
+
 namespace physics {
 
 class CLCollisionEngine : public CollisionEngine {
 
 public:
 
+    /*
+     *  Default destructor
+     */
     ~CLCollisionEngine() override = default;
 
+    /*
+     *  Compute collision distance between 2 borders (box1 and box2)
+     *  Thanks to opencl paralell processing
+     */
     float ComputeCollision(float box1[], float box2[]) override final;
 
-    inline static CLCollisionEngine *Instance() {
+    /*
+     *  Return (and allocates if needed) sole Instance
+     */
+    inline static CLCollisionEngine* Instance()
+    {
         static bool sIsInit = false;
         /* Raw pointers because static vars */
         static auto sInstance = new CLCollisionEngine;
         static auto collision_mutex = new tbb::mutex;
 
         /*
-         *  Init the engine if not already done
+         *  Init the context if not already done
          */
         collision_mutex->lock();
         if (!sIsInit) {
@@ -57,10 +69,17 @@ public:
 
 protected:
 
+    /*
+     *  Constructor
+     *  Protected scope ensure sole instance
+     */
     CLCollisionEngine(){};
     CLCollisionEngine(const CLCollisionEngine&) = default;
     CLCollisionEngine& operator=(const CLCollisionEngine&) = default;
 
+    /*
+     *  Init opencl parallell context
+     */
     void InitCollisionEngine() override final;
 
     cl::Kernel cl_kernel_;
@@ -71,7 +90,8 @@ protected:
     int wk_size_{32};
 };
 
-}//namespace parallell
-}//namespace engine
+} // namespace parallell
 
-#endif //PHYSICS_CLCOLLISIONENGINE_H_
+} // namespace engine
+
+#endif // PHYSICS_CLCOLLISIONENGINE_H_

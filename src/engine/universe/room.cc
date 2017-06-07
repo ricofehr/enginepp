@@ -1,14 +1,14 @@
 /*
-* Room class file
-* @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+ *  Room class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
 
 #include "engine/universe/room.h"
 
 namespace engine {
+
 namespace universe {
 
-/* Constructors */
 Room::Room()
      :Room(glm::vec4(1.0f)) {}
 
@@ -36,5 +36,6 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_
                                        location);
 }
 
-}//namespace universe
-}//namespace engine
+} // namespace universe
+
+} // namespace engine

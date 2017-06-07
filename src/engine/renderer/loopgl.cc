@@ -1,3 +1,8 @@
+/*
+ *  LoopGL class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ */
+
 #include "engine/renderer/loopgl.h"
 
 #include <fstream>
@@ -7,28 +12,29 @@
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace renderer {
 
-/* Default value for static variables */
-GLFWwindow *LoopGL::sGLWindow = nullptr;
+/* Define LoopGL global static class variables */
+GLFWwindow* LoopGL::sGLWindow = nullptr;
 GLuint LoopGL::sProgramId = -1;
 GLuint LoopGL::sMatrixId = -1;
 
 namespace {
 
-static engine::universe::Universe *sUniverse = nullptr;
+static engine::universe::Universe* sUniverse = nullptr;
 static double sBeginTime = 0.0f;
 
 /**
  *   LoadShaders - Compile and Load shader from files to ram
- *   Currently, 2 shaders are compiled: vertex and fragment shaders.
+ *   2 shaders are compiled: vertex and fragment shaders.
  */
 void LoadShaders()
 {
     using engine::core::ConfigEngine;
 
-    const char *vertex_file_path = "glsl/SimpleVertexShader.vertexshader";
-    const char *fragment_file_path = "glsl/SimpleFragmentShader.fragmentshader";
+    const char* vertex_file_path = "glsl/SimpleVertexShader.vertexshader";
+    const char* fragment_file_path = "glsl/SimpleFragmentShader.fragmentshader";
 
     /* Create the shaders */
     GLuint vertexshader_id = glCreateShader(GL_VERTEX_SHADER);
@@ -67,7 +73,7 @@ void LoadShaders()
     if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
         std::cout << "Compiling shader : " << vertex_file_path << std::endl;
     }
-    const char *vertexsource_pointer = vertexshader_code.c_str();
+    const char* vertexsource_pointer = vertexshader_code.c_str();
     glShaderSource(vertexshader_id, 1, &vertexsource_pointer , nullptr);
     glCompileShader(vertexshader_id);
 
@@ -84,7 +90,7 @@ void LoadShaders()
     if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
         std::cout << "Compiling shader : " << fragment_file_path << std::endl;
     }
-    const char *fragmentsource_pointer = fragmentshader_code.c_str();
+    const char* fragmentsource_pointer = fragmentshader_code.c_str();
     glShaderSource(fragmentshader_id, 1, &fragmentsource_pointer, nullptr);
     glCompileShader(fragmentshader_id);
 
@@ -122,9 +128,8 @@ void LoadShaders()
     glDeleteShader(fragmentshader_id);
 }
 
-/**
- *    draw - Main display function
- *    Display function triggered when opengl must display again all polygons
+/*
+ *    Draw Current Universe
  */
 void Draw()
 {
@@ -156,7 +161,7 @@ void Draw()
 }
 
 /*
- *   Compute current fps and display it
+ *   Compute current fps and display it if debug enabled
  */
 int Fps(double &last_time, int &nb_frames)
 {
@@ -213,9 +218,8 @@ int Fps(double &last_time, int &nb_frames)
     return ret;
 }
 
-}//namespace
+} // anonymous namespace
 
-/* Init gl Window */
 void LoopGL::InitGL()
 {
     using engine::core::ConfigEngine;
@@ -263,8 +267,7 @@ void LoopGL::InitGL()
     glBindVertexArray(vao);
 }
 
-/* Setup gl scene */
-void LoopGL::Loop(engine::universe::Universe *uni)
+void LoopGL::Loop(engine::universe::Universe* uni)
 {
     using engine::core::ConfigEngine;
 
@@ -319,5 +322,6 @@ void LoopGL::Loop(engine::universe::Universe *uni)
            && glfwWindowShouldClose(LoopGL::sGLWindow) == 0);
 }
 
-}//namespace renderer
-}//namespace engine
+} // namespace renderer
+
+} // namespace engine

@@ -1,6 +1,6 @@
 /*
- * RandomUniverseFactory class file
- * @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  RandomUniverseFactory class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
  */
 
 #include "engine/universe/random_universe_factory.h"
@@ -10,6 +10,7 @@
 #include "engine/core/config_engine.h"
 
 namespace engine {
+
 namespace universe {
 
 void RandomUniverseFactory::GenerateBuffers() const
@@ -34,7 +35,11 @@ std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
 
     /* Compute grid placements */
     uni->ReinitGrid();
-    uni->DisplayGrid();
+
+    /* Display Universe Grid if Standard Debug mode */
+    if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
+        uni->DisplayGrid();
+    }
 
     for (auto &room : rooms) {
         /* Generate Walls of Room */
@@ -50,13 +55,16 @@ std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
             }
         }
 
-        room->DisplayGrid();
+        /* Display Room Grid only if Full Debug mode */
+        if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_ALL) {
+            room->DisplayGrid();
+        }
     }
 
     return uni;
 }
 
-Room* RandomUniverseFactory::GenerateRoom(Universe *uni) const
+Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
 {
     /* Entropy value */
     auto r = rand();
@@ -194,7 +202,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe *uni) const
     return nullptr;
 }
 
-void RandomUniverseFactory::GenerateWalls(Room *room) const
+void RandomUniverseFactory::GenerateWalls(Room* room) const
 {
     glm::vec3 scale_w = {1.0f, 1.0f, 1.0f};
     glm::vec3 location_0 {0.0f};
@@ -318,7 +326,7 @@ void RandomUniverseFactory::GenerateWalls(Room *room) const
     }
 }
 
-void RandomUniverseFactory::GenerateBrick(Room *room) const
+void RandomUniverseFactory::GenerateBrick(Room* room) const
 {
     float x = 0.0f, y = 0.0f, z = 0.0f;
     float scale = 1.0f;
@@ -467,5 +475,6 @@ std::unique_ptr<Camera> RandomUniverseFactory::GenerateCamera(glm::vec3 location
                                     0.0f, 1.0f, 0.0f);
 }
 
-} //universe
-} //engine
+} // universe
+
+} // engine
