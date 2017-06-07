@@ -50,22 +50,21 @@ std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid() noexcept
         auto k = r->placements()[0][2];
 
         if (i != 0 && grid_[i-1][j][k].size() != 0) {
-            r->addDoor(kFLOOR);
-        }
-
-        if (i != grid_y_-1 && grid_[i+1][j][k].size() != 0) {
-            r->addDoor(kROOF);
-        }
-
-        if (j != 0 && grid_[i][j-1][k].size() != 0) {
             r->addDoor(kLEFT);
         }
 
-        if (j != grid_x_-1 && grid_[i][j+1][k].size() != 0) {
+        if (i != grid_x_-1 && grid_[i+1][j][k].size() != 0) {
             r->addDoor(kRIGHT);
-        }
-        else {
+        } else {
             r->addWindow(kRIGHT);
+        }
+
+        if (j != 0 && grid_[i][j-1][k].size() != 0) {
+            r->addDoor(kFLOOR);
+        }
+
+        if (j != grid_y_-1 && grid_[i][j+1][k].size() != 0) {
+            r->addDoor(kROOF);
         }
 
         if (k != 0 && grid_[i][j][k-1].size() != 0) {
@@ -75,7 +74,7 @@ std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid() noexcept
         if (k != grid_z_-1 && grid_[i][j][k+1].size() != 0) {
             r->addDoor(kBACK);
         }
-        else if (j != grid_x_-1 && grid_[i][j+1][k].size() != 0) {
+        else if (i != grid_x_-1 && grid_[i+1][j][k].size() != 0) {
             r->addWindow(kBACK);
         }
     }

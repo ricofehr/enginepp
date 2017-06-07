@@ -92,14 +92,14 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
     uni->lock();
 
     /* Generate and place randomly object into rooms grid */
-    while (cnt++ < grid_y * grid_x * grid_z) {
-        auto l = r % grid_y;
-        auto m = s % grid_x;
+    while (cnt++ < grid_x * grid_y * grid_z) {
+        auto l = r % grid_x;
+        auto m = s % grid_y;
         auto n = t % grid_z;
 
-        auto y2 = grid_0[1] + l * grid_unit_y + grid_unit_y/2;
-        auto x2 = grid_0[0] + m * grid_unit_x + grid_unit_x/2;
-        auto z2 = grid_0[2] + n * grid_unit_z + grid_unit_z/2;
+        auto loc_x = grid_0[0] + l * grid_unit_x + grid_unit_x/2;
+        auto loc_y = grid_0[1] + m * grid_unit_y + grid_unit_y/2;
+        auto loc_z = grid_0[2] + n * grid_unit_z + grid_unit_z/2;
 
         /* 2 cases: grid is empty or need another room nearest */
         if (uni->countChilds() == 0 ||
@@ -107,11 +107,11 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
              ((l != 0 && !uni->IsEmplacementGridEmpty(l-1, m, n)) ||
               (m != 0 && !uni->IsEmplacementGridEmpty(l, m-1, n)) ||
               (n != 0 && !uni->IsEmplacementGridEmpty(l, m, n-1)) ||
-              (l != grid_y-1 && !uni->IsEmplacementGridEmpty(l+1, m, n)) ||
-              (m != grid_x-1 && !uni->IsEmplacementGridEmpty(l, m+1, n)) ||
+              (l != grid_x-1 && !uni->IsEmplacementGridEmpty(l+1, m, n)) ||
+              (m != grid_y-1 && !uni->IsEmplacementGridEmpty(l, m+1, n)) ||
               (n != grid_z-1 && !uni->IsEmplacementGridEmpty(l, m, n+1))))) {
 
-            auto location = glm::vec4(x2, y2, z2, 0.0f);
+            auto location = glm::vec4(loc_x, loc_y, loc_z, 0.0f);
             auto room_ptr{std::make_unique<Room>(location)};
             room_ptr->add_placement(l, m, n);
 
@@ -137,7 +137,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
             case 0:
                 if (++t - k == grid_z) {
                     t = k;
-                    if (++s - j == grid_x) {
+                    if (++s - j == grid_y) {
                         s = j;
                         ++r;
                     }
@@ -147,7 +147,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
             case 1:
                 if (++s - j == grid_z) {
                     s = j;
-                    if (++r - i == grid_y) {
+                    if (++r - i == grid_x) {
                         r = i;
                         ++t;
                     }
@@ -157,7 +157,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
             case 2:
                 if (++t - k == grid_z) {
                     t = k;
-                    if (++r - i == grid_y) {
+                    if (++r - i == grid_x) {
                         r = i;
                         ++s;
                     }
@@ -165,7 +165,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
                 break;
 
             case 3:
-                if (++s - j == grid_x) {
+                if (++s - j == grid_y) {
                     s = j;
                     if (++t - k == grid_z) {
                         t = k;
@@ -175,7 +175,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
                 break;
 
             case 4:
-                if (++r - i == grid_y) {
+                if (++r - i == grid_x) {
                     r = i;
                     if (++t - k == grid_z) {
                         t = k;
@@ -185,9 +185,9 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
                 break;
                 
             case 5:
-                if (++r - i == grid_y) {
+                if (++r - i == grid_x) {
                     r = i;
-                    if (++s - j == grid_x) {
+                    if (++s - j == grid_y) {
                         s = j;
                         ++t;
                     }
@@ -209,8 +209,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
     glm::vec4 location_w {0.0f};
 
     /* Init local vars from Room object attributes */
-    auto it_doors = room->doors();//.begin();
-    auto it_windows = room->windows();//.begin();
+    auto doors = room->doors();
+    auto windows = room->windows();
     auto grid_x = room->gridx();
     auto grid_y = room->gridy();
     auto grid_z = room->gridz();
@@ -234,7 +234,7 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
         cilk_for (auto j = 0; j < grid_x; j+=grid_x/4) {
             cilk_for (auto k = 0; k < grid_z; k+=grid_z/4) {
                 /* No brick floor/roof if trapdoor */
-                if (!it_doors[side] ||
+                if (!doors[side] ||
                     (j != 2*grid_x/4 && j != 3*grid_x/4) ||
                     (k != 2*grid_x/4 && k != 3*grid_x/4)) {
 
@@ -270,8 +270,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
         cilk_for (auto j = 0; j < grid_y; j+=grid_y/3) {
             cilk_for (auto k = 0; k < grid_z; k+=grid_z/4) {
                 /* No brick wall if Doors or Windows */
-                if ((!it_doors[side] || j > grid_y/3 || k != 0) &&
-                    (!it_windows[side] || (j != grid_y/3) || (k != 2*grid_z/4 && k != 3*grid_z/4))) {
+                if ((!doors[side] || j > grid_y/3 || k != 0) &&
+                    (!windows[side] || (j != grid_y/3) || (k != 2*grid_z/4 && k != 3*grid_z/4))) {
 
                     room->lock();
                     location_w = glm::vec4(location_0, 0.0f)
@@ -303,8 +303,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
         cilk_for (auto j = 0; j < grid_y; j+=grid_y/3) {
             cilk_for (auto k = 0; k < grid_x; k+=grid_x/4) {
                 /* No brick wall if Doors or Windows */
-                if ((!it_doors[side] || j > grid_y/3 || k != 0) &&
-                    (!it_windows[side] || j != grid_y/3 || (k != 2*grid_x/4 && k != 3*grid_x/4))) {
+                if ((!doors[side] || j > grid_y/3 || k != 0) &&
+                    (!windows[side] || j != grid_y/3 || (k != 2*grid_x/4 && k != 3*grid_x/4))) {
 
                     room->lock();
                     location_w = glm::vec4(location_0, 0.0f)
@@ -328,9 +328,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
 
 void RandomUniverseFactory::GenerateBrick(Room* room) const
 {
-    float x = 0.0f, y = 0.0f, z = 0.0f;
+    float move_x = 0.0f, move_y = 0.0f, move_z = 0.0f;
     float scale = 1.0f;
-    int x0 = 0, z0 = 0;
 
     /* Lock Room */
     room->lock();
@@ -353,15 +352,15 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
 
     /* 1/7 moves on y axis */
     if (index % 7 == 0) {
-        y = (rand() % 20 + 3) * 0.007f;
-        x = 0.0f;
-        z = 0.0f;
+        move_y = (rand() % 20 + 3) * 0.007f;
+        move_x = 0.0f;
+        move_z = 0.0f;
     } else {
-        x = (rand() % 20 + 3) * 0.007f;
-        x = (r % 2 == 0) ? -x : x;
-        z = (rand() % 20 + 3) * 0.007f;
-        z = (r % 3 == 0) ? -z : z;
-        y = 0.0f;
+        move_x = (rand() % 20 + 3) * 0.007f;
+        move_x = (r % 2 == 0) ? -move_x : move_x;
+        move_z = (rand() % 20 + 3) * 0.007f;
+        move_z = (r % 3 == 0) ? -move_z : move_z;
+        move_y = 0.0f;
     }
 
     /* First 3D point into Room */
@@ -371,20 +370,23 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
     auto j = s;
     auto k = t;
     auto cnt = 0;
-    /* Generate and place randomly object into room grid */
-    while (cnt++ < (grid_y-1) * (grid_x-1) * (grid_z-1)) {
+    /* Generate and place randomly object into room grid 
+       1 grid_unit is reserved every 6 sides (2 in each axe) for Walls */
+    while (cnt++ < (grid_x-2) * (grid_y-2) * (grid_z-2)) {
         /* Placements Coords */
-        auto l = r % (grid_y-1);
-        auto m = s % (grid_x-1);
-        auto n = t % (grid_z-1);
+        auto l = 1 + r % (grid_x-2);
+        auto m = 1 + s % (grid_y-2);
+        auto n = 1 + t % (grid_z-2);
 
-        /* Location Coords */
-        auto y2 = grid_0[1] + l * grid_unit_y + grid_unit_y/2;
-        auto x2 = grid_0[0] + m * grid_unit_x + grid_unit_x/2;
-        auto z2 = grid_0[2] + n * grid_unit_z + grid_unit_z/2;
+        /* Location Coords, center (grid_unit/2) of the grid case */
+        auto loc_x = grid_0[0] + l * grid_unit_x + grid_unit_x/2;
+        auto loc_y = grid_0[1] + m * grid_unit_y + grid_unit_y/2;
+        auto loc_z = grid_0[2] + n * grid_unit_z + grid_unit_z/2;
 
         if (room->IsEmplacementGridEmpty(l,m,n)) {
-            auto obj = std::make_unique<Brick>(scale, glm::vec4(x2, y2, z2, 0.0f), glm::vec4(x, y, z, 0.0f));
+            auto obj = std::make_unique<Brick>(scale,
+                                               glm::vec4(loc_x, loc_y, loc_z, 0.0f),
+                                               glm::vec4(move_x, move_y, move_z, 0.0f));
             obj->add_placement(l, m, n);
 
             /* Lock room for ensure only one change at same time on grid_ array */
@@ -399,9 +401,9 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
         /* Ensure entropy for random placement */
         switch (i % 6) {
             case 0:
-                if (++t - k == grid_z) {
+                if (++t - k == (grid_z-2)) {
                     t = k;
-                    if (++s - j == grid_x) {
+                    if (++s - j == (grid_y-2)) {
                         s = j;
                         ++r;
                     }
@@ -409,9 +411,9 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
                 break;
 
             case 1:
-                if (++s - j == grid_z) {
+                if (++s - j == (grid_y-2)) {
                     s = j;
-                    if (++r - i == grid_y) {
+                    if (++r - i == (grid_x-2)) {
                         r = i;
                         ++t;
                     }
@@ -419,9 +421,9 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
                 break;
 
             case 2:
-                if (++t - k == grid_z) {
+                if (++t - k == (grid_z-2)) {
                     t = k;
-                    if (++r - i == grid_y) {
+                    if (++r - i == (grid_x-2)) {
                         r = i;
                         ++s;
                     }
@@ -429,9 +431,9 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
                 break;
 
             case 3:
-                if (++s - j == grid_x) {
+                if (++s - j == (grid_y-2)) {
                     s = j;
-                    if (++t - k == grid_z) {
+                    if (++t - k == (grid_z-2)) {
                         t = k;
                         ++r;
                     }
@@ -439,9 +441,9 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
                 break;
 
             case 4:
-                if (++r - i == grid_y) {
+                if (++r - i == (grid_x-2)) {
                     r = i;
-                    if (++t - k == grid_z) {
+                    if (++t - k == (grid_z-2)) {
                         t = k;
                         ++s;
                     }
@@ -449,9 +451,9 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
                 break;
                 
             case 5:
-                if (++r - i == grid_y) {
+                if (++r - i == (grid_x-2)) {
                     r = i;
-                    if (++s - j == grid_x) {
+                    if (++s - j == (grid_y-2)) {
                         s = j;
                         ++t;
                     }

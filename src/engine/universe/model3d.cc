@@ -98,10 +98,10 @@ void Model3D::Move() noexcept
 
 void Model3D::InitGrid()
 {
-    grid_ = new std::vector<Model3D*> **[grid_y_];
-    for (auto i = 0; i < grid_y_; i++) {
-        grid_[i] = new std::vector<Model3D*> *[grid_x_];
-        for (auto j = 0; j < grid_x_; j++) {
+    grid_ = new std::vector<Model3D*> **[grid_x_];
+    for (auto i = 0; i < grid_x_; i++) {
+        grid_[i] = new std::vector<Model3D*> *[grid_y_];
+        for (auto j = 0; j < grid_y_; j++) {
             grid_[i][j] = new std::vector<Model3D*>[grid_z_]();
         }
     }
@@ -124,8 +124,8 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid() noexcept
         auto x1 = coords.at(0)[0];
         auto y1 = coords.at(0)[1];
         auto z1 = coords.at(0)[2];
-        auto h1 = coords.at(3)[1] - y1;
         auto w1 = coords.at(1)[0] - x1;
+        auto h1 = coords.at(3)[1] - y1;
         auto d1 = coords.at(4)[2] - z1;
 
         for (auto &p : objects_[o]->placements()) {
@@ -144,10 +144,10 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid() noexcept
         objects_[o]->clear_placements();
         auto grid_0 = location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
 
-        cilk_for (auto i = 0; i < grid_y_; i++) {
-            auto y2 = grid_0[1] + (i+1) * grid_unit_y_;
-            cilk_for (auto j = 0; j < grid_x_; j++) {
-                auto x2 = grid_0[0] + j * grid_unit_x_;
+        cilk_for (auto i = 0; i < grid_x_; i++) {
+            auto x2 = grid_0[0] + i * grid_unit_x_;
+            cilk_for (auto j = 0; j < grid_y_; j++) {
+                auto y2 = grid_0[1] + (j+1) * grid_unit_y_;
                 cilk_for (auto k = 0; k < grid_z_; k++) {
                     auto z2 = grid_0[2] + (k+1) * grid_unit_z_;
                     auto h2 = -grid_unit_y_;
@@ -191,7 +191,7 @@ void Model3D::DisplayGrid() noexcept
         std::cout << "=== Floor " << i << std::endl;
         for (auto k = 0; k < grid_z_; k++) {
             for (auto j = 0; j < grid_x_; j++) {
-                if (grid_[i][j][k].size() >0) {
+                if (grid_[j][i][k].size() > 0) {
                     std::cout << "  o";
                 } else {
                     std::cout << "  x";
@@ -204,32 +204,32 @@ void Model3D::DisplayGrid() noexcept
     }
 }
 
-std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> obj, bool force) noexcept
+std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> child, bool force) noexcept
 {
-    if (force || IsInside(obj->location())) {
+    if (force || IsInside(child->location())) {
         /* Output if debug setted */
         using engine::core::ConfigEngine;
         if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION && force) {
-            std::cout << "Transfert " << obj->id() << " to Room " << id() << " (forced: " << force << ")" << std::endl;
+            std::cout << "Transfert " << child->id() << " to Room " << id() << " (forced: " << force << ")" << std::endl;
         }
 
         /* Inverse object move if forced transfert */
         if (force) {
-            obj->InverseMove();
+            child->InverseMove();
         }
 
         /* If obj is Camera, insert into first child.
            Else insert in last position. */
-        if (obj->type() == Model3D::kMODEL3D_CAMERA) {
-            objects_.insert(objects_.begin(), std::move(obj));
+        if (child->type() == Model3D::kMODEL3D_CAMERA) {
+            objects_.insert(objects_.begin(), std::move(child));
         } else {
-            objects_.push_back(std::move(obj));
+            objects_.push_back(std::move(child));
         }
 
         return nullptr;
     }
 
-    return obj;
+    return child;
 }
 
 bool Model3D::IsInside(glm::vec3 location_object) const
@@ -285,65 +285,61 @@ void Model3D::PivotCollision(Model3D* target, std::vector<Model3D*> neighbors) n
 
     /* Check all grid placements for current object and select other objects near this one */
     cilk_for (auto p = 0; p < placements.size(); p++) {
-        auto y = placements[p][0];
-        auto x = placements[p][1];
+        auto x = placements[p][0];
+        auto y = placements[p][1];
         auto z = placements[p][2];
 
-        /* Other room objects adding */
-        cilk_for (auto i = y-1; i <= y+1; i++) {
-            cilk_for (auto j = x-1; j <= x+1; j++) {
-                if ((i != -1 && i != grid_y_) || (j != -1 && j != grid_x_)) {
-                    cilk_for (auto k = z-1; k <= z+1; k++) {
-                        if (((i != -1 && i != grid_y_) || (k != -1 && k != grid_z_)) &&
-                            ((j != -1 && j != grid_x_) || (k != -1 && k != grid_z_))) {
+        /* Other objects adding */
+        cilk_for (auto i = x-1; i <= x+1; i++) {
+            cilk_for (auto j = y-1; j <= y+1; j++) {
+                cilk_for (auto k = z-1; k <= z+1; k++) {
 
-                            std::vector<Model3D*> brothers;
+                    std::vector<Model3D*> brothers;
 
-                            if (i < 0) {
-                                if (neighbors[kFLOOR] != nullptr) {
-                                    brothers = neighbors[kFLOOR]->getPlacementObjects(grid_y_-1, j, k);
-                                }
-                            } else if (i == grid_y_) {
-                                if (neighbors[kROOF] != nullptr) {
-                                    brothers = neighbors[kROOF]->getPlacementObjects(0, j, k);
-                                }
-                            } else if (j < 0) {
-                                if (neighbors[kLEFT] != nullptr) {
-                                    brothers = neighbors[kLEFT]->getPlacementObjects(i, grid_x_-1, k);
-                                }
-                            } else if (j == grid_x_) {
-                                if (neighbors[kRIGHT] != nullptr) {
-                                    brothers = neighbors[kRIGHT]->getPlacementObjects(i, 0, k);
-                                }
-                            } else if (k < 0) {
-                                if (neighbors[kFRONT] != nullptr) {
-                                    brothers = neighbors[kFRONT]->getPlacementObjects(i, j, grid_z_-1);
-                                }
-                            } else if (k == grid_z_) {
-                                if (neighbors[kBACK] != nullptr) {
-                                    brothers = neighbors[kBACK]->getPlacementObjects(i, j, 0);
-                                }
-                            } else {
-                                brothers = grid_[i][j][k];
-                            }
+                    if (i < 0) {
+                        if (neighbors[kLEFT] != nullptr) {
+                            brothers = neighbors[kLEFT]->getPlacementObjects(grid_x_-1, j, k);
+                        }
+                    } else if (i == grid_x_) {
+                        if (neighbors[kRIGHT] != nullptr) {
+                            brothers = neighbors[kRIGHT]->getPlacementObjects(0, j, k);
+                        }
+                    } else if (j < 0) {
+                        if (neighbors[kFLOOR] != nullptr) {
+                            brothers = neighbors[kFLOOR]->getPlacementObjects(i, grid_y_-1, k);
+                        }
+                    } else if (j == grid_y_) {
+                        if (neighbors[kROOF] != nullptr) {
+                            brothers = neighbors[kROOF]->getPlacementObjects(i, 0, k);
+                        }
+                    } else if (k < 0) {
+                        if (neighbors[kFRONT] != nullptr) {
+                            brothers = neighbors[kFRONT]->getPlacementObjects(i, j, grid_z_-1);
+                        }
+                    } else if (k == grid_z_) {
+                        if (neighbors[kBACK] != nullptr) {
+                            brothers = neighbors[kBACK]->getPlacementObjects(i, j, 0);
+                        }
+                    } else {
+                        brothers = grid_[i][j][k];
+                    }
 
-                            /* Merge targets with collisions array */
-                            for (auto &obj : brothers) {
-                                if (*obj != *target) {
-                                    tbb::mutex::scoped_lock lock_map(pivot_mutex);
-                                    grid_objects[obj->id()] = obj;
-                                }
-                            } // for
-                        } // fi
-                    } // cilk_for
-                } // fi
-            } // cilk_for
-        } // cilk_for
-    } // cilk_for
+                    /* Merge targets with collisions array */
+                    for (auto &obj : brothers) {
+                        if (*obj != *target) {
+                            tbb::mutex::scoped_lock lock_map(pivot_mutex);
+                            grid_objects[obj->id()] = obj;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
 
     /* Prepare vector for collision compute */
     std::vector<Model3D*> test_objects;
-    for (auto & obj_pair : grid_objects) {
+    for (auto &obj_pair : grid_objects) {
         test_objects.push_back(obj_pair.second);
     }
 
@@ -394,7 +390,7 @@ std::map<int, Model3D*> Model3D::GetNeighbors(Model3D* target, int level) noexce
         neighbors[tmp->id()] = tmp;
     }
 
-    if (i != grid_y_-1 && grid_[i+1][j][k].size() != 0) {
+    if (i != grid_x_-1 && grid_[i+1][j][k].size() != 0) {
         tmp = grid_[i+1][j][k][0];
         neighbors[tmp->id()] = tmp;
     }
@@ -404,7 +400,7 @@ std::map<int, Model3D*> Model3D::GetNeighbors(Model3D* target, int level) noexce
         neighbors[tmp->id()] = tmp;
     }
 
-    if (j != grid_x_-1 && grid_[i][j+1][k].size() != 0) {
+    if (j != grid_y_-1 && grid_[i][j+1][k].size() != 0) {
         tmp = grid_[i][j+1][k][0];
         neighbors[tmp->id()] = tmp;
     }
@@ -421,6 +417,7 @@ std::map<int, Model3D*> Model3D::GetNeighbors(Model3D* target, int level) noexce
 
     if (level) {
         std::map<int, Model3D*> neighbors_recur_merge;
+        /* While level is not zero, merge neighbors maps */
         for (auto &n : neighbors) {
             auto neighbors_recur = GetNeighbors(n.second, level-1);
             neighbors_recur_merge.insert(neighbors_recur.begin(), neighbors_recur.end());
@@ -439,19 +436,19 @@ std::vector<Model3D*> Model3D::GetOrderNeighbors(Model3D* target) noexcept
     auto k = target->placements()[0][2];
 
     if (i != 0 && grid_[i-1][j][k].size() != 0) {
-        neighbors[kFLOOR] = grid_[i-1][j][k][0];
+        neighbors[kLEFT] = grid_[i-1][j][k][0];
     }
 
-    if (i != grid_y_-1 && grid_[i+1][j][k].size() != 0) {
-        neighbors[kROOF] = grid_[i+1][j][k][0];
+    if (i != grid_x_-1 && grid_[i+1][j][k].size() != 0) {
+        neighbors[kRIGHT] = grid_[i+1][j][k][0];
     }
 
     if (j != 0 && grid_[i][j-1][k].size() != 0) {
-        neighbors[kLEFT] = grid_[i][j-1][k][0];
+        neighbors[kFLOOR] = grid_[i][j-1][k][0];
     }
 
-    if (j != grid_x_-1 && grid_[i][j+1][k].size() != 0) {
-        neighbors[kRIGHT] = grid_[i][j+1][k][0];
+    if (j != grid_y_-1 && grid_[i][j+1][k].size() != 0) {
+        neighbors[kROOF] = grid_[i][j+1][k][0];
     }
     
     if (k != 0 && grid_[i][j][k-1].size() != 0) {
@@ -475,8 +472,8 @@ void Model3D::RecordHID()
 Model3D::~Model3D()
 {
     if (grid_ != nullptr) {
-        for (auto i = 0; i < grid_y_; i++) {
-            for (auto j = 0; j < grid_x_; j++) {
+        for (auto i = 0; i < grid_x_; i++) {
+            for (auto j = 0; j < grid_y_; j++) {
                 delete [] grid_[i][j];
             }
             delete [] grid_[i];

@@ -40,14 +40,40 @@ public:
     static constexpr int kMODEL3D_BRICK = 6;
 
     /*
-     *  Model Side Constants
+     *  Model Single Side Constants
      */
-    static constexpr int kFLOOR = 0;
-    static constexpr int kROOF = 1;
-    static constexpr int kLEFT = 2;
-    static constexpr int kRIGHT = 3;
+    static constexpr int kLEFT = 0;
+    static constexpr int kRIGHT = 1;
+    static constexpr int kFLOOR = 2;
+    static constexpr int kROOF = 3;
     static constexpr int kFRONT = 4;
     static constexpr int kBACK = 5;
+
+    /*
+     *  Model Composed Side Constants
+     */
+    static constexpr int kLEFT_FLOOR = 6;
+    static constexpr int kLEFT_ROOF = 7;
+    static constexpr int kLEFT_FRONT = 8;
+    static constexpr int kLEFT_FRONT_FLOOR = 9;
+    static constexpr int kLEFT_FRONT_ROOF = 10;
+    static constexpr int kLEFT_BACK = 11;
+    static constexpr int kLEFT_BACK_FLOOR = 12;
+    static constexpr int kLEFT_BACK_ROOF = 13;
+
+    static constexpr int kRIGHT_FLOOR = 14;
+    static constexpr int kRIGHT_ROOF = 15;
+    static constexpr int kRIGHT_FRONT = 16;
+    static constexpr int kRIGHT_FRONT_FLOOR = 17;
+    static constexpr int kRIGHT_FRONT_ROOF = 18;
+    static constexpr int kRIGHT_BACK = 19;
+    static constexpr int kRIGHT_BACK_FLOOR = 20;
+    static constexpr int kRIGHT_BACK_ROOF = 21;
+
+    static constexpr int kFRONT_FLOOR = 22;
+    static constexpr int kFRONT_ROOF = 23;
+    static constexpr int kBACK_FLOOR = 24;
+    static constexpr int kBACK_ROOF = 25;
 
     /*
      *  Destructor
@@ -86,9 +112,10 @@ public:
     virtual std::vector<std::unique_ptr<Model3D>> ReinitGrid() noexcept;
 
     /*
-     *
+     *  Add a child Model3D to current Model3D parent
+     *  Return child if this one is not inside current Model3D parent
      */
-    std::unique_ptr<Model3D> TransfertObject(std::unique_ptr<Model3D> obj, bool force) noexcept;
+    std::unique_ptr<Model3D> TransfertObject(std::unique_ptr<Model3D> child, bool force) noexcept;
 
     /*
      *  Return a list of Childs who were into the Grid
@@ -301,7 +328,7 @@ protected:
     /*
      *  Engine used for collision computes
      */
-    engine::physics::CollisionEngine* collision_engine_;
+    engine::physics::CollisionEngine* collision_engine_{nullptr};
 
     /*
      *  Grid settings

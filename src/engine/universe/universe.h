@@ -99,8 +99,8 @@ private:
     /*
      *  Constants For Grid Settings
      */
-    static constexpr int kGRID_Y = 4;
     static constexpr int kGRID_X = 8;
+    static constexpr int kGRID_Y = 4;
     static constexpr int kGRID_Z = 8;
     static constexpr float kGRID_UNIT_X = 16.0f;
     static constexpr float kGRID_UNIT_Y = 12.0f;
