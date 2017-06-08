@@ -53,27 +53,28 @@ public:
      *  Model Composed Side Constants
      */
     static constexpr int kLEFT_FLOOR = 6;
-    static constexpr int kLEFT_ROOF = 7;
-    static constexpr int kLEFT_FRONT = 8;
-    static constexpr int kLEFT_FRONT_FLOOR = 9;
-    static constexpr int kLEFT_FRONT_ROOF = 10;
-    static constexpr int kLEFT_BACK = 11;
-    static constexpr int kLEFT_BACK_FLOOR = 12;
-    static constexpr int kLEFT_BACK_ROOF = 13;
+    static constexpr int kLEFT_FLOOR_FRONT = 7;
+    static constexpr int kLEFT_FLOOR_BACK = 8;
+    static constexpr int kLEFT_ROOF = 9;
+    static constexpr int kLEFT_ROOF_FRONT = 10;
+    static constexpr int kLEFT_ROOF_BACK = 11;
+    static constexpr int kLEFT_FRONT = 12;
+    static constexpr int kLEFT_BACK = 13;
 
     static constexpr int kRIGHT_FLOOR = 14;
-    static constexpr int kRIGHT_ROOF = 15;
-    static constexpr int kRIGHT_FRONT = 16;
-    static constexpr int kRIGHT_FRONT_FLOOR = 17;
-    static constexpr int kRIGHT_FRONT_ROOF = 18;
-    static constexpr int kRIGHT_BACK = 19;
-    static constexpr int kRIGHT_BACK_FLOOR = 20;
-    static constexpr int kRIGHT_BACK_ROOF = 21;
+    static constexpr int kRIGHT_FLOOR_FRONT = 15;
+    static constexpr int kRIGHT_FLOOR_BACK = 16;
+    static constexpr int kRIGHT_ROOF = 17;
+    static constexpr int kRIGHT_ROOF_FRONT = 18;
+    static constexpr int kRIGHT_ROOF_BACK = 19;
+    static constexpr int kRIGHT_FRONT = 20;
+    static constexpr int kRIGHT_BACK = 21;
 
-    static constexpr int kFRONT_FLOOR = 22;
-    static constexpr int kFRONT_ROOF = 23;
-    static constexpr int kBACK_FLOOR = 24;
-    static constexpr int kBACK_ROOF = 25;
+    static constexpr int kFLOOR_FRONT = 22;
+    static constexpr int kFLOOR_BACK = 23;
+
+    static constexpr int kROOF_FRONT = 24;
+    static constexpr int kROOF_BACK = 25;
 
     /*
      *  Destructor
@@ -198,7 +199,10 @@ public:
     inline Model3D* add_object(std::unique_ptr<Model3D> obj) noexcept {
         auto obj_raw = obj.get();
 
-        for (auto &p : obj->placements()) {
+        objects_.push_back(std::move(obj));
+//        auto obj_raw = objects_[objects_.size()-1].get();
+
+        for (auto &p : obj_raw->placements()) {
             grid_[p[0]][p[1]][p[2]].push_back(obj_raw);
         }
 
@@ -207,8 +211,6 @@ public:
             obj_raw->type() != kMODEL3D_CAMERA) {
             --missobjects_;
         }
-
-        objects_.push_back(std::move(obj));
 
         return obj_raw;
     }
