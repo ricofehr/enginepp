@@ -93,6 +93,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
 
     /* Generate and place randomly object into rooms grid */
     while (cnt++ < grid_x * grid_y * grid_z) {
+
         auto l = r % grid_x;
         auto m = s % grid_y;
         auto n = t % grid_z;
@@ -133,7 +134,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
         }
 
         /* Compute next grid coordinates for ensure entropy */
-        switch (i % 6) {
+        switch (cnt % 6) {
             case 0:
                 if (++t - k == grid_z) {
                     t = k;
@@ -199,7 +200,8 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
     /* UnLock Universe */
     uni->unlock();
 
-    return nullptr;
+    /* Dont find empty square, try again with different entropy */
+    return GenerateRoom(uni);
 }
 
 void RandomUniverseFactory::GenerateWalls(Room* room) const
@@ -378,7 +380,7 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
         auto m = 1 + s % (grid_y-2);
         auto n = 1 + t % (grid_z-2);
 
-        /* Location Coords, center (grid_unit/2) of the grid case */
+        /* Location Coords, center (grid_unit/2) of the grid square */
         auto loc_x = grid_0[0] + l * grid_unit_x + grid_unit_x/2;
         auto loc_y = grid_0[1] + m * grid_unit_y + grid_unit_y/2;
         auto loc_z = grid_0[2] + n * grid_unit_z + grid_unit_z/2;
@@ -399,7 +401,7 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
         }
 
         /* Ensure entropy for random placement */
-        switch (i % 6) {
+        switch (cnt % 6) {
             case 0:
                 if (++t - k == (grid_z-2)) {
                     t = k;
@@ -464,6 +466,9 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
 
     /* UnLock Room */
     room->unlock();
+
+    /* Dont find empty square, try again with different entropy */
+    return GenerateBrick(room);
 }
 
 std::unique_ptr<Camera> RandomUniverseFactory::GenerateCamera(glm::vec3 location) const
