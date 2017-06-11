@@ -104,7 +104,7 @@ void ConfigEngine::ParseConfig() const
     std::cout << "Load objects frequency in time: " << getValue<float>("load_objects_freq") << std::endl;
     std::cout << "Rooms count: " << getValue<int>("rooms_count") << std::endl;
     std::cout << "Collision granularity: " << getValue<int>("granularity") << std::endl;
-    std::cout << "Clipping (0 -> no clipping, 1 -> low clipping, 2 -> high clipping): " << getValue<int>("clipping") << std::endl;
+    std::cout << "Clipping (0 -> no clipping, 1 -> high clipping, 2 -> low clipping): " << getValue<int>("clipping") << std::endl;
     std::cout << "Workers count: " << nworkers << std::endl;
     std::cout << "Execution Time (0 -> no limit): " << getValue<int>("execution_time") << std::endl;
     std::cout << "Vsync (limit framerate to monitor): " << getValue<bool>("vsync") << std::endl;
@@ -149,7 +149,7 @@ void ConfigEngine::ManageProgramParameters(int argc, char* argv[])
         /* Help */
         if (arg == "-h") {
             std::cout << argv[0] << " can be used with following options who overrides config file" << std::endl;
-            std::cout << "-c n   Clipping, 0: no clipping, 1: low clipping, 2: high clipping" << std::endl;
+            std::cout << "-c n   Clipping, 0: no clipping, 1: high clipping, 2: low clipping" << std::endl;
             std::cout << "-d n   Debug mode, 0: no debug, 1: test debug, 2: performance debug, 3: collision debug, 4: all debug" << std::endl;
             std::cout << "-e n   Execution Time, 0: no limit" << std::endl;
             std::cout << "-g n   Granularity on collision computes" << std::endl;

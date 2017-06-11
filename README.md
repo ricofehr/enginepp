@@ -168,7 +168,7 @@ bin/./engine  # Use settings as setted in config file (config/enginepp.ini or co
 
 Program accept options who can override config settings
 ```
--c n   Clipping, 0: no clipping, 1: low clipping, 2: high clipping
+-c n   Clipping, 0: no clipping, 1: high clipping, 2: low clipping
 -d n   Debug mode, 0: no debug, 1: test debug, 2: performance debug, 3: collision debug, 4: all debug
 -e n   Execution Time, 0: no limit
 -g n   Granularity on collision computes

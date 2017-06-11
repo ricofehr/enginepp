@@ -75,6 +75,16 @@ public:
 
     static constexpr int kROOF_FRONT = 24;
     static constexpr int kROOF_BACK = 25;
+    static constexpr int kSAME = 26;
+
+    static constexpr int kSIDES = 27;
+
+    /*
+     *  Grid Square Use Constants
+     */
+    static constexpr int kGRID_UNKNOW = -1;
+    static constexpr int kGRID_USED = 0;
+    static constexpr int kGRID_EMPTY = 1;
 
     /*
      *  Destructor
@@ -134,7 +144,23 @@ public:
      *  Detect the nearest Collision between the Current 3d model
      *  And the "neighbors" array in input
      */
-    void DetectCollision(std::vector<Model3D*> neighbors) noexcept;
+    void DetectCollision() noexcept;
+
+    /*
+     *  Compute neighbors array with a deeping clipping level
+     */
+    void ComputeNeighbors() noexcept;
+
+    /*
+     *  Return a list of all neighbors of current object
+     */
+    std::vector<Model3D*> GetAllNeighbors() const noexcept;
+
+    /*
+     *  Return a list of neighbors in respect with the clipping constraint defined by "level" parameter
+     *  All objects too far ("level" distance into parent grid) or hidden by current view are not included.
+     */
+    std::vector<Model3D*> GetClippingNeighbors(int level) const noexcept;
 
     /*
      *  (In)Equality Operators 
@@ -149,6 +175,7 @@ public:
     float distance() const { return distance_; }
     int id_last_collision() const { return id_last_collision_; }
     Model3D* obstacle() { return obstacle_; }
+    Model3D* parent() { return parent_; }
     engine::graphics::Border* border() const { return border_.get(); }
     bool IsCrossed() const { return is_crossed_; }
     bool IsControlled() const { return is_controlled_; }
@@ -170,8 +197,8 @@ public:
     constexpr float grid_unitx() const { return grid_unit_x_; }
     constexpr float grid_unity() const { return grid_unit_y_; }
     constexpr float grid_unitz() const { return grid_unit_z_; }
-    bool IsEmplacementGridEmpty(int l, int m, int n) const { return grid_[l][m][n].size() == 0; }
-    bool IsFull() const { return missobjects_ <= 0; }
+    int IsEmplacementGridEmpty(int l, int m, int n) const noexcept;
+    inline bool IsFull() const { return missobjects_ <= 0 || objects_.size() >= grid_x_ * grid_y_ * grid_z_; }
     bool IsCamera() const { return type_ == kMODEL3D_CAMERA; }
     inline Model3D* get_camera()
     {
@@ -182,16 +209,15 @@ public:
 
         return nullptr;
     }
-    std::vector<Model3D*> getPlacementObjects(int i, int j, int k) const { return grid_[i][j][k]; }
 
     /*
      *  Delegate Accessors 
      */
     glm::vec3 location() const { return glm::vec3(border_->location()); }
     bool IsMoved() const { return border_->IsMoved(); }
-    bool IsMovedX() const { return border_->IsMovedX(); }
-    bool IsMovedY() const { return border_->IsMovedY(); }
-    bool IsMovedZ() const { return border_->IsMovedZ(); }
+    int IsMovedX() const { return border_->IsMovedX(); }
+    int IsMovedY() const { return border_->IsMovedY(); }
+    int IsMovedZ() const { return border_->IsMovedZ(); }
 
     /*
      *  Mutators 
@@ -199,8 +225,8 @@ public:
     inline Model3D* add_object(std::unique_ptr<Model3D> obj) noexcept {
         auto obj_raw = obj.get();
 
+        obj->set_parent(this);
         objects_.push_back(std::move(obj));
-//        auto obj_raw = objects_[objects_.size()-1].get();
 
         for (auto &p : obj_raw->placements()) {
             grid_[p[0]][p[1]][p[2]].push_back(obj_raw);
@@ -218,10 +244,14 @@ public:
     void set_obstacle(Model3D* obstacle) { obstacle_ = obstacle; }
     void add_placement(int i, int j, int k) { placements_.push_back({i,j,k}); }
     void clear_placements() { placements_.clear(); }
-    void set_camera(std::unique_ptr<Model3D> cam) { objects_.insert(objects_.begin(), std::move(cam)); }
+    void set_camera(std::unique_ptr<Model3D> cam) {
+        cam->set_parent(this);
+        objects_.insert(objects_.begin(), std::move(cam));
+    }
     void reset_missobjects(int missobjects) { missobjects_ = 0; }
     void set_missobjects(int missobjects) { missobjects_ = missobjects; }
     void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
+    void set_parent(Model3D* parent) { parent_ = parent; }
 
     /*
      *  Delegate Mutators 
@@ -278,23 +308,34 @@ protected:
      *  And compute collisions between this child and the other childs of 
      *  current Model3D and his nearest "brothers" (neighbors parameter).
      */
-    void PivotCollision(Model3D* target, std::vector<Model3D*> neighbors) noexcept;
+    void PivotCollision() noexcept;
 
     /*
      *  Check if location_object point is inside the current Model
      */
     bool IsInside (glm::vec3 location_object) const;
 
-    /* 
-     *  Return 6 side "brothers" (Model3D with same mother) of target if exists
-     *  Indexed by side constants
+    /*
+     *  Return a list of Model3D which are found in i,j,k coords
+     *  in the Grid of the current object.
+     *  If i,j,k are outside of the Grid, the search occurs in othet near objects.
      */
-    std::vector<Model3D*> GetOrderNeighbors(Model3D* target) noexcept;
+    std::vector<Model3D*> FindPlacementObjects(int i, int j, int k) const noexcept;
 
     /*
-     *  Return a group of 3d models near target with a deeping clipping level
+     *  Return a list of neighbors qualified for a collision with current object
      */
-    std::map<int, Model3D*> GetNeighbors(Model3D* target, int level) noexcept;
+    std::vector<Model3D*> GetCollisionNeighbors() const noexcept;
+
+    /*
+     *  Check if target must be eligible for neighbors with clipping constraint defined by "level" parameter
+     */
+    bool IsClippingNear(Model3D* target, int level) const noexcept;
+
+    /*
+     *  Clear each sides neighbors_ list
+     */
+    void ResetNeighbors() noexcept;
 
     /*
      *  Model3D Composite attributes
@@ -307,13 +348,26 @@ protected:
     std::vector<std::unique_ptr<Model3D>> objects_;
 
     /*
+     *  neighbors of current 3d model, indexed by
+     *      placement index
+     *      side constant
+     *      Model3D id
+     */
+    std::vector<std::map<int, Model3D*>> neighbors_{static_cast<int>(kSIDES)};
+
+    /*
+     *  Parent of the current 3d model
+     */
+    Model3D* parent_{nullptr};
+
+    /*
      *  Grid placements for the childs of the model
      */
     std::vector<Model3D*> ***grid_{nullptr};
 
     /*
      *  Placements coordinates into the grid
-     *  of the mother model for current model
+     *  of the parent model for current model
      */
     std::vector<std::vector<int>> placements_;
 

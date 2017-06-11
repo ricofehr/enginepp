@@ -75,9 +75,9 @@ public:
      *  Delegate Accessors 
      */
     bool IsMoved() const { return cube_->IsMoved(); }
-    bool IsMovedX() const { return cube_->IsMovedX(); }
-    bool IsMovedY() const { return cube_->IsMovedY(); }
-    bool IsMovedZ() const { return cube_->IsMovedZ(); }
+    int IsMovedX() const { return cube_->IsMovedX(); }
+    int IsMovedY() const { return cube_->IsMovedY(); }
+    int IsMovedZ() const { return cube_->IsMovedZ(); }
     glm::vec4 location() const { return cube_->location(); }
     glm::vec3 scale() const { return cube_->scale(); }
     glm::vec4 move() const { return cube_->move(); }

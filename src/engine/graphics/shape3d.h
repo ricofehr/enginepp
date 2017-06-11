@@ -54,9 +54,43 @@ public:
      *  Accessors
      */
     bool IsMoved() const { return move_[0] != 0.0f || move_[1] != 0.0f || move_[2] != 0.0f; }
-    bool IsMovedX() const { return move_[0] != 0.0f; }
-    bool IsMovedY() const { return move_[1] != 0.0f; }
-    bool IsMovedZ() const { return move_[2] != 0.0f; }
+
+    inline int IsMovedX() const {
+        if (move_[0] == 0.0f) {
+            return 0;
+        }
+
+        if (move_[0] < 0.0f) {
+            return -1;
+        }
+
+        return 1;
+    }
+
+    inline int IsMovedY() const {
+        if (move_[1] == 0.0f) {
+            return 0;
+        }
+
+        if (move_[1] < 0.0f) {
+            return -1;
+        }
+
+        return 1;
+    }
+
+    inline int IsMovedZ() const {
+        if (move_[2] == 0.0f) {
+            return 0;
+        }
+
+        if (move_[2] < 0.0f) {
+            return -1;
+        }
+
+        return 1;
+    }
+
     float distance() const { return distance_; }
     glm::vec4 move() const { return move_ * sMoveFactor; }
     glm::vec4 location() const { return location_; }

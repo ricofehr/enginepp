@@ -16,22 +16,20 @@ namespace engine {
 
 namespace physics {
 
-std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine::universe::Model3D* object,
-                                                                         engine::universe::Model3D* obstacle,
-                                                                         tbb::mutex& collision_mutex)
+std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine::universe::Model3D* target,
+                                                                         engine::universe::Model3D* obstacle)
 {
     using engine::universe::Model3D;
     using engine::graphics::Border;
 
     float distance = 1.0f;
     std::vector<float> distances;
-    int fact = 1, fact2 = 0;
 
     std::vector<Model3D*> recompute;
     Model3D* oldobstacle1{nullptr};
     Model3D* oldobstacle2{nullptr};
 
-    const Border* border1 = object->border();
+    const Border* border1 = target->border();
     const Border* border2 = obstacle->border();
     std::vector<glm::vec3> coords1 = border1->ComputeCoords();
     std::vector<glm::vec3> coords2 = border2->ComputeCoords();
@@ -42,8 +40,8 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     GLfloat move1x, move1y, move1z, move2x, move2y, move2z;
 
 
-    /* Cant touch same object twice in short time */
-    if (obstacle->id() == object->id_last_collision()) {
+    /* Cant touch same target twice in short time */
+    if (obstacle->id() == target->id_last_collision()) {
         return recompute;
     }
 
@@ -68,6 +66,7 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     move2y = border2->move()[1];
     move2z = border2->move()[2];
 
+    /* Prepare arrays for computecollision */
     float box1[9] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
     float box2[9] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
 
@@ -76,9 +75,9 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
 
     /* Compute distance and update collision properties if needed */
     if (distance != 1.0f) {
-        /* Protect conccurency update for objects in a room */
-        tbb::mutex::scoped_lock lock_c(collision_mutex);
-        if ((object->obstacle() == nullptr || distance < object->distance()) &&
+        /* Protect conccurency update for targets in parent */
+        target->parent()->lock();
+        if ((target->obstacle() == nullptr || distance < target->distance()) &&
             (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
             /* Print debug if setting */
             using engine::core::ConfigEngine;
@@ -86,13 +85,13 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
                 std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
             }
 
-            oldobstacle1 = object->obstacle();
+            oldobstacle1 = target->obstacle();
             oldobstacle2 = obstacle->obstacle();
 
-            object->set_obstacle(obstacle);
-            object->set_distance(distance);
+            target->set_obstacle(obstacle);
+            target->set_distance(distance);
             obstacle->set_distance(distance);
-            obstacle->set_obstacle(object);
+            obstacle->set_obstacle(target);
 
             /* Recompute for polygons unbinded */
             if (oldobstacle1 != nullptr) {
@@ -105,12 +104,13 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
 
             if (oldobstacle2 != nullptr &&
                 oldobstacle2->IsMoved() &&
-                oldobstacle2->id() != object->id()) {
+                oldobstacle2->id() != target->id()) {
                 oldobstacle2->set_distance(-1);
                 oldobstacle2->set_obstacle(nullptr);
                 recompute.push_back(oldobstacle2);
             }
         }
+        target->parent()->unlock();
     }
 
     return recompute;

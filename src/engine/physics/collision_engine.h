@@ -42,8 +42,7 @@ public:
      *  Return a list of Model3D to recompute if there was other crossed objects before.
      */
     virtual std::vector<engine::universe::Model3D*> DetectCollision(engine::universe::Model3D* object,
-                                                                    engine::universe::Model3D* obstacle,
-                                                                    tbb::mutex& collision_mutex);
+                                                                    engine::universe::Model3D* obstacle);
     /*
      *  Compute the distance of collision between 2 borders box (box1 and box2 are Coordinates arrays)
      *  Return the distance (-1.0f if no collision point)

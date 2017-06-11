@@ -36,6 +36,9 @@ std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
     /* Compute grid placements */
     uni->ReinitGrid();
 
+    /* Compute Neighbhors for all Rooms added */
+    uni->ComputeNeighbors();
+
     /* Display Universe Grid if Standard Debug mode */
     if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
         uni->DisplayGrid();
@@ -60,6 +63,9 @@ std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
             room->DisplayGrid();
         }
     }
+
+    /* Compute Neighbhors for all Objects in Rooms */
+    uni->ComputeNeighbors();
 
     return uni;
 }
@@ -88,7 +94,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
     auto k = t;
     auto cnt = 0;
 
-    /* Lock Universe */
+    /* Ensure thread safe execution */
     uni->lock();
 
     /* Generate and place randomly object into rooms grid */
@@ -104,13 +110,13 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
 
         /* 2 cases: grid is empty or need another room nearest */
         if (uni->countChilds() == 0 ||
-            (uni->IsEmplacementGridEmpty(l, m, n) &&
-             ((l != 0 && !uni->IsEmplacementGridEmpty(l-1, m, n)) ||
-              (m != 0 && !uni->IsEmplacementGridEmpty(l, m-1, n)) ||
-              (n != 0 && !uni->IsEmplacementGridEmpty(l, m, n-1)) ||
-              (l != grid_x-1 && !uni->IsEmplacementGridEmpty(l+1, m, n)) ||
-              (m != grid_y-1 && !uni->IsEmplacementGridEmpty(l, m+1, n)) ||
-              (n != grid_z-1 && !uni->IsEmplacementGridEmpty(l, m, n+1))))) {
+            (uni->IsEmplacementGridEmpty(l, m, n) == 1 &&
+             (!uni->IsEmplacementGridEmpty(l-1, m, n) ||
+              !uni->IsEmplacementGridEmpty(l, m-1, n) ||
+              !uni->IsEmplacementGridEmpty(l, m, n-1) ||
+              !uni->IsEmplacementGridEmpty(l+1, m, n) ||
+              !uni->IsEmplacementGridEmpty(l, m+1, n) ||
+              !uni->IsEmplacementGridEmpty(l, m, n+1)))) {
 
             auto location = glm::vec4(loc_x, loc_y, loc_z, 0.0f);
             auto room_ptr{std::make_unique<Room>(location)};
@@ -122,7 +128,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
 
             /* Init Camera for the first room */
             if (uni->countChilds() == 0) {
-             room_ptr->set_camera(std::move(GenerateCamera(location)));
+                room_ptr->set_camera(std::move(GenerateCamera(location)));
             }
 
             auto room = dynamic_cast<Room*>(uni->add_object(std::move(room_ptr)));
@@ -385,7 +391,7 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
         auto loc_y = grid_0[1] + m * grid_unit_y + grid_unit_y/2;
         auto loc_z = grid_0[2] + n * grid_unit_z + grid_unit_z/2;
 
-        if (room->IsEmplacementGridEmpty(l,m,n)) {
+        if (room->IsEmplacementGridEmpty(l,m,n) == 1) {
             auto obj = std::make_unique<Brick>(scale,
                                                glm::vec4(loc_x, loc_y, loc_z, 0.0f),
                                                glm::vec4(move_x, move_y, move_z, 0.0f));

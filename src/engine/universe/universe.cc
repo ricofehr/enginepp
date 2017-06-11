@@ -85,6 +85,7 @@ std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid() noexcept
 void Universe::Draw() noexcept
 {
     using engine::core::ConfigEngine;
+    auto clipping = ConfigEngine::getSetting<int>("clipping");
 
     /* Detect current room */
     int active_index = -1;
@@ -103,14 +104,12 @@ void Universe::Draw() noexcept
     objects_[active_index]->RecordHID();
 
     /* Select displayed rooms: all rooms or 2 clipping levels */
-    if (ConfigEngine::getSetting<int>("clipping") > 0) {
+    if (clipping > 0) {
         display_rooms_.clear();
-        auto map_rooms = GetNeighbors(objects_[active_index].get(),
-                                      ConfigEngine::getSetting<int>("clipping") % 2);
-        map_rooms[objects_[active_index]->id()] = objects_[active_index].get();
-        for (auto &r : map_rooms) {
-            display_rooms_.push_back(r.second);
-        }
+        display_rooms_ = objects_[active_index]->GetClippingNeighbors(clipping);
+        display_rooms_.push_back(objects_[active_index].get());
+
+        /* Add deeping neighbors if clipping */
     } else if(display_rooms_.size() == 0) {
         for (auto &o : objects_) {
             display_rooms_.push_back(o.get());
@@ -119,7 +118,7 @@ void Universe::Draw() noexcept
 
     /* Detect collision in active rooms */
     cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-        display_rooms_[cnt]->DetectCollision(GetOrderNeighbors(display_rooms_[cnt]));
+        display_rooms_[cnt]->DetectCollision();
     }
 
     /* Universe is only ready after 10 hops */
@@ -150,8 +149,8 @@ void Universe::Draw() noexcept
     for (auto &objs : replace_objs) {
         if (objs.second.size()) {
             for (auto &o : objs.second) {
-                for (auto &r : GetNeighbors(objs.first, 0)) {
-                    o = r.second->TransfertObject(std::move(o), false);
+                for (auto &r : objs.first->GetAllNeighbors()) {
+                    o = r->TransfertObject(std::move(o), false);
                     if (o == nullptr) {
                         break;
                     }
@@ -164,6 +163,12 @@ void Universe::Draw() noexcept
             }
         }
     }
+
+    cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
+        auto objs = display_rooms_[cnt]->ReinitGrid();
+    }
+
+    ComputeNeighbors();
 
     /* GL functions during object generate, then needs serial execution */
     float freq = 0.0f;

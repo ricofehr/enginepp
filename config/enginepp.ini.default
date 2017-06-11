@@ -8,8 +8,8 @@ load_objects_freq = 0.0
 rooms_count = 24
 // accuracy for collision (higher is better accurate but need more cpu use)
 granularity = 64
-// 0 => no clipping, 1 => low clipping, 2 => high clipping
-clipping = 1
+// 0 => no clipping, 1 => high clipping, 2 => low clipping
+clipping = 2
 // window width / height
 width = 1200.0
 height = 740.0
