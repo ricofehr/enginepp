@@ -10,6 +10,7 @@
 #include <iostream>
 #include <cilk/cilk.h>
 
+#include "engine/graphics/border.h"
 #include "engine/universe/room.h"
 #include "engine/universe/random_universe_factory.h"
 #include "engine/core/config_engine.h"
@@ -35,12 +36,16 @@ Universe::Universe()
     grid_unit_y_ = kGRID_UNIT_Y;
     grid_unit_z_ = kGRID_UNIT_Z;
     InitGrid();
+
+    using engine::graphics::Border;
+    border_ = std::make_unique<Border>(glm::vec3(grid_x_*grid_unit_x_/2,
+                                                 grid_y_*grid_unit_y_/2,
+                                                 grid_z_*grid_unit_z_/2),
+                                       glm::vec4(0,0,0,0));
 }
 
-std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid() noexcept
+void Universe::InitDoorsForRooms() noexcept
 {
-    std::vector<std::unique_ptr<Model3D>> ret = Model3D::ReinitGrid();
-
     for (auto &o : objects_) {
         /* Objects contained in Universe are Rooms, with Doors and Windows */
         auto r = dynamic_cast<Room*>(o.get());
@@ -78,8 +83,6 @@ std::vector<std::unique_ptr<Model3D>> Universe::ReinitGrid() noexcept
             r->addWindow(kBACK);
         }
     }
-
-    return ret;
 }
 
 void Universe::Draw() noexcept
@@ -118,7 +121,7 @@ void Universe::Draw() noexcept
 
     /* Detect collision in active rooms */
     cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-        display_rooms_[cnt]->DetectCollision();
+        display_rooms_[cnt]->DetectCollisionBetweenChilds();
     }
 
     /* Universe is only ready after 10 hops */
@@ -134,40 +137,7 @@ void Universe::Draw() noexcept
         }
     }
 
-    /* Recompute object grids for each active rooms and transfert boundary objects */
-    tbb::mutex hop_mutex;
-    std::map<Model3D*, std::vector<std::unique_ptr<Model3D>>> replace_objs;
-    cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-        auto objs = display_rooms_[cnt]->ReinitGrid();
-        if (objs.size()) {
-            tbb::mutex::scoped_lock lock_map(hop_mutex);
-            replace_objs[display_rooms_[cnt]] = std::move(objs);
-        }
-    }
-
-    /* Transfert boundary objects onto nearest room */
-    for (auto &objs : replace_objs) {
-        if (objs.second.size()) {
-            for (auto &o : objs.second) {
-                for (auto &r : objs.first->GetAllNeighbors()) {
-                    o = r->TransfertObject(std::move(o), false);
-                    if (o == nullptr) {
-                        break;
-                    }
-                }
-
-                /* No orphan object */
-                if (o != nullptr) {
-                    objs.first->TransfertObject(std::move(o), true);
-                }
-            }
-        }
-    }
-
-    cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-        auto objs = display_rooms_[cnt]->ReinitGrid();
-    }
-
+    /* Compute neighbors recursively for all universe objects */
     ComputeNeighbors();
 
     /* GL functions during object generate, then needs serial execution */

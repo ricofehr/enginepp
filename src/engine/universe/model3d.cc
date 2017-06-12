@@ -73,9 +73,9 @@ void Model3D::Move() noexcept
 {
     border_->set_distance(distance_);
     border_->MoveCoords();
-    for (auto &element : elements_) {
-        element->set_distance(distance_);
-        element->ComputeMVP();
+    cilk_for (auto cnt = 0; cnt < elements_.size(); cnt++) {
+        elements_[cnt]->set_distance(distance_);
+        elements_[cnt]->ComputeMVP();
     }
     distance_ = -1.0f;
     /* An object cant touch same object twice, except camera */
@@ -85,17 +85,28 @@ void Model3D::Move() noexcept
     }
     obstacle_ = nullptr;
 
+    /* New placements in parent grid */
+    if (IsMoved()) {
+        ComputePlacements();
+    }
+
     if (countChilds() == 0) {
         return;
     }
 
-    /* Compute coords for first child object.
-       Important if this one is camera */
-    objects_[0]->Move();
+    /*
+     *  Compute GL coords for childs
+     *  ComputePlacements (called by Move) can move child to another parent
+     *  Need to have a sequential loop
+     */
+    for (auto cnt = 0; cnt < objects_.size();) {
+        auto nb_objs = objects_.size();
 
-    /* Compute objects GL coords  */
-    cilk_for (auto cnt = 1; cnt < objects_.size(); cnt++) {
         objects_[cnt]->Move();
+
+        if (nb_objs == objects_.size()) {
+            cnt++;
+        }
     }
 }
 
@@ -110,79 +121,258 @@ void Model3D::InitGrid()
     }
 }
 
-std::vector<std::unique_ptr<Model3D>> Model3D::ReinitGrid() noexcept
+std::unique_ptr<Model3D> Model3D::TransfertChild(Model3D* child) noexcept
 {
-    std::vector<std::unique_ptr<Model3D>> ret;
-    for (auto o = 0; o < objects_.size();) {
+    std::unique_ptr<Model3D> ret{nullptr};
 
-        if (!objects_[o]->IsMoved() &&
-            objects_[o]->placements().size() > 0) {
-            ++o;
-            continue;
-        }
-
-        /* check grid collision */
-        auto border = objects_[o]->border();
-        std::vector<glm::vec3> coords = border->ComputeCoords();
-        auto x1 = coords.at(0)[0];
-        auto y1 = coords.at(0)[1];
-        auto z1 = coords.at(0)[2];
-        auto w1 = coords.at(1)[0] - x1;
-        auto h1 = coords.at(3)[1] - y1;
-        auto d1 = coords.at(4)[2] - z1;
-
-        for (auto &p : objects_[o]->placements()) {
-
-            auto pi = p[0];
-            auto pj = p[1];
-            auto pk = p[2];
-
+    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
+        if (objects_[cnt].get() == child) {
             lock();
-            auto it = std::find(grid_[pi][pj][pk].begin(), grid_[pi][pj][pk].end(), objects_[o].get());
-            if(it != grid_[pi][pj][pk].end()) {
-                grid_[pi][pj][pk].erase(it);
-            }
+            ret = std::move(objects_[cnt]);
+            objects_.erase(objects_.begin() + cnt);
             unlock();
-        }
 
-        objects_[o]->clear_placements();
-        auto grid_0 = location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
-
-        cilk_for (auto i = 0; i < grid_x_; i++) {
-            auto x2 = grid_0[0] + i * grid_unit_x_;
-            cilk_for (auto j = 0; j < grid_y_; j++) {
-                auto y2 = grid_0[1] + (j+1) * grid_unit_y_;
-                cilk_for (auto k = 0; k < grid_z_; k++) {
-                    auto z2 = grid_0[2] + (k+1) * grid_unit_z_;
-                    auto h2 = -grid_unit_y_;
-                    auto w2 = grid_unit_x_;
-                    auto d2 = -grid_unit_z_;
-
-                    if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
-                        y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
-                        lock();
-                        objects_[o]->add_placement(i, j, k);
-                        grid_[i][j][k].push_back(objects_[o].get());
-                        unlock();
-                    }
-                }
-            }
-        }
-
-        if (objects_[o]->placements().size() == 0) {
-            lock();
-            ret.push_back(std::move(objects_[o]));
-            objects_.erase(objects_.begin() + o);
-            unlock();
-        } else {
-            o++;
+            return ret;
         }
     }
 
     return ret;
 }
 
-void Model3D::DisplayGrid() noexcept
+glm::vec3 Model3D::GetGrid0() const noexcept
+{
+    return location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
+}
+
+void Model3D::ResetGrid() noexcept
+{
+    lock();
+    for (auto pi = 0; pi < grid_x_; pi++) {
+        for (auto pj = 0; pj < grid_y_; pj++) {
+            for (auto pk = 0; pk < grid_z_; pk++) {
+                grid_[pi][pj][pk].clear();
+            }
+        }
+    }
+    unlock();
+}
+
+void Model3D::ComputeChildsPlacements() noexcept
+{
+    for (auto cnt = 0; cnt < objects_.size();) {
+        auto tmp = objects_.size();
+        if (objects_[cnt]->IsMoved()) {
+            objects_[cnt]->ComputePlacements();
+
+            if (tmp != objects_.size()) {
+                continue;
+            }
+        }
+
+        cnt++;
+    }
+}
+
+void Model3D::AddItemToGrid(int i, int j, int k, Model3D *obj) noexcept
+{
+    lock();
+    grid_[i][j][k].push_back(obj);
+    unlock();
+}
+
+void Model3D::RemoveItemToGrid(int i, int j, int k, Model3D *obj) noexcept
+{
+    for (auto cnt = 0; cnt < grid_[i][j][k].size(); cnt++) {
+        if (grid_[i][j][k][cnt] == obj) {
+            lock();
+            grid_[i][j][k].erase(grid_[i][j][k].begin() + cnt);
+            unlock();
+            return;
+        }
+    }
+}
+
+void Model3D::ComputePlacements() noexcept
+{
+    if (parent_ == nullptr) {
+        return;
+    }
+
+    std::vector<glm::vec3> coords = border_->ComputeCoords();
+    Model3D* parent_new{nullptr};
+
+    auto x1 = coords.at(0)[0];
+    auto y1 = coords.at(0)[1];
+    auto z1 = coords.at(0)[2];
+
+    auto x2 = coords.at(0)[0];
+    auto y2 = coords.at(0)[1];
+    auto z2 = coords.at(0)[2];
+
+    /* Find the extremities coordinates of the border */
+    for (auto &point : coords) {
+        if (point[0] < x1) {
+            x1 = point[0];
+        }
+
+        if (point[1] < y1) {
+            y1 = point[1];
+        }
+
+        if (point[2] < z1) {
+            z1 = point[2];
+        }
+
+        if (point[0] > x2) {
+            x2 = point[0];
+        }
+
+        if (point[1] > y2) {
+            y2 = point[1];
+        }
+
+        if (point[2] > z2) {
+            z2 = point[2];
+        }
+    }
+
+    auto grid0 = parent_->GetGrid0();
+    auto grid_unit = glm::vec3(parent_->grid_unitx(), parent_->grid_unity(), parent_->grid_unitz());
+
+    auto x = x1;
+    auto y = y1;
+    auto z = z1;
+
+    clear_placements();
+
+    for (x = x1 ; x < x2 ; x += grid_unit[0]) {
+        for (y = y1 ; y < y2 ; y += grid_unit[1]) {
+            for (z = z1 ; z < z2 ; z += grid_unit[2]) {
+
+                parent_new = parent_;
+
+                auto tmp = (glm::vec3(x, y, z) - grid0) / grid_unit;
+                auto i = static_cast<int>(tmp[0]);
+                auto j = static_cast<int>(tmp[1]);
+                auto k = static_cast<int>(tmp[2]);
+
+                /* if i,j,k are not valid, select the good parent */
+                if (i < 0) {
+                    if (j < 0) {
+
+                        if (k < 0) {
+                            parent_new = parent_->GetNeighborSide(kLEFT_FLOOR_FRONT);
+                        } else if (k >= parent_->gridz()) {
+                            parent_new = parent_->GetNeighborSide(kLEFT_FLOOR_BACK);
+                        } else {
+                            parent_new = parent_->GetNeighborSide(kLEFT_FLOOR);
+                        }
+
+                    } else if (j >= parent_->gridy()) {
+
+                        if (k < 0) {
+                            parent_new = parent_->GetNeighborSide(kLEFT_ROOF_FRONT);
+                        } else if (k >= parent_->gridz()) {
+                            parent_new = parent_->GetNeighborSide(kLEFT_ROOF_BACK);
+                        } else {
+                            parent_new = parent_->GetNeighborSide(kLEFT_ROOF);
+                        }
+
+                    } else if (k < 0) {
+                        parent_new = parent_->GetNeighborSide(kLEFT_FRONT);
+                    } else if (k >= parent_->gridz()) {
+                        parent_new = parent_->GetNeighborSide(kLEFT_BACK);
+                    } else {
+                        parent_new = parent_->GetNeighborSide(kLEFT);
+                    }
+
+                } else if (i >= parent_->gridx()) {
+
+                    if (j < 0) {
+
+                        if (k < 0) {
+                            parent_new = parent_->GetNeighborSide(kRIGHT_FLOOR_FRONT);
+                        } else if (k >= parent_->gridz()) {
+                            parent_new = parent_->GetNeighborSide(kRIGHT_FLOOR_BACK);
+                        } else {
+                            parent_new = parent_->GetNeighborSide(kRIGHT_FLOOR);
+                        }
+
+                    } else if (j >= parent_->gridy()) {
+
+                        if (k < 0) {
+                            parent_new = parent_->GetNeighborSide(kRIGHT_ROOF_FRONT);
+                        } else if (k >= parent_->gridz()) {
+                            parent_new = parent_->GetNeighborSide(kRIGHT_ROOF_BACK);
+                        } else {
+                            parent_new = parent_->GetNeighborSide(kRIGHT_ROOF);
+                        }
+
+                    } else if (k < 0) {
+                        parent_new = parent_->GetNeighborSide(kRIGHT_FRONT);
+                    } else if (k >= parent_->gridz()) {
+                        parent_new = parent_->GetNeighborSide(kRIGHT_BACK);
+                    } else {
+                        parent_new = parent_->GetNeighborSide(kRIGHT);
+                    }
+
+                } else if (j < 0) {
+
+                    if (k < 0) {
+                        parent_new = parent_->GetNeighborSide(kFLOOR_FRONT);
+                    } else if (k >= parent_->gridz()) {
+                        parent_new = parent_->GetNeighborSide(kFLOOR_BACK);
+                    } else {
+                        parent_new = parent_->GetNeighborSide(kFLOOR);
+                    }
+
+                } else if (j >= parent_->gridy()) {
+
+                    if (k < 0) {
+                        parent_new = parent_->GetNeighborSide(kROOF_FRONT);
+                    } else if (k >= parent_->gridz()) {
+                        parent_new = parent_->GetNeighborSide(kROOF_BACK);
+                    } else {
+                        parent_new = parent_->GetNeighborSide(kROOF);
+                    }
+
+                } else if (k < 0) {
+                    parent_new = parent_->GetNeighborSide(kFRONT);
+                } else if (k >= parent_->gridz()) {
+                    parent_new = parent_->GetNeighborSide(kBACK);
+                }
+
+                /* If no parent for current coords */
+                if (parent_new == nullptr) {
+                    continue;
+                }
+
+                /* If parent change for current coords */
+                if (parent_new != parent_) {
+                    continue;
+                }
+
+                add_placement(i, j, k);
+            }
+        }
+    }
+
+    /* All coords are into other parent */
+    if (parent_new != nullptr &&
+        parent_new != parent_ &&
+        placements_.size() == 0) {
+        /* change parent compute */
+        parent_new->add_child(std::move(parent_->TransfertChild(this)));
+    }
+
+    /* No one parent, the current object
+       is outside World, reverse direction */
+    if (IsMoved() && placements_.size() == 0) {
+        InverseMove();
+    }
+}
+
+void Model3D::DisplayGrid() const noexcept
 {
     std::string object_type{"MODEL3D"};
     if (type_ == kMODEL3D_UNIVERSE) {
@@ -208,34 +398,6 @@ void Model3D::DisplayGrid() noexcept
         }
         std::cout << std::endl << std::endl;
     }
-}
-
-std::unique_ptr<Model3D> Model3D::TransfertObject(std::unique_ptr<Model3D> child, bool force) noexcept
-{
-    if (force || IsInside(child->location())) {
-        /* Output if debug setted */
-        using engine::core::ConfigEngine;
-        if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION && force) {
-            std::cout << "Transfert " << child->id() << " to Room " << id() << " (forced: " << force << ")" << std::endl;
-        }
-
-        /* Inverse object move if forced transfert */
-        if (force) {
-            child->InverseMove();
-        }
-
-        /* If obj is Camera, insert into first child.
-           Else insert in last position. */
-        if (child->type() == Model3D::kMODEL3D_CAMERA) {
-            set_camera(std::move(child));
-        } else {
-            add_object(std::move(child));
-        }
-
-        return nullptr;
-    }
-
-    return child;
 }
 
 bool Model3D::IsInside(glm::vec3 location_object) const
@@ -267,7 +429,7 @@ std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects() noexcept
     return ret;
 }
 
-void Model3D::DetectCollision() noexcept
+void Model3D::DetectCollisionBetweenChilds() noexcept
 {
     /* For all others moving objects
        Parallell loop with cilkplus */
@@ -281,6 +443,8 @@ void Model3D::DetectCollision() noexcept
 void Model3D::PivotCollision() noexcept
 {
     /* ensure that 2 same objects are not checked at the same time */
+    static tbb::mutex pivot_mutex;
+
     lock();
 
     /* Prepare vector for collision compute */
@@ -331,163 +495,163 @@ void Model3D::ComputeNeighbors() noexcept
         auto j = p[1];
         auto k = p[2];
 
-        for (auto &n : parent_->FindPlacementObjects(i, j, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j, k)) {
             if (n != this) {
                 neighbors_[kSAME].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j-1, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j-1, k-1)) {
             if (n != this) {
                 neighbors_[kLEFT_FLOOR_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j-1, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j-1, k+1)) {
             if (n != this) {
                 neighbors_[kLEFT_FLOOR_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j-1, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j-1, k)) {
             if (n != this) {
                 neighbors_[kLEFT_FLOOR].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j+1, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j+1, k-1)) {
             if (n != this) {
                 neighbors_[kLEFT_ROOF_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j+1, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j+1, k+1)) {
             if (n != this) {
                 neighbors_[kLEFT_ROOF_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j+1, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j+1, k)) {
             if (n != this) {
                 neighbors_[kLEFT_ROOF].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j, k-1)) {
             if (n != this) {
                 neighbors_[kLEFT_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j, k+1)) {
             if (n != this) {
                 neighbors_[kLEFT_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i-1, j, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i-1, j, k)) {
             if (n != this) {
                 neighbors_[kLEFT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j-1, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j-1, k-1)) {
             if (n != this) {
                 neighbors_[kRIGHT_FLOOR_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j-1, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j-1, k+1)) {
             if (n != this) {
                 neighbors_[kRIGHT_FLOOR_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j-1, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j-1, k)) {
             if (n != this) {
                 neighbors_[kRIGHT_FLOOR].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j+1, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j+1, k-1)) {
             if (n != this) {
                 neighbors_[kRIGHT_ROOF_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j+1, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j+1, k+1)) {
             if (n != this) {
                 neighbors_[kRIGHT_ROOF_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j+1, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j+1, k)) {
             if (n != this) {
                 neighbors_[kRIGHT_ROOF].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j, k-1)) {
             if (n != this) {
                 neighbors_[kRIGHT_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j, k+1)) {
             if (n != this) {
                 neighbors_[kRIGHT_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i+1, j, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i+1, j, k)) {
             if (n != this) {
                 neighbors_[kRIGHT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j-1, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j-1, k-1)) {
             if (n != this) {
                 neighbors_[kFLOOR_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j-1, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j-1, k+1)) {
             if (n != this) {
                 neighbors_[kFLOOR_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j-1, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j-1, k)) {
             if (n != this) {
                 neighbors_[kFLOOR].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j+1, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j+1, k-1)) {
             if (n != this) {
                 neighbors_[kROOF_FRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j+1, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j+1, k+1)) {
             if (n != this) {
                 neighbors_[kROOF_BACK].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j+1, k)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j+1, k)) {
             if (n != this) {
                 neighbors_[kROOF].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j, k-1)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j, k-1)) {
             if (n != this) {
                 neighbors_[kFRONT].emplace(n->id(), n);
             }
         }
 
-        for (auto &n : parent_->FindPlacementObjects(i, j, k+1)) {
+        for (auto &n : parent_->FindItemsInGrid(i, j, k+1)) {
             if (n != this) {
                 neighbors_[kBACK].emplace(n->id(), n);
             }
@@ -643,6 +807,16 @@ std::vector<Model3D*> Model3D::GetCollisionNeighbors() const noexcept
     return ret;
 }
 
+Model3D* Model3D::GetNeighborSide(int side) const noexcept
+{
+    if (neighbors_[side].size() > 0) {
+        return neighbors_[side].begin()->second;
+    }
+
+    return nullptr;
+}
+
+
 std::vector<Model3D*> Model3D::GetAllNeighbors() const noexcept
 {
     std::vector<Model3D*> ret(0);
@@ -730,17 +904,17 @@ bool Model3D::IsClippingNear(Model3D* target, int level) const noexcept
     return false;
 }
 
-int Model3D::IsEmplacementGridEmpty(int i, int j, int k) const noexcept
+int Model3D::IsPositionInTheGridEmpty(int i, int j, int k) const noexcept
 {
     if (i < 0) {
         if (parent_ == nullptr) {
             return kGRID_UNKNOW;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0]-1, placements_[0][1], placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0]-1, placements_[0][1], placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->IsEmplacementGridEmpty(neighbor[0]->gridx()-1, j, k);
+            return neighbor[0]->IsPositionInTheGridEmpty(neighbor[0]->gridx()-1, j, k);
         } else {
             return kGRID_UNKNOW;
         }
@@ -751,10 +925,10 @@ int Model3D::IsEmplacementGridEmpty(int i, int j, int k) const noexcept
             return kGRID_UNKNOW;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0]+1, placements_[0][1], placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0]+1, placements_[0][1], placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->IsEmplacementGridEmpty(0, j, k);
+            return neighbor[0]->IsPositionInTheGridEmpty(0, j, k);
         } else {
             return kGRID_UNKNOW;
         }
@@ -765,10 +939,10 @@ int Model3D::IsEmplacementGridEmpty(int i, int j, int k) const noexcept
             return kGRID_UNKNOW;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1]-1, placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1]-1, placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->IsEmplacementGridEmpty(i, neighbor[0]->gridy()-1, k);
+            return neighbor[0]->IsPositionInTheGridEmpty(i, neighbor[0]->gridy()-1, k);
         } else {
             return kGRID_UNKNOW;
         }
@@ -779,10 +953,10 @@ int Model3D::IsEmplacementGridEmpty(int i, int j, int k) const noexcept
             return kGRID_UNKNOW;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1]+1, placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1]+1, placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->IsEmplacementGridEmpty(i, 0, k);
+            return neighbor[0]->IsPositionInTheGridEmpty(i, 0, k);
         } else {
             return kGRID_UNKNOW;
         }
@@ -793,10 +967,10 @@ int Model3D::IsEmplacementGridEmpty(int i, int j, int k) const noexcept
             return kGRID_UNKNOW;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1], placements_[0][2]-1);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1], placements_[0][2]-1);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->IsEmplacementGridEmpty(i, j, neighbor[0]->gridz()-1);
+            return neighbor[0]->IsPositionInTheGridEmpty(i, j, neighbor[0]->gridz()-1);
         } else {
             return kGRID_UNKNOW;
         }
@@ -807,10 +981,10 @@ int Model3D::IsEmplacementGridEmpty(int i, int j, int k) const noexcept
             return kGRID_UNKNOW;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1], placements_[0][2]+1);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1], placements_[0][2]+1);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->IsEmplacementGridEmpty(i, j, 0);
+            return neighbor[0]->IsPositionInTheGridEmpty(i, j, 0);
         } else {
             return kGRID_UNKNOW;
         }
@@ -823,7 +997,7 @@ int Model3D::IsEmplacementGridEmpty(int i, int j, int k) const noexcept
     return kGRID_USED;
 }
 
-std::vector<Model3D*> Model3D::FindPlacementObjects(int i, int j, int k) const noexcept
+std::vector<Model3D*> Model3D::FindItemsInGrid(int i, int j, int k) const noexcept
 {
     std::vector<Model3D*> empty_ret(0);
 
@@ -832,10 +1006,10 @@ std::vector<Model3D*> Model3D::FindPlacementObjects(int i, int j, int k) const n
             return empty_ret;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0]-1, placements_[0][1], placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0]-1, placements_[0][1], placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->FindPlacementObjects(neighbor[0]->gridx()-1, j, k);
+            return neighbor[0]->FindItemsInGrid(neighbor[0]->gridx()-1, j, k);
         } else {
             return empty_ret;
         }
@@ -846,10 +1020,10 @@ std::vector<Model3D*> Model3D::FindPlacementObjects(int i, int j, int k) const n
             return empty_ret;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0]+1, placements_[0][1], placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0]+1, placements_[0][1], placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->FindPlacementObjects(0, j, k);
+            return neighbor[0]->FindItemsInGrid(0, j, k);
         } else {
             return empty_ret;
         }
@@ -860,10 +1034,10 @@ std::vector<Model3D*> Model3D::FindPlacementObjects(int i, int j, int k) const n
             return empty_ret;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1]-1, placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1]-1, placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->FindPlacementObjects(i, neighbor[0]->gridy()-1, k);
+            return neighbor[0]->FindItemsInGrid(i, neighbor[0]->gridy()-1, k);
         } else {
             return empty_ret;
         }
@@ -874,10 +1048,10 @@ std::vector<Model3D*> Model3D::FindPlacementObjects(int i, int j, int k) const n
             return empty_ret;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1]+1, placements_[0][2]);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1]+1, placements_[0][2]);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->FindPlacementObjects(i, 0, k);
+            return neighbor[0]->FindItemsInGrid(i, 0, k);
         } else {
             return empty_ret;
         }
@@ -888,10 +1062,10 @@ std::vector<Model3D*> Model3D::FindPlacementObjects(int i, int j, int k) const n
             return empty_ret;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1], placements_[0][2]-1);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1], placements_[0][2]-1);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->FindPlacementObjects(i, j, neighbor[0]->gridz()-1);
+            return neighbor[0]->FindItemsInGrid(i, j, neighbor[0]->gridz()-1);
         } else {
             return empty_ret;
         }
@@ -903,10 +1077,10 @@ std::vector<Model3D*> Model3D::FindPlacementObjects(int i, int j, int k) const n
             return empty_ret;
         }
 
-        auto neighbor = parent_->FindPlacementObjects(placements_[0][0], placements_[0][1], placements_[0][2]+1);
+        auto neighbor = parent_->FindItemsInGrid(placements_[0][0], placements_[0][1], placements_[0][2]+1);
 
         if (neighbor.size() > 0) {
-            return neighbor[0]->FindPlacementObjects(i, j, 0);
+            return neighbor[0]->FindItemsInGrid(i, j, 0);
         } else {
             return empty_ret;
         }

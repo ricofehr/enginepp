@@ -92,7 +92,7 @@ public:
      *   Override Model3D Reinitgrid function
      *   Add Doors and Windows for Rooms object
      */
-    std::vector<std::unique_ptr<Model3D>> ReinitGrid() noexcept override final;
+    void InitDoorsForRooms() noexcept;
 
 private:
 

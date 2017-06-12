@@ -8,6 +8,7 @@
 #ifndef ENGINE_UNIVERSE_MODEL3D_H_
 #define ENGINE_UNIVERSE_MODEL3D_H_
 
+#include <iostream>
 #include <memory>
 #include <vector>
 #include <map>
@@ -98,14 +99,15 @@ public:
     virtual void RecordHID();
 
     /*
-     *  Proceed to move Model (if movable)
+     *  Proceed to move current object
      */
     virtual void Move() noexcept;
 
     /*
-     *  Draw the model and models inside
+     *  Draw the object and his childs
      */
-    inline virtual void Draw() noexcept {
+    inline virtual void Draw() noexcept
+    {
         /* Draw current object */
         for (auto &element : elements_) {
             element->Draw();
@@ -118,17 +120,6 @@ public:
     }
 
     /*
-     *   Compute again all placement coordinates for childs into the Grid
-     */
-    virtual std::vector<std::unique_ptr<Model3D>> ReinitGrid() noexcept;
-
-    /*
-     *  Add a child Model3D to current Model3D parent
-     *  Return child if this one is not inside current Model3D parent
-     */
-    std::unique_ptr<Model3D> TransfertObject(std::unique_ptr<Model3D> child, bool force) noexcept;
-
-    /*
      *  Return a list of Childs who were into the Grid
      *  but now are outside of the current Model
      */
@@ -137,14 +128,12 @@ public:
     /*
      *  Display the Grid into stdout for Debug purpose
      */
-    void DisplayGrid() noexcept;
+    void DisplayGrid() const noexcept;
 
     /*
-     *  Collision Function
-     *  Detect the nearest Collision between the Current 3d model
-     *  And the "neighbors" array in input
+     *  Detect collision between childs of the current object
      */
-    void DetectCollision() noexcept;
+    void DetectCollisionBetweenChilds() noexcept;
 
     /*
      *  Compute neighbors array with a deeping clipping level
@@ -157,8 +146,9 @@ public:
     std::vector<Model3D*> GetAllNeighbors() const noexcept;
 
     /*
-     *  Return a list of neighbors in respect with the clipping constraint defined by "level" parameter
-     *  All objects too far ("level" distance into parent grid) or hidden by current view are not included.
+     *  Return a list of neighbors in respect with the clipping constraint
+     *  All objects too far or hidden by current view are not included.
+     *      level: clipping level (1 -> high clipping, 2 -> low clipping)
      */
     std::vector<Model3D*> GetClippingNeighbors(int level) const noexcept;
 
@@ -182,25 +172,20 @@ public:
     int type() const { return type_; }
     std::vector<std::vector<int>> placements() const { return placements_; }
     virtual int countChilds() const { return objects_.size(); }
-    inline virtual int countMovingChilds() const {
-        cilk::reducer<cilk::op_add<int>> count_sum(0);
-        cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
-            if (objects_[cnt]->IsMoved()) {
-                *count_sum += 1;
-            }
-        }
-        return count_sum.get_value();
-    }
     constexpr int gridx() const { return grid_x_; }
     constexpr int gridy() const { return grid_y_; }
     constexpr int gridz() const { return grid_z_; }
     constexpr float grid_unitx() const { return grid_unit_x_; }
     constexpr float grid_unity() const { return grid_unit_y_; }
     constexpr float grid_unitz() const { return grid_unit_z_; }
-    int IsEmplacementGridEmpty(int l, int m, int n) const noexcept;
+    int IsPositionInTheGridEmpty(int l, int m, int n) const noexcept;
     inline bool IsFull() const { return missobjects_ <= 0 || objects_.size() >= grid_x_ * grid_y_ * grid_z_; }
     bool IsCamera() const { return type_ == kMODEL3D_CAMERA; }
-    inline Model3D* get_camera()
+
+    /*
+     *  Return Camera object if exists into childs array
+     */
+    inline Model3D* get_camera() const noexcept
     {
         if (countChilds() > 0 &&
             objects_[0]->IsCamera()) {
@@ -208,6 +193,20 @@ public:
         }
 
         return nullptr;
+    }
+
+    /*
+     *  Return number of Moving Object into childs array
+     */
+    inline virtual int countMovingChilds() const
+    {
+        cilk::reducer<cilk::op_add<int>> count_sum(0);
+        cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
+            if (objects_[cnt]->IsMoved()) {
+                *count_sum += 1;
+            }
+        }
+        return count_sum.get_value();
     }
 
     /*
@@ -222,15 +221,38 @@ public:
     /*
      *  Mutators 
      */
-    inline Model3D* add_object(std::unique_ptr<Model3D> obj) noexcept {
+    void set_distance(float distance) { distance_ = distance; }
+    void set_obstacle(Model3D* obstacle) { obstacle_ = obstacle; }
+    void reset_missobjects(int missobjects) { missobjects_ = 0; }
+    void set_missobjects(int missobjects) { missobjects_ = missobjects; }
+    void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
+    void set_parent(Model3D* parent) { parent_ = parent; }
+
+    /*
+     *  Add a new child to the current object
+     *      obj: new child to add on the objects_ array
+     *  Return a raw pointer to the new object inserted
+     */
+    inline Model3D* add_child(std::unique_ptr<Model3D> obj) noexcept
+    {
+        /* Only non moved object can have child and grid */
+        if (IsMoved()) {
+            return nullptr;
+        }
+
         auto obj_raw = obj.get();
 
         obj->set_parent(this);
-        objects_.push_back(std::move(obj));
 
-        for (auto &p : obj_raw->placements()) {
-            grid_[p[0]][p[1]][p[2]].push_back(obj_raw);
+        lock();
+        if (obj->type() == kMODEL3D_CAMERA) {
+            objects_.insert(objects_.begin(), std::move(obj));
+        } else {
+            objects_.push_back(std::move(obj));
         }
+        unlock();
+
+        obj_raw->ComputePlacements();
 
         /* Dont decrement if Wall or Camera */
         if (obj_raw->type() != kMODEL3D_WALL &&
@@ -240,23 +262,37 @@ public:
 
         return obj_raw;
     }
-    void set_distance(float distance) { distance_ = distance; }
-    void set_obstacle(Model3D* obstacle) { obstacle_ = obstacle; }
-    void add_placement(int i, int j, int k) { placements_.push_back({i,j,k}); }
-    void clear_placements() { placements_.clear(); }
-    void set_camera(std::unique_ptr<Model3D> cam) {
-        cam->set_parent(this);
-        objects_.insert(objects_.begin(), std::move(cam));
+
+    /*
+     *  Add new grid parent coords for current object
+     *  Apply these add to the grid parent
+     */
+    inline void add_placement(int i, int j, int k) noexcept
+    {
+        lock();
+        placements_.push_back({i,j,k});
+        unlock();
+
+        parent_->AddItemToGrid(i, j, k, this);
     }
-    void reset_missobjects(int missobjects) { missobjects_ = 0; }
-    void set_missobjects(int missobjects) { missobjects_ = missobjects; }
-    void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
-    void set_parent(Model3D* parent) { parent_ = parent; }
+
+    /*
+     *  Clear placements_ array for current Object
+     *  Apply theses removes to the grid parent
+     */
+    inline void clear_placements() noexcept
+    {
+        for (auto &p : placements_) {
+            parent_->RemoveItemToGrid(p[0], p[1], p[2], this);
+        }
+        placements_.clear();
+    }
 
     /*
      *  Delegate Mutators 
      */
-    inline void InverseMove() {
+    inline void InverseMove() noexcept
+    {
         border_->InverseMove();
         for (auto &e : elements_) {
             e->InverseMove();
@@ -304,9 +340,7 @@ protected:
     void InitGrid();
 
     /*
-     *  Pivot around one child (parameter target) of the Current Model3D.
-     *  And compute collisions between this child and the other childs of 
-     *  current Model3D and his nearest "brothers" (neighbors parameter).
+     *  Pivot around the current object for detect collision with neighbors.
      */
     void PivotCollision() noexcept;
 
@@ -316,16 +350,21 @@ protected:
     bool IsInside (glm::vec3 location_object) const;
 
     /*
-     *  Return a list of Model3D which are found in i,j,k coords
+     *  Return a list of childs which are found in i,j,k coords
      *  in the Grid of the current object.
      *  If i,j,k are outside of the Grid, the search occurs in othet near objects.
      */
-    std::vector<Model3D*> FindPlacementObjects(int i, int j, int k) const noexcept;
+    std::vector<Model3D*> FindItemsInGrid(int i, int j, int k) const noexcept;
 
     /*
      *  Return a list of neighbors qualified for a collision with current object
      */
     std::vector<Model3D*> GetCollisionNeighbors() const noexcept;
+
+    /*
+     *  Return a first side neighbor
+     */
+    Model3D* GetNeighborSide(int side) const noexcept;
 
     /*
      *  Check if target must be eligible for neighbors with clipping constraint defined by "level" parameter
@@ -336,6 +375,45 @@ protected:
      *  Clear each sides neighbors_ list
      */
     void ResetNeighbors() noexcept;
+
+    /*
+     *  Add a new Child Object to the Grid
+     *      i,j,k: coords into Grid array
+     *      obj: child object
+     */
+    void AddItemToGrid(int i, int j, int k, Model3D *obj) noexcept;
+
+    /*
+     *  Remove Child Object to the Grid
+     *      i,j,k: coords into Grid array
+     *      obj: child object
+     */
+    void RemoveItemToGrid(int i, int j, int k, Model3D *obj) noexcept;
+
+    /*
+     *  Remove child and return the unique_ptr associated to this one
+     */
+    std::unique_ptr<Model3D> TransfertChild(Model3D* child) noexcept;
+
+    /*
+     *  Return the first point of the grid
+     */
+    glm::vec3 GetGrid0() const noexcept;
+
+    /*
+     *  Compute placements coords in the parent grid
+     */
+    void ComputePlacements() noexcept;
+
+    /*
+     *  Compute all childs placements coords
+     */
+    void ComputeChildsPlacements() noexcept;
+
+    /*
+     *  Flush all items into the grid
+     */
+    void ResetGrid() noexcept;
 
     /*
      *  Model3D Composite attributes
