@@ -157,30 +157,14 @@ void Model3D::ResetGrid() noexcept
     unlock();
 }
 
-void Model3D::ComputeChildsPlacements() noexcept
-{
-    for (auto cnt = 0; cnt < objects_.size();) {
-        auto tmp = objects_.size();
-        if (objects_[cnt]->IsMoved()) {
-            objects_[cnt]->ComputePlacements();
-
-            if (tmp != objects_.size()) {
-                continue;
-            }
-        }
-
-        cnt++;
-    }
-}
-
-void Model3D::AddItemToGrid(int i, int j, int k, Model3D *obj) noexcept
+void Model3D::AddItemToGrid(int i, int j, int k, Model3D* obj) noexcept
 {
     lock();
     grid_[i][j][k].push_back(obj);
     unlock();
 }
 
-void Model3D::RemoveItemToGrid(int i, int j, int k, Model3D *obj) noexcept
+void Model3D::RemoveItemToGrid(int i, int j, int k, Model3D* obj) noexcept
 {
     for (auto cnt = 0; cnt < grid_[i][j][k].size(); cnt++) {
         if (grid_[i][j][k][cnt] == obj) {
@@ -256,90 +240,12 @@ void Model3D::ComputePlacements() noexcept
                 auto j = static_cast<int>(tmp[1]);
                 auto k = static_cast<int>(tmp[2]);
 
-                /* if i,j,k are not valid, select the good parent */
-                if (i < 0) {
-                    if (j < 0) {
+                /* if i,j,k are not valid, select the good side where to search */
+                auto parent_side = parent_->BeInTheRightPlace(i, j, k);
 
-                        if (k < 0) {
-                            parent_new = parent_->GetNeighborSide(kLEFT_FLOOR_FRONT);
-                        } else if (k >= parent_->gridz()) {
-                            parent_new = parent_->GetNeighborSide(kLEFT_FLOOR_BACK);
-                        } else {
-                            parent_new = parent_->GetNeighborSide(kLEFT_FLOOR);
-                        }
-
-                    } else if (j >= parent_->gridy()) {
-
-                        if (k < 0) {
-                            parent_new = parent_->GetNeighborSide(kLEFT_ROOF_FRONT);
-                        } else if (k >= parent_->gridz()) {
-                            parent_new = parent_->GetNeighborSide(kLEFT_ROOF_BACK);
-                        } else {
-                            parent_new = parent_->GetNeighborSide(kLEFT_ROOF);
-                        }
-
-                    } else if (k < 0) {
-                        parent_new = parent_->GetNeighborSide(kLEFT_FRONT);
-                    } else if (k >= parent_->gridz()) {
-                        parent_new = parent_->GetNeighborSide(kLEFT_BACK);
-                    } else {
-                        parent_new = parent_->GetNeighborSide(kLEFT);
-                    }
-
-                } else if (i >= parent_->gridx()) {
-
-                    if (j < 0) {
-
-                        if (k < 0) {
-                            parent_new = parent_->GetNeighborSide(kRIGHT_FLOOR_FRONT);
-                        } else if (k >= parent_->gridz()) {
-                            parent_new = parent_->GetNeighborSide(kRIGHT_FLOOR_BACK);
-                        } else {
-                            parent_new = parent_->GetNeighborSide(kRIGHT_FLOOR);
-                        }
-
-                    } else if (j >= parent_->gridy()) {
-
-                        if (k < 0) {
-                            parent_new = parent_->GetNeighborSide(kRIGHT_ROOF_FRONT);
-                        } else if (k >= parent_->gridz()) {
-                            parent_new = parent_->GetNeighborSide(kRIGHT_ROOF_BACK);
-                        } else {
-                            parent_new = parent_->GetNeighborSide(kRIGHT_ROOF);
-                        }
-
-                    } else if (k < 0) {
-                        parent_new = parent_->GetNeighborSide(kRIGHT_FRONT);
-                    } else if (k >= parent_->gridz()) {
-                        parent_new = parent_->GetNeighborSide(kRIGHT_BACK);
-                    } else {
-                        parent_new = parent_->GetNeighborSide(kRIGHT);
-                    }
-
-                } else if (j < 0) {
-
-                    if (k < 0) {
-                        parent_new = parent_->GetNeighborSide(kFLOOR_FRONT);
-                    } else if (k >= parent_->gridz()) {
-                        parent_new = parent_->GetNeighborSide(kFLOOR_BACK);
-                    } else {
-                        parent_new = parent_->GetNeighborSide(kFLOOR);
-                    }
-
-                } else if (j >= parent_->gridy()) {
-
-                    if (k < 0) {
-                        parent_new = parent_->GetNeighborSide(kROOF_FRONT);
-                    } else if (k >= parent_->gridz()) {
-                        parent_new = parent_->GetNeighborSide(kROOF_BACK);
-                    } else {
-                        parent_new = parent_->GetNeighborSide(kROOF);
-                    }
-
-                } else if (k < 0) {
-                    parent_new = parent_->GetNeighborSide(kFRONT);
-                } else if (k >= parent_->gridz()) {
-                    parent_new = parent_->GetNeighborSide(kBACK);
+                /* Find a new parent */
+                if (parent_side != kSAME) {
+                    parent_new = parent_->FindNeighborSide(parent_side);
                 }
 
                 /* If no parent for current coords */
@@ -448,7 +354,7 @@ void Model3D::PivotCollision() noexcept
     lock();
 
     /* Prepare vector for collision compute */
-    std::vector<Model3D*> test_objects = GetCollisionNeighbors();
+    std::vector<Model3D*> test_objects = FindCollisionNeighbors();
 
     /* Parallell collision loop for objects with cilkplus */
     std::map<int, std::vector<Model3D*>> recompute;
@@ -483,348 +389,252 @@ void Model3D::PivotCollision() noexcept
     }
 }
 
-void Model3D::ComputeNeighbors() noexcept
+int Model3D::BeInTheRightPlace(int i, int j, int k) const
 {
-    ResetNeighbors();
+    if (i < 0 && j < 0 && k < 0) {
+        return kLEFT_FLOOR_FRONT;
+    } else if (i < 0 && j < 0 && k >= gridz()) {
+        return kLEFT_FLOOR_BACK;
+    } else if (i < 0 && j < 0) {
+        return kLEFT_FLOOR;
+    } else if (i < 0 && j >= gridy() && k < 0) {
+        return kLEFT_ROOF_FRONT;
+    } else if (i < 0 && j >= gridy() && k >= gridz()) {
+        return kLEFT_ROOF_BACK;
+    } else if (i < 0 && j >= gridy()) {
+        return kLEFT_ROOF;
+    } else if (i < 0 && k < 0) {
+        return kLEFT_FRONT;
+    } else if (i < 0 && k >= gridz()) {
+        return kLEFT_BACK;
+    } else if (i < 0) {
+        return kLEFT;
+    } else if (i >= gridx() && j < 0 && k < 0) {
+        return kRIGHT_FLOOR_FRONT;
+    } else if (i >= gridx() && j < 0 && k >= gridz()) {
+        return kRIGHT_FLOOR_BACK;
+    } else if (i >= gridx() && j < 0) {
+        return kRIGHT_FLOOR;
+    } else if (i >= gridx() && j >= gridy() && k < 0) {
+        return kRIGHT_ROOF_FRONT;
+    } else if (i >= gridx() && j >= gridy() && k >= gridz()) {
+        return kRIGHT_ROOF_BACK;
+    } else if (i >= gridx() && j >= gridy()) {
+        return kRIGHT_ROOF;
+    } else if (i >= gridx() && k < 0) {
+        return kRIGHT_FRONT;
+    } else if (i >= gridx() && k >= gridz()) {
+        return kRIGHT_BACK;
+    } else if (i >= gridx()) {
+        return kRIGHT;
+    } else if (j < 0 && k < 0) {
+        return kFLOOR_FRONT;
+    } else if (j < 0 && k >= gridz()) {
+        return kFLOOR_BACK;
+    } else if (j < 0) {
+        return kFLOOR;
+    } else if (j >= gridy() && k < 0) {
+        return kROOF_FRONT;
+    } else if (j >= gridy() && k >= gridz()) {
+        return kROOF_BACK;
+    } else if (j >= gridy()) {
+        return kROOF;
+    } else if (k < 0) {
+        return kFRONT;
+    } else if (k >= gridz()) {
+        return kBACK;
+    }
 
-    /* Ensure neighbors_ map changes are thread safe */
-    lock();
+    /* kSAME -> already the right place */
+    return kSAME;
+}
 
+std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept
+{
+    /* Left sides */
+    if (dirx == -1 && diry == -1 && dirz == -1) {
+        return {kSAME, kLEFT, kLEFT_FLOOR, kFLOOR, kLEFT_FRONT, kLEFT_FLOOR_FRONT, kFLOOR_FRONT, kFRONT};
+    }
+
+    if (dirx == -1 && diry == -1 && dirz == 1) {
+        return {kSAME, kLEFT, kLEFT_FLOOR, kFLOOR, kLEFT_BACK, kLEFT_FLOOR_BACK, kFLOOR_BACK, kBACK};
+    }
+
+    if (dirx == -1 && diry == -1) {
+        return {kSAME, kLEFT, kLEFT_FLOOR, kFLOOR};
+    }
+
+    if (dirx == -1 && diry == 1 && dirz == -1) {
+        return {kSAME, kLEFT, kLEFT_ROOF, kROOF, kLEFT_FRONT, kLEFT_ROOF_FRONT, kROOF_FRONT, kFRONT};
+    }
+
+    if (dirx == -1 && diry == 1 && dirz == 1) {
+        return {kSAME, kLEFT, kLEFT_ROOF, kROOF, kLEFT_BACK, kLEFT_ROOF_BACK, kROOF_BACK, kBACK};
+    }
+
+    if (dirx == -1 && diry == 1) {
+        return {kSAME, kLEFT, kLEFT_ROOF, kROOF};
+    }
+
+    if (dirx == -1 && dirz == -1) {
+        return {kSAME, kLEFT, kLEFT_FRONT, kFRONT};
+    }
+
+    if (dirx == -1 && dirz == 1) {
+        return {kSAME, kLEFT, kLEFT_BACK, kBACK};
+    }
+
+    if (dirx == -1) {
+        return {kSAME, kLEFT};
+    }
+
+    /* Right sides */
+    if (dirx == 1 && diry == -1 && dirz == -1) {
+        return {kSAME, kRIGHT, kRIGHT_FLOOR, kFLOOR, kRIGHT_FRONT, kRIGHT_FLOOR_FRONT, kFLOOR_FRONT, kFRONT};
+    }
+
+    if (dirx == 1 && diry == -1 && dirz == 1) {
+        return {kSAME, kRIGHT, kRIGHT_FLOOR, kFLOOR, kRIGHT_BACK, kRIGHT_FLOOR_BACK, kFLOOR_BACK, kBACK};
+    }
+
+    if (dirx == 1 && diry == -1) {
+        return {kSAME, kRIGHT, kRIGHT_FLOOR, kFLOOR};
+    }
+
+    if (dirx == 1 && diry == 1 && dirz == -1) {
+        return {kSAME, kRIGHT, kRIGHT_ROOF, kROOF, kRIGHT_FRONT, kRIGHT_ROOF_FRONT, kROOF_FRONT, kFRONT};
+    }
+
+    if (dirx == 1 && diry == 1 && dirz == 1) {
+        return {kSAME, kRIGHT, kRIGHT_ROOF, kROOF, kRIGHT_BACK, kRIGHT_ROOF_BACK, kROOF_BACK, kBACK};
+    }
+
+    if (dirx == 1 && diry == 1) {
+        return {kSAME, kRIGHT, kRIGHT_ROOF, kROOF};
+    }
+
+    if (dirx == 1 && dirz == -1) {
+        return {kSAME, kRIGHT, kRIGHT_FRONT, kFRONT};
+    }
+
+    if (dirx == 1 && dirz == 1) {
+        return {kSAME, kRIGHT, kRIGHT_BACK, kBACK};
+    }
+
+    if (dirx == 1) {
+        return {kSAME, kRIGHT};
+    }
+
+    /* Floor sides */
+    if (diry == -1 && dirz == -1) {
+        return {kSAME, kFLOOR, kFLOOR_FRONT, kFRONT};
+    }
+
+    if (diry == -1 && dirz == 1) {
+        return {kSAME, kFLOOR, kFLOOR_BACK, kBACK};
+    }
+
+    if (diry == -1) {
+        return {kSAME, kFLOOR};
+    }
+
+    /* Roof sides */
+    if (diry == 1 && dirz == -1) {
+        return {kSAME, kROOF, kROOF_FRONT, kFRONT};
+    }
+
+    if (diry == 1 && dirz == 1) {
+        return {kSAME, kROOF, kROOF_BACK, kBACK};
+    }
+
+    if (diry == 1) {
+        return {kSAME, kROOF};
+    }
+
+    /* Front sides */
+    if (dirz == -1) {
+        return {kSAME, kFRONT};
+    }
+
+    /* Back sides */
+    if (dirz == 1) {
+        return {kSAME, kBACK};
+    }
+
+    /* Must not to be here */
+    return {kSAME};
+}
+
+std::vector<int> Model3D::GetNeighborCoordsBySide(int i, int j, int k, int side) const
+{
+    switch(side) {
+        case kSAME: return {i,j,k};
+        case kLEFT_FLOOR_FRONT: return {i-1,j-1,k-1};
+        case kLEFT_FLOOR_BACK: return {i-1,j-1,k+1};
+        case kLEFT_FLOOR: return {i-1,j-1,k};
+        case kLEFT_ROOF_FRONT: return {i-1,j+1,k-1};
+        case kLEFT_ROOF_BACK: return {i-1,j+1,k+1};
+        case kLEFT_ROOF: return {i-1,j+1,k};
+        case kLEFT_FRONT: return {i-1,j,k-1};
+        case kLEFT_BACK: return {i-1,j,k+1};
+        case kLEFT: return {i-1,j,k};
+        case kRIGHT_FLOOR_FRONT: return {i+1,j-1,k-1};
+        case kRIGHT_FLOOR_BACK: return {i+1,j-1,k+1};
+        case kRIGHT_FLOOR: return {i+1,j-1,k};
+        case kRIGHT_ROOF_FRONT: return {i+1,j+1,k-1};
+        case kRIGHT_ROOF_BACK: return {i+1,j+1,k+1};
+        case kRIGHT_ROOF: return {i+1,j+1,k};
+        case kRIGHT_FRONT: return {i+1,j,k-1};
+        case kRIGHT_BACK: return {i+1,j,k+1};
+        case kRIGHT: return {i+1,j,k};
+        case kFLOOR_FRONT: return {i,j-1,k-1};
+        case kFLOOR_BACK: return {i,j-1,k+1};
+        case kFLOOR: return {i,j-1,k};
+        case kROOF_FRONT: return {i,j+1,k-1};
+        case kROOF_BACK: return {i,j+1,k+1};
+        case kROOF: return {i,j+1,k};
+        case kFRONT: return {i,j,k-1};
+        case kBACK: return {i,j,k+1};
+    }
+
+    return {i,j,k};
+}
+
+Model3D* Model3D::FindNeighborSide(int side) const noexcept
+{
     for (auto &p: placements_) {
         auto i = p[0];
         auto j = p[1];
         auto k = p[2];
+        auto c = GetNeighborCoordsBySide(i, j, k, side);
 
-        for (auto &n : parent_->FindItemsInGrid(i, j, k)) {
+        for (auto &n : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
             if (n != this) {
-                neighbors_[kSAME].emplace(n->id(), n);
+                return n;
             }
         }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j-1, k-1)) {
-            if (n != this) {
-                neighbors_[kLEFT_FLOOR_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j-1, k+1)) {
-            if (n != this) {
-                neighbors_[kLEFT_FLOOR_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j-1, k)) {
-            if (n != this) {
-                neighbors_[kLEFT_FLOOR].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j+1, k-1)) {
-            if (n != this) {
-                neighbors_[kLEFT_ROOF_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j+1, k+1)) {
-            if (n != this) {
-                neighbors_[kLEFT_ROOF_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j+1, k)) {
-            if (n != this) {
-                neighbors_[kLEFT_ROOF].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j, k-1)) {
-            if (n != this) {
-                neighbors_[kLEFT_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j, k+1)) {
-            if (n != this) {
-                neighbors_[kLEFT_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i-1, j, k)) {
-            if (n != this) {
-                neighbors_[kLEFT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j-1, k-1)) {
-            if (n != this) {
-                neighbors_[kRIGHT_FLOOR_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j-1, k+1)) {
-            if (n != this) {
-                neighbors_[kRIGHT_FLOOR_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j-1, k)) {
-            if (n != this) {
-                neighbors_[kRIGHT_FLOOR].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j+1, k-1)) {
-            if (n != this) {
-                neighbors_[kRIGHT_ROOF_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j+1, k+1)) {
-            if (n != this) {
-                neighbors_[kRIGHT_ROOF_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j+1, k)) {
-            if (n != this) {
-                neighbors_[kRIGHT_ROOF].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j, k-1)) {
-            if (n != this) {
-                neighbors_[kRIGHT_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j, k+1)) {
-            if (n != this) {
-                neighbors_[kRIGHT_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i+1, j, k)) {
-            if (n != this) {
-                neighbors_[kRIGHT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j-1, k-1)) {
-            if (n != this) {
-                neighbors_[kFLOOR_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j-1, k+1)) {
-            if (n != this) {
-                neighbors_[kFLOOR_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j-1, k)) {
-            if (n != this) {
-                neighbors_[kFLOOR].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j+1, k-1)) {
-            if (n != this) {
-                neighbors_[kROOF_FRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j+1, k+1)) {
-            if (n != this) {
-                neighbors_[kROOF_BACK].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j+1, k)) {
-            if (n != this) {
-                neighbors_[kROOF].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j, k-1)) {
-            if (n != this) {
-                neighbors_[kFRONT].emplace(n->id(), n);
-            }
-        }
-
-        for (auto &n : parent_->FindItemsInGrid(i, j, k+1)) {
-            if (n != this) {
-                neighbors_[kBACK].emplace(n->id(), n);
-            }
-        }
-    }
-
-    unlock();
-
-    /* Compute neighbors for all child objects */
-    cilk_for (auto cnt = 0; cnt < objects_.size(); cnt++) {
-        if (objects_[cnt]->IsMoved() ||
-            objects_[cnt]->type() == kMODEL3D_ROOM) {
-            objects_[cnt]->ComputeNeighbors();
-        }
-    }
-}
-
-void Model3D::ResetNeighbors() noexcept
-{
-    /* Ensure neighbors_ map changes are thread safe */
-    lock();
-
-    for (auto cnt = 0; cnt < kSIDES; cnt++) {
-        neighbors_[cnt].clear();
-    }
-
-    unlock();
-}
-
-std::vector<Model3D*> Model3D::GetCollisionNeighbors() const noexcept
-{
-    std::vector<int> sides;
-    std::vector<Model3D*> ret(0);
-
-    auto dirx = IsMovedX();
-    auto diry = IsMovedY();
-    auto dirz = IsMovedZ();
-
-    /* Below, uses of static_cast for constants because odr constraint */
-    sides.push_back(static_cast<int>(kSAME));
-
-    /* Choose sides to select following current object directions */
-    if (dirx == -1) {
-        sides.push_back(static_cast<int>(kLEFT));
-        if (diry == -1) {
-            sides.push_back(static_cast<int>(kLEFT_FLOOR));
-            sides.push_back(static_cast<int>(kFLOOR));
-
-            if (dirz == -1) {
-                sides.push_back(static_cast<int>(kLEFT_FLOOR_FRONT));
-                sides.push_back(static_cast<int>(kFLOOR_FRONT));
-                sides.push_back(static_cast<int>(kFRONT));
-            } else if (dirz == 1) {
-                sides.push_back(static_cast<int>(kLEFT_FLOOR_BACK));
-                sides.push_back(static_cast<int>(kFLOOR_BACK));
-                sides.push_back(static_cast<int>(kBACK));
-            }
-        } else if (diry == 1) {
-            sides.push_back(static_cast<int>(kLEFT_ROOF));
-            sides.push_back(static_cast<int>(kROOF));
-
-            if (dirz == -1) {
-                sides.push_back(static_cast<int>(kLEFT_FRONT));
-                sides.push_back(static_cast<int>(kLEFT_ROOF_FRONT));
-                sides.push_back(static_cast<int>(kROOF_FRONT));
-                sides.push_back(static_cast<int>(kFRONT));
-            } else if (dirz == 1) {
-                sides.push_back(static_cast<int>(kLEFT_BACK));
-                sides.push_back(static_cast<int>(kLEFT_ROOF_BACK));
-                sides.push_back(static_cast<int>(kROOF_BACK));
-                sides.push_back(static_cast<int>(kBACK));
-            }
-        } else if (dirz == -1) {
-            sides.push_back(static_cast<int>(kLEFT_FRONT));
-            sides.push_back(static_cast<int>(kFRONT));
-        } else if (dirz == 1) {
-            sides.push_back(static_cast<int>(kLEFT_BACK));
-            sides.push_back(static_cast<int>(kBACK));
-        }
-    } else if (dirx == 1) {
-        sides.push_back(static_cast<int>(kRIGHT));
-
-        if (diry == -1) {
-            sides.push_back(static_cast<int>(kRIGHT_FLOOR));
-            sides.push_back(static_cast<int>(kFLOOR));
-
-            if (dirz == -1) {
-                sides.push_back(static_cast<int>(kRIGHT_FLOOR_FRONT));
-                sides.push_back(static_cast<int>(kRIGHT_FRONT));
-                sides.push_back(static_cast<int>(kFLOOR_FRONT));
-                sides.push_back(static_cast<int>(kFRONT));
-            } else if (dirz == 1) {
-                sides.push_back(static_cast<int>(kRIGHT_FLOOR_BACK));
-                sides.push_back(static_cast<int>(kRIGHT_BACK));
-                sides.push_back(static_cast<int>(kFLOOR_BACK));
-                sides.push_back(static_cast<int>(kBACK));
-            }
-        } else if (diry == 1) {
-            sides.push_back(static_cast<int>(kRIGHT_ROOF));
-            sides.push_back(static_cast<int>(kROOF));
-
-            if (dirz == -1) {
-                sides.push_back(static_cast<int>(kRIGHT_ROOF_FRONT));
-                sides.push_back(static_cast<int>(kRIGHT_FRONT));
-                sides.push_back(static_cast<int>(kROOF_FRONT));
-                sides.push_back(static_cast<int>(kFRONT));
-            } else if (dirz == 1) {
-                sides.push_back(static_cast<int>(kRIGHT_ROOF_BACK));
-                sides.push_back(static_cast<int>(kRIGHT_BACK));
-                sides.push_back(static_cast<int>(kROOF_BACK));
-                sides.push_back(static_cast<int>(kBACK));
-            }
-        } else if (dirz == -1) {
-            sides.push_back(static_cast<int>(kRIGHT_FRONT));
-            sides.push_back(static_cast<int>(kFRONT));
-        } else if (dirz == 1) {
-            sides.push_back(static_cast<int>(kRIGHT_BACK));
-            sides.push_back(static_cast<int>(kBACK));
-        }
-    } else if (diry == -1) {
-        sides.push_back(static_cast<int>(kFLOOR));
-
-        if (dirz == -1) {
-            sides.push_back(static_cast<int>(kFLOOR_FRONT));
-            sides.push_back(static_cast<int>(kFRONT));
-        } else if (dirz == 1) {
-            sides.push_back(static_cast<int>(kFLOOR_BACK));
-            sides.push_back(static_cast<int>(kBACK));
-        }
-    } else if (diry == 1) {
-        sides.push_back(static_cast<int>(kROOF));
-        if (dirz == -1) {
-            sides.push_back(static_cast<int>(kROOF_FRONT));
-            sides.push_back(static_cast<int>(kFRONT));
-        } else if (dirz == 1) {
-            sides.push_back(static_cast<int>(kROOF_BACK));
-            sides.push_back(static_cast<int>(kBACK));
-        }
-    } else if (dirz == -1) {
-        sides.push_back(static_cast<int>(kFRONT));
-    } else if (dirz == 1) {
-        sides.push_back(static_cast<int>(kBACK));
-    }
-
-    for (auto &side : sides) {
-        for (auto &neighbor : neighbors_[side]) {
-            if(std::find(ret.begin(), ret.end(), neighbor.second) == ret.end()) {
-                ret.push_back(neighbor.second);
-            }
-        }
-    }
-
-    return ret;
-}
-
-Model3D* Model3D::GetNeighborSide(int side) const noexcept
-{
-    if (neighbors_[side].size() > 0) {
-        return neighbors_[side].begin()->second;
     }
 
     return nullptr;
 }
 
-
-std::vector<Model3D*> Model3D::GetAllNeighbors() const noexcept
+std::vector<Model3D*> Model3D::FindNeighborsSide(int side) const noexcept
 {
     std::vector<Model3D*> ret(0);
+    tbb::mutex neighbor_mutex;
 
-    for (auto &side_neigh : neighbors_) {
-        for (auto &neighbor : side_neigh) {
-            if (std::find(ret.begin(), ret.end(), neighbor.second) == ret.end()) {
-                ret.push_back(neighbor.second);
+    cilk_for (auto cnp = 0; cnp < placements_.size(); cnp++) {
+        auto i = placements_[cnp][0];
+        auto j = placements_[cnp][1];
+        auto k = placements_[cnp][2];
+        auto c = GetNeighborCoordsBySide(i, j, k, side);
+
+        for (auto &n : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
+            if (n != this) {
+                tbb::mutex::scoped_lock lock_map(neighbor_mutex);
+                if (std::find(ret.begin(), ret.end(), n) == ret.end()) {
+                    ret.push_back(n);
+                }
             }
         }
     }
@@ -832,10 +642,59 @@ std::vector<Model3D*> Model3D::GetAllNeighbors() const noexcept
     return ret;
 }
 
-std::vector<Model3D*> Model3D::GetClippingNeighbors(int level) const noexcept
+std::vector<Model3D*> Model3D::FindCollisionNeighbors() const noexcept
 {
     std::vector<Model3D*> ret(0);
-    auto neighs = GetAllNeighbors();
+    tbb::mutex neighbor_mutex;
+
+    auto dirx = IsMovedX();
+    auto diry = IsMovedY();
+    auto dirz = IsMovedZ();
+
+    auto sides = parent_->ListSidesInTheDirection(dirx, diry, dirz);
+    cilk_for(auto cnt = 0; cnt < sides.size(); cnt++) {
+        for (auto &neighbor: FindNeighborsSide(sides[cnt])) {
+            tbb::mutex::scoped_lock lock_map(neighbor_mutex);
+            if(std::find(ret.begin(), ret.end(), neighbor) == ret.end()) {
+                ret.push_back(neighbor);
+            }
+        }
+    }
+
+    return ret;
+}
+
+std::vector<Model3D*> Model3D::FindAllNeighbors() const noexcept
+{
+    std::vector<Model3D*> ret(0);
+    tbb::mutex neighbor_mutex;
+
+    cilk_for (auto cnp = 0; cnp < placements_.size(); cnp++) {
+        auto i = placements_[cnp][0];
+        auto j = placements_[cnp][1];
+        auto k = placements_[cnp][2];
+
+        cilk_for (auto cnt = 0; cnt < kSIDES; cnt++) {
+            auto c = GetNeighborCoordsBySide(i, j, k, cnt);
+
+            for (auto &n : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
+                if (n != this) {
+                    tbb::mutex::scoped_lock lock_map(neighbor_mutex);
+                    if (std::find(ret.begin(), ret.end(), n) == ret.end()) {
+                        ret.push_back(n);
+                    }
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
+std::vector<Model3D*> Model3D::FindClippingNeighbors(int level) const noexcept
+{
+    std::vector<Model3D*> ret(0);
+    auto neighs = FindAllNeighbors();
     auto cnt = level;
 
     /* Filter neighbor of current Model3D */
@@ -852,7 +711,7 @@ std::vector<Model3D*> Model3D::GetClippingNeighbors(int level) const noexcept
         /* Copy ret for avoid changing this one during parsing these */
         auto tmp = ret;
         for (auto &o : tmp) {
-            for (auto &n : o->GetAllNeighbors()) {
+            for (auto &n : o->FindAllNeighbors()) {
                 if (IsClippingNear(n, level)) {
                     if (n != this && std::find(ret.begin(), ret.end(), n) == ret.end()) {
                         ret.push_back(n);

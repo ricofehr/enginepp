@@ -59,9 +59,6 @@ std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
         }
     }
 
-    /* Compute Recursively Neighbhors for all Objects in Universe */
-    uni->ComputeNeighbors();
-
     return uni;
 }
 

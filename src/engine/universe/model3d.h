@@ -8,7 +8,6 @@
 #ifndef ENGINE_UNIVERSE_MODEL3D_H_
 #define ENGINE_UNIVERSE_MODEL3D_H_
 
-#include <iostream>
 #include <memory>
 #include <vector>
 #include <map>
@@ -136,21 +135,11 @@ public:
     void DetectCollisionBetweenChilds() noexcept;
 
     /*
-     *  Compute neighbors array with a deeping clipping level
-     */
-    void ComputeNeighbors() noexcept;
-
-    /*
-     *  Return a list of all neighbors of current object
-     */
-    std::vector<Model3D*> GetAllNeighbors() const noexcept;
-
-    /*
      *  Return a list of neighbors in respect with the clipping constraint
      *  All objects too far or hidden by current view are not included.
      *      level: clipping level (1 -> high clipping, 2 -> low clipping)
      */
-    std::vector<Model3D*> GetClippingNeighbors(int level) const noexcept;
+    std::vector<Model3D*> FindClippingNeighbors(int level) const noexcept;
 
     /*
      *  (In)Equality Operators 
@@ -334,8 +323,7 @@ protected:
 
     /*
      *  Allocate grid array dynamically
-     *  Uses of raw pointers for 3d arrays
-     *  And performance
+     *  Uses of raw pointers
      */
     void InitGrid();
 
@@ -357,14 +345,27 @@ protected:
     std::vector<Model3D*> FindItemsInGrid(int i, int j, int k) const noexcept;
 
     /*
+     *  Return a list of all neighbors of current object
+     */
+    std::vector<Model3D*> FindAllNeighbors() const noexcept;
+
+    /*
      *  Return a list of neighbors qualified for a collision with current object
      */
-    std::vector<Model3D*> GetCollisionNeighbors() const noexcept;
+    std::vector<Model3D*> FindCollisionNeighbors() const noexcept;
 
     /*
      *  Return a first side neighbor
+     *      side: constant side constraint
      */
-    Model3D* GetNeighborSide(int side) const noexcept;
+    Model3D* FindNeighborSide(int side) const noexcept;
+
+    /*
+     *  Return all neighbors following a side constraint
+     *      side: constant side constraint
+     */
+    std::vector<Model3D*> FindNeighborsSide(int side) const noexcept;
+
 
     /*
      *  Check if target must be eligible for neighbors with clipping constraint defined by "level" parameter
@@ -372,23 +373,37 @@ protected:
     bool IsClippingNear(Model3D* target, int level) const noexcept;
 
     /*
-     *  Clear each sides neighbors_ list
-     */
-    void ResetNeighbors() noexcept;
-
-    /*
      *  Add a new Child Object to the Grid
      *      i,j,k: coords into Grid array
      *      obj: child object
      */
-    void AddItemToGrid(int i, int j, int k, Model3D *obj) noexcept;
+    void AddItemToGrid(int i, int j, int k, Model3D* obj) noexcept;
+
+    /*
+     *  Return the side place in the current grid object following coords
+     *      i,j,k: coords into Grid array
+     */
+    int BeInTheRightPlace(int i, int j, int k) const;
+
+    /*
+     *  Compute the right grid coords following a side
+     *      i,j,k: initial coords into Grid array
+     *      side: side constant targetting
+     */
+    std::vector<int> GetNeighborCoordsBySide(int i, int j, int k, int side) const;
+
+    /*
+     *  Return an array of sides qualified with a moving direction
+     *      dirx, diry, dirz: axes direction of the moving current object
+     */
+    std::vector<int> ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept;
 
     /*
      *  Remove Child Object to the Grid
      *      i,j,k: coords into Grid array
      *      obj: child object
      */
-    void RemoveItemToGrid(int i, int j, int k, Model3D *obj) noexcept;
+    void RemoveItemToGrid(int i, int j, int k, Model3D* obj) noexcept;
 
     /*
      *  Remove child and return the unique_ptr associated to this one
@@ -406,11 +421,6 @@ protected:
     void ComputePlacements() noexcept;
 
     /*
-     *  Compute all childs placements coords
-     */
-    void ComputeChildsPlacements() noexcept;
-
-    /*
      *  Flush all items into the grid
      */
     void ResetGrid() noexcept;
@@ -424,14 +434,6 @@ protected:
     std::vector<std::unique_ptr<engine::graphics::Shape3D>> elements_;
     std::unique_ptr<engine::graphics::Border> border_{nullptr};
     std::vector<std::unique_ptr<Model3D>> objects_;
-
-    /*
-     *  neighbors of current 3d model, indexed by
-     *      placement index
-     *      side constant
-     *      Model3D id
-     */
-    std::vector<std::map<int, Model3D*>> neighbors_{static_cast<int>(kSIDES)};
 
     /*
      *  Parent of the current 3d model

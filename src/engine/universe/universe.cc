@@ -109,7 +109,7 @@ void Universe::Draw() noexcept
     /* Select displayed rooms: all rooms or 2 clipping levels */
     if (clipping > 0) {
         display_rooms_.clear();
-        display_rooms_ = objects_[active_index]->GetClippingNeighbors(clipping);
+        display_rooms_ = objects_[active_index]->FindClippingNeighbors(clipping);
         display_rooms_.push_back(objects_[active_index].get());
 
         /* Add deeping neighbors if clipping */
@@ -136,9 +136,6 @@ void Universe::Draw() noexcept
             r->Draw();
         }
     }
-
-    /* Compute neighbors recursively for all universe objects */
-    ComputeNeighbors();
 
     /* GL functions during object generate, then needs serial execution */
     float freq = 0.0f;
