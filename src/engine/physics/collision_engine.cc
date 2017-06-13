@@ -90,7 +90,11 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
 
             target->set_obstacle(obstacle);
             target->set_distance(distance);
-            obstacle->set_distance(distance);
+            if (obstacle->IsSameDirectionThan(target)) {
+                obstacle->set_distance(-distance);
+            } else {
+                obstacle->set_distance(distance);
+            }
             obstacle->set_obstacle(target);
 
             /* Recompute for polygons unbinded */

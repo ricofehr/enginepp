@@ -8,6 +8,7 @@
 #ifndef ENGINE_GRAPHICS_SHAPE3D_H_
 #define ENGINE_GRAPHICS_SHAPE3D_H_
 
+#include <math.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
@@ -40,9 +41,12 @@ public:
      */
     inline void MoveLocation() noexcept
     {
-        if (distance_ != -1.0f) {
-            location_ += move_ * distance_ * sMoveFactor;
-            move_ = -move_;
+        /* Inverse move only if distance is positive */
+        if (distance_ > -1.0f && distance_ < 0) {
+            location_ += move_ * distance() * sMoveFactor;
+        } else if (distance_ >= 0) {
+            location_ += move_ * distance() * sMoveFactor;
+            InverseMove();
         } else {
             location_ += move_ * sMoveFactor;
         }
@@ -91,7 +95,7 @@ public:
         return 1;
     }
 
-    float distance() const { return distance_; }
+    float distance() const { return fabs(distance_); }
     glm::vec4 move() const { return move_ * sMoveFactor; }
     glm::vec4 location() const { return location_; }
     glm::vec3 scale() const { return scale_; }

@@ -81,6 +81,7 @@ public:
     glm::vec4 location() const { return cube_->location(); }
     glm::vec3 scale() const { return cube_->scale(); }
     glm::vec4 move() const { return cube_->move(); }
+    float distance() const { return cube_->distance(); }
 
     /*
      *  Delegate Mutators

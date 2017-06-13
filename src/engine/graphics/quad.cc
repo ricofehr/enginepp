@@ -52,7 +52,7 @@ Quad::Quad(int face, glm::vec3 scale, glm::vec4 location,
     move_ = move;
     vertexbuffer_ = vertexbuffer;
     texturebuffer_ = texturebuffer;
-    distance_ = -1;
+    distance_ = -1.0f;
 
     if (sElementBuffer == 0) {
         CreateElementBuffer();

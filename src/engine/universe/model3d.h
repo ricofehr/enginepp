@@ -119,6 +119,26 @@ public:
     }
 
     /*
+     *  Test if 2 objects are in same direction
+     */
+    inline bool IsSameDirectionThan(Model3D* target)
+    {
+        if (IsMovedX() != target->IsMovedX()) {
+            return false;
+        }
+
+        if (IsMovedY() != target->IsMovedY()) {
+            return false;
+        }
+
+        if (IsMovedZ() != target->IsMovedZ()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /*
      *  Return a list of Childs who were into the Grid
      *  but now are outside of the current Model
      */
@@ -151,7 +171,6 @@ public:
      *  Accessors 
      */
     int id() const { return id_; }
-    float distance() const { return distance_; }
     int id_last_collision() const { return id_last_collision_; }
     Model3D* obstacle() { return obstacle_; }
     Model3D* parent() { return parent_; }
@@ -211,11 +230,11 @@ public:
     int IsMovedX() const { return border_->IsMovedX(); }
     int IsMovedY() const { return border_->IsMovedY(); }
     int IsMovedZ() const { return border_->IsMovedZ(); }
+    float distance() const { return border_->distance(); }
 
     /*
      *  Mutators 
      */
-    void set_distance(float distance) { distance_ = distance; }
     void set_obstacle(Model3D* obstacle) { obstacle_ = obstacle; }
     void reset_missobjects(int missobjects) { missobjects_ = 0; }
     void set_missobjects(int missobjects) { missobjects_ = missobjects; }
@@ -285,6 +304,13 @@ public:
     /*
      *  Delegate Mutators 
      */
+    inline void set_distance(float distance) {
+        border_->set_distance(distance);
+        for (auto &element : elements_) {
+            element->set_distance(distance);
+        }
+    }
+
     inline void InverseMove() noexcept
     {
         border_->InverseMove();

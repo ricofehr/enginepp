@@ -71,10 +71,8 @@ void Model3D::InitCollisionEngine()
 
 void Model3D::Move() noexcept
 {
-    border_->set_distance(distance_);
     border_->MoveCoords();
     cilk_for (auto cnt = 0; cnt < elements_.size(); cnt++) {
-        elements_[cnt]->set_distance(distance_);
         elements_[cnt]->ComputeMVP();
     }
     distance_ = -1.0f;
