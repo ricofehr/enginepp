@@ -78,8 +78,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
     auto grid_unit_z = uni->grid_unitz();
 
     /* Starting location */
-    auto grid_0 = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-    grid_0 -= glm::vec4(grid_x*grid_unit_x/2, grid_y*grid_unit_y/2, grid_z*grid_unit_z/2, 0.0f);
+    auto grid_0 = uni->GetGrid0();
 
     auto i = r;
     auto j = s;
@@ -196,7 +195,6 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
 {
     glm::vec3 scale_w = {1.0f, 1.0f, 1.0f};
     glm::vec3 location_0 {0.0f};
-    glm::vec4 location_w {0.0f};
 
     /* Init local vars from Room object attributes */
     auto doors = room->doors();
@@ -210,7 +208,7 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
     auto side = 0;
 
     /* First Room 3D Point */
-    location_0 = room->location() - glm::vec3(grid_x*grid_unit_x/2, grid_y*grid_unit_y/2, grid_z*grid_unit_z/2);
+    location_0 = room->GetGrid0();
 
     /* Top and Roof */
     scale_w = {(grid_x/8)*grid_unit_x, grid_unit_y/4, (grid_z/8)*grid_unit_z};
@@ -226,9 +224,9 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
                 /* No brick floor/roof if trapdoor */
                 if (!doors[side] ||
                     (j != 2*grid_x/4 && j != 3*grid_x/4) ||
-                    (k != 2*grid_x/4 && k != 3*grid_x/4)) {
+                    (k != 2*grid_z/4 && k != 3*grid_z/4)) {
 
-                    location_w = glm::vec4(location_0, 0.0f)
+                    auto location_w = glm::vec4(location_0, 0.0f)
                     + glm::vec4(scale_w[0], 0.0f, scale_w[2], 0.0f)
                     + glm::vec4 {j*grid_unit_x, i*grid_unit_y, k*grid_unit_z, 0.0f};
 
@@ -261,7 +259,7 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
                 if ((!doors[side] || j > grid_y/3 || k != 0) &&
                     (!windows[side] || (j != grid_y/3) || (k != 2*grid_z/4 && k != 3*grid_z/4))) {
 
-                    location_w = glm::vec4(location_0, 0.0f)
+                    auto location_w = glm::vec4(location_0, 0.0f)
                     + glm::vec4(0.0f, scale_w[1], scale_w[2], 0.0f)
                     + glm::vec4 {i*grid_unit_x, j*grid_unit_y, k*grid_unit_z, 0.0f};
 
@@ -292,7 +290,7 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
                 if ((!doors[side] || j > grid_y/3 || k != 0) &&
                     (!windows[side] || j != grid_y/3 || (k != 2*grid_x/4 && k != 3*grid_x/4))) {
 
-                    location_w = glm::vec4(location_0, 0.0f)
+                    auto location_w = glm::vec4(location_0, 0.0f)
                     + glm::vec4(scale_w[0], scale_w[1], 0.0f, 0.0f)
                     + glm::vec4 {k*grid_unit_x, j*grid_unit_y, i*grid_unit_z, 0.0f};
 
@@ -345,7 +343,7 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
     }
 
     /* First 3D point into Room */
-    auto grid_0 = room->location() - glm::vec3(grid_x*grid_unit_x/2, grid_y*grid_unit_y/2, grid_z*grid_unit_z/2);
+    auto grid_0 = room->GetGrid0();
 
     auto i = r;
     auto j = s;

@@ -199,6 +199,11 @@ public:
     }
 
     /*
+     *  Compute the first point of the grid
+     */
+    glm::vec3 GetGrid0() const noexcept;
+
+    /*
      *  Delegate Accessors 
      */
     glm::vec3 location() const { return glm::vec3(border_->location()); }
@@ -409,11 +414,6 @@ protected:
      *  Remove child and return the unique_ptr associated to this one
      */
     std::unique_ptr<Model3D> TransfertChild(Model3D* child) noexcept;
-
-    /*
-     *  Return the first point of the grid
-     */
-    glm::vec3 GetGrid0() const noexcept;
 
     /*
      *  Compute placements coords in the parent grid
