@@ -44,12 +44,12 @@ public:
     {
         /* Inverse move only if distance is positive */
         if (distance_ > -1.0f && distance_ < 0) {
-            location_ += move_ * distance() * sMoveFactor;
+            location_ += move() * distance();
         } else if (distance_ >= 0) {
-            location_ += move_ * distance() * sMoveFactor;
+            location_ += move() * distance();
             InverseMove();
         } else {
-            location_ += move_ * sMoveFactor;
+            location_ += move();
         }
         distance_ = -1.0f;
     }
