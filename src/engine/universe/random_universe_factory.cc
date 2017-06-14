@@ -327,17 +327,17 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
     auto s = rand();
     auto t = rand();
     /* For sizes available */
-    scale = 1.0f / (float)(index % 3 + 2.0);
+    scale = 1.0f / (float)(index % 4 + 2.0);
 
     /* 1/7 moves on y axis */
     if (index % 7 == 0) {
-        move_y = (rand() % 20 + 3) * 0.007f;
+        move_y = (rand() % 20 + 3) * 0.0045f;
         move_x = 0.0f;
         move_z = 0.0f;
     } else {
-        move_x = (rand() % 20 + 3) * 0.007f;
+        move_x = (rand() % 20 + 3) * 0.0045f;
         move_x = (r % 2 == 0) ? -move_x : move_x;
-        move_z = (rand() % 20 + 3) * 0.007f;
+        move_z = (rand() % 20 + 3) * 0.0045f;
         move_z = (r % 3 == 0) ? -move_z : move_z;
         move_y = 0.0f;
     }
