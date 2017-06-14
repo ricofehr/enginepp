@@ -456,7 +456,7 @@ protected:
      *  @param side is the side constant targetting
      *  @return the new coords after apply side constraint
      */
-    std::vector<int> GetNeighborCoordsBySide(int i, int j, int k, int side) const;
+    glm::vec3 GetNeighborCoordsBySide(int i, int j, int k, int side) const;
 
     /**
      *  Compute an array of sides qualified with a moving direction

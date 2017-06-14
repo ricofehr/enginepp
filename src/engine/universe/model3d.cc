@@ -548,39 +548,39 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
     return {kSAME};
 }
 
-std::vector<int> Model3D::GetNeighborCoordsBySide(int i, int j, int k, int side) const
+glm::vec3 Model3D::GetNeighborCoordsBySide(int i, int j, int k, int side) const
 {
     switch(side) {
-        case kSAME: return {i,j,k};
-        case kLEFT_FLOOR_FRONT: return {i-1,j-1,k-1};
-        case kLEFT_FLOOR_BACK: return {i-1,j-1,k+1};
-        case kLEFT_FLOOR: return {i-1,j-1,k};
-        case kLEFT_ROOF_FRONT: return {i-1,j+1,k-1};
-        case kLEFT_ROOF_BACK: return {i-1,j+1,k+1};
-        case kLEFT_ROOF: return {i-1,j+1,k};
-        case kLEFT_FRONT: return {i-1,j,k-1};
-        case kLEFT_BACK: return {i-1,j,k+1};
-        case kLEFT: return {i-1,j,k};
-        case kRIGHT_FLOOR_FRONT: return {i+1,j-1,k-1};
-        case kRIGHT_FLOOR_BACK: return {i+1,j-1,k+1};
-        case kRIGHT_FLOOR: return {i+1,j-1,k};
-        case kRIGHT_ROOF_FRONT: return {i+1,j+1,k-1};
-        case kRIGHT_ROOF_BACK: return {i+1,j+1,k+1};
-        case kRIGHT_ROOF: return {i+1,j+1,k};
-        case kRIGHT_FRONT: return {i+1,j,k-1};
-        case kRIGHT_BACK: return {i+1,j,k+1};
-        case kRIGHT: return {i+1,j,k};
-        case kFLOOR_FRONT: return {i,j-1,k-1};
-        case kFLOOR_BACK: return {i,j-1,k+1};
-        case kFLOOR: return {i,j-1,k};
-        case kROOF_FRONT: return {i,j+1,k-1};
-        case kROOF_BACK: return {i,j+1,k+1};
-        case kROOF: return {i,j+1,k};
-        case kFRONT: return {i,j,k-1};
-        case kBACK: return {i,j,k+1};
+        case kSAME: return glm::vec3(i,j,k);
+        case kLEFT_FLOOR_FRONT: return glm::vec3(i-1,j-1,k-1);
+        case kLEFT_FLOOR_BACK: return glm::vec3(i-1,j-1,k+1);
+        case kLEFT_FLOOR: return glm::vec3(i-1,j-1,k);
+        case kLEFT_ROOF_FRONT: return glm::vec3(i-1,j+1,k-1);
+        case kLEFT_ROOF_BACK: return glm::vec3(i-1,j+1,k+1);
+        case kLEFT_ROOF: return glm::vec3(i-1,j+1,k);
+        case kLEFT_FRONT: return glm::vec3(i-1,j,k-1);
+        case kLEFT_BACK: return glm::vec3(i-1,j,k+1);
+        case kLEFT: return glm::vec3(i-1,j,k);
+        case kRIGHT_FLOOR_FRONT: return glm::vec3(i+1,j-1,k-1);
+        case kRIGHT_FLOOR_BACK: return glm::vec3(i+1,j-1,k+1);
+        case kRIGHT_FLOOR: return glm::vec3(i+1,j-1,k);
+        case kRIGHT_ROOF_FRONT: return glm::vec3(i+1,j+1,k-1);
+        case kRIGHT_ROOF_BACK: return glm::vec3(i+1,j+1,k+1);
+        case kRIGHT_ROOF: return glm::vec3(i+1,j+1,k);
+        case kRIGHT_FRONT: return glm::vec3(i+1,j,k-1);
+        case kRIGHT_BACK: return glm::vec3(i+1,j,k+1);
+        case kRIGHT: return glm::vec3(i+1,j,k);
+        case kFLOOR_FRONT: return glm::vec3(i,j-1,k-1);
+        case kFLOOR_BACK: return glm::vec3(i,j-1,k+1);
+        case kFLOOR: return glm::vec3(i,j-1,k);
+        case kROOF_FRONT: return glm::vec3(i,j+1,k-1);
+        case kROOF_BACK: return glm::vec3(i,j+1,k+1);
+        case kROOF: return glm::vec3(i,j+1,k);
+        case kFRONT: return glm::vec3(i,j,k-1);
+        case kBACK: return glm::vec3(i,j,k+1);
     }
 
-    return {i,j,k};
+    return glm::vec3(i,j,k);
 }
 
 Model3D* Model3D::FindNeighborSide(int side) const noexcept
