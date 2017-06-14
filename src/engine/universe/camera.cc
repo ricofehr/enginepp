@@ -1,6 +1,6 @@
-/*
+/**
  *   Camera class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/camera.h"
@@ -88,6 +88,7 @@ Camera::Camera(float cx, float cy, float cz,
     horizontal_angle_ = 3.14f;
     vertical_angle_ = 0.0;
     fov_ = 45.0f;
+    is_controlled_ = true;
 
     using engine::graphics::Border;
     border_ = std::make_unique<Border>(1.0f,
@@ -96,7 +97,6 @@ Camera::Camera(float cx, float cy, float cz,
                 sCameraCoords);
 
     type_ = kMODEL3D_CAMERA;
-    is_controlled_ = true;
 
     if (active_ == nullptr) {
         set_active();

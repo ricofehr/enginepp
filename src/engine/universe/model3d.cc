@@ -1,6 +1,6 @@
-/*
+/**
  *   Model3d class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/model3d.h"
@@ -30,11 +30,9 @@ namespace {
 Model3D::Model3D()
 {
     id_ = sObjectId++;
-    distance_ = -1.0f;
     obstacle_ = nullptr;
     id_last_collision_ = 0;
     is_controlled_ = false;
-    is_crossed_ = false;
     InitCollisionEngine();
 }
 
@@ -75,7 +73,7 @@ void Model3D::Move() noexcept
     cilk_for (auto cnt = 0; cnt < elements_.size(); cnt++) {
         elements_[cnt]->ComputeMVP();
     }
-    distance_ = -1.0f;
+
     /* An object cant touch same object twice, except camera */
     id_last_collision_ = -1;
     if (!is_controlled_ && obstacle_ != nullptr) {
@@ -320,27 +318,14 @@ bool Model3D::IsInside(glm::vec3 location_object) const
     return false;
 }
 
-std::vector<std::unique_ptr<Model3D>> Model3D::ListOutsideObjects() noexcept
+void Model3D::DetectCollision() noexcept
 {
-    std::vector<std::unique_ptr<Model3D>> ret;
-
-    for (auto &o : objects_) {
-        if (!IsInside(o->location())) {
-            ret.push_back(std::move(o));
-        }
+    if (IsMoved()) {
+        PivotCollision();
     }
-    
-    return ret;
-}
 
-void Model3D::DetectCollisionBetweenChilds() noexcept
-{
-    /* For all others moving objects
-       Parallell loop with cilkplus */
     cilk_for (auto i = 0; i < objects_.size(); i++) {
-        if (objects_[i]->IsMoved()) {
-            objects_[i]->PivotCollision();
-        }
+        objects_[i]->DetectCollision();
     }
 }
 
@@ -606,9 +591,9 @@ Model3D* Model3D::FindNeighborSide(int side) const noexcept
         auto k = p[2];
         auto c = GetNeighborCoordsBySide(i, j, k, side);
 
-        for (auto &n : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
-            if (n != this) {
-                return n;
+        for (auto &neighbor : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
+            if (neighbor != this) {
+                return neighbor;
             }
         }
     }
@@ -627,11 +612,11 @@ std::vector<Model3D*> Model3D::FindNeighborsSide(int side) const noexcept
         auto k = placements_[cnp][2];
         auto c = GetNeighborCoordsBySide(i, j, k, side);
 
-        for (auto &n : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
-            if (n != this) {
+        for (auto &neighbor : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
+            if (neighbor != this) {
                 tbb::mutex::scoped_lock lock_map(neighbor_mutex);
-                if (std::find(ret.begin(), ret.end(), n) == ret.end()) {
-                    ret.push_back(n);
+                if (std::find(ret.begin(), ret.end(), neighbor) == ret.end()) {
+                    ret.push_back(neighbor);
                 }
             }
         }
@@ -675,11 +660,11 @@ std::vector<Model3D*> Model3D::FindAllNeighbors() const noexcept
         cilk_for (auto cnt = 0; cnt < kSIDES; cnt++) {
             auto c = GetNeighborCoordsBySide(i, j, k, cnt);
 
-            for (auto &n : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
-                if (n != this) {
+            for (auto &neighbor : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
+                if (neighbor != this) {
                     tbb::mutex::scoped_lock lock_map(neighbor_mutex);
-                    if (std::find(ret.begin(), ret.end(), n) == ret.end()) {
-                        ret.push_back(n);
+                    if (std::find(ret.begin(), ret.end(), neighbor) == ret.end()) {
+                        ret.push_back(neighbor);
                     }
                 }
             }
@@ -696,10 +681,10 @@ std::vector<Model3D*> Model3D::FindClippingNeighbors(int level) const noexcept
     auto cnt = level;
 
     /* Filter neighbor of current Model3D */
-    for (auto &n : neighs) {
-        if (IsClippingNear(n, level)) {
-            if (n != this && std::find(ret.begin(), ret.end(), n) == ret.end()) {
-                ret.push_back(n);
+    for (auto &neighbor : neighs) {
+        if (IsClippingNear(neighbor, level)) {
+            if (neighbor != this && std::find(ret.begin(), ret.end(), neighbor) == ret.end()) {
+                ret.push_back(neighbor);
             }
         }
     }
@@ -709,10 +694,10 @@ std::vector<Model3D*> Model3D::FindClippingNeighbors(int level) const noexcept
         /* Copy ret for avoid changing this one during parsing these */
         auto tmp = ret;
         for (auto &o : tmp) {
-            for (auto &n : o->FindAllNeighbors()) {
-                if (IsClippingNear(n, level)) {
-                    if (n != this && std::find(ret.begin(), ret.end(), n) == ret.end()) {
-                        ret.push_back(n);
+            for (auto &neighbor : o->FindAllNeighbors()) {
+                if (IsClippingNear(neighbor, level)) {
+                    if (neighbor != this && std::find(ret.begin(), ret.end(), neighbor) == ret.end()) {
+                        ret.push_back(neighbor);
                     }
                 }
             }

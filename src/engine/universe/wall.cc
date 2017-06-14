@@ -1,7 +1,7 @@
-/*
-*   Wall class file
-*   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
-*/
+/**
+ *   Wall class file
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ */
 
 #include "engine/universe/wall.h"
 
@@ -20,12 +20,12 @@ namespace universe {
 
 namespace {
 
+/* GL Buffer ids for texture and vertex */
 static GLuint sTextureBuffer[3] = {0,0,0};
 static GLuint sVertexBuffer[3] = {0,0,0};
 
-/* Wall vertex / color / texture coordinates */
+/* Wall vertex (3) / color (3) / texture (2) coordinates */
 static const GLfloat sBufferData[192] = {
-  /* Position            Color              Texcoords */
     /* Front */
     -1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
      1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,

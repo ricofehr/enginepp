@@ -1,6 +1,6 @@
-/*
- *  opencl version for CollisionEngine
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+/**
+ *  CLCollisionEngine class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/physics/cl_collision_engine.h"

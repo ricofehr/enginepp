@@ -1,8 +1,8 @@
-/*
+/**
  *   Model3D class header
- *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *
- *   Abstract class who defines generic 3d model which shall be inherited by all other 3d models
+ *   Abstract class who defines generic 3d object and shall be inherited by all other 3d models
  */
 
 #ifndef ENGINE_UNIVERSE_MODEL3D_H_
@@ -86,23 +86,45 @@ public:
     static constexpr int kGRID_USED = 0;
     static constexpr int kGRID_EMPTY = 1;
 
-    /*
+    /**
+     *  Default Move constructor
+     */
+    Model3D(Model3D&&) = default;
+
+    /**
+     *  Default Move assignment
+     */
+    Model3D& operator=(Model3D&&) = default;
+
+    /**
+     *  Copy constructor Deleted
+     *  Because border_ is unique_ptr
+     */
+    Model3D(const Model3D&) = delete;
+
+    /**
+     *  Copy assignment Deleted
+     *  Because border_ is unique_ptr
+     */
+    Model3D& operator=(const Model3D&) = delete;
+
+    /**
      *  Destructor
      *  Deallocates grid_ raw pointers array
      */
     virtual ~Model3D();
 
-    /*
+    /**
      *  Record HID events
      */
     virtual void RecordHID();
 
-    /*
+    /**
      *  Proceed to move current object
      */
     virtual void Move() noexcept;
 
-    /*
+    /**
      *  Draw the object and his childs
      */
     inline virtual void Draw() noexcept
@@ -112,14 +134,16 @@ public:
             element->Draw();
         }
 
-        /* Draw associated objects */
+        /* Draw childs objects */
         for (auto &object : objects_) {
             object->Draw();
         }
     }
 
-    /*
+    /**
      *  Test if 2 objects are in same direction
+     *  @param target is the other object to compare
+     *  @return true if the both are moving in same direction
      */
     inline bool IsSameDirectionThan(Model3D* target)
     {
@@ -138,26 +162,21 @@ public:
         return true;
     }
 
-    /*
-     *  Return a list of Childs who were into the Grid
-     *  but now are outside of the current Model
-     */
-    std::vector<std::unique_ptr<Model3D>> ListOutsideObjects() noexcept;
-
-    /*
-     *  Display the Grid into stdout for Debug purpose
+    /**
+     *  Display the Grid onto stdout for Debug or Information purpose
      */
     void DisplayGrid() const noexcept;
 
-    /*
-     *  Detect collision between childs of the current object
+    /**
+     *  Detect collision for current object and for his childs
      */
-    void DetectCollisionBetweenChilds() noexcept;
+    void DetectCollision() noexcept;
 
-    /*
-     *  Return a list of neighbors in respect with the clipping constraint
+    /**
+     *  Compute neighbors in respect with the clipping constraint
      *  All objects too far or hidden by current view are not included.
-     *      level: clipping level (1 -> high clipping, 2 -> low clipping)
+     *  @param level is clipping level (1 -> high clipping, 2 -> low clipping)
+     *  @return vector of neighbors
      */
     std::vector<Model3D*> FindClippingNeighbors(int level) const noexcept;
 
@@ -175,8 +194,6 @@ public:
     Model3D* obstacle() { return obstacle_; }
     Model3D* parent() { return parent_; }
     engine::graphics::Border* border() const { return border_.get(); }
-    bool IsCrossed() const { return is_crossed_; }
-    bool IsControlled() const { return is_controlled_; }
     int type() const { return type_; }
     std::vector<std::vector<int>> placements() const { return placements_; }
     virtual int countChilds() const { return objects_.size(); }
@@ -190,8 +207,9 @@ public:
     inline bool IsFull() const { return missobjects_ <= 0 || objects_.size() >= grid_x_ * grid_y_ * grid_z_; }
     bool IsCamera() const { return type_ == kMODEL3D_CAMERA; }
 
-    /*
-     *  Return Camera object if exists into childs array
+    /**
+     *  Return Camera object if present into childs array
+     *  @return raw pointer to the camera if present, or nullptr
      */
     inline Model3D* get_camera() const noexcept
     {
@@ -203,8 +221,9 @@ public:
         return nullptr;
     }
 
-    /*
-     *  Return number of Moving Object into childs array
+    /**
+     *  Return number of Moving Object into childs
+     *  @return count of moving childs
      */
     inline virtual int countMovingChilds() const
     {
@@ -217,8 +236,9 @@ public:
         return count_sum.get_value();
     }
 
-    /*
+    /**
      *  Compute the first point of the grid
+     *  @return coords of the first point
      */
     glm::vec3 GetGrid0() const noexcept;
 
@@ -241,10 +261,10 @@ public:
     void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
     void set_parent(Model3D* parent) { parent_ = parent; }
 
-    /*
+    /**
      *  Add a new child to the current object
-     *      obj: new child to add on the objects_ array
-     *  Return a raw pointer to the new object inserted
+     *  @param obj is the new child to add
+     *  @return a raw pointer to the new object inserted
      */
     inline Model3D* add_child(std::unique_ptr<Model3D> obj) noexcept
     {
@@ -276,9 +296,10 @@ public:
         return obj_raw;
     }
 
-    /*
+    /**
      *  Add new grid parent coords for current object
      *  Apply these add to the grid parent
+     *  @param i,j,k are the placement coords into parent grid
      */
     inline void add_placement(int i, int j, int k) noexcept
     {
@@ -289,8 +310,8 @@ public:
         parent_->AddItemToGrid(i, j, k, this);
     }
 
-    /*
-     *  Clear placements_ array for current Object
+    /**
+     *  Clear placements array for current object
      *  Apply theses removes to the grid parent
      */
     inline void clear_placements() noexcept
@@ -301,8 +322,9 @@ public:
         placements_.clear();
     }
 
-    /*
-     *  Delegate Mutators 
+    /**
+     *  Set collision distance on the border and shape elements
+     *  @param distance before the collision between this object and other
      */
     inline void set_distance(float distance) {
         border_->set_distance(distance);
@@ -311,6 +333,9 @@ public:
         }
     }
 
+    /**
+     *  Inverse the Move direction of the current object
+     */
     inline void InverseMove() noexcept
     {
         border_->InverseMove();
@@ -319,206 +344,204 @@ public:
         }
     }
 
-    /*
-     *  Lock / Unlock mutex of current model
+    /**
+     *  Lock a mutex on the current object
      */
     void lock() { object_mutex_.lock(); }
+
+    /**
+     *  Unlock a mutex on the current object
+     */
     void unlock() { object_mutex_.unlock(); }
 
 protected:
 
-    /*
-     *  Constructors
+    /**
+     *  Constructor
      *  Protected scope ensures Abstract Class Design
      */
     Model3D();
 
-    /*
-     *  Default move constructor and assignment
-     *  Protected scope ensures Abstract Class Design
-     */
-    Model3D(Model3D&&) = default;
-    Model3D& operator=(Model3D&&) = default;
-
-    /*
-     *  Delete copy constructor / assignment
-     *  Because border_ is unique_ptr
-     */
-    Model3D(const Model3D&) = delete;
-    Model3D& operator=(const Model3D&) = delete;
-
-    /*
+    /**
      *  Select the Collision Engine Algorithm
      */
     void InitCollisionEngine();
 
-    /*
+    /**
      *  Allocate grid array dynamically
-     *  Uses of raw pointers
+     *  Use of raw pointers
      */
     void InitGrid();
 
-    /*
+    /**
      *  Pivot around the current object for detect collision with neighbors.
      */
     void PivotCollision() noexcept;
 
-    /*
-     *  Check if location_object point is inside the current Model
+    /**
+     *  Check if location_object point is inside the current object
+     *  @param location_object is the point to test
+     *  @return true if the point is inside the current object
      */
     bool IsInside (glm::vec3 location_object) const;
 
-    /*
-     *  Return a list of childs which are found in i,j,k coords
+    /**
+     *  Return a list of childs which are found with coords
      *  in the Grid of the current object.
-     *  If i,j,k are outside of the Grid, the search occurs in othet near objects.
+     *  If coords are outside of the Grid, the search occurs in other near objects.
+     *  @param i,j,k are the coords into the current object grid
+     *  @return a vector of 3d objects
      */
     std::vector<Model3D*> FindItemsInGrid(int i, int j, int k) const noexcept;
 
-    /*
+    /**
      *  Return a list of all neighbors of current object
+     *  @return a vector of neighbors
      */
     std::vector<Model3D*> FindAllNeighbors() const noexcept;
 
-    /*
+    /**
      *  Return a list of neighbors qualified for a collision with current object
+     *  @return a vector of neighbors
      */
     std::vector<Model3D*> FindCollisionNeighbors() const noexcept;
 
-    /*
-     *  Return a first side neighbor
-     *      side: constant side constraint
+    /**
+     *  Return only one (first finded) neighbor of the current object following a side constraint
+     *  @param side is the side constraint
+     *  @return a neighbor
      */
     Model3D* FindNeighborSide(int side) const noexcept;
 
-    /*
-     *  Return all neighbors following a side constraint
-     *      side: constant side constraint
+    /**
+     *  Return all neighbors of the current object following a side constraint
+     *  @param side is the side constraint
+     *  @return a vector of neighbors
      */
     std::vector<Model3D*> FindNeighborsSide(int side) const noexcept;
 
-
-    /*
-     *  Check if target must be eligible for neighbors with clipping constraint defined by "level" parameter
+    /**
+     *  Check if target must be eligible for neighbors with clipping constraint
+     *  @param target is the neighbor to test
+     *  @param level is the clipping level
+     *  @return true if eligible
      */
     bool IsClippingNear(Model3D* target, int level) const noexcept;
 
-    /*
-     *  Add a new Child Object to the Grid
-     *      i,j,k: coords into Grid array
-     *      obj: child object
+    /**
+     *  Add a new coords child into the Grid
+     *  @param i,j,k are the coords into the current object grid
+     *  @param obj is the child object
      */
     void AddItemToGrid(int i, int j, int k, Model3D* obj) noexcept;
 
-    /*
-     *  Return the side place in the current grid object following coords
-     *      i,j,k: coords into Grid array
-     */
-    int BeInTheRightPlace(int i, int j, int k) const;
-
-    /*
-     *  Compute the right grid coords following a side
-     *      i,j,k: initial coords into Grid array
-     *      side: side constant targetting
-     */
-    std::vector<int> GetNeighborCoordsBySide(int i, int j, int k, int side) const;
-
-    /*
-     *  Return an array of sides qualified with a moving direction
-     *      dirx, diry, dirz: axes direction of the moving current object
-     */
-    std::vector<int> ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept;
-
-    /*
-     *  Remove Child Object to the Grid
-     *      i,j,k: coords into Grid array
-     *      obj: child object
+    /**
+     *  Remove a child placement to the Grid
+     *  @param i,j,k are the coords into the current object grid
+     *  @param obj is the child object
      */
     void RemoveItemToGrid(int i, int j, int k, Model3D* obj) noexcept;
 
-    /*
-     *  Remove child and return the unique_ptr associated to this one
+    /**
+     *  Return the side place in the current grid object following coords
+     *  @param i,j,k are the coords into the current object grid
+     *  @return the border side constant
+     */
+    int BeInTheRightPlace(int i, int j, int k) const;
+
+    /**
+     *  Compute the right grid coords following a side
+     *  This function dont use class members.
+     *  @param i,j,k are initial coords into Grid array
+     *  @param side is the side constant targetting
+     *  @return the new coords after apply side constraint
+     */
+    std::vector<int> GetNeighborCoordsBySide(int i, int j, int k, int side) const;
+
+    /**
+     *  Compute an array of sides qualified with a moving direction
+     *  @param dirx,diry,dirz are axis directions of the moving current object
+     *  @return a vector of sides constant
+     */
+    std::vector<int> ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept;
+
+    /**
+     *  Remove child off the current object and return the unique_ptr associated to this one
+     *  @param child to remove
+     *  @return the unique_ptr to the old child
      */
     std::unique_ptr<Model3D> TransfertChild(Model3D* child) noexcept;
 
-    /*
-     *  Compute placements coords in the parent grid
+    /**
+     *  Compute placements coords of the current object in the parent grid
      */
     void ComputePlacements() noexcept;
 
-    /*
+    /**
      *  Flush all items into the grid
      */
     void ResetGrid() noexcept;
 
-    /*
-     *  Model3D Composite attributes
-     *      elements_: 3d objects which composes the 3d model
-     *      border_: the "box" which defines the border of the 3d model
-     *      objects_: 3d models which are inside the current 3d model, as childs of this one
-     */
+
+    /** 3d shapes which composes the current object */
     std::vector<std::unique_ptr<engine::graphics::Shape3D>> elements_;
+
+    /** the box which defines the border */
     std::unique_ptr<engine::graphics::Border> border_{nullptr};
+
+    /** childs of the current object */
     std::vector<std::unique_ptr<Model3D>> objects_;
 
-    /*
-     *  Parent of the current 3d model
-     */
+    /** Parent of the current 3d model */
     Model3D* parent_{nullptr};
 
-    /*
-     *  Grid placements for the childs of the model
-     */
+    /** Grid placements for the childs of the current object */
     std::vector<Model3D*> ***grid_{nullptr};
 
-    /*
-     *  Placements coordinates into the grid
-     *  of the parent model for current model
-     */
+    /** Placements coordinates into the parent grid */
     std::vector<std::vector<int>> placements_;
 
-    /*
-     *  If defined, obestacle_ is the model collision partner
-     */
+    /** If setted, obestacle_ is the collision partner */
     Model3D* obstacle_{nullptr};
 
-    /*
-     *  Mutex ensures thread safe
-     */
+    /** Mutex ensures thread safe instructions */
     tbb::mutex object_mutex_;
 
-    /*
-     *  Engine used for collision computes
-     */
+    /** Engine used for collision computes */
     engine::physics::CollisionEngine* collision_engine_{nullptr};
 
-    /*
-     *  Grid settings
-     *      grid_unit_(x|y|z)_: size in gl pixels for one unity and for the 3 dimensions
-     *      grid_(x|y|z)_: number of unities in the complete grid for the 3 dimensions
-     *      
-     *      And Finally
-     *           grid_x * grid_unit_x =~ width of the Model
-     *           grid_y * grid_unit_y =~ heigth of the Model
-     *           grid_z * grid_unit_z =~ depth of the Model
-     */
+    /** size in gl pixels for one unity of X grid axis */
     float grid_unit_x_{0.0f};
+
+    /** size in gl pixels for one unity of Y grid axis */
     float grid_unit_y_{0.0f};
+
+    /** size in gl pixels for one unity of Z grid axis */
     float grid_unit_z_{0.0f};
+
+    /** number of X unities in the grid (grid_x * grid_unit_x = grid width) */
     int grid_x_{0};
+
+    /** number of Y unities in the grid (grid_y * grid_unit_y = grid height) */
     int grid_y_{0};
+
+    /** number of Z unities in the grid (grid_z * grid_unit_z = grid depth) */
     int grid_z_{0};
 
-    /*
-     *  Model3d Attributes
-     */
-    float distance_;
+    /** Unique id */
     int id_;
+
+    /** Last obstacle id */
     int id_last_collision_;
+
+    /** Type of 3d object */
     int type_{10000};
+
+    /** Count of childs who are still missing */
     int missobjects_{0};
-    bool is_crossed_;
-    bool is_controlled_;
+
+    /** The object can be controlled by hid (mainly camera) */
+    bool is_controlled_{false};
 };
 
 } // namespace graphics

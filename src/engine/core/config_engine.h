@@ -1,6 +1,6 @@
-/*
+/**
  *  ConfigEngine class header
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *
  *  ConfigEngine implements and maintains a configuration management for the program.
  *
@@ -20,7 +20,7 @@ class ConfigEngine {
 
 public:
 
-    /* 
+    /*
      *  Debug Constants
      */
     static constexpr int kDEBUG_QUIET = 0;
@@ -29,8 +29,31 @@ public:
     static constexpr int kDEBUG_COLLISION = 3;
     static constexpr int kDEBUG_ALL = 4;
 
-    /* 
+    /**
+     *  Default Move constructor
+     */
+    ConfigEngine(ConfigEngine&&) = default;
+
+    /**
+     *  Default Move assignment
+     */
+    ConfigEngine& operator=(ConfigEngine&&) = default;
+
+    /**
+     *  Copy constructor Deleted
+     *  Ensure a sole Instance
+     */
+    ConfigEngine(const ConfigEngine&) = delete;
+
+    /**
+     *  Copy assignment Deleted
+     *  Ensure a sole Instance
+     */
+    ConfigEngine& operator=(const ConfigEngine&) = delete;
+
+    /**
      *  Return sole Instance
+     *  @return sole ConfigEngine instance
      */
     static ConfigEngine* Instance()
     {
@@ -39,7 +62,7 @@ public:
         return instance;
     }
 
-    /*  
+    /**
      *  Init Config
      */
     static void InitConfig()
@@ -48,13 +71,17 @@ public:
         Instance()->DefaultValues();
     }
 
-    /*
+    /**
      *  Test if a parameter exists
+     *  @param key the name of the parameter
+     *  @return true if the parameter exists in the config, false in the other case
      */
     inline static bool IsExist(std::string key) { return Instance()->exists(key); }
 
-    /*
+    /**
      *  Parameter Accessor
+     *  @param key the name of the parameter
+     *  @return the value of the parameter in the requested type
      */
     template<typename T>
     static T getSetting(std::string key)
@@ -62,8 +89,11 @@ public:
         return Instance()->getValue<T>(key);
     }
 
-    /*
+    /**
      *  Parameter Mutator
+     *  @param key the name of the parameter
+     *  @param setting_type the type of the parameter
+     *  @param value the value of the parameter
      */
     template<typename T>
     static void setSetting(std::string key, libconfig::Setting::Type setting_type, T value)
@@ -71,49 +101,58 @@ public:
         Instance()->setValue(key, setting_type, value);
     }
 
+    /**
+     *  Display all config parameter in the current state
+     */
     static void DisplayConfig()
     {
         Instance()->ParseConfig();
     }
 
+    /**
+     *  Record parameters taken from the command line
+     *  @param argc the number of parameters in command line
+     *  @param argv the array of parameters in the command line
+     */
     static void ManageProgramParameters(int argc, char* argv[]);
 
 protected:
 
-    /*
-     *  Standard Constructors and Assignments
-     *  Protected scope beacause singleton class
+    /**
+     *  Default Constructor
+     *  With a protected scope for avoid any directly Allocation
      */
-    ConfigEngine(){};
-    ConfigEngine(const ConfigEngine&) = default;
-    ConfigEngine& operator=(const ConfigEngine&) = default;
+    ConfigEngine() = default;
 
 private:
 
-    /*
+    /**
      *   Parse config file and set config values
      */
     void ParseFile();
 
-    /*
+    /**
      * Parse and display config
      */
     void ParseConfig() const;
 
-    /*
+    /**
      *   Set default config values if defined neither into config file,
      *   neither in program arguments.
      *   Ensure all setting parameters are defined.
      */
     void DefaultValues();
 
-    /*
-     *  Test if exists in libconfig instance
+    /**
+     *  Test if parameter exists in libconfig instance
+     *  @param key the name of the parameter
      */
-    inline bool exists(std::string key) { return cfg.exists(key); }
+    inline bool exists(std::string key) const { return cfg.exists(key); }
 
-    /* 
-     *  Internal Accessor 
+    /**
+     *  Internal Accessor
+     *  @param key the name of the parameter
+     *  @return the value of the parameter in the requested type
      */
     template<typename T>
     T getValue(std::string key) const
@@ -123,8 +162,11 @@ private:
         return ret;
     }
 
-    /*
+    /**
      *  Internal Mutator
+     *  @param key the name of the parameter
+     *  @param setting_type the type of the parameter
+     *  @param value the value of the parameterin the requested type
      */
     template<typename T>
     void setValue(std::string key, libconfig::Setting::Type setting_type, T value)
@@ -136,7 +178,8 @@ private:
         root.add(key, setting_type) = value;
     }
 
-    /* libconfig Object */
+
+    /** libconfig Object */
     libconfig::Config cfg;
 };
 

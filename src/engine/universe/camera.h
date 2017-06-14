@@ -1,6 +1,6 @@
-/*
+/**
  *   Camera class header
- *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *
  *   Camera 3d model, inherits Model3D abstract class
  *
@@ -25,27 +25,42 @@ class Camera : public Model3D {
 
 public:
 
-    /*
-     *  Constructors
+    /**
+     *  Constructor
      */
     Camera();
+
+    /**
+     *  Constructor
+     *  @param cx,cy,cz are camera location coordinates
+     *  @param vx,vy,vz are camera view coordinates
+     *  @param hx,hy,hz are camera head coordinates
+     */
     Camera(float cx, float cy, float cz,
            float vx, float vy, float vz,
            float hx, float hy, float hz);
 
-    /*
-     *  Default move constructor and assignment
+    /**
+     *  Default Move constructor
      */
     Camera(Camera&&) = default;
+
+    /**
+     *  Default Move assignment
+     */
     Camera& operator=(Camera&&) = default;
 
-    /*
-     *  Default copy constructor and assignment
+    /**
+     *  Copy constructor Deleted (Model3D Inherit)
      */
-    Camera(const Camera&) = default;
-    Camera& operator=(const Camera&) = default;
+    Camera(const Camera&) = delete;
 
-    /*
+    /**
+     *  Copy assignment Deleted (Model3D Inherit)
+     */
+    Camera& operator=(const Camera&) = delete;
+
+    /**
      *  Default destructor
      */
     ~Camera() override = default;
@@ -63,17 +78,26 @@ public:
      */
     void set_active() { active_ = this; }
 
-    /*
+    /**
      *  Record Mouse and Keyboard Events 
      */
     void RecordHID() noexcept override final;
 
 private:
 
+    /** VIew direction vector */
     glm::vec3 direction_;
+
+    /** Head coords */
     glm::vec3 head_;
+
+    /** Horizontal orientation angle */
     float horizontal_angle_;
+
+    /** Vertical orientation angle */
     float vertical_angle_;
+
+    /** Field of view */
     float fov_;
 
     /* At least one and only one current active Camera */

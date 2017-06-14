@@ -1,6 +1,6 @@
-/*
+/**
  *  LoopGL class file
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/renderer/loopgl.h"
@@ -26,7 +26,7 @@ static engine::universe::Universe* sUniverse = nullptr;
 static double sBeginTime = 0.0f;
 
 /**
- *   LoadShaders - Compile and Load shader from files to ram
+ *   Compile and Load shader from files to ram
  *   2 shaders are compiled: vertex and fragment shaders.
  */
 void LoadShaders()
@@ -128,7 +128,7 @@ void LoadShaders()
     glDeleteShader(fragmentshader_id);
 }
 
-/*
+/**
  *    Draw Current Universe
  */
 void Draw()
@@ -160,8 +160,8 @@ void Draw()
     glfwSwapBuffers(LoopGL::sGLWindow);
 }
 
-/*
- *   Compute current fps and display it if debug enabled
+/**
+ *   Compute current fps and display it (if debug enabled)
  */
 int Fps(double &last_time, int &nb_frames)
 {

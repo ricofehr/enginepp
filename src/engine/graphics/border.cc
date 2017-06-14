@@ -1,6 +1,6 @@
-/*
+/**
  *   Border class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/graphics/border.h"
@@ -14,6 +14,8 @@ namespace engine {
 namespace graphics {
 
 namespace {
+
+/* Default base coords for the box */
 static const std::vector<glm::vec3> sDefaultCoords = {
     /* Front */
     {-1.0f,  1.0f,  1.0f},
@@ -47,6 +49,7 @@ static const std::vector<glm::vec3> sDefaultCoords = {
     { 1.0f, -1.0f,  1.0f},
 
 };
+
 } // anonymous namespace
 
 Border::Border()

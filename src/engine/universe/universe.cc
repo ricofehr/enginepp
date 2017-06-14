@@ -1,6 +1,6 @@
-/*
+/**
  *  Universe class file
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/universe.h"
@@ -121,7 +121,7 @@ void Universe::Draw() noexcept
 
     /* Detect collision in active rooms */
     cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-        display_rooms_[cnt]->DetectCollisionBetweenChilds();
+        display_rooms_[cnt]->DetectCollision();
     }
 
     /* Universe is only ready after 10 hops */

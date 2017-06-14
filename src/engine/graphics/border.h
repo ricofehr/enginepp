@@ -1,8 +1,8 @@
-/*
+/**
  *  Border class header
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *
- *  Each 3d model in the scene must be fill into a border.
+ *  Each 3d object in the scene must be fill into a border.
  *  This border is represented by a Cube object with a Delegator scheme.
  *  Used for 3d objects coordinates and collision compute.
  */
@@ -25,48 +25,114 @@ class Border {
 
 public:
 
-    /*
-     *  Constructors
+    /**
+     *  Constructor
      */
     Border();
+
+    /**
+     *  Constructor
+     *  @param scale is a float factor applied to the native coords array
+     *  @param location is the center point of the Border
+     */
     Border(float scale, glm::vec4 location);
+
+    /**
+     *  Constructor
+     *  @param scale is a 3 axis factor applied to the native coords array
+     *  @param location is the center point of the Border
+     */
     Border(glm::vec3 scale, glm::vec4 location);
+
+    /**
+     *  Constructor
+     *  @param scale is a float factor applied to the native coords array
+     *  @param location is the center point of the Border
+     *  @param move is the translation vector
+     */
     Border(float scale, glm::vec4 location, glm::vec4 move);
+
+    /**
+     *  Constructor
+     *  @param scale is a 3 axis factor applied to the native coords array
+     *  @param location is the center point of the Border
+     *  @param move is the translation vector
+     */
     Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move);
+
+    /**
+     *  Constructor
+     *  @param scale is a float factor applied to the native coords array
+     *  @param location is the center point of the Border
+     *  @param coords is the native coords of the cube border
+     */
     Border(float scale, glm::vec4 location, std::vector<glm::vec3> coords);
+
+    /**
+     *  Constructor
+     *  @param scale is a 3 axis factor applied to the native coords array
+     *  @param location is the center point of the Border
+     *  @param coords is the native coords of the cube border
+     */
     Border(glm::vec3 scale, glm::vec4 location, std::vector<glm::vec3> coords);
+
+    /**
+     *  Constructor
+     *  @param scale is a float factor applied to the native coords array
+     *  @param location is the center point of the Border
+     *  @param move is the translation vector
+     *  @param coords is the native coords of the cube border
+     */
     Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
+
+    /**
+     *  Constructor
+     *  @param scale is a 3 axis factor applied to the native coords array
+     *  @param location is the center point of the Border
+     *  @param move is the translation vector
+     *  @param coords is the native coords of the cube border
+     */
     Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
 
-    /*
-     *  Default move constructor and assignment
+    /**
+     *  Default Move constructor
      */
     Border(Border&&) = default;
+
+    /**
+     *  Default Move assignment
+     */
     Border& operator=(Border&&) = default;
 
-    /*
-     *  Delete copy constructor / assignment
+    /**
+     *  Copy constructor Deleted
      *  Because cube_ is unique_ptr
      */
     Border(const Border&) = delete;
+
+    /**
+     *  Copy assignment Deleted
+     *  Because cube_ is unique_ptr
+     */
     Border& operator=(const Border&) = delete;
 
-    /*
+    /**
      *  Default destructor
      */
     ~Border() = default;
 
-    /*
-     *  Return coords computed for the current state
+    /**
+     *  Compute and return coords computed with current model matrix
+     *  @return border coords computed
      */
     std::vector<glm::vec3> ComputeCoords() const;
 
-    /* 
+    /**
      *  Compute new location for the next move
      */
     void MoveCoords();
 
-    /*
+    /**
      *  Delegate Move 
      */
     void MoveLocation() { cube_->MoveLocation(); }
@@ -92,7 +158,10 @@ public:
 
 private:
 
+    /** Represents the border */
     std::unique_ptr<Cube> cube_{nullptr};
+
+    /** Border coords */
     std::vector<glm::vec3> coords_;
 };
 

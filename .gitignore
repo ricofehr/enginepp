@@ -52,3 +52,8 @@ config/enginepp.ini
 
 # tmp folder
 tmp
+
+# doxygen folder
+doxy/*
+!doxy/engine.png
+!doxy/.gitkeep

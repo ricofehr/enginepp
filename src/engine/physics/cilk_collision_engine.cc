@@ -1,6 +1,6 @@
-/*
+/**
  *   cilkplus version for CollisionEngine
- *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/physics/cilk_collision_engine.h"

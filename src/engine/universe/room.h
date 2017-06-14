@@ -1,6 +1,6 @@
-/*
+/**
  *  Room class header
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *  
  *  Define a Room (inside with walls and moving objects), inherits Model3D abstract class
  */
@@ -21,12 +21,49 @@ class Room : public Model3D {
 
 public:
 
-    /*
-     *  Constructors 
+    /**
+     *  Constructor
      */
     Room();
+
+    /**
+     *  Constructor
+     *  @param location is the center point of the room
+     */
     Room(glm::vec4 location);
+
+    /**
+     *  Constructor
+     *  @param location is the center point of the room
+     *  @param is_doors set sides which are a door
+     *  @param is_windows set sides which are a window
+     */
     Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows);
+
+    /**
+     *  Default Move constructor
+     */
+    Room(Room&&) = default;
+
+    /**
+     *  Default Move assignment
+     */
+    Room& operator=(Room&&) = default;
+
+    /**
+     *  Copy constructor Deleted (Model3D Inherit)
+     */
+    Room(const Room&) = delete;
+
+    /**
+     *  Copy assignment Deleted (Model3D Inherit)
+     */
+    Room& operator=(const Room&) = delete;
+
+    /**
+     *  Default destructor
+     */
+    ~Room() override = default;
 
     /*
      *  Accessors
@@ -52,12 +89,10 @@ private:
     static constexpr float kGRID_UNIT_X = 2.0f;
     static constexpr float kGRID_UNIT_Z = 2.0f;
 
-    /*
-     *  Room attributes
-     *      doors_: select room side with a Door
-     *      windows_: select room side with a Window
-     */
+    /** select room side with a Door */
     std::vector<bool> doors_{false, false, false, false, false, false};
+
+    /** select room side with a Window */
     std::vector<bool> windows_{false, false, false, false, false, false};
 };
 

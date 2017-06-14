@@ -1,6 +1,6 @@
-/*
+/**
  *  ConfigEngine Class File
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/core/config_engine.h"

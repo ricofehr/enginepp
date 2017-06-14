@@ -1,6 +1,6 @@
-/*
+/**
  *  CLCollisionEngine class header
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *
  *  Implements opencl algorithm for collision computes.
  */
@@ -33,19 +33,45 @@ class CLCollisionEngine : public CollisionEngine {
 
 public:
 
-    /*
+    /**
+     *  Default Move constructor
+     */
+    CLCollisionEngine(CLCollisionEngine&&) = default;
+
+    /**
+     *  Default Move assignment
+     */
+    CLCollisionEngine& operator=(CLCollisionEngine&&) = default;
+
+    /**
+     *  Copy constructor Deleted
+     *  Ensure a sole Instance
+     */
+    CLCollisionEngine(const CLCollisionEngine&) = delete;
+
+    /**
+     *  Copy assignment Deleted
+     *  Ensure a sole Instance
+     */
+    CLCollisionEngine& operator=(const CLCollisionEngine&) = delete;
+
+    /**
      *  Default destructor
      */
     ~CLCollisionEngine() override = default;
 
-    /*
-     *  Compute collision distance between 2 borders (box1 and box2)
+    /**
+     *  Compute collision distance between borders of 2 objects
      *  Thanks to opencl paralell processing
+     *  @param box1 includes the coords for the first border and the moving vector
+     *  @param box2 includes the coords for the second border and the moving vector
+     *  @return distance between the 2 borders
      */
     float ComputeCollision(float box1[], float box2[]) override final;
 
-    /*
+    /**
      *  Return (and allocates if needed) sole Instance
+     *  @return the sole collision engine instance
      */
     inline static CLCollisionEngine* Instance()
     {
@@ -69,24 +95,34 @@ public:
 
 protected:
 
-    /*
-     *  Constructor
+    /**
+     *  Default Constructor
      *  Protected scope ensure sole instance
      */
-    CLCollisionEngine(){};
-    CLCollisionEngine(const CLCollisionEngine&) = default;
-    CLCollisionEngine& operator=(const CLCollisionEngine&) = default;
+    CLCollisionEngine() = default;
 
-    /*
+    /**
      *  Init opencl parallell context
      */
     void InitCollisionEngine() override final;
 
+
+    /** Opencl Kernel Object */
     cl::Kernel cl_kernel_;
+
+    /** Opencl Execution Queue  Object */
     cl::CommandQueue cl_queue_;
+
+    /** Opencl Input Buffer */
     std::vector<cl::Buffer> bufferin_;
+
+    /** Opencl Output Buffer */
     std::vector<cl::Buffer> bufferout_;
+
+    /** Ensures thread safe execution */
     tbb::mutex collision_mutex_;
+
+    /** Opencl Workgroup size */
     int wk_size_{32};
 };
 

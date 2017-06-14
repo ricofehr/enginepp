@@ -1,6 +1,6 @@
-/*
+/**
  *  Room class file
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/room.h"

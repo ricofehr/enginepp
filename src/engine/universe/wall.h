@@ -1,6 +1,6 @@
-/*
+/**
  *  Wall class header
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *
  *  Wall 3d model, inherits Model3D abstract class
  */
@@ -37,30 +37,45 @@ public:
     static constexpr int kWALL_BOTTOM = 4;
     static constexpr int kWALL_TOP = 5;
 
-    /*
-     *  Constructors
+    /**
+     *  Constructor
      */
     Wall();
+
+    /**
+     *  Constructor
+     *  @param scale is the float scale factor of native coords
+     *  @param location is the center point of the brick
+     *  @param face is the orientation number of the wall: kROOF, kFLOOR, kLEFT, kRIGHT, kFRONT, kBACK
+     */
     Wall(glm::vec3 scale, glm::vec4 location, int face);
 
-    /*
-     *  Default move constructor and assignment
+    /**
+     *  Default move constructor
      */
     Wall(Wall&&) = default;
+
+    /**
+     *  Default move assignment
+     */
     Wall& operator=(Wall&&) = default;
 
-    /*
-     *  Default copy constructor and assignment
+    /**
+     *  Copy constructor Deleted (Model3D Inherit)
      */
-    Wall(const Wall&) = default;
-    Wall& operator=(const Wall&) = default;
+    Wall(const Wall&) = delete;
 
-    /*
+    /**
+     *  Copy assignment Deleted (Model3D Inherit)
+     */
+    Wall& operator=(const Wall&) = delete;
+
+    /**
      *  Default destructor
      */
     ~Wall() override = default;
 
-    /*
+    /**
      *  Fill vertex and texture into GL Buffers
      *  Needs a sole execution for all Walls object.
      */

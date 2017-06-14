@@ -1,6 +1,6 @@
-/*
+/**
  *  SerialCollisionEngine class header
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  *
  *  Implements Serial algorithm for collision computes.
  */
@@ -20,19 +20,45 @@ class SerialCollisionEngine : public CollisionEngine {
 
 public:
 
-    /*
+    /**
+     *  Default Move constructor
+     */
+    SerialCollisionEngine(SerialCollisionEngine&&) = default;
+
+    /**
+     *  Default Move assignment
+     */
+    SerialCollisionEngine& operator=(SerialCollisionEngine&&) = default;
+
+    /**
+     *  Copy constructor Deleted
+     *  Ensure a sole Instance
+     */
+    SerialCollisionEngine(const SerialCollisionEngine&) = delete;
+
+    /**
+     *  Copy assignment Deleted
+     *  Ensure a sole Instance
+     */
+    SerialCollisionEngine& operator=(const SerialCollisionEngine&) = delete;
+
+    /**
      *  Default destructor
      */
     ~SerialCollisionEngine() override = default;
 
-    /*
-     *  Compute collision distance between 2 borders (box1 and box2)
+    /**
+     *  Compute collision distance between borders of 2 objects
      *  Thanks to a serial compute in only one cpu core.
+     *  @param box1 includes the coords for the first border and the moving vector
+     *  @param box2 includes the coords for the second border and the moving vector
+     *  @return distance between the 2 borders
      */
     float ComputeCollision(float box1[], float box2[]) override final;
 
-    /*
+    /**
      *  Return (and allocates if needed) sole Instance
+     *  @return the sole collision engine instance
      */
     inline static SerialCollisionEngine* Instance()
     {
@@ -56,14 +82,12 @@ public:
 protected:
 
     /*
-     *  Constructor
+     *  Default Constructor
      *  Protected scope ensure sole instance
      */
-    SerialCollisionEngine(){};
-    SerialCollisionEngine(const SerialCollisionEngine&) = default;
-    SerialCollisionEngine& operator=(const SerialCollisionEngine&) = default;
+    SerialCollisionEngine() = default;
 
-    /*
+    /**
      *  Init serial context
      */
     void InitCollisionEngine() override final;

@@ -1,6 +1,7 @@
-/*
- *  CollisionEngine class file: Implements the default DectectCollision function
- *  @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+/**
+ *  CollisionEngine class file.
+ *  Defines the default DectectCollision function
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/physics/collision_engine.h"

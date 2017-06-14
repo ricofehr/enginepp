@@ -126,6 +126,7 @@ Scanning dependencies of target engine
 +--cmake/   Cmake modules folder
 +--config/  Config folder
 +--dia/     Uml and span diagrams
++--doxy/    Destination folder for documentation generated
 +--glsl/    OpenGL Shaders folder
 +--others/	Demo gif and others exported files
 +--scripts/ Bash scripts
@@ -210,7 +211,12 @@ Usage: ./scripts/./test_perf.sh [options]
 
 ## Documentation
 
-Doxy pages are available [here](http://oxy.enginepp.nextdeploy.io)
+For generate doxygen documentation, into the project folder
+```
+doxygen doxygen.config
+```
+
+Doxy pages are available online [here](http://oxy.enginepp.nextdeploy.io)
 
 ## UML
 

@@ -1,6 +1,6 @@
-/*
+/**
  *   Brick class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+ *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/brick.h"
@@ -20,12 +20,12 @@ namespace universe {
 
 namespace {
 
+/* GL Buffer ids for texture and vertex */
 static GLuint sTextureBuffer = 0;
 static GLuint sVertexBuffer = 0;
 
-/* Brick vertex / color / texture coordinates */
+/* Brick vertex (3) / color (3) / texture (2) coordinates */
 const GLfloat sBufferData[192] = {
-  /* Position            Color              Texcoords */
     /* Front */
     -1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
      1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,
