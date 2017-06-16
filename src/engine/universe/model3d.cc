@@ -32,7 +32,8 @@ Model3D::Model3D()
     id_ = sObjectId++;
     obstacle_ = nullptr;
     id_last_collision_ = 0;
-    is_controlled_ = false;
+    is_collision_with_camera_ = false;
+    collision_countdown_ = 0;
     InitCollisionEngine();
 }
 
@@ -70,16 +71,32 @@ void Model3D::InitCollisionEngine()
 void Model3D::Move() noexcept
 {
     border_->MoveCoords();
+
     cilk_for (auto cnt = 0; cnt < elements_.size(); cnt++) {
         elements_[cnt]->ComputeMVP();
     }
 
-    /* An object cant touch same object twice, except camera */
-    id_last_collision_ = -1;
-    if (!is_controlled_ && obstacle_ != nullptr) {
-        id_last_collision_ = obstacle_->id();
+    if (collision_countdown_ == 0) {
+        id_last_collision_ = 0;
+    } else {
+        --collision_countdown_;
     }
+
+    /* Ensure next kCOLLISION_COUNTDOWN frames
+       dont compute collision with same obstacle */
+    if (obstacle_ != nullptr && !IsCameraCollision()) {
+        id_last_collision_ = obstacle_->id();
+        collision_countdown_ = kCOLLISION_COUNTDOWN;
+    }
+
+    if (collision_countdown_ == 0) {
+        id_last_collision_ = 0;
+    } else {
+        --collision_countdown_;
+    }
+
     obstacle_ = nullptr;
+    is_collision_with_camera_ = false;
 
     /* New placements in parent grid */
     if (IsMoved()) {
@@ -219,17 +236,20 @@ void Model3D::ComputePlacements() noexcept
     auto grid0 = parent_->GetGrid0();
     auto grid_unit = glm::vec3(parent_->grid_unitx(), parent_->grid_unity(), parent_->grid_unitz());
 
-    auto x = x1;
-    auto y = y1;
-    auto z = z1;
-
     clear_placements();
 
-    for (x = x1 ; x < x2 ; x += grid_unit[0]) {
-        for (y = y1 ; y < y2 ; y += grid_unit[1]) {
-            for (z = z1 ; z < z2 ; z += grid_unit[2]) {
+    int size_x = static_cast<int>(ceil((x2 - x1) / grid_unit[0]));
+    int size_y = static_cast<int>(ceil((y2 - y1) / grid_unit[1]));
+    int size_z = static_cast<int>(ceil((z2 - z1) / grid_unit[2]));
 
+    cilk_for (auto cnt_x = 0 ; cnt_x < size_x ; cnt_x++) {
+        cilk_for (auto cnt_y = 0 ; cnt_y < size_y ; cnt_y++) {
+            cilk_for (auto cnt_z = 0 ; cnt_z < size_z ; cnt_z++) {
                 parent_new = parent_;
+
+                float x = x1 + cnt_x * grid_unit[0];
+                float y = y1 + cnt_y * grid_unit[1];
+                float z = z1 + cnt_z * grid_unit[2];
 
                 auto tmp = (glm::vec3(x, y, z) - grid0) / grid_unit;
                 auto i = static_cast<int>(tmp[0]);
@@ -277,10 +297,10 @@ void Model3D::ComputePlacements() noexcept
 void Model3D::DisplayGrid() const noexcept
 {
     std::string object_type{"MODEL3D"};
-    if (type_ == kMODEL3D_UNIVERSE) {
+
+    if (IsUniverse()) {
         object_type = "UNIVERSE";
-    }
-    else if (type_ == kMODEL3D_ROOM) {
+    } else if (IsRoom()) {
         object_type = "ROOM";
     }
 
@@ -331,116 +351,91 @@ void Model3D::DetectCollision() noexcept
 
 void Model3D::PivotCollision() noexcept
 {
-    /* ensure that 2 same objects are not checked at the same time */
-    static tbb::mutex pivot_mutex;
-
-    lock();
-
     /* Prepare vector for collision compute */
     std::vector<Model3D*> test_objects = FindCollisionNeighbors();
 
     /* Parallell collision loop for objects with cilkplus */
-    std::map<int, std::vector<Model3D*>> recompute;
     cilk_for (auto i = 0; i < test_objects.size(); i++) {
         /* Abort program if object and room_object loop are same (must no happend) */
         assert(*this != *test_objects[i]);
 
-        std::vector<Model3D*> collision_recompute = collision_engine_->DetectCollision(this, test_objects[i]);
-        if (collision_recompute.size() > 0) {
-            recompute[test_objects[i]->id()] = collision_recompute;
-        }
+        collision_engine_->DetectCollision(this, test_objects[i]);
     }
 
-    /* end mutex lock */
-    unlock();
-
-    /* If collision detected, recompute older ones if exists */
-    if (obstacle() != nullptr ) {
-        try {
-            for (auto &obj : recompute.at(obstacle()->id())) {
-                using engine::core::ConfigEngine;
-                if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION) {
-                    std::cout << "Recompute " << id() << "::" << obj->id() << std::endl;
-                }
-                cilk_spawn obj->PivotCollision();
-            }
-        }
-        /* Silently catched out-of-range (not a problem) */
-        catch (const std::out_of_range& oor) {}
-        
-        cilk_sync;
+    if (IsCamera() && obstacle() != nullptr) {
+        obstacle()->flag_collision_with_camera();
     }
 }
 
 int Model3D::BeInTheRightPlace(int i, int j, int k) const
 {
     if (i < 0 && j < 0 && k < 0) {
-        return kLEFT_FLOOR_FRONT;
-    } else if (i < 0 && j < 0 && k >= gridz()) {
         return kLEFT_FLOOR_BACK;
+    } else if (i < 0 && j < 0 && k >= gridz()) {
+        return kLEFT_FLOOR_FRONT;
     } else if (i < 0 && j < 0) {
         return kLEFT_FLOOR;
     } else if (i < 0 && j >= gridy() && k < 0) {
-        return kLEFT_ROOF_FRONT;
-    } else if (i < 0 && j >= gridy() && k >= gridz()) {
         return kLEFT_ROOF_BACK;
+    } else if (i < 0 && j >= gridy() && k >= gridz()) {
+        return kLEFT_ROOF_FRONT;
     } else if (i < 0 && j >= gridy()) {
         return kLEFT_ROOF;
     } else if (i < 0 && k < 0) {
-        return kLEFT_FRONT;
-    } else if (i < 0 && k >= gridz()) {
         return kLEFT_BACK;
+    } else if (i < 0 && k >= gridz()) {
+        return kLEFT_FRONT;
     } else if (i < 0) {
         return kLEFT;
     } else if (i >= gridx() && j < 0 && k < 0) {
-        return kRIGHT_FLOOR_FRONT;
-    } else if (i >= gridx() && j < 0 && k >= gridz()) {
         return kRIGHT_FLOOR_BACK;
+    } else if (i >= gridx() && j < 0 && k >= gridz()) {
+        return kRIGHT_FLOOR_FRONT;
     } else if (i >= gridx() && j < 0) {
         return kRIGHT_FLOOR;
     } else if (i >= gridx() && j >= gridy() && k < 0) {
-        return kRIGHT_ROOF_FRONT;
-    } else if (i >= gridx() && j >= gridy() && k >= gridz()) {
         return kRIGHT_ROOF_BACK;
+    } else if (i >= gridx() && j >= gridy() && k >= gridz()) {
+        return kRIGHT_ROOF_FRONT;
     } else if (i >= gridx() && j >= gridy()) {
         return kRIGHT_ROOF;
     } else if (i >= gridx() && k < 0) {
-        return kRIGHT_FRONT;
-    } else if (i >= gridx() && k >= gridz()) {
         return kRIGHT_BACK;
+    } else if (i >= gridx() && k >= gridz()) {
+        return kRIGHT_FRONT;
     } else if (i >= gridx()) {
         return kRIGHT;
     } else if (j < 0 && k < 0) {
-        return kFLOOR_FRONT;
-    } else if (j < 0 && k >= gridz()) {
         return kFLOOR_BACK;
+    } else if (j < 0 && k >= gridz()) {
+        return kFLOOR_FRONT;
     } else if (j < 0) {
         return kFLOOR;
     } else if (j >= gridy() && k < 0) {
-        return kROOF_FRONT;
-    } else if (j >= gridy() && k >= gridz()) {
         return kROOF_BACK;
+    } else if (j >= gridy() && k >= gridz()) {
+        return kROOF_FRONT;
     } else if (j >= gridy()) {
         return kROOF;
     } else if (k < 0) {
-        return kFRONT;
-    } else if (k >= gridz()) {
         return kBACK;
+    } else if (k >= gridz()) {
+        return kFRONT;
     }
 
     /* kSAME -> already the right place */
     return kSAME;
 }
 
-std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept
+const std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept
 {
     /* Left sides */
     if (dirx == -1 && diry == -1 && dirz == -1) {
-        return {kSAME, kLEFT, kLEFT_FLOOR, kFLOOR, kLEFT_FRONT, kLEFT_FLOOR_FRONT, kFLOOR_FRONT, kFRONT};
+        return {kSAME, kLEFT, kLEFT_FLOOR, kFLOOR, kLEFT_BACK, kLEFT_FLOOR_BACK, kFLOOR_BACK, kBACK};
     }
 
     if (dirx == -1 && diry == -1 && dirz == 1) {
-        return {kSAME, kLEFT, kLEFT_FLOOR, kFLOOR, kLEFT_BACK, kLEFT_FLOOR_BACK, kFLOOR_BACK, kBACK};
+        return {kSAME, kLEFT, kLEFT_FLOOR, kFLOOR, kLEFT_FRONT, kLEFT_FLOOR_FRONT, kFLOOR_FRONT, kFRONT};
     }
 
     if (dirx == -1 && diry == -1) {
@@ -448,11 +443,11 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
     }
 
     if (dirx == -1 && diry == 1 && dirz == -1) {
-        return {kSAME, kLEFT, kLEFT_ROOF, kROOF, kLEFT_FRONT, kLEFT_ROOF_FRONT, kROOF_FRONT, kFRONT};
+        return {kSAME, kLEFT, kLEFT_ROOF, kROOF, kLEFT_BACK, kLEFT_ROOF_BACK, kROOF_BACK, kBACK};
     }
 
     if (dirx == -1 && diry == 1 && dirz == 1) {
-        return {kSAME, kLEFT, kLEFT_ROOF, kROOF, kLEFT_BACK, kLEFT_ROOF_BACK, kROOF_BACK, kBACK};
+        return {kSAME, kLEFT, kLEFT_ROOF, kROOF, kLEFT_FRONT, kLEFT_ROOF_FRONT, kROOF_FRONT, kFRONT};
     }
 
     if (dirx == -1 && diry == 1) {
@@ -460,11 +455,11 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
     }
 
     if (dirx == -1 && dirz == -1) {
-        return {kSAME, kLEFT, kLEFT_FRONT, kFRONT};
+        return {kSAME, kLEFT, kLEFT_BACK, kBACK};
     }
 
     if (dirx == -1 && dirz == 1) {
-        return {kSAME, kLEFT, kLEFT_BACK, kBACK};
+        return {kSAME, kLEFT, kLEFT_FRONT, kFRONT};
     }
 
     if (dirx == -1) {
@@ -473,11 +468,11 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
 
     /* Right sides */
     if (dirx == 1 && diry == -1 && dirz == -1) {
-        return {kSAME, kRIGHT, kRIGHT_FLOOR, kFLOOR, kRIGHT_FRONT, kRIGHT_FLOOR_FRONT, kFLOOR_FRONT, kFRONT};
+        return {kSAME, kRIGHT, kRIGHT_FLOOR, kFLOOR, kRIGHT_BACK, kRIGHT_FLOOR_BACK, kFLOOR_BACK, kBACK};
     }
 
     if (dirx == 1 && diry == -1 && dirz == 1) {
-        return {kSAME, kRIGHT, kRIGHT_FLOOR, kFLOOR, kRIGHT_BACK, kRIGHT_FLOOR_BACK, kFLOOR_BACK, kBACK};
+        return {kSAME, kRIGHT, kRIGHT_FLOOR, kFLOOR, kRIGHT_FRONT, kRIGHT_FLOOR_FRONT, kFLOOR_FRONT, kFRONT};
     }
 
     if (dirx == 1 && diry == -1) {
@@ -485,11 +480,11 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
     }
 
     if (dirx == 1 && diry == 1 && dirz == -1) {
-        return {kSAME, kRIGHT, kRIGHT_ROOF, kROOF, kRIGHT_FRONT, kRIGHT_ROOF_FRONT, kROOF_FRONT, kFRONT};
+        return {kSAME, kRIGHT, kRIGHT_ROOF, kROOF, kRIGHT_BACK, kRIGHT_ROOF_BACK, kROOF_BACK, kBACK};
     }
 
     if (dirx == 1 && diry == 1 && dirz == 1) {
-        return {kSAME, kRIGHT, kRIGHT_ROOF, kROOF, kRIGHT_BACK, kRIGHT_ROOF_BACK, kROOF_BACK, kBACK};
+        return {kSAME, kRIGHT, kRIGHT_ROOF, kROOF, kRIGHT_FRONT, kRIGHT_ROOF_FRONT, kROOF_FRONT, kFRONT};
     }
 
     if (dirx == 1 && diry == 1) {
@@ -497,11 +492,11 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
     }
 
     if (dirx == 1 && dirz == -1) {
-        return {kSAME, kRIGHT, kRIGHT_FRONT, kFRONT};
+        return {kSAME, kRIGHT, kRIGHT_BACK, kBACK};
     }
 
     if (dirx == 1 && dirz == 1) {
-        return {kSAME, kRIGHT, kRIGHT_BACK, kBACK};
+        return {kSAME, kRIGHT, kRIGHT_FRONT, kFRONT};
     }
 
     if (dirx == 1) {
@@ -510,11 +505,11 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
 
     /* Floor sides */
     if (diry == -1 && dirz == -1) {
-        return {kSAME, kFLOOR, kFLOOR_FRONT, kFRONT};
+        return {kSAME, kFLOOR, kFLOOR_BACK, kBACK};
     }
 
     if (diry == -1 && dirz == 1) {
-        return {kSAME, kFLOOR, kFLOOR_BACK, kBACK};
+        return {kSAME, kFLOOR, kFLOOR_FRONT, kFRONT};
     }
 
     if (diry == -1) {
@@ -523,25 +518,25 @@ std::vector<int> Model3D::ListSidesInTheDirection(int dirx, int diry, int dirz) 
 
     /* Roof sides */
     if (diry == 1 && dirz == -1) {
-        return {kSAME, kROOF, kROOF_FRONT, kFRONT};
+        return {kSAME, kROOF, kROOF_BACK, kBACK};
     }
 
     if (diry == 1 && dirz == 1) {
-        return {kSAME, kROOF, kROOF_BACK, kBACK};
+        return {kSAME, kROOF, kROOF_FRONT, kFRONT};
     }
 
     if (diry == 1) {
         return {kSAME, kROOF};
     }
 
-    /* Front sides */
+    /* Back sides */
     if (dirz == -1) {
-        return {kSAME, kFRONT};
+        return {kSAME, kBACK};
     }
 
-    /* Back sides */
+    /* Front sides */
     if (dirz == 1) {
-        return {kSAME, kBACK};
+        return {kSAME, kFRONT};
     }
 
     /* Must not to be here */
@@ -552,32 +547,32 @@ glm::vec3 Model3D::GetNeighborCoordsBySide(int i, int j, int k, int side) const
 {
     switch(side) {
         case kSAME: return glm::vec3(i,j,k);
-        case kLEFT_FLOOR_FRONT: return glm::vec3(i-1,j-1,k-1);
-        case kLEFT_FLOOR_BACK: return glm::vec3(i-1,j-1,k+1);
+        case kLEFT_FLOOR_BACK: return glm::vec3(i-1,j-1,k-1);
+        case kLEFT_FLOOR_FRONT: return glm::vec3(i-1,j-1,k+1);
         case kLEFT_FLOOR: return glm::vec3(i-1,j-1,k);
-        case kLEFT_ROOF_FRONT: return glm::vec3(i-1,j+1,k-1);
-        case kLEFT_ROOF_BACK: return glm::vec3(i-1,j+1,k+1);
+        case kLEFT_ROOF_BACK: return glm::vec3(i-1,j+1,k-1);
+        case kLEFT_ROOF_FRONT: return glm::vec3(i-1,j+1,k+1);
         case kLEFT_ROOF: return glm::vec3(i-1,j+1,k);
-        case kLEFT_FRONT: return glm::vec3(i-1,j,k-1);
-        case kLEFT_BACK: return glm::vec3(i-1,j,k+1);
+        case kLEFT_BACK: return glm::vec3(i-1,j,k-1);
+        case kLEFT_FRONT: return glm::vec3(i-1,j,k+1);
         case kLEFT: return glm::vec3(i-1,j,k);
-        case kRIGHT_FLOOR_FRONT: return glm::vec3(i+1,j-1,k-1);
-        case kRIGHT_FLOOR_BACK: return glm::vec3(i+1,j-1,k+1);
+        case kRIGHT_FLOOR_BACK: return glm::vec3(i+1,j-1,k-1);
+        case kRIGHT_FLOOR_FRONT: return glm::vec3(i+1,j-1,k+1);
         case kRIGHT_FLOOR: return glm::vec3(i+1,j-1,k);
-        case kRIGHT_ROOF_FRONT: return glm::vec3(i+1,j+1,k-1);
-        case kRIGHT_ROOF_BACK: return glm::vec3(i+1,j+1,k+1);
+        case kRIGHT_ROOF_BACK: return glm::vec3(i+1,j+1,k-1);
+        case kRIGHT_ROOF_FRONT: return glm::vec3(i+1,j+1,k+1);
         case kRIGHT_ROOF: return glm::vec3(i+1,j+1,k);
-        case kRIGHT_FRONT: return glm::vec3(i+1,j,k-1);
-        case kRIGHT_BACK: return glm::vec3(i+1,j,k+1);
+        case kRIGHT_BACK: return glm::vec3(i+1,j,k-1);
+        case kRIGHT_FRONT: return glm::vec3(i+1,j,k+1);
         case kRIGHT: return glm::vec3(i+1,j,k);
-        case kFLOOR_FRONT: return glm::vec3(i,j-1,k-1);
-        case kFLOOR_BACK: return glm::vec3(i,j-1,k+1);
+        case kFLOOR_BACK: return glm::vec3(i,j-1,k-1);
+        case kFLOOR_FRONT: return glm::vec3(i,j-1,k+1);
         case kFLOOR: return glm::vec3(i,j-1,k);
-        case kROOF_FRONT: return glm::vec3(i,j+1,k-1);
-        case kROOF_BACK: return glm::vec3(i,j+1,k+1);
+        case kROOF_BACK: return glm::vec3(i,j+1,k-1);
+        case kROOF_FRONT: return glm::vec3(i,j+1,k+1);
         case kROOF: return glm::vec3(i,j+1,k);
-        case kFRONT: return glm::vec3(i,j,k-1);
-        case kBACK: return glm::vec3(i,j,k+1);
+        case kBACK: return glm::vec3(i,j,k-1);
+        case kFRONT: return glm::vec3(i,j,k+1);
     }
 
     return glm::vec3(i,j,k);
@@ -637,6 +632,13 @@ std::vector<Model3D*> Model3D::FindCollisionNeighbors() const noexcept
     auto sides = parent_->ListSidesInTheDirection(dirx, diry, dirz);
     cilk_for(auto cnt = 0; cnt < sides.size(); cnt++) {
         for (auto &neighbor: FindNeighborsSide(sides[cnt])) {
+
+            /* Avoid add last collision objects between both */
+            if (neighbor->id() == id_last_collision() ||
+                id() == neighbor->id_last_collision()) {
+                    continue;
+            }
+
             tbb::mutex::scoped_lock lock_map(neighbor_mutex);
             if(std::find(ret.begin(), ret.end(), neighbor) == ret.end()) {
                 ret.push_back(neighbor);

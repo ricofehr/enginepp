@@ -67,12 +67,10 @@ public:
      *  Detect if a collision exists between target and obstacle.
      *  @param target: the first object, targetted for the detection
      *  @param obstacle: the second object used for the detection
-     *  @return a list of objects which needs compute again if they are in theses cases\n
-     *              - old obstacle of the first object\n
-     *              - old obstacle of the second object\n
      */
-    virtual std::vector<engine::universe::Model3D*> DetectCollision(engine::universe::Model3D* target,
-                                                                    engine::universe::Model3D* obstacle);
+    virtual void DetectCollision(engine::universe::Model3D* target,
+                                 engine::universe::Model3D* obstacle);
+
     /**
      *  Compute collision distance between borders of 2 objects
      *  A pure virtual member.

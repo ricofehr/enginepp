@@ -17,18 +17,13 @@ namespace engine {
 
 namespace physics {
 
-std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine::universe::Model3D* target,
-                                                                         engine::universe::Model3D* obstacle)
+void CollisionEngine::DetectCollision(engine::universe::Model3D* target,
+                                      engine::universe::Model3D* obstacle)
 {
     using engine::universe::Model3D;
     using engine::graphics::Border;
 
     float distance = 1.0f;
-    std::vector<float> distances;
-
-    std::vector<Model3D*> recompute;
-    Model3D* oldobstacle1{nullptr};
-    Model3D* oldobstacle2{nullptr};
 
     const Border* border1 = target->border();
     const Border* border2 = obstacle->border();
@@ -39,12 +34,6 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     GLfloat x1, y1, z1, h1, w1, d1;
     GLfloat x2, y2, z2, h2, w2, d2;
     GLfloat move1x, move1y, move1z, move2x, move2y, move2z;
-
-
-    /* Cant touch same target twice in short time */
-    if (obstacle->id() == target->id_last_collision()) {
-        return recompute;
-    }
 
     x1 = coords1.at(0)[0];
     y1 = coords1.at(0)[1];
@@ -71,54 +60,30 @@ std::vector<engine::universe::Model3D*> CollisionEngine::DetectCollision(engine:
     float box1[9] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
     float box2[9] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
 
-    /* Compute distance collision thanks to parallell library (opencl, cilk, or no parallell use) */
-    distance = ComputeCollision(box1, box2);
-
-    /* Compute distance and update collision properties if needed */
-    if (distance != 1.0f) {
-        /* Protect conccurency update for targets in parent */
-        target->parent()->lock();
-        if ((target->obstacle() == nullptr || distance < target->distance()) &&
-            (obstacle->obstacle() == nullptr || distance < obstacle->distance())) {
-            /* Print debug if setting */
-            using engine::core::ConfigEngine;
-            if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION) {
-                std::cerr << "Obstacle::" << obstacle->id() << ", distance::" << distance << std::endl;
-            }
-
-            oldobstacle1 = target->obstacle();
-            oldobstacle2 = obstacle->obstacle();
-
-            target->set_obstacle(obstacle);
-            target->set_distance(distance);
-            if (obstacle->IsSameDirectionThan(target)) {
-                obstacle->set_distance(-distance);
-            } else {
-                obstacle->set_distance(distance);
-            }
-            obstacle->set_obstacle(target);
-
-            /* Recompute for polygons unbinded */
-            if (oldobstacle1 != nullptr) {
-                oldobstacle1->set_distance(-1);
-                oldobstacle1->set_obstacle(nullptr);
-                if (oldobstacle1->IsMoved()) {
-                    recompute.push_back(oldobstacle1);
-                }
-            }
-
-            if (oldobstacle2 != nullptr &&
-                oldobstacle2->IsMoved() &&
-                oldobstacle2->id() != target->id()) {
-                oldobstacle2->set_distance(-1);
-                oldobstacle2->set_obstacle(nullptr);
-                recompute.push_back(oldobstacle2);
-            }
-        }
-        target->parent()->unlock();
+    /* If the both objects are already associated, return */
+    if (target->obstacle() == obstacle) {
+        return;
     }
 
-    return recompute;
+    /* Compute distance collision thanks to parallell library (opencl, cilk, or no parallell use) */
+    distance = ComputeCollision(box1, box2);
+    if (distance == 1.0f) {
+        return;
+    }
+
+    /* Update obstacle and distance if lower than former */
+    target->lock();
+    if (distance < target->distance()) {
+        target->set_obstacle(obstacle);
+        target->set_distance(-distance);
+
+        /* Print debug if setting */
+        using engine::core::ConfigEngine;
+        if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION) {
+            std::cerr << "Object::" << target->id() << " - Obstacle::" << obstacle->id() << " - Distance::" << distance << std::endl;
+        }
+    }
+    target->unlock();
 }
 
 } // namespace helpers

@@ -86,6 +86,11 @@ public:
     static constexpr int kGRID_USED = 0;
     static constexpr int kGRID_EMPTY = 1;
 
+    /*
+     *  Initial collision countdown value
+     */
+    static constexpr int kCOLLISION_COUNTDOWN = 4;
+
     /**
      *  Default Move constructor
      */
@@ -191,10 +196,9 @@ public:
      */
     int id() const { return id_; }
     int id_last_collision() const { return id_last_collision_; }
-    Model3D* obstacle() { return obstacle_; }
+    Model3D* obstacle() const { return obstacle_; }
     Model3D* parent() { return parent_; }
     engine::graphics::Border* border() const { return border_.get(); }
-    int type() const { return type_; }
     std::vector<std::vector<int>> placements() const { return placements_; }
     virtual int countChilds() const { return objects_.size(); }
     constexpr int gridx() const { return grid_x_; }
@@ -205,7 +209,11 @@ public:
     constexpr float grid_unitz() const { return grid_unit_z_; }
     int IsPositionInTheGridEmpty(int l, int m, int n) const noexcept;
     inline bool IsFull() const { return missobjects_ <= 0 || objects_.size() >= grid_x_ * grid_y_ * grid_z_; }
+    bool IsUniverse() const { return type_ == kMODEL3D_UNIVERSE; }
+    bool IsRoom() const { return type_ == kMODEL3D_ROOM; }
     bool IsCamera() const { return type_ == kMODEL3D_CAMERA; }
+    bool IsWall() const { return type_ == kMODEL3D_WALL; }
+    bool IsCameraCollision() const { return type_ == kMODEL3D_CAMERA || is_collision_with_camera_; }
 
     /**
      *  Return Camera object if present into childs array
@@ -260,6 +268,7 @@ public:
     void set_missobjects(int missobjects) { missobjects_ = missobjects; }
     void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
     void set_parent(Model3D* parent) { parent_ = parent; }
+    void flag_collision_with_camera() { is_collision_with_camera_ = true; }
 
     /**
      *  Add a new child to the current object
@@ -275,10 +284,11 @@ public:
 
         auto obj_raw = obj.get();
 
-        obj->set_parent(this);
+        obj_raw->set_parent(this);
 
         lock();
-        if (obj->type() == kMODEL3D_CAMERA) {
+        /* Insert Camera as first element. Push on the last for others */
+        if (obj_raw->IsCamera()) {
             objects_.insert(objects_.begin(), std::move(obj));
         } else {
             objects_.push_back(std::move(obj));
@@ -288,8 +298,7 @@ public:
         obj_raw->ComputePlacements();
 
         /* Dont decrement if Wall or Camera */
-        if (obj_raw->type() != kMODEL3D_WALL &&
-            obj_raw->type() != kMODEL3D_CAMERA) {
+        if (!obj_raw->IsWall() && !obj_raw->IsCamera()) {
             --missobjects_;
         }
 
@@ -463,7 +472,7 @@ protected:
      *  @param dirx,diry,dirz are axis directions of the moving current object
      *  @return a vector of sides constant
      */
-    std::vector<int> ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept;
+    const std::vector<int> ListSidesInTheDirection(int dirx, int diry, int dirz) const noexcept;
 
     /**
      *  Remove child off the current object and return the unique_ptr associated to this one
@@ -534,14 +543,17 @@ protected:
     /** Last obstacle id */
     int id_last_collision_;
 
+    /** Frames count before test again collision with id_last_collision */
+    int collision_countdown_{0};
+
     /** Type of 3d object */
     int type_{10000};
 
     /** Count of childs who are still missing */
     int missobjects_{0};
 
-    /** The object can be controlled by hid (mainly camera) */
-    bool is_controlled_{false};
+    /** Collision with Camera is a special case and need to be flagged */
+    bool is_collision_with_camera_{false};
 };
 
 } // namespace graphics

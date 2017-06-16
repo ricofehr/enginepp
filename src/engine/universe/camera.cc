@@ -88,7 +88,6 @@ Camera::Camera(float cx, float cy, float cz,
     horizontal_angle_ = 3.14f;
     vertical_angle_ = 0.0;
     fov_ = 45.0f;
-    is_controlled_ = true;
 
     using engine::graphics::Border;
     border_ = std::make_unique<Border>(1.0f,
@@ -115,7 +114,7 @@ void Camera::RecordHID() noexcept
 
     /* Dont apply movefactor to camera */
     using engine::graphics::Shape3D;
-    float speed = 3.0f * 1.0f / Shape3D::sMoveFactor;
+    float speed = 3.5f / Shape3D::sMoveFactor;
 
     const float zoom_sensitivity = -0.2f;
     const float mouse_speed = 0.1f;

@@ -98,7 +98,7 @@ std::vector<glm::vec3> Border::ComputeCoords() const
 void Border::MoveCoords()
 {
     if (!IsMoved()) {
-        set_distance(-1.0f);
+        set_distance(1.0f);
         return;
     }
 

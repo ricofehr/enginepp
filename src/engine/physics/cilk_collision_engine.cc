@@ -51,16 +51,17 @@ float CilkCollisionEngine::ComputeCollision(float box1[], float box2[])
     move2z = box2[8] / granularity_;
 
     cilk_for (auto fact = 0; fact < granularity_; fact++) {
-        x1 += move1x;
-        y1 += move1y;
-        z1 += move1z;
-        x2 += move2x;
-        y2 += move2y;
-        z2 += move2z;
+        auto test_x1 = x1 + (fact+1) * move1x;
+        auto test_y1 = y1 + (fact+1) * move1y;
+        auto test_z1 = z1 + (fact+1) * move1z;
+        auto test_x2 = x2 + (fact+1) * move2x;
+        auto test_y2 = y2 + (fact+1) * move2y;
+        auto test_z2 = z2 + (fact+1) * move2z;
 
-        if (x2 < x1 + w1 && x2 + w2 > x1 && y2 + h2 < y1 &&
-            y2 > y1 + h1 && z2 > z1 + d1 && z2 + d2 < z1) {
-                distance.calc_min(static_cast<float>(fact) / granularity_);
+        if (test_x2 < test_x1 + w1 && test_x2 + w2 > test_x1 &&
+            test_y2 + h2 < test_y1 && test_y2 > test_y1 + h1 &&
+            test_z2 > test_z1 + d1 && test_z2 + d2 < test_z1) {
+            distance.calc_min(static_cast<float>(fact) / granularity_);
         }
     }
 
