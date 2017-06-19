@@ -12,7 +12,9 @@ Needs Cmake (>3.1), OpenCL (1.2), CilkPlus and TBB, OpenGL3 (>3.3) and GLew / GL
 
 On ubuntu or Debian, apt-get make most of prerequisites install
 ```
-# apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev libglew-dev opencl-headers libtbb-dev lsb-core libconfig++-dev
+# apt-get install cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev 
+# apt-get install libxrandr-dev libxext-dev libglfw3-dev libsoil-dev libglm-dev
+# apt-get install libglew-dev opencl-headers libtbb-dev lsb-core libconfig++-dev
 ```
 
 For OpenCL, we need gpu library, for intel gpu
@@ -188,10 +190,10 @@ Program accept options who can override config settings
 
 For example
 ```
-./bin/./engine -d 0 -p serial -o 24 -g 32 # no debug, no parallellism, 24 objects, 32 computes for collision
+./bin/./engine -d 0 -p cilkplus -o 48 -r 16 # no debug, cilkplus parallellism, 48 objects, 16 rooms
 ```
 
-![Engine](others/demo.gif?raw=true)
+[![Engine](https://img.youtube.com/vi/7XnjXwFhHZk/0.jpg)](https://www.youtube.com/watch?v=7XnjXwFhHZk)
 
 ## Test
 
@@ -220,32 +222,59 @@ Doxy pages are available online [here](http://oxy.enginepp.nextdeploy.io)
 
 ## UML
 
-![Class Diagram](others/classes.png)
+5 namespaces
+- Core
+- Graphics
+- Physics
+- Renderer
+- Universe
+
+Uses of Design Patterns
+- Composite (Model3D / Universe / Room / Brick / Wall / Camera)
+- Abstract Factory (UniverseFactory / RandomUniverseFactory)
+- Strategy (CollisionEngine and his inherited classes)
+- Singleton (ConfigEngine, LoopGL)
+
+![Class Diagram](https://github.com/ricofehr/enginepp/raw/master/others/classes.png)
 
 ## Parallell Computes
 
-Below, the enginepp span graph (v0.1)
-![Span Diagram](others/parallell_span.png)
+Below, the enginepp span graph (v0.2)
+![Span Diagram](https://github.com/ricofehr/enginepp/raw/master/others/parallell_span.png)
 
-During the test, Enginepp (v0.1) is started with the following parameters
-- granularity: 64
+During the tests, Enginepp (v0.2) is started with the following parameters
+- granularity: 128
 - vsync: false
-- 4 rooms
-- 128 moving objects (32 per room)
+- clipping: disabled
+- 4 / 8 / 12 rooms
+- 128 / 512 / 1152 Moving objects
 
 And hardware used during test
 - cpu: Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz (6 physical cores, 12 with intel ht)
 - ram: 32Go at 2100Mhz
 - cg: GeForce GTX 980 Ti (22 computes units)
 
-Test result showing fps sum according to the number of workers (active cpu cores)
-![Test Result](others/fpsbyworkers.png)
+#### 4 Rooms and 128 Moving Objects
+![Test Result With 128 Moving Objects](https://github.com/ricofehr/enginepp/raw/master/others/fpsbycores_128.png)
+- optimal number of workers: 6
+- speedup to 6 workers: 2
+- efficiency to 6 workers: 33%
 
-From this graph, we deduce that the optimal number of workers is 10 on this cpu
-- speedup to 10 workers: 4,5
-- efficiency to 10 workers: 45%
+#### 8 Rooms and 512 Moving Objects
+![Test Result With 512 Moving Objects](https://github.com/ricofehr/enginepp/raw/master/others/fpsbycores_512.png)
+- optimal number of workers: 8
+- speedup to 8 workers: 3
+- efficiency to 8 workers: 37%
 
-And going through opencl for collision calculation, the results provide an improvement only if the precision for the collisions is very important.
+#### 12 Rooms and 1152 Moving Objects
+![Test Result With 1152 Moving Objects](https://github.com/ricofehr/enginepp/raw/master/others/fpsbycores_1152.png)
+- optimal number of workers: 12
+- speedup to 12 workers: 4,2
+- efficiency to 12 workers: 35%
+
+We deduce that more moving objects there are, more the number of cores gives an increase in performance.
+
+And going through opencl for collision calculation, the results provide an improvement only if the precision for the collisions is very very important.
 Thus, with a granularity of 32768, one obtains a speedup of 2 and a efficiency of 10%.
 
 It is concluded that the CPU parallelism of cilkplus brings real gains on enginepp.
