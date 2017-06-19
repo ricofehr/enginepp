@@ -1,10 +1,7 @@
 /**
- *  Border class header
+ *  @file border.h
+ *  @brief Border class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Each 3d object in the scene must be fill into a border.
- *  This border is represented by a Cube object with a Delegator scheme.
- *  Used for 3d objects coordinates and collision compute.
  */
 
 #ifndef ENGINE_GRAPHICS_BORDER_H_
@@ -17,10 +14,24 @@
 
 #include "engine/graphics/cube.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::graphics
+ *  @brief Elementary 3d graphic classes
+ */
 namespace graphics {
 
+/**
+ *  @class Border
+ *  @brief Each 3d object in the scene must be fill into a border.\n
+ *  This border is represented by a Cube object with a Delegator scheme.\n
+ *  Used for 3d objects coordinates and collision compute.
+ */
 class Border {
 
 public:
@@ -133,12 +144,12 @@ public:
     void MoveCoords();
 
     /**
-     *  Delegate Move 
+     *  Delegate Move
      */
     void MoveLocation() { cube_->MoveLocation(); }
 
     /*
-     *  Delegate Accessors 
+     *  Delegate Accessors
      */
     bool IsMoved() const { return cube_->IsMoved(); }
     int IsMovedX() const { return cube_->IsMovedX(); }

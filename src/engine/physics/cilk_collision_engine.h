@@ -1,8 +1,7 @@
 /**
- *  CilkCollisionEngine class header
+ *  @file cilk_collision_engine.h
+ *  @brief CilkCollisionEngine class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Implements intelcilkplus algorithm for collision computes.
  */
 
 #ifndef PHYSICS_CILKCOLLISIONENGINE_H_
@@ -12,10 +11,22 @@
 
 #include "engine/physics/collision_engine.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::physics
+ *  @brief Physics and collision engines
+ */
 namespace physics {
 
+/**
+ *  @class CilkCollisionEngine
+ *  @brief Implements intelcilkplus algorithm for collision computes
+ */
 class CilkCollisionEngine : public CollisionEngine {
 
 public:
@@ -48,15 +59,6 @@ public:
     ~CilkCollisionEngine() override = default;
 
     /**
-     *  Compute collision distance between borders of 2 objects
-     *  Thanks to cilkplus paralell processing
-     *  @param box1 includes the coords for the first border and the moving vector
-     *  @param box2 includes the coords for the second border and the moving vector
-     *  @return distance between the 2 borders
-     */
-    float ComputeCollision(float box1[], float box2[]) override final;
-
-    /**
      *  Return (and allocates if needed) sole Instance
      *  @return the sole collision engine instance
      */
@@ -67,7 +69,7 @@ public:
         static auto sInstance = new CilkCollisionEngine;
         static auto collision_mutex = new tbb::mutex;
 
-        /* 
+        /*
          *  Init the engine if not already done
          */
         collision_mutex->lock();
@@ -80,7 +82,16 @@ public:
         return sInstance;
     }
 
-protected:
+    /**
+     *  Compute collision distance between borders of 2 objects
+     *  Thanks to cilkplus paralell processing
+     *  @param box1 includes the coords for the first border and the moving vector
+     *  @param box2 includes the coords for the second border and the moving vector
+     *  @return distance between the 2 borders
+     */
+    float ComputeCollision(float box1[], float box2[]) override final;
+
+private:
 
     /**
      *  Default Constructor

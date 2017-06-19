@@ -1,14 +1,7 @@
 /**
- *  LoopGL class header
+ *  @file loopgl.h
+ *  @brief LoopGL class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  LoopGL manage the lifetime of the opengl scene\n
- *      Create the scene\n
- *      Manages shaders\n
- *      Loop for display frames\n
- *      Exit if interrupted by user\n\n
- *
- *  Implement Singleton Design Pattern which ensure a sole LoopGL object for the program
  */
 
 #ifndef ENGINE_RENDERER_LOOPGL_H_
@@ -19,10 +12,23 @@
 
 #include "engine/universe/universe.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::renderer
+ *  @brief Prepare, Render, and Display GL Scene
+ */
 namespace renderer {
 
+/**
+ *  @class LoopGL
+ *  @brief  LoopGL manages the lifetime of the opengl scene\n
+ *  Implement Singleton Design Pattern which ensure a sole LoopGL object for the program
+ */
 class LoopGL {
 
 public:
@@ -50,17 +56,6 @@ public:
     LoopGL& operator=(const LoopGL&) = delete;
 
     /**
-     *  Setup the GL Scene
-     */
-    void InitGL();
-
-    /**
-     *  Loop and Record Events
-     *  @param universe is The universe of the program
-     */
-    void Loop(engine::universe::Universe* universe);
-
-    /**
      *  Return (and allocates if needed) sole Instance
      *  @return the sole LoopGL instance
      */
@@ -70,6 +65,17 @@ public:
         static auto instance = new LoopGL;
         return instance;
     }
+
+    /**
+     *  Setup the GL Scene
+     */
+    void InitGL();
+
+    /**
+     *  Loop and Record Events
+     *  @param universe is The universe of the program
+     */
+    void Loop(engine::universe::Universe* universe);
 
 
     /** A Global variable, GL Window */
@@ -81,7 +87,7 @@ public:
     /** A Global variable for the GL Matrix */
     static GLuint sMatrixId;
 
-protected:
+private:
 
     /**
      *  Default Constructor

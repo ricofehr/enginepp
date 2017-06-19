@@ -1,6 +1,7 @@
 /**
- *   Quad class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ *  @file quad.cc
+ *  @brief Quad class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/graphics/quad.h"

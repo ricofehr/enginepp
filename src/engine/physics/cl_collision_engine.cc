@@ -1,5 +1,6 @@
 /**
- *  CLCollisionEngine class file
+ *  @file cl_collision_engine.cc
+ *  @brief CLCollisionEngine class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 

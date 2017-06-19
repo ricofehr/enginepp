@@ -1,8 +1,7 @@
 /**
- *  Random World Factory Class for universe objects
+ *  @file random_universe_factory.h
+ *  @brief Random World Factory Class for universe objects
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Implements the abstract UniverseFactory, generate Objects For Universe in Random manner
  */
 
 #ifndef ENGINE_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
@@ -10,10 +9,22 @@
 
 #include "engine/universe/universe_factory.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::universe
+ *  @brief World elements
+ */
 namespace universe {
 
+/**
+ *  @class RandomUniverseFactory
+ *  @brief Implements the abstract UniverseFactory, generate Objects For Universe in Random manner
+ */
 class RandomUniverseFactory : public UniverseFactory {
 
 public:
@@ -49,12 +60,6 @@ public:
     virtual ~RandomUniverseFactory() override = default;
 
     /**
-     *  Generate global GL Buffers
-     *  Need executed only once and before any drawing object
-     */
-    virtual void GenerateBuffers() const override final;
-
-    /**
      *  Generate an Universe and return it
      *  @return the unique_ptr to the Universe created
      */
@@ -84,7 +89,13 @@ public:
      *  @param location is the coords of the camera
      *  @return an unique_ptr to the camera created
      */
-    virtual std::unique_ptr<Camera> GenerateCamera(glm::vec3 location) const override final;
+    virtual std::unique_ptr<Camera> GenerateCamera(glm::vec4 location) const override final;
+
+    /**
+     *  Generate global GL Buffers
+     *  Need executed only once and before any drawing object
+     */
+    virtual void GenerateBuffers() const override final;
 
 };
 

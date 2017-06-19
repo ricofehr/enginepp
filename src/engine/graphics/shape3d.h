@@ -1,8 +1,7 @@
 /**
- *   Shape3D class header
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *   Interface which must be implemented to define any 3d graphic object.
+ *  @file shape3d.h
+ *  @brief Shape3D class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #ifndef ENGINE_GRAPHICS_SHAPE3D_H_
@@ -12,10 +11,22 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::graphics
+ *  @brief Elementary 3d graphic classes
+ */
 namespace graphics {
 
+/**
+ *  @class Shape3D
+ *  @brief Interface which must be implemented to define any 3d graphic object.
+ */
 class Shape3D {
 
 public:
@@ -124,7 +135,7 @@ public:
     glm::vec3 scale() const { return scale_; }
 
     /*
-     *  Mutators 
+     *  Mutators
      */
     void set_distance(float distance) { distance_ = distance; }
     void set_move(glm::vec4 move) { move_ = move; }

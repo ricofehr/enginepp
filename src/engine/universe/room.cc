@@ -1,5 +1,6 @@
 /**
- *  Room class file
+ *  @file room.cc
+ *  @brief Room class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 

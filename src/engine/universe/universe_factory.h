@@ -1,8 +1,7 @@
 /**
- *  Abstract Factory Class for universe objects
+ *  @file universe_factory.h
+ *  @brief Abstract Factory Class for universe objects
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Implements Factory Pattern for Universe Objects
  */
 
 #ifndef ENGINE_UNIVERSE_UNIVERSEFACTORY_H_
@@ -17,10 +16,22 @@
 #include "engine/universe/wall.h"
 #include "engine/universe/camera.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::universe
+ *  @brief World elements
+ */
 namespace universe {
 
+/**
+ *  @class UniverseFactory
+ *  @brief Abstract Factory Pattern for Universe Objects
+ */
 class UniverseFactory {
 
 public:
@@ -49,13 +60,6 @@ public:
      *  Abstract Class, define virtual destructor
      */
     virtual ~UniverseFactory() = default;
-
-    /**
-     *  Generate global GL Buffers
-     *  Need executed only once and before any drawing object
-     *  A pure virtual member.
-     */
-    virtual void GenerateBuffers() const = 0;
 
     /**
      *  Generate an Universe and return it
@@ -92,7 +96,14 @@ public:
      *  @param location is the coords of the camera
      *  @return an unique_ptr to the camera created
      */
-    virtual std::unique_ptr<Camera> GenerateCamera(glm::vec3 location) const = 0;
+    virtual std::unique_ptr<Camera> GenerateCamera(glm::vec4 location) const = 0;
+
+    /**
+     *  Generate global GL Buffers
+     *  Need executed only once and before any drawing object
+     *  A pure virtual member.
+     */
+    virtual void GenerateBuffers() const = 0;
 
 protected:
 

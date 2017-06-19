@@ -1,30 +1,40 @@
 /**
- *  CollisionEngine class header
+ *  @file collision_engine.h
+ *  @brief CollisionEngine class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Interface who manage collisition computes between 3d models
- *  Use Strategy Pattern for this abstract class and subclasses,
- *  which proposes 3 differents Collision Algorithm: serial, cilkplus vernsion and opencl version
  */
-
 
 #ifndef PHYSICS_COLLISIONENGINE_H_
 #define PHYSICS_COLLISIONENGINE_H_
 
 #include <tbb/mutex.h>
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
 /*
- *  Forward declaration of 
+ *  Forward declaration of
  *  Model3D class
  */
 namespace universe {
     class Model3D;
 } // namespace universe
 
+/**
+ *  @namespace engine::physics
+ *  @brief Physics and collision engines
+ */
 namespace physics {
 
+/**
+ *  @class CollisionEngine
+ *  @brief Interface who manage collisition computes between 3d models\n
+ *  Use Strategy Pattern for this abstract class and subclasses,\n
+ *  which proposes 3 differents Collision Algorithm: serial, cilkplus vernsion and opencl version
+ */
 class CollisionEngine {
 
 public:
@@ -59,9 +69,9 @@ public:
     /**
      *  Parallell Algo Constants
      */
-    static const int kPARALLELL_SERIAL = 1;
-    static const int kPARALLELL_CILK = 2;
-    static const int kPARALLELL_CL = 3;
+    static constexpr int kPARALLELL_SERIAL = 1;
+    static constexpr int kPARALLELL_CILK = 2;
+    static constexpr int kPARALLELL_CL = 3;
 
     /**
      *  Detect if a collision exists between target and obstacle.

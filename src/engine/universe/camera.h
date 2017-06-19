@@ -1,13 +1,7 @@
 /**
- *   Camera class header
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *   Camera 3d model, inherits Model3D abstract class
- *
- *   The active Camera is the eye of the GL Scene.
- *   All 3d objects are displaying thanks to the projection
- *   matrix (ModelViewProjection, see Shape3D class) computed from camera position.
- *   This class records hid (mouse, keyboard) events.
+ *  @file camera.h
+ *  @brief Camera class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #ifndef ENGINE_UNIVERSE_CAMERA_H_
@@ -17,10 +11,26 @@
 
 #include "engine/universe/model3d.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::universe
+ *  @brief World elements
+ */
 namespace universe {
 
+/**
+ *  @class Camera
+ *  @brief Camera 3d model, inherits Model3D abstract class\n
+ *  The active Camera is the eye of the GL Scene\n
+ *  All 3d objects are displaying thanks to the projection matrix computed from camera position\n
+ *  This class records hid (mouse, keyboard) events
+ *  @see Shape3D
+ */
 class Camera : public Model3D {
 
 public:
@@ -66,7 +76,7 @@ public:
     ~Camera() override = default;
 
     /*
-     *  Accessors 
+     *  Accessors
      */
     glm::vec3 direction() const { return direction_; }
     glm::vec3 head() const { return head_; }
@@ -79,7 +89,7 @@ public:
     void set_active() { active_ = this; }
 
     /**
-     *  Record Mouse and Keyboard Events 
+     *  Record Mouse and Keyboard Events
      */
     void RecordHID() noexcept override final;
 

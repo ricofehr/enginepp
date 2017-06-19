@@ -1,8 +1,7 @@
 /**
- *  CLCollisionEngine class header
+ *  @file cl_collision_engine.h
+ *  @brief CLCollisionEngine class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Implements opencl algorithm for collision computes.
  */
 
 #ifndef PHYSICS_CLCOLLISIONENGINE_H_
@@ -25,10 +24,22 @@
 
 #include "engine/physics/collision_engine.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::physics
+ *  @brief Physics and collision engines
+ */
 namespace physics {
 
+/**
+ *  @class CLCollisionEngine
+ *  @brief Implements opencl algorithm for collision computes
+ */
 class CLCollisionEngine : public CollisionEngine {
 
 public:
@@ -61,15 +72,6 @@ public:
     ~CLCollisionEngine() override = default;
 
     /**
-     *  Compute collision distance between borders of 2 objects
-     *  Thanks to opencl paralell processing
-     *  @param box1 includes the coords for the first border and the moving vector
-     *  @param box2 includes the coords for the second border and the moving vector
-     *  @return distance between the 2 borders
-     */
-    float ComputeCollision(float box1[], float box2[]) override final;
-
-    /**
      *  Return (and allocates if needed) sole Instance
      *  @return the sole collision engine instance
      */
@@ -92,6 +94,15 @@ public:
 
         return sInstance;
     }
+
+    /**
+     *  Compute collision distance between borders of 2 objects
+     *  Thanks to opencl paralell processing
+     *  @param box1 includes the coords for the first border and the moving vector
+     *  @param box2 includes the coords for the second border and the moving vector
+     *  @return distance between the 2 borders
+     */
+    float ComputeCollision(float box1[], float box2[]) override final;
 
 protected:
 

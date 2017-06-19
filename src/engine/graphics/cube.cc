@@ -1,6 +1,7 @@
 /**
- *   Cube class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ *  @file cube.cc
+ *  @brief Cube class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/graphics/cube.h"

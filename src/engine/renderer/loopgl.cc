@@ -1,5 +1,6 @@
 /**
- *  LoopGL class file
+ *  @file loopgl.cc
+ *  @brief LoopGL class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 

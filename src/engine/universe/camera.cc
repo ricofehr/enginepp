@@ -1,6 +1,7 @@
 /**
- *   Camera class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ *  @file camera.cc
+ *  @brief Camera class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/camera.h"
@@ -63,8 +64,8 @@ static const std::vector<glm::vec3> sCameraCoords = {
 /* Record a time */
 static double sLastTime = 0;
 
-/*  
- *  OnScroll - callback function who record wheel change 
+/*
+ *  OnScroll - callback function who record wheel change
  */
 static void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
 {

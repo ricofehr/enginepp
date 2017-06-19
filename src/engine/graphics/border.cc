@@ -1,6 +1,7 @@
 /**
- *   Border class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ *  @file border.cc
+ *  @brief Border class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/graphics/border.h"

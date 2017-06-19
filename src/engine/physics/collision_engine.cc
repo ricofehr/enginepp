@@ -1,6 +1,6 @@
 /**
- *  CollisionEngine class file.
- *  Defines the default DectectCollision function
+ *  @file collision_engine.cc
+ *  @brief CollisionEngine class file.
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 

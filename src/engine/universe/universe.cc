@@ -1,5 +1,6 @@
 /**
- *  Universe class file
+ *  @file universe.cc
+ *  @brief Universe class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -44,47 +45,6 @@ Universe::Universe()
                                        glm::vec4(0,0,0,0));
 }
 
-void Universe::InitDoorsForRooms() noexcept
-{
-    for (auto &o : objects_) {
-        /* Objects contained in Universe are Rooms, with Doors and Windows */
-        auto r = dynamic_cast<Room*>(o.get());
-
-        auto i = r->placements()[0][0];
-        auto j = r->placements()[0][1];
-        auto k = r->placements()[0][2];
-
-        if (i != 0 && grid_[i-1][j][k].size() != 0) {
-            r->addDoor(kLEFT);
-        }
-
-        if (i != grid_x_-1 && grid_[i+1][j][k].size() != 0) {
-            r->addDoor(kRIGHT);
-        } else {
-            r->addWindow(kRIGHT);
-        }
-
-        if (j != 0 && grid_[i][j-1][k].size() != 0) {
-            r->addDoor(kFLOOR);
-        }
-
-        if (j != grid_y_-1 && grid_[i][j+1][k].size() != 0) {
-            r->addDoor(kROOF);
-        }
-
-        if (k != 0 && grid_[i][j][k-1].size() != 0) {
-            r->addDoor(kFRONT);
-        }
-
-        if (k != grid_z_-1 && grid_[i][j][k+1].size() != 0) {
-            r->addDoor(kBACK);
-        }
-        else if (i != grid_x_-1 && grid_[i+1][j][k].size() != 0) {
-            r->addWindow(kBACK);
-        }
-    }
-}
-
 void Universe::Draw() noexcept
 {
     using engine::core::ConfigEngine;
@@ -106,28 +66,36 @@ void Universe::Draw() noexcept
     /* Record moving orders for camera */
     objects_[active_index]->RecordHID();
 
-    /* Select displayed rooms: all rooms or 2 clipping levels */
-    if (clipping > 0) {
-        display_rooms_.clear();
-        display_rooms_ = objects_[active_index]->FindClippingNeighbors(clipping);
-        display_rooms_.push_back(objects_[active_index].get());
+    /* Lock current universe */
+    lock();
 
-        /* Add deeping neighbors if clipping */
-    } else if(display_rooms_.size() == 0) {
-        for (auto &o : objects_) {
-            display_rooms_.push_back(o.get());
+    /* Select displayed rooms: 2 clipping levels or all rooms (clipping is 0) */
+    display_rooms_.clear();
+    if (clipping > 0) {
+        display_rooms_ = objects_[active_index]->FindClippingNeighbors(clipping);
+    } else {
+        for (auto cnt = 0; cnt < objects_.size(); cnt++) {
+            if (cnt != active_index) {
+                display_rooms_.push_back(objects_[cnt].get());
+            }
         }
     }
+    /* Ensure active room is in first position */
+    display_rooms_.insert(display_rooms_.begin(), objects_[active_index].get());
 
-    /* Detect collision in active rooms */
-    cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-        display_rooms_[cnt]->DetectCollision();
-    }
+    /* Unlock mutex */
+    unlock();
 
     /* Universe is only ready after 10 hops */
     if (ready()) {
-        /* Compute new coords after current move */
+        /* Detect collision in display rooms */
         cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
+            display_rooms_[cnt]->DetectCollision();
+        }
+
+        /* Compute new coords after current move, first the active room */
+        display_rooms_[0]->Move();
+        cilk_for (auto cnt = 1; cnt < display_rooms_.size(); cnt++) {
             display_rooms_[cnt]->Move();
         }
 
@@ -152,6 +120,47 @@ void Universe::Draw() noexcept
 
         if (current_time - sLastTime >= freq) {
             sLastTime = current_time;
+        }
+    }
+}
+
+void Universe::InitDoorsForRooms() noexcept
+{
+    for (auto &o : objects_) {
+        /* Objects contained in Universe are Rooms, with Doors and Windows */
+        auto r = dynamic_cast<Room*>(o.get());
+
+        auto i = r->placements()[0][0];
+        auto j = r->placements()[0][1];
+        auto k = r->placements()[0][2];
+
+        if (i != 0 && IsPositionInTheGridEmpty(i-1,j,k) == kGRID_USED) {
+            r->addDoor(kLEFT);
+        }
+
+        if (i != grid_x_-1 && IsPositionInTheGridEmpty(i+1,j,k) == kGRID_USED) {
+            r->addDoor(kRIGHT);
+        } else {
+            r->addWindow(kRIGHT);
+        }
+
+        if (j != 0 && IsPositionInTheGridEmpty(i,j-1,k) == kGRID_USED) {
+            r->addDoor(kFLOOR);
+        }
+
+        if (j != grid_y_-1 && IsPositionInTheGridEmpty(i,j+1,k) == kGRID_USED) {
+            r->addDoor(kROOF);
+        }
+
+        if (k != 0 && IsPositionInTheGridEmpty(i,j,k-1) == kGRID_USED) {
+            r->addDoor(kFRONT);
+        }
+
+        if (k != grid_z_-1 && IsPositionInTheGridEmpty(i,j,k+1) == kGRID_USED) {
+            r->addDoor(kBACK);
+        }
+        else if (i != grid_x_-1 && IsPositionInTheGridEmpty(i+1,j,k) == kGRID_USED) {
+            r->addWindow(kBACK);
         }
     }
 }

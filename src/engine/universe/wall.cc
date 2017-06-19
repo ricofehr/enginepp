@@ -1,6 +1,7 @@
 /**
- *   Wall class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ *  @file wall.cc
+ *  @brief Wall class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/wall.h"

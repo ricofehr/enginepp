@@ -1,5 +1,6 @@
 /**
- *  RandomUniverseFactory class file
+ *  @file random_universe_factory.cc
+ *  @brief RandomUniverseFactory class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -12,13 +13,6 @@
 namespace engine {
 
 namespace universe {
-
-void RandomUniverseFactory::GenerateBuffers() const
-{
-    /* Generate Buffers Once */
-    Brick::CreateBuffers();
-    Wall::CreateBuffers();
-}
 
 std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
 {
@@ -174,7 +168,7 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
                     }
                 }
                 break;
-                
+
             case 5:
                 if (++r - i == grid_x) {
                     r = i;
@@ -349,7 +343,7 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
     auto j = s;
     auto k = t;
     auto cnt = 0;
-    /* Generate and place randomly object into room grid 
+    /* Generate and place randomly object into room grid
        1 grid_unit is reserved every 6 sides (2 in each axe) for Walls */
     while (cnt++ < (grid_x-2) * (grid_y-2) * (grid_z-2)) {
         /* Placements Coords */
@@ -424,7 +418,7 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
                     }
                 }
                 break;
-                
+
             case 5:
                 if (++r - i == (grid_x-2)) {
                     r = i;
@@ -441,7 +435,7 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
     return GenerateBrick(room);
 }
 
-std::unique_ptr<Camera> RandomUniverseFactory::GenerateCamera(glm::vec3 location) const
+std::unique_ptr<Camera> RandomUniverseFactory::GenerateCamera(glm::vec4 location) const
 {
     return std::make_unique<Camera>(location[0],
                                     location[1] + 1.0f,
@@ -450,6 +444,13 @@ std::unique_ptr<Camera> RandomUniverseFactory::GenerateCamera(glm::vec3 location
                                     location[1] + 1.0f,
                                     location[2],
                                     0.0f, 1.0f, 0.0f);
+}
+
+void RandomUniverseFactory::GenerateBuffers() const
+{
+    /* Generate Buffers Once */
+    Brick::CreateBuffers();
+    Wall::CreateBuffers();
 }
 
 } // universe

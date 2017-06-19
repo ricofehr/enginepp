@@ -1,6 +1,7 @@
 /**
- *   Shape3D class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ *  @file shape3d.cc
+ *  @brief Shape3D class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/graphics/shape3d.h"

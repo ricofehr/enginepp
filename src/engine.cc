@@ -1,3 +1,9 @@
+/**
+ *  @file engine.cc
+ *  @brief Main Function File
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ */
+
 #include <memory>
 
 #include "engine/universe/random_universe_factory.h"

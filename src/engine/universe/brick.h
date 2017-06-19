@@ -1,8 +1,7 @@
 /**
- *   Brick class header
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *   Brick 3d model, inherits Model3D abstract class
+ *  @file brick.h
+ *  @brief Brick class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #ifndef ENGINE_UNIVERSE_BRICK_H_
@@ -12,10 +11,22 @@
 
 #include "engine/universe/model3d.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::universe
+ *  @brief World elements
+ */
 namespace universe {
 
+/**
+ *  @class Brick
+ *  @brief Brick 3d model, inherits Model3D abstract class
+ */
 class Brick : public Model3D {
 
 public:

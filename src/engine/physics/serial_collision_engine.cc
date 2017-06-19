@@ -1,5 +1,6 @@
 /**
- *  serial version for CollisionEngine
+ *  @file serial_collision_engine.cc
+ *  @brief serial version for CollisionEngine
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 

@@ -1,8 +1,7 @@
 /**
- *  Universe class header
+ *  @file universe.h
+ *  @brief Universe class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Define an Universe (with rooms inside), inherits Model3D abstract class
  */
 
 #ifndef ENGINE_UNIVERSE_UNIVERSE_H_
@@ -15,11 +14,22 @@
 
 #include "engine/universe/model3d.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::universe
+ *  @brief World elements
+ */
 namespace universe {
 
-/* Define the global universe */
+/**
+ *  @class Universe
+ *  @brief Define an Universe (with rooms inside), inherits Model3D abstract class
+ */
 class Universe : public Model3D {
 
 public:

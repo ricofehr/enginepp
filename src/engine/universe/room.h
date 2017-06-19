@@ -1,8 +1,7 @@
 /**
- *  Room class header
+ *  @file room.h
+ *  @brief Room class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *  
- *  Define a Room (inside with walls and moving objects), inherits Model3D abstract class
  */
 
 #ifndef ENGINE_UNIVERSE_ROOM_H_
@@ -13,10 +12,22 @@
 
 #include "engine/universe/model3d.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::universe
+ *  @brief World elements
+ */
 namespace universe {
 
+/**
+ *  @class Room
+ *  @brief Define a Room (inside with walls and moving objects), inherits Model3D abstract class
+ */
 class Room : public Model3D {
 
 public:
@@ -80,7 +91,7 @@ public:
 private:
 
     /*
-     *  Grid Constants For Romm Setting 
+     *  Grid Constants For Romm Setting
      */
     static constexpr int kGRID_Y = 6;
     static constexpr int kGRID_X = 8;

@@ -1,10 +1,7 @@
 /**
- *  ConfigEngine class header
+ *  @file config_engine.h
+ *  @brief ConfigEngine Header File
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  ConfigEngine implements and maintains a configuration management for the program.
- *
- *  Implement Singleton Pattern which ensure a sole ConfigEngine object for the program
  */
 
 #ifndef ENGINE_CORE_CONFIGENGINE_H_
@@ -12,10 +9,23 @@
 
 #include <libconfig.h++>
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::core
+ *  @brief Core system
+ */
 namespace core {
 
+/**
+ *  @class ConfigEngine
+ *  @brief ConfigEngine maintains a configuration management for the program.\n
+ *  Implement Singleton Pattern which ensure a sole ConfigEngine object for the program
+ */
 class ConfigEngine {
 
 public:
@@ -79,6 +89,21 @@ public:
     inline static bool IsExist(std::string key) { return Instance()->exists(key); }
 
     /**
+     *  Display all config parameter in the current state
+     */
+    static void DisplayConfig()
+    {
+        Instance()->ParseConfig();
+    }
+
+    /**
+     *  Record parameters taken from the command line
+     *  @param argc the number of parameters in command line
+     *  @param argv the array of parameters in the command line
+     */
+    static void ManageProgramParameters(int argc, char* argv[]);
+
+    /**
      *  Parameter Accessor
      *  @param key the name of the parameter
      *  @return the value of the parameter in the requested type
@@ -100,21 +125,6 @@ public:
     {
         Instance()->setValue(key, setting_type, value);
     }
-
-    /**
-     *  Display all config parameter in the current state
-     */
-    static void DisplayConfig()
-    {
-        Instance()->ParseConfig();
-    }
-
-    /**
-     *  Record parameters taken from the command line
-     *  @param argc the number of parameters in command line
-     *  @param argv the array of parameters in the command line
-     */
-    static void ManageProgramParameters(int argc, char* argv[]);
 
 protected:
 

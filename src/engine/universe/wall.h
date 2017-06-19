@@ -1,8 +1,7 @@
 /**
- *  Wall class header
+ *  @file wall.h
+ *  @brief Wall class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *  Wall 3d model, inherits Model3D abstract class
  */
 
 #ifndef ENGINE_UNIVERSE_WALL_H_
@@ -12,10 +11,22 @@
 
 #include "engine/universe/model3d.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::universe
+ *  @brief World elements
+ */
 namespace universe {
 
+/**
+ *  @class Wall
+ *  @brief Wall 3d model, inherits Model3D abstract class
+ */
 class Wall : public Model3D {
 
 public:
@@ -27,7 +38,7 @@ public:
     static constexpr int kTEXTURE_WALL = 1;
     static constexpr int kTEXTURE_FLOOR = 2;
 
-    /* 
+    /*
      *  Wall Side constants
      */
     static constexpr int kWALL_FRONT = 0;

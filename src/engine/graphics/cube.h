@@ -1,8 +1,7 @@
 /**
- *   Cube class header
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *   Define a 3d Cube Object, Inherits from Shape3D.
+ *  @file cube.h
+ *  @brief Cube class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #ifndef ENGINE_GRAPHICS_CUBE_H_
@@ -13,10 +12,22 @@
 
 #include "engine/graphics/shape3d.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::graphics
+ *  @brief Elementary 3d graphic classes
+ */
 namespace graphics {
 
+/**
+ *  @class Cube
+ *  @brief Define a 3d Cube Object, Inherits from Shape3D
+ */
 class Cube : public Shape3D {
 
 public:
@@ -101,7 +112,7 @@ public:
     Cube& operator=(const Cube&) = default;
 
     /**
-     *  Default destructor 
+     *  Default destructor
      */
     virtual ~Cube() override = default;
 

@@ -1,6 +1,7 @@
 /**
- *   Brick class file
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ *  @file brick.cc
+ *  @brief Brick class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #include "engine/universe/brick.h"
@@ -59,7 +60,7 @@ const GLfloat sBufferData[192] = {
 };
 
 /*
- *  Fill vertex buffer 
+ *  Fill vertex buffer
  */
 void CreateVertexBuffer() noexcept {
     glGenBuffers(1, &sVertexBuffer);

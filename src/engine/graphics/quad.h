@@ -1,8 +1,7 @@
 /**
- *   Quad class header
- *   @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *   Define a 3d Quad Object, Inherits from Shape3D.
+ *  @file quad.h
+ *  @brief Quad class header
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #ifndef ENGINE_GRAPHICS_QUAD_H_
@@ -13,10 +12,22 @@
 
 #include "engine/graphics/shape3d.h"
 
+/**
+ *  @namespace engine
+ *  @brief Common parent namespace
+ */
 namespace engine {
 
+/**
+ *  @namespace engine::graphics
+ *  @brief Elementary 3d graphic classes
+ */
 namespace graphics {
 
+/**
+ *  @class Quad
+ *  @brief Define a 3d Quad Object, Inherits from Shape3D
+ */
 class Quad : public Shape3D {
 
 public:
