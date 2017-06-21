@@ -1,4 +1,4 @@
-# enginepp
+# nextfloor
 
 A 3d engine at very early stage and in working progress.
 (C++ version of https://github.com/ricofehr/engine, with improved features)
@@ -86,28 +86,30 @@ Step2, in build directory, generate MakeFiles and compile project
 $ cd build && cmake ../
 -- Configuring done
 -- Generating done
--- Build files have been written to: ~/enginepp
+-- Build files have been written to:
 
 $ make
-Scanning dependencies of target engine
-[  5%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/shape3d.cc.o
-[ 11%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/quad.cc.o
-[ 17%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/cube.cc.o
-[ 23%] Building CXX object CMakeFiles/engine.dir/src/engine/geometry/box.cc.o
-[ 29%] Building CXX object CMakeFiles/engine.dir/src/engine/helpers/proxy_config.cc.o
-[ 35%] Building CXX object CMakeFiles/engine.dir/src/engine/helpers/proxygl.cc.o
-[ 41%] Building CXX object CMakeFiles/engine.dir/src/engine/parallell/cl_parallell.cc.o
-[ 47%] Building CXX object CMakeFiles/engine.dir/src/engine/parallell/cilk_parallell.cc.o
-[ 52%] Building CXX object CMakeFiles/engine.dir/src/engine/parallell/serial_parallell.cc.o
-[ 58%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/camera.cc.o
-[ 64%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/model3d.cc.o
-[ 70%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/wall.cc.o
-[ 76%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/brick.cc.o
-[ 82%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/room.cc.o
-[ 88%] Building CXX object CMakeFiles/engine.dir/src/engine/universe/universe.cc.o
-[ 94%] Building CXX object CMakeFiles/engine.dir/src/engine.cc.o
-[100%] Linking CXX executable ../bin/engine
-[100%] Built target engine
+Scanning dependencies of target nextfloor
+[  5%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/graphics/shape3d.cc.o
+[ 10%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/graphics/quad.cc.o
+[ 15%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/graphics/cube.cc.o
+[ 21%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/graphics/border.cc.o
+[ 26%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/core/config_engine.cc.o
+[ 31%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/renderer/loopgl.cc.o
+[ 36%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/physics/collision_engine.cc.o
+[ 42%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/physics/cl_collision_engine.cc.o
+[ 47%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/physics/cilk_collision_engine.cc.o
+[ 52%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/physics/serial_collision_engine.cc.o
+[ 57%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/universe/random_universe_factory.cc.o
+[ 63%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/universe/camera.cc.o
+[ 68%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/universe/model3d.cc.o
+[ 73%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/universe/wall.cc.o
+[ 78%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/universe/brick.cc.o
+[ 84%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/universe/room.cc.o
+[ 89%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor/universe/universe.cc.o
+[ 94%] Building CXX object CMakeFiles/nextfloor.dir/src/nextfloor.cc.o
+[100%] Linking CXX executable ../bin/nextfloor
+[100%] Built target nextfloor
 ```
 
 ## Features
@@ -122,7 +124,7 @@ Scanning dependencies of target engine
 ## Folders
 ```
 +--assets/  Texture files
-+--bin/		Binary folder where engine executable is written
++--bin/		Binary folder where nextfloor executable is written
 +--build/   Build folder for compile stuffs
 +--cl/      OpenCL Kernels folder
 +--cmake/   Cmake modules folder
@@ -138,11 +140,11 @@ Scanning dependencies of target engine
 
 ## Settings
 
-A default setting file is present at config/enginepp.ini.default
+A default setting file is present at config/nextfloor.ini.default
 For local config change, we can duplicate this file
 ```
-$ cp config/enginepp.ini.default config/enginepp.ini
-$ vi config/enginepp.ini
+$ cp config/nextfloor.ini.default config/nextfloor.ini
+$ vi config/nextfloor.ini
 ```
 
 It's also possible to change mostly setting on the fly with program parameters (See below).
@@ -166,7 +168,7 @@ source ./scripts/./cilk_vars_osx.sh
 
 Default run, without any parameter
 ```
-bin/./engine  # Use settings as setted in config file (config/enginepp.ini or config/enginepp.ini.default).
+bin/./nextfloor  # Use settings as setted in config file (config/nextfloor.ini or config/nextfloor.ini.default).
 ```
 
 Program accept options who can override config settings
@@ -190,10 +192,10 @@ Program accept options who can override config settings
 
 For example
 ```
-./bin/./engine -d 0 -p cilkplus -o 48 -r 16 # no debug, cilkplus parallellism, 48 objects, 16 rooms
+./bin/./nextfloor -d 0 -p cilkplus -o 48 -r 16 # no debug, cilkplus parallellism, 48 objects, 16 rooms
 ```
 
-[![Engine](https://img.youtube.com/vi/7XnjXwFhHZk/0.jpg)](https://www.youtube.com/watch?v=7XnjXwFhHZk)
+[![NextFloor](https://img.youtube.com/vi/7XnjXwFhHZk/0.jpg)](https://www.youtube.com/watch?v=7XnjXwFhHZk)
 
 ## Test
 
@@ -218,7 +220,7 @@ For generate doxygen documentation, into the project folder
 doxygen doxygen.config
 ```
 
-Doxy pages are available online [here](http://oxy.enginepp.nextdeploy.io)
+Doxy pages are available online [here](http://oxy.nextfloor.nextdeploy.io)
 
 ## UML
 
@@ -235,14 +237,14 @@ Uses of Design Patterns
 - Strategy (CollisionEngine and his inherited classes)
 - Singleton (ConfigEngine, LoopGL)
 
-![Class Diagram](https://github.com/ricofehr/enginepp/raw/master/others/classes.png)
+![Class Diagram](https://github.com/ricofehr/nextfloor/raw/master/others/classes.png)
 
 ## Parallell Computes
 
-Below, the enginepp span graph (v0.2)
-![Span Diagram](https://github.com/ricofehr/enginepp/raw/master/others/parallell_span.png)
+Below, the nextfloor span graph (v0.2)
+![Span Diagram](https://github.com/ricofehr/nextfloor/raw/master/others/parallell_span.png)
 
-During the tests, Enginepp (v0.2) is started with the following parameters
+During the tests, NextFloor (v0.2) is started with the following parameters
 - granularity: 128
 - vsync: false
 - clipping: disabled
@@ -255,19 +257,19 @@ And hardware used during test
 - cg: GeForce GTX 980 Ti (22 computes units)
 
 #### 4 Rooms and 128 Moving Objects
-![Test Result With 128 Moving Objects](https://github.com/ricofehr/enginepp/raw/master/others/fpsbycores_128.png)
+![Test Result With 128 Moving Objects](https://github.com/ricofehr/nextfloor/raw/master/others/fpsbycores_128.png)
 - optimal number of workers: 6
 - speedup to 6 workers: 2
 - efficiency to 6 workers: 33%
 
 #### 8 Rooms and 512 Moving Objects
-![Test Result With 512 Moving Objects](https://github.com/ricofehr/enginepp/raw/master/others/fpsbycores_512.png)
+![Test Result With 512 Moving Objects](https://github.com/ricofehr/nextfloor/raw/master/others/fpsbycores_512.png)
 - optimal number of workers: 8
 - speedup to 8 workers: 3
 - efficiency to 8 workers: 37%
 
 #### 12 Rooms and 1152 Moving Objects
-![Test Result With 1152 Moving Objects](https://github.com/ricofehr/enginepp/raw/master/others/fpsbycores_1152.png)
+![Test Result With 1152 Moving Objects](https://github.com/ricofehr/nextfloor/raw/master/others/fpsbycores_1152.png)
 - optimal number of workers: 12
 - speedup to 12 workers: 4,2
 - efficiency to 12 workers: 35%
@@ -277,5 +279,5 @@ We deduce that more moving objects there are, more the number of cores gives an 
 And going through opencl for collision calculation, the results provide an improvement only if the precision for the collisions is very very important.
 Thus, with a granularity of 32768, one obtains a speedup of 2 and a efficiency of 10%.
 
-It is concluded that the CPU parallelism of cilkplus brings real gains on enginepp.
+It is concluded that the CPU parallelism of cilkplus brings real gains on NextFloor.
 On the other hand, OpenCL is only adapted from a high level of calculations sent to the kernel on the GPU.

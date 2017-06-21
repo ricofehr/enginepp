@@ -48,7 +48,7 @@ build/*
 !build/.gitkeep
 
 # Config overridded
-config/enginepp.ini
+config/nextfloor.ini
 
 # tmp folder
 tmp

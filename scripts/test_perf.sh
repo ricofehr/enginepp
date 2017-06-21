@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Launch performance tests with some metrics in output 
-# @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+# @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
 
 NCORES=0
 REPORTFOLDER=tmp
@@ -109,8 +109,8 @@ mkdir -p ${REPORTFOLDER}/test_${NOW}
 # no sequentially load (all objects are displayed at start)
 # NCORES cpu cores
 if ((TESTS % 2 == 0)); then
-./bin/./engine -d 1 -p serial -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -l > ${REPORTFOLDER}/test_${NOW}/serial_test0_settings
-./bin/./engine -d 1 -p serial -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 > ${REPORTFOLDER}/test_${NOW}/serial_test0_report
+./bin/./nextfloor -d 1 -p serial -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -l > ${REPORTFOLDER}/test_${NOW}/serial_test0_settings
+./bin/./nextfloor -d 1 -p serial -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 > ${REPORTFOLDER}/test_${NOW}/serial_test0_report
 fi
 
 # perf debug
@@ -122,8 +122,8 @@ fi
 # no vsync
 # Sequentially load: one new object by room each 10s
 if ((TESTS >= 1)); then
-./bin/./engine -d 1 -p serial -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -l > ${REPORTFOLDER}/test_${NOW}/serial_test1_settings
-./bin/./engine -d 1 -p serial -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 > ${REPORTFOLDER}/test_${NOW}/serial_test1_report
+./bin/./nextfloor -d 1 -p serial -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -l > ${REPORTFOLDER}/test_${NOW}/serial_test1_settings
+./bin/./nextfloor -d 1 -p serial -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 > ${REPORTFOLDER}/test_${NOW}/serial_test1_report
 fi
 
 ###### PART 2: OPENCL TEST #######
@@ -139,8 +139,8 @@ if ((OPENCL == 1)); then
 # no sequentially load (all objects are displayed at start)
 # NCORES cpu cores
 if ((TESTS % 2 == 0)); then
-./bin/./engine -d 1 -p opencl -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -l > ${REPORTFOLDER}/test_${NOW}/cl_test0_settings
-./bin/./engine -d 1 -p opencl -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 > ${REPORTFOLDER}/test_${NOW}/cl_test0_report
+./bin/./nextfloor -d 1 -p opencl -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -l > ${REPORTFOLDER}/test_${NOW}/cl_test0_settings
+./bin/./nextfloor -d 1 -p opencl -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 > ${REPORTFOLDER}/test_${NOW}/cl_test0_report
 fi
 
 # perf debug
@@ -152,8 +152,8 @@ fi
 # no vsync
 # Sequentially load: one new object by room each 10s
 if ((TESTS >= 1)); then
-./bin/./engine -d 1 -p opencl -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -l > ${REPORTFOLDER}/test_${NOW}/cl_test1_settings
-./bin/./engine -d 1 -p opencl -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 > ${REPORTFOLDER}/test_${NOW}/cl_test1_report
+./bin/./nextfloor -d 1 -p opencl -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -l > ${REPORTFOLDER}/test_${NOW}/cl_test1_settings
+./bin/./nextfloor -d 1 -p opencl -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 > ${REPORTFOLDER}/test_${NOW}/cl_test1_report
 fi
 
 fi
@@ -174,8 +174,8 @@ while ((NC <= NCORES)); do
 # no sequentially load (all objects are displayed at start)
 # NCORES cpu cores
 if ((TESTS % 2 == 0)); then
-./bin/./engine -d 1 -p cilkplus -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_settings
-./bin/./engine -d 1 -p cilkplus -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_report
+./bin/./nextfloor -d 1 -p cilkplus -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_settings
+./bin/./nextfloor -d 1 -p cilkplus -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_report
 fi
 
 # perf debug
@@ -187,8 +187,8 @@ fi
 # no vsync
 # Sequentially load: one new object by room each 10s
 if ((TESTS >= 1)); then
-./bin/./engine -d 1 -p cilkplus -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_settings
-./bin/./engine -d 1 -p cilkplus -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_report
+./bin/./nextfloor -d 1 -p cilkplus -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_settings
+./bin/./nextfloor -d 1 -p cilkplus -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_report
 fi
 
 NC=$((NC+2))

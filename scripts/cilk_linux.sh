@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Install cilkplus library and clang specific version
-# @author Eric Fehr (ricofehr@nextdeploy.io, @github: ricofehr)
+# @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
 
 if [[ -d /usr/local/cilkplus ]]; then
     echo "Cilkplus is already installed"
