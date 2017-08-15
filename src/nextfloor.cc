@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     using nextfloor::core::ConfigEngine;
 
     /* Reset seed */
-    srand (time(NULL));
+    srand(time(NULL));
 
     /* Init Config */
     ConfigEngine::InitConfig();
