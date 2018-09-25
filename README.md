@@ -46,7 +46,7 @@ $ brew install cmake glm glew glfw3 tbb libconfig
 
 And SOIL must be install manually
 ```
-$ git clone https://github.com/smibarber/libSOIL
+$ git clone https://github.com/childhood/libSOIL
 $ cd libSOIL && make
 $ sudo mkdir -p /usr/local/include/SOIL
 $ sudo cp *.h /usr/local/include/SOIL/
@@ -74,11 +74,11 @@ For CilkPlus installation, you can execute script below (detailed instructions o
 Step1, Before each compile, we need init env for cilkplus use.
 On Linux
 ```
-source ./scripts/./cilk_vars_linux.sh
+source ./scripts/./cilk_linux_vars.sh
 ```
 On MacOS
 ```
-source ./scripts/./cilk_vars_osx.sh
+source ./scripts/./cilk_osx_vars.sh
 ```
 
 Step2, in build directory, generate MakeFiles and compile project

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # clang binaries
 export PATH=/usr/local/cilkplus/bin:$PATH
 # cilkplus headers
