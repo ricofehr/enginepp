@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <cilk/cilk_api.h>
 
 #include "nextfloor/core/config_engine.h"
 
@@ -22,9 +21,6 @@ void CLCollisionEngine::InitCollisionEngine()
     cl::Device device_target;
     int max_cores = 0;
     size_t num;
-
-    /* Disable cilkplus parallell */
-    __cilkrts_set_param("nworkers", "1");
 
     using nextfloor::core::ConfigEngine;
     granularity_ = ConfigEngine::getSetting<int>("granularity");
@@ -94,8 +90,11 @@ void CLCollisionEngine::InitCollisionEngine()
 
 float CLCollisionEngine::ComputeCollision(float box1[], float box2[])
 {
-    std::vector<float> distances(granularity_, 1.0f);
-    float* distances_ptr = distances.data();
+    /* All tbb threads share same opencl objects, need mutex */
+    collision_mutex_.lock();
+
+    float* distances_ptr = new float[granularity_];
+    float ret = 1.0f;
 
     /* Copy the input data to the input buffer */
     cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
@@ -116,12 +115,16 @@ float CLCollisionEngine::ComputeCollision(float box1[], float box2[])
     cl_queue_.enqueueReadBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
 
     for (auto i = 0; i < granularity_; i++) {
-        if (distances[i] != 1.0f) {
-            return distances[i];
+        if (distances_ptr[i] != 1.0f) {
+            ret = distances_ptr[i];
+            break;
         }
     }
 
-    return 1.0f;
+    delete distances_ptr;
+    collision_mutex_.unlock();
+
+    return ret;
 }
 
 } // namespace helpers
