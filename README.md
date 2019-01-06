@@ -8,7 +8,7 @@ The camera can move with mouse (head orientation) and arrow keys (camera directi
 
 ## Prerequisites
 
-Needs Cmake (>3.1), OpenCL (1.2), CilkPlus and TBB, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+Needs Cmake (>3.1), OpenCL (1.2), TBB, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
 
 On ubuntu or Debian, apt-get make most of prerequisites install
 ```
@@ -32,11 +32,6 @@ And intel (for intel cpu) runtime
 $ wget "http://registrationcenter-download.intel.com/akdlm/irc_nas/9019/opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25.tgz"
 $ tar xvfz opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25.tgz
 $ cd  opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25 && ./install.sh
-```
-
-For CilkPlus installation, you can execute script below (detailed instructions on the [github page](https://github.com/cilkplus/cilkplus.github.com/blob/master/index.md#try-cilk-plusllvm)).
-```
-./scripts/./cilk_linux.sh
 ```
 
 On OSX, we need XCode and install some libraries with brew (SOIL must be install manually)
@@ -64,24 +59,9 @@ For OpenCL header copy, need execute this in terminal on Recovery Mode
 $ csrutil disable
 ```
 
-For CilkPlus installation, you can execute script below (detailed instructions on the [github page](https://github.com/cilkplus/cilkplus.github.com/blob/master/index.md#try-cilk-plusllvm)).
-```
-./scripts/./cilk_osx.sh
-```
-
 ## Compile
 
-Step1, Before each compile, we need init env for cilkplus use.
-On Linux
-```
-source ./scripts/./cilk_linux_vars.sh
-```
-On MacOS
-```
-source ./scripts/./cilk_osx_vars.sh
-```
-
-Step2, in build directory, generate MakeFiles and compile project
+In build directory, generate MakeFiles and compile project
 ```
 $ cd build && cmake ../
 -- Configuring done
@@ -116,7 +96,7 @@ Scanning dependencies of target nextfloor
 
 - C++14
 - OpenCL 1.2
-- CilkPlus / TBB
+- TBB
 - Opengl 3
 - Use of Glew, GLM, SOIL, Glfw libraries
 - CMake for compile
@@ -156,16 +136,6 @@ And following keys are used
 - 'p': pause / unpause
 - 'esc': exit
 
-Before run, we need init env for dynamic libraries path.
-On Linux
-```
-source ./scripts/./cilk_vars_linux.sh
-```
-On MacOS
-```
-source ./scripts/./cilk_vars_osx.sh
-```
-
 Default run, without any parameter
 ```
 bin/./nextfloor  # Use settings as setted in config file (config/nextfloor.ini or config/nextfloor.ini.default).
@@ -180,9 +150,9 @@ Program accept options who can override config settings
 -h     Display help
 -l     Display config
 -o n   Count of objects in rooms
--p serial|cilkplus|opencl
+-p serial|tbb|opencl
        serial: no parallellism
-       cilkplus: uses intel cilkplus library
+       tvv: uses intel tbb library
        opencl: uses opencl for collision computes
 -r n   Count of rooms
 -s n.m Load objects frequency, 0: generates all objects at start
@@ -192,7 +162,7 @@ Program accept options who can override config settings
 
 For example
 ```
-./bin/./nextfloor -d 0 -p cilkplus -o 48 -r 16 # no debug, cilkplus parallellism, 48 objects, 16 rooms
+./bin/./nextfloor -d 0 -p tbb -o 48 -r 16 # no debug, cilkplus parallellism, 48 objects, 16 rooms
 ```
 
 [![NextFloor](https://img.youtube.com/vi/7XnjXwFhHZk/0.jpg)](https://www.youtube.com/watch?v=7XnjXwFhHZk)
@@ -279,5 +249,5 @@ We deduce that more moving objects there are, more the number of cores gives an 
 And going through opencl for collision calculation, the results provide an improvement only if the precision for the collisions is very very important.
 Thus, with a granularity of 32768, one obtains a speedup of 2 and a efficiency of 10%.
 
-It is concluded that the CPU parallelism of cilkplus brings real gains on NextFloor.
+It is concluded that the CPU parallelism of tbb brings real gains on NextFloor.
 On the other hand, OpenCL is only adapted from a high level of calculations sent to the kernel on the GPU.

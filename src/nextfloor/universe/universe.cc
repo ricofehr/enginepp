@@ -9,7 +9,7 @@
 #include <GLFW/glfw3.h>
 #include <map>
 #include <iostream>
-#include <cilk/cilk.h>
+#include <tbb/tbb.h>
 
 #include "nextfloor/graphics/border.h"
 #include "nextfloor/universe/room.h"
@@ -52,11 +52,11 @@ void Universe::Draw() noexcept
 
     /* Detect current room */
     int active_index = -1;
-    cilk_for (auto cnt = 0; cnt < objects_.size(); cnt++) {
+    tbb::parallel_for (0, (int)objects_.size(), 1, [&](int cnt) {
         if (objects_[cnt]->get_camera() != nullptr) {
             active_index = cnt;
         }
-    }
+    });
 
     /* if no active Room, return */
     if (active_index == -1) {
@@ -89,15 +89,15 @@ void Universe::Draw() noexcept
     /* Universe is only ready after 10 hops */
     if (ready()) {
         /* Detect collision in display rooms */
-        cilk_for (auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
+        tbb::parallel_for (0, (int)display_rooms_.size(), 1, [&](int cnt) {
             display_rooms_[cnt]->DetectCollision();
-        }
+        });
 
         /* Compute new coords after current move, first the active room */
         display_rooms_[0]->Move();
-        cilk_for (auto cnt = 1; cnt < display_rooms_.size(); cnt++) {
+        tbb::parallel_for (1, (int)display_rooms_.size(), 1, [&](int cnt) {
             display_rooms_[cnt]->Move();
-        }
+        });
 
         /* Draw Rooms on Gl Scene */
         for (auto &r : display_rooms_) {

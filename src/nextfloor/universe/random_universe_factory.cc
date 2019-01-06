@@ -7,6 +7,7 @@
 #include "nextfloor/universe/random_universe_factory.h"
 
 #include <string>
+#include <tbb/tbb.h>
 
 #include "nextfloor/core/config_engine.h"
 
@@ -213,8 +214,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
         } else {
             side = Model3D::kROOF;
         }
-        cilk_for (auto j = 0; j < grid_x; j+=grid_x/4) {
-            cilk_for (auto k = 0; k < grid_z; k+=grid_z/4) {
+        tbb::parallel_for (0, grid_x, grid_x/4, [&](int j) {
+            tbb::parallel_for (0, grid_z, grid_z/4, [&](int k) {
                 /* No brick floor/roof if trapdoor */
                 if (!doors[side] ||
                     (j != 2*grid_x/4 && j != 3*grid_x/4) ||
@@ -235,8 +236,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
                                                                     static_cast<int>(Wall::kTEXTURE_TOP))};
                     room->add_child(std::move(wall_ptr));
                 }
-            }
-        }
+            });
+        });
     }
 
     scale_w = {grid_unit_x/4, (grid_y/6)*grid_unit_y, (grid_z/8)*grid_unit_z};
@@ -247,8 +248,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
         } else {
             side = Model3D::kRIGHT;
         }
-        cilk_for (auto j = 0; j < grid_y; j+=grid_y/3) {
-            cilk_for (auto k = 0; k < grid_z; k+=grid_z/4) {
+        tbb::parallel_for (0, grid_y, grid_y/3, [&](int j) {
+            tbb::parallel_for (0, grid_z, grid_z/4, [&](int k) {
                 /* No brick wall if Doors or Windows */
                 if ((!doors[side] || j > grid_y/3 || k != 0) &&
                     (!windows[side] || (j != grid_y/3) || (k != 2*grid_z/4 && k != 3*grid_z/4))) {
@@ -266,8 +267,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, static_cast<int>(Wall::kTEXTURE_WALL))};
                     room->add_child(std::move(wall_ptr));
                 }
-            }
-        }
+            });
+        });
     }
 
     scale_w = {(grid_x/8)*grid_unit_x, (grid_y/6)*grid_unit_y, grid_unit_z/4};
@@ -278,8 +279,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
         } else {
             side = Model3D::kBACK;
         }
-        cilk_for (auto j = 0; j < grid_y; j+=grid_y/3) {
-            cilk_for (auto k = 0; k < grid_x; k+=grid_x/4) {
+        tbb::parallel_for (0, grid_y, grid_y/3, [&](int j) {
+            tbb::parallel_for (0, grid_x, grid_x/4, [&](int k) {
                 /* No brick wall if Doors or Windows */
                 if ((!doors[side] || j > grid_y/3 || k != 0) &&
                     (!windows[side] || j != grid_y/3 || (k != 2*grid_x/4 && k != 3*grid_x/4))) {
@@ -297,8 +298,8 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
                     auto wall_ptr{std::make_unique<Wall>(scale_w, location_w, static_cast<int>(Wall::kTEXTURE_WALL))};
                     room->add_child(std::move(wall_ptr));
                 }
-            }
-        }
+            });
+        });
     }
 }
 

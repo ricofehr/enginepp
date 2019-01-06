@@ -6,7 +6,7 @@
 
 #include "nextfloor/physics/serial_collision_engine.h"
 
-#include <cilk/cilk_api.h>
+#include <tbb/tbb.h>
 
 #include "nextfloor/core/config_engine.h"
 
@@ -17,9 +17,6 @@ namespace physics {
 void SerialCollisionEngine::InitCollisionEngine() {
     using nextfloor::core::ConfigEngine;
     granularity_ = ConfigEngine::getSetting<int>("granularity");
-
-    /* Disable cilkplus parallell */
-    __cilkrts_set_param("nworkers", "1");
 }
 
 float SerialCollisionEngine::ComputeCollision(float box1[], float box2[])

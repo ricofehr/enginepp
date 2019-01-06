@@ -9,8 +9,6 @@
 
 #include <memory>
 #include <vector>
-#include <cilk/cilk.h>
-#include <cilk/reducer_opadd.h>
 
 #include "nextfloor/universe/model3d.h"
 
@@ -93,17 +91,35 @@ public:
      *  @return the count of objects inside rooms
      */
     inline const int countRoomsChilds(bool display) const {
-        cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
-            cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-                *count_sum += display_rooms_[cnt]->countChilds();
-            }
+            return tbb::parallel_reduce(
+                tbb::blocked_range<int>(0, display_rooms_.size()),
+                0, 
+                [&](const tbb::blocked_range<int>& r, int init)->int {
+                    for (int a = r.begin(); a != r.end(); ++a) {
+                        init += display_rooms_[a]->countChilds();
+                    }
+                    return init;
+                },
+                [](int x, int y)->int {
+                    return x + y;
+                }
+            );
         } else {
-            cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
-                *count_sum += objects_[cnt]->countChilds();
-            }
+            return tbb::parallel_reduce(
+                tbb::blocked_range<int>(0, objects_.size()),
+                0, 
+                [&](const tbb::blocked_range<int>& r, int init)->int {
+                    for (int a = r.begin(); a != r.end(); ++a) {
+                        init += objects_[a]->countChilds();
+                    }
+                    return init;
+                },
+                [](int x, int y)->int {
+                    return x + y;
+                }
+            );
         }
-        return count_sum.get_value();
     }
 
     /**
@@ -112,17 +128,35 @@ public:
      *  @return the count of moving objects inside rooms
      */
     inline const int countRoomsMovingChilds(bool display) const {
-        cilk::reducer<cilk::op_add<int>> count_sum(0);
         if (display) {
-            cilk_for(auto cnt = 0; cnt < display_rooms_.size(); cnt++) {
-                *count_sum += display_rooms_[cnt]->countMovingChilds();
-            }
+            return tbb::parallel_reduce(
+                tbb::blocked_range<int>(0, display_rooms_.size()),
+                0, 
+                [&](const tbb::blocked_range<int>& r, int init)->int {
+                    for (int a = r.begin(); a != r.end(); ++a) {
+                        init += display_rooms_[a]->countMovingChilds();
+                    }
+                    return init;
+                },
+                [](int x, int y)->int {
+                    return x + y;
+                }
+            );
         } else {
-            cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
-                *count_sum += objects_[cnt]->countMovingChilds();
-            }
+            return tbb::parallel_reduce(
+                tbb::blocked_range<int>(0, objects_.size()),
+                0, 
+                [&](const tbb::blocked_range<int>& r, int init)->int {
+                    for (int a = r.begin(); a != r.end(); ++a) {
+                        init += objects_[a]->countMovingChilds();
+                    }
+                    return init;
+                },
+                [](int x, int y)->int {
+                    return x + y;
+                }
+            );
         }
-        return count_sum.get_value();
     }
 
     /*

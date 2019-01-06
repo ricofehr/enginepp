@@ -1,11 +1,11 @@
 /**
- *  @file cilk_collision_engine.h
- *  @brief CilkCollisionEngine class header
+ *  @file tbb_collision_engine.h
+ *  @brief TbbCollisionEngine class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef PHYSICS_CILKCOLLISIONNEXTFLOOR_H_
-#define PHYSICS_CILKCOLLISIONNEXTFLOOR_H_
+#ifndef PHYSICS_TBBCOLLISIONNEXTFLOOR_H_
+#define PHYSICS_TBBCOLLISIONNEXTFLOOR_H_
 
 #include <tbb/mutex.h>
 
@@ -24,49 +24,49 @@ namespace nextfloor {
 namespace physics {
 
 /**
- *  @class CilkCollisionEngine
- *  @brief Implements intelcilkplus algorithm for collision computes
+ *  @class TbbCollisionEngine
+ *  @brief Implements inteltbbplus algorithm for collision computes
  */
-class CilkCollisionEngine : public CollisionEngine {
+class TbbCollisionEngine : public CollisionEngine {
 
 public:
 
     /**
      *  Default Move constructor
      */
-    CilkCollisionEngine(CilkCollisionEngine&&) = default;
+    TbbCollisionEngine(TbbCollisionEngine&&) = default;
 
     /**
      *  Default Move assignment
      */
-    CilkCollisionEngine& operator=(CilkCollisionEngine&&) = default;
+    TbbCollisionEngine& operator=(TbbCollisionEngine&&) = default;
 
     /**
      *  Copy constructor Deleted
      *  Ensure a sole Instance
      */
-    CilkCollisionEngine(const CilkCollisionEngine&) = delete;
+    TbbCollisionEngine(const TbbCollisionEngine&) = delete;
 
     /**
      *  Copy assignment Deleted
      *  Ensure a sole Instance
      */
-    CilkCollisionEngine& operator=(const CilkCollisionEngine&) = delete;
+    TbbCollisionEngine& operator=(const TbbCollisionEngine&) = delete;
 
     /**
      *  Default destructor
      */
-    ~CilkCollisionEngine() override = default;
+    ~TbbCollisionEngine() override = default;
 
     /**
      *  Return (and allocates if needed) sole Instance
      *  @return the sole collision engine instance
      */
-    inline static CilkCollisionEngine* Instance()
+    inline static TbbCollisionEngine* Instance()
     {
         static bool sIsInit = false;
         /* Raw pointers because static vars */
-        static auto sInstance = new CilkCollisionEngine;
+        static auto sInstance = new TbbCollisionEngine;
         static auto collision_mutex = new tbb::mutex;
 
         /*
@@ -84,7 +84,7 @@ public:
 
     /**
      *  Compute collision distance between borders of 2 objects
-     *  Thanks to cilkplus paralell processing
+     *  Thanks to tbbplus paralell processing
      *  @param box1 includes the coords for the first border and the moving vector
      *  @param box2 includes the coords for the second border and the moving vector
      *  @return distance between the 2 borders
@@ -97,10 +97,10 @@ private:
      *  Default Constructor
      *  Protected scope ensure sole instance
      */
-    CilkCollisionEngine() = default;
+    TbbCollisionEngine() = default;
 
     /**
-     *  Init cilkplus parallell context
+     *  Init tbbplus parallell context
      */
     void InitCollisionEngine() override final;
 };
@@ -109,4 +109,4 @@ private:
 
 } // namespace nextfloor
 
-#endif // PHYSICS_CILKCOLLISIONNEXTFLOOR_H_
+#endif // PHYSICS_TBBCOLLISIONNEXTFLOOR_H_

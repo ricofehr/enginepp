@@ -9,7 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sys/stat.h>
-#include <cilk/cilk_api.h>
+#include <tbb/tbb.h>
 
 #include "nextfloor/physics/collision_engine.h"
 
@@ -96,9 +96,9 @@ void ConfigEngine::DefaultValues()
 
 void ConfigEngine::ParseConfig() const
 {
-    auto nworkers = getValue<int>("workers_count") ? getValue<int>("workers_count") : __cilkrts_get_nworkers();
+    auto nworkers = getValue<int>("workers_count") ? getValue<int>("workers_count") : tbb::task_scheduler_init::default_num_threads();
 
-    std::cout << "Parallell mode (1 -> serial, 2 -> cilkplus, 3 -> opencl): " << getValue<int>("parallell") << std::endl;
+    std::cout << "Parallell mode (1 -> serial, 2 -> tbb, 3 -> opencl): " << getValue<int>("parallell") << std::endl;
     std::cout << "Window width: " << getValue<float>("width") << std::endl;
     std::cout << "Window height: " << getValue<float>("height") << std::endl;
     std::cout << "Objects count: " << getValue<int>("objects_count") << std::endl;
@@ -157,9 +157,9 @@ void ConfigEngine::ManageProgramParameters(int argc, char* argv[])
             std::cout << "-h     Display help" << std::endl;
             std::cout << "-l     Display config" << std::endl;
             std::cout << "-o n   Count of objects in rooms" << std::endl;
-            std::cout << "-p serial|cilkplus|opencl" << std::endl
+            std::cout << "-p serial|tbb|opencl" << std::endl
             << "       serial: no parallellism" << std::endl
-            << "       cilkplus: uses intel cilkplus library" << std::endl
+            << "       tbb: uses intel tbb library" << std::endl
             << "       opencl: uses opencl for collision computes" << std::endl;
             std::cout << "-r n   Count of rooms" << std::endl;
             std::cout << "-s n.m Load objects frequency, 0: generates all objects at start" << std::endl;
@@ -186,8 +186,8 @@ void ConfigEngine::ManageProgramParameters(int argc, char* argv[])
                 ConfigEngine::setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_SERIAL);
             }
 
-            if (arg2 == "cilkplus") {
-                ConfigEngine::setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_CILK);
+            if (arg2 == "tbb") {
+                ConfigEngine::setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_TBB);
             }
 
             if (arg2 == "opencl") {
@@ -218,6 +218,10 @@ void ConfigEngine::ManageProgramParameters(int argc, char* argv[])
             const std::string arg2(argv[cnt++]);
             ConfigEngine::setSetting("workers_count", libconfig::Setting::TypeInt, std::stoi(arg2));
         }
+    }
+
+    if (ConfigEngine::getSetting<int>("parallell") == CollisionEngine::kPARALLELL_SERIAL) {
+        ConfigEngine::setSetting("workers_count", libconfig::Setting::TypeInt, 1);
     }
 
     /* Display config values from file */

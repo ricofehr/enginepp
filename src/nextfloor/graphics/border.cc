@@ -8,7 +8,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
-#include <cilk/cilk.h>
+#include <tbb/tbb.h>
 
 namespace nextfloor {
 
@@ -88,10 +88,10 @@ std::vector<glm::vec3> Border::ComputeCoords() const
     std::vector<glm::vec3> ret(coords_.size());
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location())) * glm::scale(scale());
 
-    /* Parallell coords compute with cilkplus */
-    cilk_for (auto i = 0; i < coords_.size(); i++) {
+    /* Parallell coords compute with tbb */
+    tbb::parallel_for (0, (int)coords_.size(), 1, [&](int i) {
         ret[i] = glm::vec3(model * glm::vec4(coords_[i], 1.0f));
-    }
+    });
 
     return ret;
 }

@@ -8,6 +8,8 @@
 #define NEXTFLOOR_CORE_CONFIGENGINE_H_
 
 #include <libconfig.h++>
+#include <memory>
+#include <tbb/tbb.h>
 
 /**
  *  @namespace nextfloor

@@ -84,13 +84,6 @@ while (($# > 0)); do
   esac
 done
 
-# load library path
-if [[ -f /usr/bin/sw_vers ]]; then
-    source scripts/cilk_osx_vars.sh
-else
-    source scripts/cilk_linux_vars.sh
-fi
-
 # prepare report folder
 mkdir -p $REPORTFOLDER
 rm -rf ${REPORTFOLDER}/test_${NOW}
@@ -159,13 +152,13 @@ fi
 fi
 
 
-###### PART 3: CILKPLUS TEST #######
+###### PART 3: TBB TEST #######
 
 NC=2
 ((NCORES == 0)) && NC=0
 while ((NC <= NCORES)); do
 # perf debug
-# cilkplus parallellism
+# tbb parallellism
 # NBOBJ (32) objects by room, NBR (4) rooms (NBR*NBOBJ Moving Objects in all)
 # GRAN (64) computes for collision
 # no clipping (all objects are displayed)
@@ -174,12 +167,12 @@ while ((NC <= NCORES)); do
 # no sequentially load (all objects are displayed at start)
 # NCORES cpu cores
 if ((TESTS % 2 == 0)); then
-./bin/./nextfloor -d 1 -p cilkplus -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_settings
-./bin/./nextfloor -d 1 -p cilkplus -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_report
+./bin/./nextfloor -d 1 -p tbb -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_settings
+./bin/./nextfloor -d 1 -p tbb -o $NBOBJ -r $NBR -g $GRAN -c 0 -e 60 -v 0 -s 0 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test0_${NC}core_report
 fi
 
 # perf debug
-# cilkplus parallellism
+# tbb parallellism
 # Until 2*NBOBJ (64) objects by room, NBR (4) rooms
 # GRAN (64) computes for collision
 # no clipping (all objects are displayed)
@@ -187,8 +180,8 @@ fi
 # no vsync
 # Sequentially load: one new object by room each 10s
 if ((TESTS >= 1)); then
-./bin/./nextfloor -d 1 -p cilkplus -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_settings
-./bin/./nextfloor -d 1 -p cilkplus -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_report
+./bin/./nextfloor -d 1 -p tbb -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC -l > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_settings
+./bin/./nextfloor -d 1 -p tbb -o $((2*NBOBJ)) -r $NBR -g $GRAN -c 0 -e $((10*2*NBOBJ)) -v 0 -s 10 -w $NC > ${REPORTFOLDER}/test_${NOW}/cilk_test1_${NC}core_report
 fi
 
 NC=$((NC+2))

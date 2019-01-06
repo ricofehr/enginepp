@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(nextfloor)
 
-
 # pick a version #
-set(nextfloor_VERSION 0.2)
+set(nextfloor_VERSION 0.3)
 
 include_directories(src)
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 # define bin folder as destination folder
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -26,7 +25,7 @@ set(renderer_SRCS
 set(physics_SRCS
     src/nextfloor/physics/collision_engine.cc
     src/nextfloor/physics/cl_collision_engine.cc
-    src/nextfloor/physics/cilk_collision_engine.cc
+    src/nextfloor/physics/tbb_collision_engine.cc
     src/nextfloor/physics/serial_collision_engine.cc)
 
 set(universe_SRCS
@@ -61,7 +60,7 @@ set(renderer_HDRS
 set(physics_HDRS
     src/nextfloor/physics/collision_engine.h
     src/nextfloor/physics/cl_collision_engine.h
-    src/nextfloor/physics/cilk_collision_engine.h
+    src/nextfloor/physics/tbb_collision_engine.h
     src/nextfloor/physics/serial_collision_engine.h)
 
 set(universe_HDRS
@@ -83,13 +82,13 @@ set(nextfloor_HDRS
 
 add_executable(nextfloor ${nextfloor_SRCS} ${nextfloor_HDRS})
 
-find_package(Cilk REQUIRED)
 find_package(TBB REQUIRED)
 find_package(Config++ REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenCL REQUIRED)
-add_definitions("-fcilkplus -std=gnu++14 -stdlib=libc++")
+add_definitions("-std=gnu++17")
 include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${Config++_INCLUDE_DIRS})
-target_link_libraries(nextfloor ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY} config++ cilkrts tbb)
+target_link_libraries(nextfloor ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY} config++ tbb)
+target_compile_features(nextfloor PUBLIC cxx_nullptr)

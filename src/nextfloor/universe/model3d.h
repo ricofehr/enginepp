@@ -11,8 +11,7 @@
 #include <vector>
 #include <map>
 #include <tbb/mutex.h>
-#include <cilk/cilk.h>
-#include <cilk/reducer_opadd.h>
+#include <tbb/tbb.h>
 #include <glm/glm.hpp>
 
 #include "nextfloor/graphics/shape3d.h"
@@ -261,13 +260,21 @@ public:
      */
     inline virtual int countMovingChilds() const
     {
-        cilk::reducer<cilk::op_add<int>> count_sum(0);
-        cilk_for(auto cnt = 0; cnt < objects_.size(); cnt++) {
-            if (objects_[cnt]->IsMoved()) {
-                *count_sum += 1;
+        return tbb::parallel_reduce(
+            tbb::blocked_range<int>(0, objects_.size()),
+            0, 
+            [&](const tbb::blocked_range<int>& r, int init)->int {
+                for (int a = r.begin(); a != r.end(); ++a) {
+                    if (objects_[a]->IsMoved()) {
+                        ++init;
+                    }
+                }
+                return init;
+            },
+            [](int x, int y)->int {
+                return x + y;
             }
-        }
-        return count_sum.get_value();
+        );
     }
 
     /*
@@ -570,7 +577,7 @@ private:
     /** Placements coordinates into the parent grid */
     std::vector<std::vector<int>> placements_;
 
-    /** If setted, obestacle_ is the collision partner */
+    /** If setted, obstacle_ is the collision partner */
     Model3D* obstacle_{nullptr};
 
     /** Mutex ensures thread safe instructions */

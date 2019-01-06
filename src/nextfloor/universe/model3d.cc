@@ -20,11 +20,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cilk/cilk.h>
+#include <tbb/tbb.h>
 
 #include "nextfloor/physics/cl_collision_engine.h"
 #include "nextfloor/physics/serial_collision_engine.h"
-#include "nextfloor/physics/cilk_collision_engine.h"
+#include "nextfloor/physics/tbb_collision_engine.h"
 #include "nextfloor/core/config_engine.h"
 
 namespace nextfloor {
@@ -65,8 +65,8 @@ void Model3D::InitCollisionEngine()
     int type_parallell = ConfigEngine::getSetting<int>("parallell");
 
     switch (type_parallell) {
-        case CollisionEngine::kPARALLELL_CILK:
-            collision_engine_ = nextfloor::physics::CilkCollisionEngine::Instance();
+        case CollisionEngine::kPARALLELL_TBB:
+            collision_engine_ = nextfloor::physics::TbbCollisionEngine::Instance();
             break;
         case CollisionEngine::kPARALLELL_CL:
             collision_engine_ = nextfloor::physics::CLCollisionEngine::Instance();
@@ -141,12 +141,12 @@ std::vector<Model3D*> Model3D::FindAllNeighbors() const noexcept
     std::vector<Model3D*> ret(0);
     tbb::mutex neighbor_mutex;
 
-    cilk_for (auto cnp = 0; cnp < placements_.size(); cnp++) {
+    tbb::parallel_for (0, (int)placements_.size(), 1, [&](int cnp) {
         auto i = placements_[cnp][0];
         auto j = placements_[cnp][1];
         auto k = placements_[cnp][2];
 
-        cilk_for (auto cnt = 0; cnt < kSIDES; cnt++) {
+        tbb::parallel_for (0, kSIDES, 1, [&](int cnt) {
             auto c = GetNeighborCoordsBySide(i, j, k, cnt);
 
             for (auto &neighbor : parent_->FindItemsInGrid(c[0], c[1], c[2])) {
@@ -157,8 +157,8 @@ std::vector<Model3D*> Model3D::FindAllNeighbors() const noexcept
                     }
                 }
             }
-        }
-    }
+        });
+    });
 
     return ret;
 }
@@ -301,9 +301,9 @@ void Model3D::DetectCollision() noexcept
         PivotCollision();
     }
 
-    cilk_for (auto i = 0; i < objects_.size(); i++) {
+    tbb::parallel_for (0, (int)objects_.size(), 1, [&](int i) {
         objects_[i]->DetectCollision();
-    }
+    });
 }
 
 void Model3D::PivotCollision() noexcept
@@ -311,13 +311,13 @@ void Model3D::PivotCollision() noexcept
     /* Prepare vector for collision compute */
     std::vector<Model3D*> test_objects = FindCollisionNeighbors();
 
-    /* Parallell collision loop for objects with cilkplus */
-    cilk_for (auto i = 0; i < test_objects.size(); i++) {
+    /* Parallell collision loop for objects with tbb */
+    tbb::parallel_for (0, (int)test_objects.size(), 1, [&](int i) {
         /* Abort program if object and room_object loop are same (must no happend) */
         assert(*this != *test_objects[i]);
 
         collision_engine_->DetectCollision(this, test_objects[i]);
-    }
+    });
 
     if (IsCamera() && obstacle() != nullptr) {
         obstacle()->flag_collision_with_camera();
@@ -334,7 +334,7 @@ std::vector<Model3D*> Model3D::FindCollisionNeighbors() const noexcept
     auto dirz = IsMovedZ();
 
     auto sides = parent_->ListSidesInTheDirection(dirx, diry, dirz);
-    cilk_for(auto cnt = 0; cnt < sides.size(); cnt++) {
+    tbb::parallel_for (0, (int)sides.size(), 1, [&](int cnt) {
         for (auto &neighbor: FindNeighborsSide(sides[cnt])) {
 
             /* Avoid add last collision objects between both */
@@ -348,7 +348,7 @@ std::vector<Model3D*> Model3D::FindCollisionNeighbors() const noexcept
                 ret.push_back(neighbor);
             }
         }
-    }
+    });
 
     return ret;
 }
@@ -474,7 +474,7 @@ std::vector<Model3D*> Model3D::FindNeighborsSide(int side) const noexcept
     std::vector<Model3D*> ret(0);
     tbb::mutex neighbor_mutex;
 
-    cilk_for (auto cnp = 0; cnp < placements_.size(); cnp++) {
+    tbb::parallel_for (0, (int)placements_.size(), 1, [&](int cnp) {
         auto i = placements_[cnp][0];
         auto j = placements_[cnp][1];
         auto k = placements_[cnp][2];
@@ -488,7 +488,7 @@ std::vector<Model3D*> Model3D::FindNeighborsSide(int side) const noexcept
                 }
             }
         }
-    }
+    });
 
     return ret;
 }
@@ -532,9 +532,9 @@ void Model3D::Move() noexcept
 {
     border_->MoveCoords();
 
-    cilk_for (auto cnt = 0; cnt < elements_.size(); cnt++) {
+    tbb::parallel_for (0, (int)elements_.size(), 1, [&](int cnt) {
         elements_[cnt]->ComputeMVP();
-    }
+    });
 
     if (collision_countdown_ == 0) {
         id_last_collision_ = 0;
@@ -638,9 +638,9 @@ void Model3D::ComputePlacements() noexcept
     int size_y = static_cast<int>(ceil((y2 - y1) / grid_unit[1]));
     int size_z = static_cast<int>(ceil((z2 - z1) / grid_unit[2]));
 
-    cilk_for (auto cnt_x = 0 ; cnt_x < size_x ; cnt_x++) {
-        cilk_for (auto cnt_y = 0 ; cnt_y < size_y ; cnt_y++) {
-            cilk_for (auto cnt_z = 0 ; cnt_z < size_z ; cnt_z++) {
+    tbb::parallel_for (0, size_x, 1, [&](int cnt_x) {
+        tbb::parallel_for (0, size_y, 1, [&](int cnt_y) {
+            tbb::parallel_for (0, size_z, 1, [&](int cnt_z) {
                 parent_new = parent_;
 
                 float x = x1 + cnt_x * grid_unit[0];
@@ -661,19 +661,22 @@ void Model3D::ComputePlacements() noexcept
                 }
 
                 /* If no parent for current coords */
-                if (parent_new == nullptr) {
-                    continue;
-                }
+                // if (parent_new == nullptr) {
+                //     continue;
+                // }
 
                 /* If parent change for current coords */
-                if (parent_new != parent_) {
-                    continue;
-                }
+                // if (parent_new != parent_) {
+                //     continue;
+                // }
 
-                add_placement(i, j, k);
-            }
-        }
-    }
+                /* Add placement only if a parent exist and doesnt change */
+                if (parent_new != nullptr && parent_new == parent_) {
+                    add_placement(i, j, k);
+                }
+            });
+        });
+    });
 
     /* All coords are into other parent */
     if (parent_new != nullptr &&

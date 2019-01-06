@@ -5,6 +5,7 @@
  */
 
 #include <memory>
+#include <tbb/tbb.h>
 
 #include "nextfloor/universe/random_universe_factory.h"
 #include "nextfloor/core/config_engine.h"
@@ -25,6 +26,12 @@ int main(int argc, char* argv[])
 
     /* Manage program parameters */
     ConfigEngine::ManageProgramParameters(argc, argv);
+
+    /* Manage Threads Parallelism : disable tbb parallelism if serial option, or set arbitrary thread number (default is to let tbb core decide) */
+    std::unique_ptr<tbb::task_scheduler_init> tbb_threads_config{nullptr};
+    if (ConfigEngine::getSetting<int>("workers_count")) {
+        tbb_threads_config = std::make_unique<tbb::task_scheduler_init>(ConfigEngine::getSetting<int>("workers_count"));
+    }
 
 	/* Init world */
     RandomUniverseFactory factory;

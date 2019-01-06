@@ -70,7 +70,7 @@ public:
      *  Parallell Algo Constants
      */
     static constexpr int kPARALLELL_SERIAL = 1;
-    static constexpr int kPARALLELL_CILK = 2;
+    static constexpr int kPARALLELL_TBB = 2;
     static constexpr int kPARALLELL_CL = 3;
 
     /**
