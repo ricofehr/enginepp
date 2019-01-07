@@ -11,6 +11,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 /**
  *  @namespace nextfloor
  *  @brief Common parent namespace
