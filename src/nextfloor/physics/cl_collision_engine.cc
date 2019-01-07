@@ -121,7 +121,7 @@ float CLCollisionEngine::ComputeCollision(float box1[], float box2[])
         }
     }
 
-    delete distances_ptr;
+    delete[] distances_ptr;
     collision_mutex_.unlock();
 
     return ret;
