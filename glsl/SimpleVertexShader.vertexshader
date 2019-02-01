@@ -1,17 +1,17 @@
 #version 330 core
-layout(location = 0) in vec3 vertexPosition_modelspace;
-layout(location = 1) in vec3 vertexColor;
-layout(location = 2) in vec2 texcoord;
+layout(location = 0) in vec3 vertex_position_modelspace;
+layout(location = 1) in vec3 vertex_color;
+layout(location = 2) in vec2 tex_coord;
 
 // Output data ; will be interpolated for each fragment.
-out vec3 fragmentColor;
-out vec2 texCoord;
+out vec3 fragment_color;
+out vec2 fragment_tex_coord;
 
 uniform mat4 MVP;
 
 void main(){
   // Output position of the vertex, in clip space : MVP * position
-  gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
-  fragmentColor = vertexColor;
-  texCoord = texcoord;
+  gl_Position =  MVP * vec4(vertex_position_modelspace, 1);
+  fragment_color = vertex_color;
+  fragment_tex_coord = tex_coord;
 }
