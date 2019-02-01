@@ -38,6 +38,7 @@
 # Cmake files and folder
 Makefile
 cmake_install.cmake
+CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles/
 
