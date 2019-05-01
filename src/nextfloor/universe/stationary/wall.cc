@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/universe/wall.h"
+#include "nextfloor/universe/stationary/wall.h"
 
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
@@ -18,6 +18,8 @@
 namespace nextfloor {
 
 namespace universe {
+
+namespace stationary {
 
 namespace {
 
@@ -132,6 +134,8 @@ void Wall::CreateBuffers()
     }
 }
 
-} // namespace graphics
+} // namespace static
+
+} // namespace universe
 
 } // namespace nextfloor

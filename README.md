@@ -51,7 +51,7 @@ $ sudo cp libSOIL.* /usr/local/lib/
 And OpenCL must be install manually
 ```
 $ wget https://github.com/KhronosGroup/OpenCL-CLHPP/releases/download/v2.0.10/cl2.hpp
-$ sudo mv cl2.hpp /System/Library/Frameworks/OpenCL.framework/Headers/
+$ sudo mv cl2.hpp /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenCL.framework/Headers/
 ```
 
 For OpenCL header copy, need execute this in terminal on Recovery Mode

@@ -56,7 +56,7 @@ float TbbCollisionEngine::ComputeCollision(float box1[], float box2[])
             test_y2 + h2 <= test_y1 && test_y2 >= test_y1 + h1 &&
             test_z2 >= test_z1 + d1 && test_z2 + d2 <= test_z1) {
             auto distcol = static_cast<float>(fact-1) / granularity_;
-            
+
             /* Raw pointers because static vars */
             static auto distance_mutex = new tbb::mutex;
 

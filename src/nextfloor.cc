@@ -7,14 +7,14 @@
 #include <memory>
 #include <tbb/tbb.h>
 
-#include "nextfloor/universe/random_universe_factory.h"
+#include "nextfloor/universe/factory/random_universe_factory.h"
 #include "nextfloor/core/config_engine.h"
 #include "nextfloor/renderer/loopgl.h"
 
 int main(int argc, char* argv[])
 {
     using nextfloor::universe::Universe;
-    using nextfloor::universe::RandomUniverseFactory;
+    using nextfloor::universe::factory::RandomUniverseFactory;
     using nextfloor::renderer::LoopGL;
     using nextfloor::core::ConfigEngine;
 

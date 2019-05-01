@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/universe/brick.h"
+#include "nextfloor/universe/dynamic/brick.h"
 
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
@@ -18,6 +18,8 @@
 namespace nextfloor {
 
 namespace universe {
+
+namespace dynamic {
 
 namespace {
 
@@ -131,6 +133,8 @@ void Brick::CreateBuffers() noexcept
     }
 }
 
-} // namespace graphics
+} // namespace dynamic
+
+} // namespace universe
 
 } // namespace nextfloor

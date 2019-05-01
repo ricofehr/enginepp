@@ -13,7 +13,7 @@
 
 #include "nextfloor/graphics/border.h"
 #include "nextfloor/universe/room.h"
-#include "nextfloor/universe/random_universe_factory.h"
+#include "nextfloor/universe/factory/random_universe_factory.h"
 #include "nextfloor/core/config_engine.h"
 
 namespace nextfloor {
@@ -64,7 +64,7 @@ void Universe::Draw() noexcept
     }
 
     /* Record moving orders for camera */
-    objects_[active_index]->RecordHID();
+    //objects_[active_index]->RecordHID();
 
     /* Lock current universe */
     lock();
@@ -108,7 +108,7 @@ void Universe::Draw() noexcept
     /* GL functions during object generate, then needs serial execution */
     float freq = 0.0f;
     if ((freq = ConfigEngine::getSetting<float>("load_objects_freq")) > 0.0f) {
-        RandomUniverseFactory factory;
+        nextfloor::universe::factory::RandomUniverseFactory factory;
         double current_time = glfwGetTime();
         for (auto &r : objects_) {
             if (!r->IsFull() && current_time - sLastTime >= freq) {

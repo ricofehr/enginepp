@@ -12,9 +12,9 @@
 
 #include "nextfloor/universe/universe.h"
 #include "nextfloor/universe/room.h"
-#include "nextfloor/universe/brick.h"
-#include "nextfloor/universe/wall.h"
-#include "nextfloor/universe/camera.h"
+#include "nextfloor/universe/dynamic/brick.h"
+#include "nextfloor/universe/stationary/wall.h"
+#include "nextfloor/universe/dynamic/camera.h"
 
 /**
  *  @namespace nextfloor
@@ -27,6 +27,13 @@ namespace nextfloor {
  *  @brief World elements
  */
 namespace universe {
+
+
+/**
+ *  @namespace nextfloor::universe::factory
+ *  @brief World factory
+ */
+namespace factory {
 
 /**
  *  @class UniverseFactory
@@ -66,7 +73,7 @@ public:
      *  A pure virtual member.
      *  @return the unique_ptr to the Universe created
      */
-    virtual std::unique_ptr<Universe> GenerateUniverse() const = 0;
+    virtual std::unique_ptr<nextfloor::universe::Universe> GenerateUniverse() const = 0;
 
     /**
      *  Generate one Room into an Universe
@@ -74,21 +81,21 @@ public:
      *  @param uni the universe targetted
      *  @return a raw pointer to the room created
      */
-    virtual Room* GenerateRoom(Universe* uni) const = 0;
+    virtual nextfloor::universe::Room* GenerateRoom(nextfloor::universe::Universe* uni) const = 0;
 
     /**
      *  Generate Walls 3d model into the Room room
      *  A pure virtual member.
      *  @param room is the place where the wall is created
      */
-    virtual void GenerateWalls(Room* room) const = 0;
+    virtual void GenerateWalls(nextfloor::universe::Room* room) const = 0;
 
     /**
      *  Generate a Brick 3d model into the Room room
      *  A pure virtual member.
      *  @param room is the place where the brick is created
      */
-    virtual void GenerateBrick(Room* room) const = 0;
+    virtual void GenerateBrick(nextfloor::universe::Room* room) const = 0;
 
     /**
      *  Generate a Camera Object and return it
@@ -96,7 +103,7 @@ public:
      *  @param location is the coords of the camera
      *  @return an unique_ptr to the camera created
      */
-    virtual std::unique_ptr<Camera> GenerateCamera(glm::vec4 location) const = 0;
+    virtual std::unique_ptr<nextfloor::universe::dynamic::Camera> GenerateCamera(glm::vec4 location) const = 0;
 
     /**
      *  Generate global GL Buffers
@@ -113,6 +120,8 @@ protected:
      */
     UniverseFactory() = default;
 };
+
+} // namespace factory
 
 } // namespace universe
 

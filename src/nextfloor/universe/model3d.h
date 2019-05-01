@@ -132,8 +132,8 @@ public:
     /*
      *  (In)Equality Operators
      */
-    friend bool operator==(const Model3D &o1, const Model3D &o2);
-    friend bool operator!=(const Model3D &o1, const Model3D &o2);
+    friend bool operator==(const Model3D& o1, const Model3D& o2);
+    friend bool operator!=(const Model3D& o1, const Model3D& o2);
 
     /**
      *  Compute neighbors in respect with the clipping constraint
@@ -230,6 +230,13 @@ public:
     constexpr float grid_unitz() const { return grid_unit_z_; }
     inline bool IsFull() const { return missobjects_ <= 0 || objects_.size() >= grid_x_ * grid_y_ * grid_z_; }
     virtual int countChilds() const { return objects_.size(); }
+    glm::vec3 direction() const { return direction_; }
+    glm::vec3 head() const { return head_; }
+
+    /**
+     *  Return Speed (scale factor of move)
+     */
+    float get_speed() { return 3.5f / nextfloor::graphics::Shape3D::sMoveFactor; }
 
     /**
      *  Compute the first point of the grid
@@ -246,9 +253,17 @@ public:
      */
     inline Model3D* get_camera() const noexcept
     {
-        if (countChilds() > 0 &&
-            objects_[0]->IsCamera()) {
-            return objects_[0].get();
+        if (countChilds() > 0) {
+            if (objects_[0]->IsCamera()) {
+                return objects_[0].get();
+            } else {
+                for (auto &object: objects_) {
+                    auto camera = object->get_camera();
+                    if (camera != nullptr) {
+                        return camera;
+                    }
+                }
+            }
         }
 
         return nullptr;
@@ -262,7 +277,7 @@ public:
     {
         return tbb::parallel_reduce(
             tbb::blocked_range<int>(0, objects_.size()),
-            0, 
+            0,
             [&](const tbb::blocked_range<int>& r, int init)->int {
                 for (int a = r.begin(); a != r.end(); ++a) {
                     if (objects_[a]->IsMoved()) {
@@ -296,6 +311,7 @@ public:
     void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
     void set_parent(Model3D* parent) { parent_ = parent; }
     void flag_collision_with_camera() { is_collision_with_camera_ = true; }
+    void set_move(glm::vec3 move_vector) { border_->set_move(move_vector); }
 
     /**
      *  Add a new child to the current object
@@ -514,6 +530,12 @@ protected:
 
     /** Type of 3d object */
     int type_{10000};
+
+    /** VIew direction vector */
+    glm::vec3 direction_;
+
+    /** Head coords */
+    glm::vec3 head_;
 
 private:
 

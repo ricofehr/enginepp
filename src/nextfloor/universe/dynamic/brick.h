@@ -24,6 +24,12 @@ namespace nextfloor {
 namespace universe {
 
 /**
+ *  @namespace nextfloor::universe::dynamic
+ *  @brief universe dynamic object
+ */
+namespace dynamic {
+
+/**
  *  @class Brick
  *  @brief Brick 3d model, inherits Model3D abstract class
  */
@@ -82,6 +88,8 @@ public:
      */
     static void CreateBuffers() noexcept;
 };
+
+} // namespace dynamic
 
 } // namespace universe
 

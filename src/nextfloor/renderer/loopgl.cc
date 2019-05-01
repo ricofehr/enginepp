@@ -9,22 +9,24 @@
 #include <fstream>
 #include <iostream>
 
+#include "nextfloor/universe/dynamic/camera.h"
+#include "nextfloor/hid/input_handler.h"
 #include "nextfloor/graphics/shape3d.h"
 #include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/global_timer.h"
 
 namespace nextfloor {
 
 namespace renderer {
 
 /* Define LoopGL global static class variables */
-GLFWwindow* LoopGL::sGLWindow = nullptr;
 GLuint LoopGL::sProgramId = -1;
 GLuint LoopGL::sMatrixId = -1;
 
 namespace {
 
 static nextfloor::universe::Universe* sUniverse = nullptr;
-static double sBeginTime = 0.0f;
+static GLFWwindow* sGLWindow = nullptr;
 
 /**
  *   Compile and Load shader from files to ram
@@ -158,36 +160,39 @@ void Draw()
     sUniverse->Draw();
 
     /* Swap buffers and poll */
-    glfwSwapBuffers(LoopGL::sGLWindow);
+    glfwSwapBuffers(sGLWindow);
 }
 
 /**
  *   Compute current fps and display it (if debug enabled)
  */
-int Fps(double &last_time, int &nb_frames)
+int Fps()
 {
     using nextfloor::core::ConfigEngine;
+    using nextfloor::core::GlobalTimer;
+
+    static double sLastTime = GlobalTimer::sTotalTime;
+    static int sNbFrames = 0;
+    static bool sFirstLoop = true;
 
     int ret = 0;
-    /* Measure speed */
-    double current_time = glfwGetTime();
 
-    nb_frames++;
-    if (current_time - last_time >= 1.0) {
+    sNbFrames++;
+    if (GlobalTimer::sTotalTime - sLastTime >= 1.0) {
         int debug = ConfigEngine::getSetting<int>("debug");
 
         /* Header for test datas output */
-        if (sBeginTime == last_time &&
+        if (sFirstLoop &&
             debug == ConfigEngine::kDEBUG_TEST) {
             std::cout << "TIME:FPS:NBOBJALL:NBOBJMOVE" << std::endl;
         }
         /* Print if debug */
         if (debug == ConfigEngine::kDEBUG_ALL) {
-            std::cout << 1000.0 / static_cast<double>(nb_frames) << " ms/frame - ";
+            std::cout << 1000.0 / static_cast<double>(sNbFrames) << " ms/frame - ";
         }
 
         if (debug == ConfigEngine::kDEBUG_PERF || debug == ConfigEngine::kDEBUG_ALL) {
-            std::cout << nb_frames << " fps - ";
+            std::cout << sNbFrames << " fps - ";
             std::cout << sUniverse->countRoomsChilds(false) << " objects ("
                       << sUniverse->countRoomsChilds(true) << " displayed) in ";
             std::cout << sUniverse->countRooms(false) << " rooms (" << sUniverse->countRooms(true) << " displayed)";
@@ -195,24 +200,25 @@ int Fps(double &last_time, int &nb_frames)
         }
 
         /* Update movefactor for objects */
-        nextfloor::graphics::Shape3D::sMoveFactor = 60.0f / nb_frames;
+        nextfloor::graphics::Shape3D::sMoveFactor = 60.0f / sNbFrames;
         sUniverse->toready();
 
         /* Test datas output */
         if (debug == ConfigEngine::kDEBUG_TEST) {
-            std::cout << static_cast<int>(current_time - sBeginTime) << ":" << nb_frames << ":";
+            std::cout << static_cast<int>(GlobalTimer::sTotalTime - sLastTime) << ":" << sNbFrames << ":";
             std::cout << sUniverse->countRoomsChilds(true) << ":"
                       << sUniverse->countRoomsMovingChilds(true) << std::endl;
         }
 
         /* Reset timer */
-        ret = nb_frames;
-        nb_frames = 0;
-        last_time += 1.0;
+        ret = sNbFrames;
+        sNbFrames = 0;
+        sLastTime += 1.0;
+        sFirstLoop = false;
     }
 
     int end_time = ConfigEngine::getSetting<int>("execution_time");
-    if (end_time && current_time - sBeginTime >= end_time) {
+    if (end_time && GlobalTimer::sTotalTime >= end_time) {
         exit(0);
     }
 
@@ -247,14 +253,14 @@ void LoopGL::InitGL()
     glfwWindowHint(GLFW_RESIZABLE, false);
 
     /* Open a window and create its OpenGL context (use glfwGetPrimaryMonitor() on third parameter for FS) */
-    LoopGL::sGLWindow = glfwCreateWindow(window_width, window_height, "=== Engine ===", nullptr, nullptr);
-    if(LoopGL::sGLWindow == nullptr) {
+    sGLWindow = glfwCreateWindow(window_width, window_height, "=== Engine ===", nullptr, nullptr);
+    if(sGLWindow == nullptr) {
         std::cerr << "Failed to open GLFW window\n";
         glfwTerminate();
         exit(-1);
     }
-    glfwSetInputMode(LoopGL::sGLWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwMakeContextCurrent(LoopGL::sGLWindow);
+    glfwSetInputMode(sGLWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwMakeContextCurrent(sGLWindow);
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW\n";
@@ -271,12 +277,15 @@ void LoopGL::InitGL()
 void LoopGL::Loop(nextfloor::universe::Universe* uni)
 {
     using nextfloor::core::ConfigEngine;
+    using nextfloor::core::GlobalTimer;
+    using nextfloor::universe::commands::Command;
+    using nextfloor::universe::dynamic::Camera;
 
     /* Init Global universe var */
     sUniverse = uni;
 
-    /* Ensure we can capture keys being pressed below */
-    glfwSetInputMode(LoopGL::sGLWindow, GLFW_STICKY_KEYS, GL_TRUE);
+    /* Creates InputHanedler object */
+    nextfloor::hid::InputHandler input_handler(sGLWindow);
 
     /* Vsync Setting (default is enable) */
     if (!ConfigEngine::getSetting<bool>("vsync")) {
@@ -294,33 +303,41 @@ void LoopGL::Loop(nextfloor::universe::Universe* uni)
     assert(LoopGL::sMatrixId != -1);
     assert(LoopGL::sProgramId != -1);
 
-    sBeginTime = glfwGetTime();
-    double last_time = sBeginTime;
     int nb_frames = 0;
     bool is_draw = true;
     bool is_released = true;
+    nextfloor::universe::Model3D* camera = sUniverse->get_camera();
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
+        GlobalTimer::LoopTimer();
+        ((Camera *)camera)->ComputeFOV(input_handler.RecordFOV());
+        ((Camera *)camera)->ComputeOrientation(input_handler.RecordHIDPointer());
+        Command* command = input_handler.HandlerInput();
+        if (command) {
+            command->execute(camera);
+        }
+
         /* Pause button */
-        if (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_P) == GLFW_PRESS) {
+        /*
+        if (glfwGetKey(sGLWindow, GLFW_KEY_P) == GLFW_PRESS) {
             if (is_released) {
                 is_draw = is_draw ? false : true;
             }
             is_released = false;
         } else {
             is_released = true;
-        }
+        }*/
 
         if (is_draw) {
             Draw();
-            Fps(last_time, nb_frames);
+            Fps();
         }
 
         glfwPollEvents();
     }
-    while (glfwGetKey(LoopGL::sGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
-           && glfwWindowShouldClose(LoopGL::sGLWindow) == 0);
+    while (glfwGetKey(sGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
+           && glfwWindowShouldClose(sGLWindow) == 0);
 }
 
 } // namespace renderer

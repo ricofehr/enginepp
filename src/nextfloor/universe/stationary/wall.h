@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_UNIVERSE_WALL_H_
-#define NEXTFLOOR_UNIVERSE_WALL_H_
+#ifndef NEXTFLOOR_UNIVERSE_STATIC_WALL_H_
+#define NEXTFLOOR_UNIVERSE_STATIC_WALL_H_
 
 #include <glm/glm.hpp>
 
@@ -22,6 +22,12 @@ namespace nextfloor {
  *  @brief World elements
  */
 namespace universe {
+
+/**
+ *  @namespace nextfloor::universe::static
+ *  @brief Static World elements
+ */
+namespace stationary {
 
 /**
  *  @class Wall
@@ -93,8 +99,10 @@ public:
     static void CreateBuffers();
 };
 
-} // namespace graphics
+} // namespace stationary
+
+} // namespace universe
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_WALL_H_
+#endif // NEXTFLOOR_UNIVERSE_STATIC_WALL_H_

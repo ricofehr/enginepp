@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/universe/random_universe_factory.h"
+#include "nextfloor/universe/factory/random_universe_factory.h"
 
 #include <string>
 #include <tbb/tbb.h>
@@ -15,9 +15,11 @@ namespace nextfloor {
 
 namespace universe {
 
-std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
+namespace factory {
+
+std::unique_ptr<nextfloor::universe::Universe> RandomUniverseFactory::GenerateUniverse() const
 {
-    auto uni = std::make_unique<Universe>();
+    auto uni = std::make_unique<nextfloor::universe::Universe>();
 
     /* Check objects count into config file */
     using nextfloor::core::ConfigEngine;
@@ -57,7 +59,7 @@ std::unique_ptr<Universe> RandomUniverseFactory::GenerateUniverse() const
     return uni;
 }
 
-Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
+nextfloor::universe::Room* RandomUniverseFactory::GenerateRoom(nextfloor::universe::Universe* uni) const
 {
     /* Entropy value */
     auto r = rand();
@@ -186,8 +188,10 @@ Room* RandomUniverseFactory::GenerateRoom(Universe* uni) const
     return GenerateRoom(uni);
 }
 
-void RandomUniverseFactory::GenerateWalls(Room* room) const
+void RandomUniverseFactory::GenerateWalls(nextfloor::universe::Room* room) const
 {
+    using nextfloor::universe::stationary::Wall;
+
     glm::vec3 scale_w = {1.0f, 1.0f, 1.0f};
     glm::vec3 location_0 {0.0f};
 
@@ -303,8 +307,10 @@ void RandomUniverseFactory::GenerateWalls(Room* room) const
     }
 }
 
-void RandomUniverseFactory::GenerateBrick(Room* room) const
+void RandomUniverseFactory::GenerateBrick(nextfloor::universe::Room* room) const
 {
+    using nextfloor::universe::dynamic::Brick;
+
     float move_x = 0.0f, move_y = 0.0f, move_z = 0.0f;
     float scale = 1.0f;
 
@@ -436,8 +442,10 @@ void RandomUniverseFactory::GenerateBrick(Room* room) const
     return GenerateBrick(room);
 }
 
-std::unique_ptr<Camera> RandomUniverseFactory::GenerateCamera(glm::vec4 location) const
+std::unique_ptr<dynamic::Camera> RandomUniverseFactory::GenerateCamera(glm::vec4 location) const
 {
+    using nextfloor::universe::dynamic::Camera;
+
     return std::make_unique<Camera>(location[0],
                                     location[1] + 1.0f,
                                     location[2] + 5.0f,
@@ -450,9 +458,11 @@ std::unique_ptr<Camera> RandomUniverseFactory::GenerateCamera(glm::vec4 location
 void RandomUniverseFactory::GenerateBuffers() const
 {
     /* Generate Buffers Once */
-    Brick::CreateBuffers();
-    Wall::CreateBuffers();
+    dynamic::Brick::CreateBuffers();
+    stationary::Wall::CreateBuffers();
 }
+
+} // namespace factory
 
 } // universe
 

@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "nextfloor/universe/camera.h"
+#include "nextfloor/universe/dynamic/camera.h"
 #include "nextfloor/core/config_engine.h"
 
 namespace nextfloor {
@@ -26,7 +26,8 @@ void Shape3D::ComputeMVP()
     float window_height = ConfigEngine::getSetting<float>("height");
 
     /* Get active Camera */
-    auto cam = nextfloor::universe::Camera::active();
+    using nextfloor::universe::dynamic::Camera;
+    auto cam = Camera::active();
 
     /* Projection Matrix */
     glm::mat4 projection = glm::perspective(glm::radians(cam->fov()),

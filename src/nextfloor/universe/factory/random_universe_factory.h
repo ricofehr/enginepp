@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
 #define NEXTFLOOR_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
 
-#include "nextfloor/universe/universe_factory.h"
+#include "nextfloor/universe/factory/universe_factory.h"
 
 /**
  *  @namespace nextfloor
@@ -20,6 +20,13 @@ namespace nextfloor {
  *  @brief World elements
  */
 namespace universe {
+
+
+/**
+ *  @namespace nextfloor::universe::factory
+ *  @brief World factory
+ */
+namespace factory {
 
 /**
  *  @class RandomUniverseFactory
@@ -63,33 +70,33 @@ public:
      *  Generate an Universe and return it
      *  @return the unique_ptr to the Universe created
      */
-    virtual std::unique_ptr<Universe> GenerateUniverse() const override final;
+    virtual std::unique_ptr<nextfloor::universe::Universe> GenerateUniverse() const override final;
 
     /**
      *  Generate one Room into an Universe
      *  @param uni the universe targetted
      *  @return a raw pointer to the room created
      */
-    virtual Room* GenerateRoom(Universe* uni) const override final;
+    virtual nextfloor::universe::Room* GenerateRoom(nextfloor::universe::Universe* uni) const override final;
 
     /**
      *  Generate Walls 3d model into the Room room
      *  @param room is the place where the wall is created
      */
-    virtual void GenerateWalls(Room* room) const override final;
+    virtual void GenerateWalls(nextfloor::universe::Room* room) const override final;
 
     /**
      *  Generate a Brick 3d model into the Room room
      *  @param room is the place where the brick is created
      */
-    virtual void GenerateBrick(Room* room) const override final;
+    virtual void GenerateBrick(nextfloor::universe::Room* room) const override final;
 
     /**
      *  Generate a Camera Object and return it
      *  @param location is the coords of the camera
      *  @return an unique_ptr to the camera created
      */
-    virtual std::unique_ptr<Camera> GenerateCamera(glm::vec4 location) const override final;
+    virtual std::unique_ptr<nextfloor::universe::dynamic::Camera> GenerateCamera(glm::vec4 location) const override final;
 
     /**
      *  Generate global GL Buffers
@@ -98,6 +105,8 @@ public:
     virtual void GenerateBuffers() const override final;
 
 };
+
+} // namespace factory
 
 } // namespace universe
 

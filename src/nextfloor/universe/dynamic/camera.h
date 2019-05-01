@@ -9,6 +9,8 @@
 
 #include <glm/glm.hpp>
 
+#include "nextfloor/hid/hid.h"
+
 #include "nextfloor/universe/model3d.h"
 
 /**
@@ -22,6 +24,12 @@ namespace nextfloor {
  *  @brief World elements
  */
 namespace universe {
+
+/**
+ *  @namespace nextfloor::universe::dynamic
+ *  @brief universe dynamic object
+ */
+namespace dynamic {
 
 /**
  *  @class Camera
@@ -78,8 +86,6 @@ public:
     /*
      *  Accessors
      */
-    glm::vec3 direction() const { return direction_; }
-    glm::vec3 head() const { return head_; }
     float fov() const { return fov_; }
     static Camera* active() { return active_; }
 
@@ -89,17 +95,16 @@ public:
     void set_active() { active_ = this; }
 
     /**
-     *  Record Mouse and Keyboard Events
+     *  Compute Camera Orientation
      */
-    void RecordHID() noexcept override final;
+    void ComputeOrientation(nextfloor::hid::HIDPointer position) noexcept;
+
+    /**
+     *  Compute Camera FOV
+     */
+    void ComputeFOV(float delta_fov) noexcept;
 
 private:
-
-    /** VIew direction vector */
-    glm::vec3 direction_;
-
-    /** Head coords */
-    glm::vec3 head_;
 
     /** Horizontal orientation angle */
     float horizontal_angle_;
@@ -113,6 +118,8 @@ private:
     /* At least one and only one current active Camera */
     static Camera* active_;
 };
+
+} // namespace dynamic
 
 } // namespace universe
 

@@ -77,10 +77,6 @@ public:
      */
     void Loop(nextfloor::universe::Universe* universe);
 
-
-    /** A Global variable, GL Window */
-    static GLFWwindow* sGLWindow;
-
     /** A Global variable for the GL Program */
     static GLuint sProgramId;
 
