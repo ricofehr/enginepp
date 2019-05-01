@@ -9,13 +9,13 @@
 
 #include "nextfloor/universe/factory/random_universe_factory.h"
 #include "nextfloor/core/config_engine.h"
-#include "nextfloor/renderer/loopgl.h"
+#include "nextfloor/job/game_loop.h"
 
 int main(int argc, char* argv[])
 {
     using nextfloor::universe::Universe;
     using nextfloor::universe::factory::RandomUniverseFactory;
-    using nextfloor::renderer::LoopGL;
+    using nextfloor::job::GameLoop;
     using nextfloor::core::ConfigEngine;
 
     /* Reset seed */
@@ -35,10 +35,10 @@ int main(int argc, char* argv[])
 
 	/* Init world */
     RandomUniverseFactory factory;
-    LoopGL::Instance()->InitGL();
+    GameLoop::Instance()->InitGL();
     factory.GenerateBuffers();
     std::unique_ptr<Universe> universe{factory.GenerateUniverse()};
 
     /* Launch GL Scene */
-    LoopGL::Instance()->Loop(universe.get());
+    GameLoop::Instance()->Loop(universe.get());
 }

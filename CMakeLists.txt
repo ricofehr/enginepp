@@ -24,12 +24,16 @@ set(graphics_SRCS
 
 set(core_SRCS
     src/nextfloor/core/config_engine.cc
-    src/nextfloor/core/global_timer.cc)
+    src/nextfloor/core/global_timer.cc
+    src/nextfloor/core/file_io.cc)
 
 set(hid_SRCS
     src/nextfloor/hid/input_handler.cc
     src/nextfloor/hid/keyboard_mouse.cc
     src/nextfloor/hid/pad.cc)
+
+set(job_SRCS
+    src/nextfloor/job/game_loop.cc)
 
 set(physics_SRCS
     src/nextfloor/physics/collision_engine.cc
@@ -38,7 +42,9 @@ set(physics_SRCS
     src/nextfloor/physics/serial_collision_engine.cc)
 
 set(renderer_SRCS
-    src/nextfloor/renderer/loopgl.cc)
+    src/nextfloor/renderer/shader.cc
+    src/nextfloor/renderer/fragment_shader.cc
+    src/nextfloor/renderer/vertex_shader.cc)
 
 set(universe_SRCS
     src/nextfloor/universe/commands/fire_command.cc
@@ -60,6 +66,7 @@ set(nextfloor_SRCS
     ${graphics_SRCS}
     ${core_SRCS}
     ${hid_SRCS}
+    ${job_SRCS}
     ${renderer_SRCS}
     ${physics_SRCS}
     ${universe_SRCS}
@@ -67,7 +74,8 @@ set(nextfloor_SRCS
 
 set(core_HDRS
     src/nextfloor/core/config_engine.h
-    src/nextfloor/core/global_timer.h)
+    src/nextfloor/core/global_timer.h
+    src/nextfloor/core/file_io.h)
 
 set(graphics_HDRS
     src/nextfloor/graphics/shape3d.h
@@ -81,6 +89,9 @@ set(hid_HDRS
     src/nextfloor/hid/keyboard_mouse.h
     src/nextfloor/hid/pad.h)
 
+set(job_HDRS
+    src/nextfloor/job/game_loop.h)
+
 set(physics_HDRS
     src/nextfloor/physics/collision_engine.h
     src/nextfloor/physics/cl_collision_engine.h
@@ -88,7 +99,9 @@ set(physics_HDRS
     src/nextfloor/physics/serial_collision_engine.h)
 
 set(renderer_HDRS
-    src/nextfloor/renderer/loopgl.h)
+    src/nextfloor/renderer/shader.h
+    src/nextfloor/renderer/fragment_shader.h
+    src/nextfloor/renderer/vertex_shader.h)
 
 set(universe_HDRS
     src/nextfloor/universe/commands/command.h
@@ -112,6 +125,7 @@ set(nextfloor_HDRS
     ${graphics_HDRS}
     ${core_HDRS}
     ${hid_HDRS}
+    ${job_HDRS}
     ${renderer_HDRS}
     ${physics_HDRS}
     ${universe_HDRS})

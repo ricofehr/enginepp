@@ -7,6 +7,9 @@
 #ifndef NEXTFLOOR_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
 #define NEXTFLOOR_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
 
+#include <memory>
+#include <glm/glm.hpp>
+
 #include "nextfloor/universe/factory/universe_factory.h"
 
 /**

@@ -1,13 +1,13 @@
 /**
- *  @file loopgl.cc
- *  @brief LoopGL class file
+ *  @file game_loop.cc
+ *  @brief GameLoop class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/renderer/loopgl.h"
+#include "nextfloor/job/game_loop.h"
 
-#include <fstream>
-#include <iostream>
+#include "nextfloor/renderer/fragment_shader.h"
+#include "nextfloor/renderer/vertex_shader.h"
 
 #include "nextfloor/universe/dynamic/camera.h"
 #include "nextfloor/hid/input_handler.h"
@@ -17,11 +17,10 @@
 
 namespace nextfloor {
 
-namespace renderer {
+namespace job {
 
-/* Define LoopGL global static class variables */
-GLuint LoopGL::sProgramId = -1;
-GLuint LoopGL::sMatrixId = -1;
+/* Define GameLoop global static class variables */
+GLuint GameLoop::sMatrixId = -1;
 
 namespace {
 
@@ -34,101 +33,23 @@ static GLFWwindow* sGLWindow = nullptr;
  */
 void LoadShaders()
 {
-    using nextfloor::core::ConfigEngine;
+    using nextfloor::renderer::Shader;
+    using nextfloor::renderer::VertexShader;
+    using nextfloor::renderer::FragmentShader;
 
     const char* vertex_file_path = "glsl/SimpleVertexShader.vertexshader";
     const char* fragment_file_path = "glsl/SimpleFragmentShader.fragmentshader";
 
-    /* Create the shaders */
-    GLuint vertexshader_id = glCreateShader(GL_VERTEX_SHADER);
-    GLuint fragmentshader_id = glCreateShader(GL_FRAGMENT_SHADER);
+    VertexShader vertex_shader(vertex_file_path);
+    FragmentShader fragment_shader(fragment_file_path);
 
-    /* Read the Vertex Shader code from the file */
-    std::string vertexshader_code;
-    std::ifstream vertexshader_stream(vertex_file_path, std::ios::in);
-    if (vertexshader_stream.is_open()) {
-        std::string line = "";
-        while(getline(vertexshader_stream, line)) {
-            vertexshader_code += "\n" + line;
-        }
-        vertexshader_stream.close();
-    } else {
-        std::cerr << "Impossible to open " << vertex_file_path << std::endl;
-        getchar();
-        return;
-    }
-
-    /* Read the Fragment Shader code from the file */
-    std::string fragmentshader_code;
-    std::ifstream fragmentshader_stream(fragment_file_path, std::ios::in);
-    if(fragmentshader_stream.is_open()){
-        std::string line = "";
-        while(getline(fragmentshader_stream, line)) {
-            fragmentshader_code += "\n" + line;
-        }
-        fragmentshader_stream.close();
-    }
-
-    GLint result = GL_FALSE;
-    int info_log_length;
-
-    /* Compile Vertex Shader */
-    if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
-        std::cout << "Compiling shader : " << vertex_file_path << std::endl;
-    }
-    const char* vertexsource_pointer = vertexshader_code.c_str();
-    glShaderSource(vertexshader_id, 1, &vertexsource_pointer , nullptr);
-    glCompileShader(vertexshader_id);
-
-    /* Check Vertex Shader */
-    glGetShaderiv(vertexshader_id, GL_COMPILE_STATUS, &result);
-    glGetShaderiv(vertexshader_id, GL_INFO_LOG_LENGTH, &info_log_length);
-    if (info_log_length > 0) {
-        std::vector<char> vertexshader_error_message(info_log_length + 1);
-        glGetShaderInfoLog(vertexshader_id, info_log_length, nullptr, &vertexshader_error_message[0]);
-        std::cerr << &vertexshader_error_message[0];
-    }
-
-    /* Compile Fragment Shader */
-    if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
-        std::cout << "Compiling shader : " << fragment_file_path << std::endl;
-    }
-    const char* fragmentsource_pointer = fragmentshader_code.c_str();
-    glShaderSource(fragmentshader_id, 1, &fragmentsource_pointer, nullptr);
-    glCompileShader(fragmentshader_id);
-
-    /* Check Fragment Shader */
-    glGetShaderiv(fragmentshader_id, GL_COMPILE_STATUS, &result);
-    glGetShaderiv(fragmentshader_id, GL_INFO_LOG_LENGTH, &info_log_length);
-    if (info_log_length > 0) {
-        std::vector<char> fragmentshader_error_message(info_log_length + 1);
-        glGetShaderInfoLog(fragmentshader_id, info_log_length, nullptr, &fragmentshader_error_message[0]);
-        std::cerr << &fragmentshader_error_message[0];
-    }
-
-    /* Link the program */
-    if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
-        std::cout << "Linking program" << std::endl;
-    }
-    LoopGL::sProgramId = glCreateProgram();
-    glAttachShader(LoopGL::sProgramId, vertexshader_id);
-    glAttachShader(LoopGL::sProgramId, fragmentshader_id);
-    glLinkProgram(LoopGL::sProgramId);
-
-    /* Check the program */
-    glGetProgramiv(LoopGL::sProgramId, GL_LINK_STATUS, &result);
-    glGetProgramiv(LoopGL::sProgramId, GL_INFO_LOG_LENGTH, &info_log_length);
-    if (info_log_length > 0) {
-        std::vector<char> program_error_message(info_log_length + 1);
-        glGetProgramInfoLog(LoopGL::sProgramId, info_log_length, nullptr, &program_error_message[0]);
-        std::cerr << &program_error_message[0];
-    }
-
-    glDetachShader(LoopGL::sProgramId, vertexshader_id);
-    glDetachShader(LoopGL::sProgramId, fragmentshader_id);
-
-    glDeleteShader(vertexshader_id);
-    glDeleteShader(fragmentshader_id);
+    vertex_shader.LoadShader();
+    fragment_shader.LoadShader();
+    vertex_shader.LinkShader();
+    fragment_shader.LinkShader();
+    Shader::CheckProgram();
+    vertex_shader.DetachShader();
+    fragment_shader.DetachShader();
 }
 
 /**
@@ -137,6 +58,7 @@ void LoadShaders()
 void Draw()
 {
     using nextfloor::core::ConfigEngine;
+    using nextfloor::renderer::Shader;
 
     /* Enable depth test */
     glEnable(GL_DEPTH_TEST);
@@ -148,7 +70,7 @@ void Draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* Use defined shaders */
-    glUseProgram(LoopGL::sProgramId);
+    glUseProgram(Shader::sProgramId);
 
     /* Fill polygon */
     if (ConfigEngine::getSetting<bool>("grid")) {
@@ -227,7 +149,7 @@ int Fps()
 
 } // anonymous namespace
 
-void LoopGL::InitGL()
+void GameLoop::InitGL()
 {
     using nextfloor::core::ConfigEngine;
 
@@ -274,12 +196,13 @@ void LoopGL::InitGL()
     glBindVertexArray(vao);
 }
 
-void LoopGL::Loop(nextfloor::universe::Universe* uni)
+void GameLoop::Loop(nextfloor::universe::Universe* uni)
 {
     using nextfloor::core::ConfigEngine;
     using nextfloor::core::GlobalTimer;
     using nextfloor::universe::commands::Command;
     using nextfloor::universe::dynamic::Camera;
+    using nextfloor::renderer::Shader;
 
     /* Init Global universe var */
     sUniverse = uni;
@@ -296,12 +219,12 @@ void LoopGL::Loop(nextfloor::universe::Universe* uni)
     LoadShaders();
 
     /* Get a handle for our "MVP" uniform */
-    LoopGL::sMatrixId = glGetUniformLocation(LoopGL::sProgramId, "MVP");
+    GameLoop::sMatrixId = glGetUniformLocation(Shader::sProgramId, "MVP");
 
     /* Ensure prerequisite */
     assert(sUniverse != nullptr);
-    assert(LoopGL::sMatrixId != -1);
-    assert(LoopGL::sProgramId != -1);
+    assert(GameLoop::sMatrixId != -1);
+    assert(Shader::sProgramId != -1);
 
     int nb_frames = 0;
     bool is_draw = true;
