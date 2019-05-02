@@ -81,6 +81,12 @@ public:
     /** Time elapsed since program beginning */
     static double sTotalTime;
 
+    /** FPS Count */
+    static int sFps;
+
+    /** True if current Loop is into a new elapsed second */
+    static bool sSecondElapsed;
+
 protected:
 
     /**
@@ -94,17 +100,17 @@ private:
     /**
      *  Compute Time
      */
-    void Loop()
-    {
-        using namespace std::chrono;
-        static double sLastTime = duration_cast<duration<double>>(high_resolution_clock::now().time_since_epoch()).count();
+    void Loop() noexcept;
 
-        /* Delta time */
-        double current_time = duration_cast<duration<double>>(high_resolution_clock::now().time_since_epoch()).count();
-        sDeltaTime = current_time - sLastTime;
-        sLastTime = current_time;
-        sTotalTime += sDeltaTime;
-    }
+    /**
+     *  Compute FPS Count
+     */
+    void ComputeFps() noexcept;
+
+    /**
+     *  Check if program time is ending
+     */
+    void CheckEndProgram() noexcept;
 };
 
 

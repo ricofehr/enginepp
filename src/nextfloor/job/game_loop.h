@@ -35,11 +35,7 @@ public:
     /**
      *  Constructor, ensure only one instance is created
      */
-    GameLoop()
-    {
-        assert(!sInstanciated);
-        sInstanciated = true;
-    }
+    GameLoop();
 
     /**
      *  Default Move constructor
@@ -66,11 +62,7 @@ public:
     /**
      *  Destructor - reset instanciated flag
      */
-    ~GameLoop()
-    {
-        assert(sInstanciated);
-        sInstanciated = false;
-    }
+    ~GameLoop();
 
     /**
      *  Setup the GL Scene
@@ -85,13 +77,6 @@ public:
 
     /** A Global variable for the GL Matrix */
     static GLuint sMatrixId;
-
-private:
-
-    /**
-     *  Flag to ensure only one object is created
-     */
-    static bool sInstanciated;
 };
 
 } // namespace renderer

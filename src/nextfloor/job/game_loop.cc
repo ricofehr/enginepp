@@ -22,10 +22,10 @@ namespace job {
 /* Define GameLoop global static class variables */
 GLuint GameLoop::sMatrixId = -1;
 
-/** Init (private) instanciated flag */
-bool GameLoop::sInstanciated = false;
-
 namespace {
+
+/** Init (private) instanciated flag */
+static bool sInstanciated = false;
 
 static nextfloor::universe::Universe* sUniverse = nullptr;
 static GLFWwindow* sGLWindow = nullptr;
@@ -89,21 +89,16 @@ void Draw()
 }
 
 /**
- *   Compute current fps and display it (if debug enabled)
+ *   Display global details for each seconds
  */
-int Fps()
+void LoopLog()
 {
     using nextfloor::core::ConfigEngine;
     using nextfloor::core::GlobalTimer;
 
-    static double sLastTime = GlobalTimer::sTotalTime;
-    static int sNbFrames = 0;
     static bool sFirstLoop = true;
 
-    int ret = 0;
-
-    sNbFrames++;
-    if (GlobalTimer::sTotalTime - sLastTime >= 1.0) {
+    if (GlobalTimer::sSecondElapsed) {
         int debug = ConfigEngine::getSetting<int>("debug");
 
         /* Header for test datas output */
@@ -113,44 +108,48 @@ int Fps()
         }
         /* Print if debug */
         if (debug == ConfigEngine::kDEBUG_ALL) {
-            std::cout << 1000.0 / static_cast<double>(sNbFrames) << " ms/frame - ";
+            std::cout << 1000.0 / static_cast<double>(GlobalTimer::sFps) << " ms/frame - ";
         }
 
         if (debug == ConfigEngine::kDEBUG_PERF || debug == ConfigEngine::kDEBUG_ALL) {
-            std::cout << sNbFrames << " fps - ";
+            std::cout << GlobalTimer::sFps << " fps - ";
             std::cout << sUniverse->countRoomsChilds(false) << " objects ("
                       << sUniverse->countRoomsChilds(true) << " displayed) in ";
             std::cout << sUniverse->countRooms(false) << " rooms (" << sUniverse->countRooms(true) << " displayed)";
             std::cout << std::endl;
         }
 
-        /* Update movefactor for objects */
-        nextfloor::graphics::Shape3D::sMoveFactor = 60.0f / sNbFrames;
-        sUniverse->toready();
-
         /* Test datas output */
         if (debug == ConfigEngine::kDEBUG_TEST) {
-            std::cout << static_cast<int>(GlobalTimer::sTotalTime - sLastTime) << ":" << sNbFrames << ":";
+            std::cout << GlobalTimer::sFps << ":";
             std::cout << sUniverse->countRoomsChilds(true) << ":"
                       << sUniverse->countRoomsMovingChilds(true) << std::endl;
         }
 
-        /* Reset timer */
-        ret = sNbFrames;
-        sNbFrames = 0;
-        sLastTime += 1.0;
+        /* First loop is ok */
         sFirstLoop = false;
     }
-
-    int end_time = ConfigEngine::getSetting<int>("execution_time");
-    if (end_time && GlobalTimer::sTotalTime >= end_time) {
-        exit(0);
-    }
-
-    return ret;
 }
 
 } // anonymous namespace
+
+/**
+ *  Constructor, ensure only one instance is created with instancied flag
+ */
+GameLoop::GameLoop()
+{
+    assert(!sInstanciated);
+    sInstanciated = true;
+}
+
+/**
+ *  Destructor - reset instanciated flag
+ */
+GameLoop::~GameLoop()
+{
+    assert(sInstanciated);
+    sInstanciated = false;
+}
 
 void GameLoop::InitGL()
 {
@@ -229,9 +228,6 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
     assert(GameLoop::sMatrixId != -1);
     assert(Shader::sProgramId != -1);
 
-    int nb_frames = 0;
-    bool is_draw = true;
-    bool is_released = true;
     nextfloor::universe::Model3D* camera = sUniverse->get_camera();
 
     /* Draw if window is focused and destroy window if ESC is pressed */
@@ -244,21 +240,14 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
             command->execute(camera);
         }
 
-        /* Pause button */
-        /*
-        if (glfwGetKey(sGLWindow, GLFW_KEY_P) == GLFW_PRESS) {
-            if (is_released) {
-                is_draw = is_draw ? false : true;
-            }
-            is_released = false;
-        } else {
-            is_released = true;
-        }*/
-
-        if (is_draw) {
-            Draw();
-            Fps();
+        if (GlobalTimer::sFps != 0) {
+            /* Update movefactor for objects */
+            nextfloor::graphics::Shape3D::sMoveFactor = 60.0f / GlobalTimer::sFps;
+            sUniverse->toready();
         }
+
+        Draw();
+        LoopLog();
 
         glfwPollEvents();
     }
