@@ -22,6 +22,9 @@ namespace job {
 /* Define GameLoop global static class variables */
 GLuint GameLoop::sMatrixId = -1;
 
+/** Init (private) instanciated flag */
+bool GameLoop::sInstanciated = false;
+
 namespace {
 
 static nextfloor::universe::Universe* sUniverse = nullptr;

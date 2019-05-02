@@ -26,12 +26,20 @@ namespace job {
 
 /**
  *  @class GameLoop
- *  @brief  GameLoop manages the lifetime of the opengl scene\n
- *  Implement Singleton Design Pattern which ensure a sole GameLoop object for the program
+ *  @brief  GameLoop manages the lifetime of the opengl scene
  */
 class GameLoop {
 
 public:
+
+    /**
+     *  Constructor, ensure only one instance is created
+     */
+    GameLoop()
+    {
+        assert(!sInstanciated);
+        sInstanciated = true;
+    }
 
     /**
      *  Default Move constructor
@@ -56,14 +64,12 @@ public:
     GameLoop& operator=(const GameLoop&) = delete;
 
     /**
-     *  Return (and allocates if needed) sole Instance
-     *  @return the sole GameLoop instance
+     *  Destructor - reset instanciated flag
      */
-    static GameLoop* Instance()
+    ~GameLoop()
     {
-        /* Raw pointer because static var */
-        static auto instance = new GameLoop;
-        return instance;
+        assert(sInstanciated);
+        sInstanciated = false;
     }
 
     /**
@@ -83,10 +89,9 @@ public:
 private:
 
     /**
-     *  Default Constructor
-     *  Protected scope beacause singleton class
+     *  Flag to ensure only one object is created
      */
-    GameLoop() = default;
+    static bool sInstanciated;
 };
 
 } // namespace renderer

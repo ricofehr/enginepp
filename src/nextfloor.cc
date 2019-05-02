@@ -35,10 +35,11 @@ int main(int argc, char* argv[])
 
 	/* Init world */
     RandomUniverseFactory factory;
-    GameLoop::Instance()->InitGL();
+    GameLoop game_loop;
+    game_loop.InitGL();
     factory.GenerateBuffers();
     std::unique_ptr<Universe> universe{factory.GenerateUniverse()};
 
     /* Launch GL Scene */
-    GameLoop::Instance()->Loop(universe.get());
+    game_loop.Loop(universe.get());
 }
