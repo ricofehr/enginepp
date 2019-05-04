@@ -95,6 +95,7 @@ void Draw()
 void LoopLog()
 {
     using nextfloor::core::CommonServices;
+    using nextfloor::graphics::Shape3D;
 
     static bool sFirstLoop = true;
 
@@ -112,7 +113,7 @@ void LoopLog()
         }
 
         if (debug == CommonServices::getConfig().kDEBUG_PERF || debug == CommonServices::getConfig().kDEBUG_ALL) {
-            std::cout << CommonServices::getTimer().getFps() << " fps - ";
+            std::cout << CommonServices::getTimer().getFps() << " fps (move facor: " << Shape3D::sMoveFactor << ") - ";
             std::cout << sUniverse->countRoomsChilds(false) << " objects ("
                       << sUniverse->countRoomsChilds(true) << " displayed) in ";
             std::cout << sUniverse->countRooms(false) << " rooms (" << sUniverse->countRooms(true) << " displayed)";
@@ -192,30 +193,34 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
     using nextfloor::universe::commands::Command;
     using nextfloor::universe::dynamic::Camera;
     using nextfloor::renderer::Shader;
+    using nextfloor::graphics::Shape3D;
+    using nextfloor::universe::Model3D;
 
-    /* Init Global universe var */
     sUniverse = uni;
 
-    /* Creates InputHanedler object */
     nextfloor::hid::InputHandler input_handler(sGLWindow);
 
-    /* Vsync Setting (default is enable) */
     if (!CommonServices::getConfig().getSetting<bool>("vsync")) {
         glfwSwapInterval(0);
     }
 
-    /* Create and compile our GLSL program from the shader */
     LoadShaders();
 
     /* Get a handle for our "MVP" uniform */
     GameLoop::sMatrixId = glGetUniformLocation(Shader::sProgramId, "MVP");
+
+    auto gl_monitor = glfwGetPrimaryMonitor();
+    assert(gl_monitor != NULL);
+    auto gl_mode = glfwGetVideoMode(gl_monitor);
+    assert(gl_mode != NULL);
+    int monitor_refresh_rate = gl_mode->refreshRate;
 
     /* Ensure prerequisite */
     assert(sUniverse != nullptr);
     assert(GameLoop::sMatrixId != -1);
     assert(Shader::sProgramId != -1);
 
-    nextfloor::universe::Model3D* camera = sUniverse->get_camera();
+    Model3D* camera = sUniverse->get_camera();
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
@@ -229,7 +234,11 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
 
         if (CommonServices::getTimer().getFps() != 0) {
             /* Update movefactor for objects */
-            nextfloor::graphics::Shape3D::sMoveFactor = 60.0f / CommonServices::getTimer().getFps();
+            auto fps_real = CommonServices::getTimer().getFps();
+            if (fps_real > monitor_refresh_rate) {
+                fps_real = monitor_refresh_rate;
+            }
+            Shape3D::sMoveFactor = (float)Shape3D::kFpsBase / fps_real;
             sUniverse->toready();
         }
 

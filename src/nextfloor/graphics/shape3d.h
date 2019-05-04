@@ -150,6 +150,9 @@ public:
      */
     static float sMoveFactor;
 
+    /** Fps target for speed movement compute on Engine */
+    static constexpr int kFpsBase = 60.0f;
+
 protected:
 
     /**
