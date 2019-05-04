@@ -5,7 +5,7 @@
  */
 #include "nextfloor/universe/commands/fire_command.h"
 
-#include "nextfloor/core/global_timer.h"
+#include "nextfloor/core/common_services.h"
 
 /**
  *  @namespace nextfloor

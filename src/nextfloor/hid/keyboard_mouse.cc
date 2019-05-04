@@ -6,8 +6,7 @@
 
 #include "nextfloor/hid/keyboard_mouse.h"
 
-#include "nextfloor/core/config_engine.h"
-#include "nextfloor/core/global_timer.h"
+#include "nextfloor/core/common_services.h"
 
 /**
  *  @namespace nextfloor
@@ -85,9 +84,9 @@ bool KeyboardMouse::isPressed(GLFWwindow* window, int ACTION_BUTTON)
  */
 HIDPointer KeyboardMouse::RecordHIDPointer(GLFWwindow* window)
 {
-    using nextfloor::core::ConfigEngine;
-    float window_width = ConfigEngine::getSetting<float>("width");
-    float window_height = ConfigEngine::getSetting<float>("width");
+    using nextfloor::core::CommonServices;
+    float window_width = CommonServices::getConfig().getSetting<float>("width");
+    float window_height = CommonServices::getConfig().getSetting<float>("width");
 
     const float hid_speed = 0.1f;
 
@@ -104,8 +103,8 @@ HIDPointer KeyboardMouse::RecordHIDPointer(GLFWwindow* window)
     }
 
 
-    HIDPointer pointer = { hid_speed * nextfloor::core::GlobalTimer::sDeltaTime * static_cast<float>(window_width/2 - xpos),
-                           hid_speed * nextfloor::core::GlobalTimer::sDeltaTime * static_cast<float>(window_height/2 - ypos) };
+    HIDPointer pointer = { hid_speed * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * static_cast<float>(window_width/2 - xpos),
+                           hid_speed * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * static_cast<float>(window_height/2 - ypos) };
 
    /* Reset Cursor position at center of screen */
     glfwSetCursorPos(window, window_width/2, window_height/2);

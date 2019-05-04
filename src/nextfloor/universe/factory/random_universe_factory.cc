@@ -9,7 +9,7 @@
 #include <string>
 #include <tbb/tbb.h>
 
-#include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -19,11 +19,12 @@ namespace factory {
 
 std::unique_ptr<nextfloor::universe::Universe> RandomUniverseFactory::GenerateUniverse() const
 {
+    using nextfloor::core::CommonServices;
+
     auto uni = std::make_unique<nextfloor::universe::Universe>();
 
     /* Check objects count into config file */
-    using nextfloor::core::ConfigEngine;
-    uni->set_missobjects(ConfigEngine::getSetting<int>("rooms_count"));
+    uni->set_missobjects(CommonServices::getConfig().getSetting<int>("rooms_count"));
 
     std::vector<Room*> rooms;
     while (!uni->IsFull()) {
@@ -34,7 +35,7 @@ std::unique_ptr<nextfloor::universe::Universe> RandomUniverseFactory::GenerateUn
     uni->InitDoorsForRooms();
 
     /* Display Universe Grid if Standard Debug mode */
-    if (ConfigEngine::getSetting<int>("debug") > ConfigEngine::kDEBUG_TEST) {
+    if (CommonServices::getConfig().getSetting<int>("debug") > CommonServices::getConfig().kDEBUG_TEST) {
         uni->DisplayGrid();
     }
 
@@ -43,15 +44,14 @@ std::unique_ptr<nextfloor::universe::Universe> RandomUniverseFactory::GenerateUn
         GenerateWalls(room);
 
         /* If sequentially object creation, return */
-        using nextfloor::core::ConfigEngine;
-        if (ConfigEngine::getSetting<float>("load_objects_freq") == 0.0f) {
+        if (CommonServices::getConfig().getSetting<float>("load_objects_freq") == 0.0f) {
             while (!room->IsFull()) {
                 GenerateBrick(room);
             }
         }
 
         /* Display Room Grid only if Full Debug mode */
-        if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_ALL) {
+        if (CommonServices::getConfig().getSetting<int>("debug") >= CommonServices::getConfig().kDEBUG_ALL) {
             room->DisplayGrid();
         }
     }
@@ -61,6 +61,8 @@ std::unique_ptr<nextfloor::universe::Universe> RandomUniverseFactory::GenerateUn
 
 nextfloor::universe::Room* RandomUniverseFactory::GenerateRoom(nextfloor::universe::Universe* uni) const
 {
+    using nextfloor::core::CommonServices;
+
     /* Entropy value */
     auto r = rand();
     auto s = rand();
@@ -107,8 +109,7 @@ nextfloor::universe::Room* RandomUniverseFactory::GenerateRoom(nextfloor::univer
             auto room_ptr{std::make_unique<Room>(location)};
 
             /* Define moving objects into Room */
-            using nextfloor::core::ConfigEngine;
-            room_ptr->set_missobjects(ConfigEngine::getSetting<int>("objects_count"));
+            room_ptr->set_missobjects(CommonServices::getConfig().getSetting<int>("objects_count"));
 
             /* Init Camera for the first room */
             if (uni->countChilds() == 0) {

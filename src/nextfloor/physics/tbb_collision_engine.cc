@@ -8,15 +8,15 @@
 
 #include <tbb/tbb.h>
 
-#include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
 namespace physics {
 
 void TbbCollisionEngine::InitCollisionEngine() {
-    using nextfloor::core::ConfigEngine;
-    granularity_ = ConfigEngine::getSetting<int>("granularity");
+    using nextfloor::core::CommonServices;
+    granularity_ = CommonServices::getConfig().getSetting<int>("granularity");
 }
 
 float TbbCollisionEngine::ComputeCollision(float box1[], float box2[])

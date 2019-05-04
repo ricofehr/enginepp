@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-#include "nextfloor/core/global_timer.h"
+#include "nextfloor/core/common_services.h"
 
 /**
  *  @namespace nextfloor
@@ -33,11 +33,11 @@ namespace commands {
  */
 void MoveLeftCommand::execute(nextfloor::universe::Model3D* actor)
 {
-    using nextfloor::core::GlobalTimer;
+    using nextfloor::core::CommonServices;
 
     /* Left vector */
     glm::vec3 left = -glm::cross(actor->direction(), actor->head());
-    actor->set_move(left * (float)GlobalTimer::sDeltaTime * actor->get_speed());
+    actor->set_move(left * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * actor->get_speed());
 }
 
 } // namespace commands

@@ -25,7 +25,7 @@
 #include "nextfloor/physics/cl_collision_engine.h"
 #include "nextfloor/physics/serial_collision_engine.h"
 #include "nextfloor/physics/tbb_collision_engine.h"
-#include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -59,10 +59,10 @@ bool operator!=(const Model3D& o1, const Model3D& o2)
 void Model3D::InitCollisionEngine()
 {
     using nextfloor::physics::CollisionEngine;
-    using nextfloor::core::ConfigEngine;
+    using nextfloor::core::CommonServices;
 
     /* Get parallell type from config */
-    int type_parallell = ConfigEngine::getSetting<int>("parallell");
+    int type_parallell = CommonServices::getConfig().getSetting<int>("parallell");
 
     switch (type_parallell) {
         case CollisionEngine::kPARALLELL_TBB:

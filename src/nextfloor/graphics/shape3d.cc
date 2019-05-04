@@ -10,7 +10,7 @@
 #include <glm/gtx/transform.hpp>
 
 #include "nextfloor/universe/dynamic/camera.h"
-#include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -20,12 +20,11 @@ float Shape3D::sMoveFactor = 1.0f;
 
 void Shape3D::ComputeMVP()
 {
-    /* width and height config values */
-    using nextfloor::core::ConfigEngine;
-    float window_width = ConfigEngine::getSetting<float>("width");
-    float window_height = ConfigEngine::getSetting<float>("height");
+    using nextfloor::core::CommonServices;
+    float window_width = CommonServices::getConfig().getSetting<float>("width");
+    float window_height = CommonServices::getConfig().getSetting<float>("height");
 
-    /* Get active Camera */
+    /* Get active Camera, TODO: find another way to pass Camera Object */
     using nextfloor::universe::dynamic::Camera;
     auto cam = Camera::active();
 

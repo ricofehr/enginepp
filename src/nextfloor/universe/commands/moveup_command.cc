@@ -5,7 +5,7 @@
  */
 #include "nextfloor/universe/commands/moveup_command.h"
 
-#include "nextfloor/core/global_timer.h"
+#include "nextfloor/core/common_services.h"
 
 /**
  *  @namespace nextfloor
@@ -31,9 +31,9 @@ namespace commands {
  */
 void MoveUpCommand::execute(nextfloor::universe::Model3D* actor)
 {
-    using nextfloor::core::GlobalTimer;
+    using nextfloor::core::CommonServices;
 
-    actor->set_move(actor->direction() * (float)GlobalTimer::sDeltaTime * actor->get_speed());
+    actor->set_move(actor->direction() * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * actor->get_speed());
 }
 
 } // namespace commands

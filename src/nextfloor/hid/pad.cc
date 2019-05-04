@@ -5,8 +5,7 @@
  */
 #include "nextfloor/hid/pad.h"
 
-#include "nextfloor/core/config_engine.h"
-#include "nextfloor/core/global_timer.h"
+#include "nextfloor/core/common_services.h"
 
 /**
  *  @namespace nextfloor

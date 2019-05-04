@@ -14,7 +14,7 @@
 #include "nextfloor/graphics/border.h"
 #include "nextfloor/universe/room.h"
 #include "nextfloor/universe/factory/random_universe_factory.h"
-#include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -47,8 +47,9 @@ Universe::Universe()
 
 void Universe::Draw() noexcept
 {
-    using nextfloor::core::ConfigEngine;
-    auto clipping = ConfigEngine::getSetting<int>("clipping");
+    using nextfloor::core::CommonServices;
+
+    auto clipping = CommonServices::getConfig().getSetting<int>("clipping");
 
     /* Detect current room */
     int active_index = -1;
@@ -107,7 +108,7 @@ void Universe::Draw() noexcept
 
     /* GL functions during object generate, then needs serial execution */
     float freq = 0.0f;
-    if ((freq = ConfigEngine::getSetting<float>("load_objects_freq")) > 0.0f) {
+    if ((freq = CommonServices::getConfig().getSetting<float>("load_objects_freq")) > 0.0f) {
         nextfloor::universe::factory::RandomUniverseFactory factory;
         double current_time = glfwGetTime();
         for (auto &r : objects_) {

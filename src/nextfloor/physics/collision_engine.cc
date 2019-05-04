@@ -11,7 +11,7 @@
 
 #include "nextfloor/graphics/border.h"
 #include "nextfloor/universe/model3d.h"
-#include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -78,8 +78,8 @@ void CollisionEngine::DetectCollision(nextfloor::universe::Model3D* target,
         target->set_distance(-distance);
 
         /* Print debug if setting */
-        using nextfloor::core::ConfigEngine;
-        if (ConfigEngine::getSetting<int>("debug") >= ConfigEngine::kDEBUG_COLLISION) {
+        using nextfloor::core::CommonServices;
+        if (CommonServices::getConfig().getSetting<int>("debug") >= CommonServices::getConfig().kDEBUG_COLLISION) {
             std::cerr << "Object::" << target->id() << " - Obstacle::" << obstacle->id() << " - Distance::" << distance << std::endl;
         }
     }

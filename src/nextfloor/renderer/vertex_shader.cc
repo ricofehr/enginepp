@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "nextfloor/core/file_io.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -19,13 +19,13 @@ namespace renderer {
  */
 void VertexShader::LoadShader()
 {
-    nextfloor::core::FileIO file_io;
+    using nextfloor::core::CommonServices;
 
     /* Create the shader */
     shader_id_ = glCreateShader(GL_VERTEX_SHADER);
 
     /* Read the Vertex Shader code from the file */
-    std::string shader_code = file_io.ReadFile(shader_filepath_);
+    std::string shader_code = CommonServices::getFileIO().ReadFile(shader_filepath_);
 
     GLint result = GL_FALSE;
     int info_log_length;

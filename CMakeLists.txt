@@ -23,9 +23,13 @@ set(graphics_SRCS
     src/nextfloor/graphics/border.cc)
 
 set(core_SRCS
-    src/nextfloor/core/config_engine.cc
+    src/nextfloor/core/common_services.cc
+    src/nextfloor/core/exit_program.cc
+    src/nextfloor/core/file_io.cc
+    src/nextfloor/core/global_log.cc
+    src/nextfloor/core/global_config.cc
     src/nextfloor/core/global_timer.cc
-    src/nextfloor/core/file_io.cc)
+    src/nextfloor/core/random_number.cc)
 
 set(hid_SRCS
     src/nextfloor/hid/input_handler.cc
@@ -73,9 +77,13 @@ set(nextfloor_SRCS
     src/nextfloor.cc)
 
 set(core_HDRS
-    src/nextfloor/core/config_engine.h
+    src/nextfloor/core/common_services.h
+    src/nextfloor/core/exit_program.h
+    src/nextfloor/core/file_io.h
+    src/nextfloor/core/global_log.h
+    src/nextfloor/core/global_config.h
     src/nextfloor/core/global_timer.h
-    src/nextfloor/core/file_io.h)
+    src/nextfloor/core/random_number.h)
 
 set(graphics_HDRS
     src/nextfloor/graphics/shape3d.h

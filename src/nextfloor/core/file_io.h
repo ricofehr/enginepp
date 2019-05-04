@@ -10,52 +10,45 @@
 #include <fstream>
 #include <iostream>
 
+/**
+ *  @namespace nextfloor
+ *  @brief Common parent namespace
+ */
 namespace nextfloor {
 
+/**
+ *  @namespace nextfloor::core
+ *  @brief Core system
+ */
 namespace core {
 
 /**
- * File I/O Operations
+ *  @class FileIO
+ *  @brief contains all FileIO Operations for the engine
  */
 class FileIO {
 
 public:
-    /**
-     *  Constructor
-     */
-    FileIO() = default;
 
-    /**
-     *  Default Move constructor
-     */
+    FileIO();
+
     FileIO(FileIO&&) = default;
 
-    /**
-     *  Default Move assignment
-     */
     FileIO& operator=(FileIO&&) = default;
 
     /**
-     *  Default Copy constructor
+     *  Copy constructor Deleted : Ensure a sole Instance
      */
-    FileIO(const FileIO&) = default;
+    FileIO(const FileIO&) = delete;
 
     /**
-     *  Default Copy assignment
+     *  Copy assignement Deleted: Ensure a sole Instance
      */
-    FileIO& operator=(const FileIO&) = default;
+    FileIO& operator=(const FileIO&) = delete;
 
-    /**
-     *  Default destructor
-     */
-    ~FileIO() = default;
+    ~FileIO();
 
-    /**
-     * Read a file and return content
-     * @param  file_path is the file to read
-     * @return           content as string
-     */
-    std::string ReadFile(std::string file_path);
+    std::string ReadFile(std::string file_path) const;
 };
 
 } // namespace core

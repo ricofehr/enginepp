@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "nextfloor/core/config_engine.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -22,8 +22,8 @@ void CLCollisionEngine::InitCollisionEngine()
     int max_cores = 0;
     size_t num;
 
-    using nextfloor::core::ConfigEngine;
-    granularity_ = ConfigEngine::getSetting<int>("granularity");
+    using nextfloor::core::CommonServices;
+    granularity_ = CommonServices::getConfig().getSetting<int>("granularity");
 
     try {
         /* Query for platforms */

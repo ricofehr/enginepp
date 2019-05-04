@@ -6,14 +6,15 @@
 
 #include "nextfloor/job/game_loop.h"
 
+#include <cassert>
+
 #include "nextfloor/renderer/fragment_shader.h"
 #include "nextfloor/renderer/vertex_shader.h"
 
 #include "nextfloor/universe/dynamic/camera.h"
 #include "nextfloor/hid/input_handler.h"
 #include "nextfloor/graphics/shape3d.h"
-#include "nextfloor/core/config_engine.h"
-#include "nextfloor/core/global_timer.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -60,7 +61,7 @@ void LoadShaders()
  */
 void Draw()
 {
-    using nextfloor::core::ConfigEngine;
+    using nextfloor::core::CommonServices;
     using nextfloor::renderer::Shader;
 
     /* Enable depth test */
@@ -76,7 +77,7 @@ void Draw()
     glUseProgram(Shader::sProgramId);
 
     /* Fill polygon */
-    if (ConfigEngine::getSetting<bool>("grid")) {
+    if (CommonServices::getConfig().getSetting<bool>("grid")) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -93,26 +94,25 @@ void Draw()
  */
 void LoopLog()
 {
-    using nextfloor::core::ConfigEngine;
-    using nextfloor::core::GlobalTimer;
+    using nextfloor::core::CommonServices;
 
     static bool sFirstLoop = true;
 
-    if (GlobalTimer::sSecondElapsed) {
-        int debug = ConfigEngine::getSetting<int>("debug");
+    if (CommonServices::getTimer().IsNewSecondElapsed()) {
+        int debug = CommonServices::getConfig().getSetting<int>("debug");
 
         /* Header for test datas output */
         if (sFirstLoop &&
-            debug == ConfigEngine::kDEBUG_TEST) {
+            debug == CommonServices::getConfig().kDEBUG_TEST) {
             std::cout << "TIME:FPS:NBOBJALL:NBOBJMOVE" << std::endl;
         }
         /* Print if debug */
-        if (debug == ConfigEngine::kDEBUG_ALL) {
-            std::cout << 1000.0 / static_cast<double>(GlobalTimer::sFps) << " ms/frame - ";
+        if (debug == CommonServices::getConfig().kDEBUG_ALL) {
+            std::cout << 1000.0 / static_cast<double>(CommonServices::getTimer().getFps()) << " ms/frame - ";
         }
 
-        if (debug == ConfigEngine::kDEBUG_PERF || debug == ConfigEngine::kDEBUG_ALL) {
-            std::cout << GlobalTimer::sFps << " fps - ";
+        if (debug == CommonServices::getConfig().kDEBUG_PERF || debug == CommonServices::getConfig().kDEBUG_ALL) {
+            std::cout << CommonServices::getTimer().getFps() << " fps - ";
             std::cout << sUniverse->countRoomsChilds(false) << " objects ("
                       << sUniverse->countRoomsChilds(true) << " displayed) in ";
             std::cout << sUniverse->countRooms(false) << " rooms (" << sUniverse->countRooms(true) << " displayed)";
@@ -120,8 +120,8 @@ void LoopLog()
         }
 
         /* Test datas output */
-        if (debug == ConfigEngine::kDEBUG_TEST) {
-            std::cout << GlobalTimer::sFps << ":";
+        if (debug == CommonServices::getConfig().kDEBUG_TEST) {
+            std::cout << CommonServices::getTimer().getFps() << ":";
             std::cout << sUniverse->countRoomsChilds(true) << ":"
                       << sUniverse->countRoomsMovingChilds(true) << std::endl;
         }
@@ -133,27 +133,15 @@ void LoopLog()
 
 } // anonymous namespace
 
-/**
- *  Constructor, ensure only one instance is created with instancied flag
- */
 GameLoop::GameLoop()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-/**
- *  Destructor - reset instanciated flag
- */
-GameLoop::~GameLoop()
-{
-    assert(sInstanciated);
-    sInstanciated = false;
-}
-
 void GameLoop::InitGL()
 {
-    using nextfloor::core::ConfigEngine;
+    using nextfloor::core::CommonServices;
 
     /* Default value for width and height */
     float window_width = 1200.0f;
@@ -166,8 +154,8 @@ void GameLoop::InitGL()
     }
 
     /* Check width and height into config file and ensure values are setted */
-    window_width = ConfigEngine::getSetting<float>("width");
-    window_height = ConfigEngine::getSetting<float>("height");
+    window_width = CommonServices::getConfig().getSetting<float>("width");
+    window_height = CommonServices::getConfig().getSetting<float>("height");
 
     glfwWindowHint(GLFW_SAMPLES, 4); /* 4x antialiasing */
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); /* OpenGL 4.1 */
@@ -200,8 +188,7 @@ void GameLoop::InitGL()
 
 void GameLoop::Loop(nextfloor::universe::Universe* uni)
 {
-    using nextfloor::core::ConfigEngine;
-    using nextfloor::core::GlobalTimer;
+    using nextfloor::core::CommonServices;
     using nextfloor::universe::commands::Command;
     using nextfloor::universe::dynamic::Camera;
     using nextfloor::renderer::Shader;
@@ -213,7 +200,7 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
     nextfloor::hid::InputHandler input_handler(sGLWindow);
 
     /* Vsync Setting (default is enable) */
-    if (!ConfigEngine::getSetting<bool>("vsync")) {
+    if (!CommonServices::getConfig().getSetting<bool>("vsync")) {
         glfwSwapInterval(0);
     }
 
@@ -232,7 +219,7 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
-        GlobalTimer::LoopTimer();
+        CommonServices::getTimer().Loop();
         ((Camera *)camera)->ComputeFOV(input_handler.RecordFOV());
         ((Camera *)camera)->ComputeOrientation(input_handler.RecordHIDPointer());
         Command* command = input_handler.HandlerInput();
@@ -240,9 +227,9 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
             command->execute(camera);
         }
 
-        if (GlobalTimer::sFps != 0) {
+        if (CommonServices::getTimer().getFps() != 0) {
             /* Update movefactor for objects */
-            nextfloor::graphics::Shape3D::sMoveFactor = 60.0f / GlobalTimer::sFps;
+            nextfloor::graphics::Shape3D::sMoveFactor = 60.0f / CommonServices::getTimer().getFps();
             sUniverse->toready();
         }
 
@@ -253,6 +240,12 @@ void GameLoop::Loop(nextfloor::universe::Universe* uni)
     }
     while (glfwGetKey(sGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
            && glfwWindowShouldClose(sGLWindow) == 0);
+}
+
+GameLoop::~GameLoop()
+{
+    assert(sInstanciated);
+    sInstanciated = false;
 }
 
 } // namespace renderer

@@ -6,11 +6,25 @@
 
 #include "nextfloor/core/file_io.h"
 
+#include <cassert>
+
 namespace nextfloor {
 
 namespace core {
 
-std::string FileIO::ReadFile(std::string file_path)
+namespace {
+
+static bool sInstanciated = false;
+
+}
+
+FileIO::FileIO()
+{
+    assert(!sInstanciated);
+    sInstanciated = true;
+}
+
+std::string FileIO::ReadFile(std::string file_path) const
 {
     std::string file_str;
     std::ifstream file_stream(file_path, std::ios::in);
@@ -27,6 +41,12 @@ std::string FileIO::ReadFile(std::string file_path)
     }
 
     return file_str;
+}
+
+FileIO::~FileIO()
+{
+    assert(sInstanciated);
+    sInstanciated = false;
 }
 
 } // namespace core
