@@ -11,43 +11,23 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace renderer
- *  @brief rederer namespace
- */
 namespace renderer {
 
 /**
- *  Shader Interface class, define design for all shader loaders
+ *  Shader Interface class, define design for all program shaders
  */
 class Shader {
 
 public:
 
-    /**
-     *  Default Move constructor
-     */
     Shader(Shader&&) = default;
 
-    /**
-     *  Default Move assignment
-     */
     Shader& operator=(Shader&&) = default;
 
-    /**
-     *  Default Copy constructor
-     */
     Shader(const Shader&) = default;
 
-    /**
-     *  Default Copy assignment
-     */
     Shader& operator=(const Shader&) = default;
 
     /**
@@ -55,48 +35,31 @@ public:
      */
     virtual ~Shader() = default;
 
-    /**
-     *  Load the Shader
-     */
     virtual void LoadShader() = 0;
 
-    /**
-     *  Link the Shader
-     */
     virtual void LinkShader();
 
-    /**
-     *  Link the Shader
-     */
     virtual void DetachShader();
 
-    /**
-     *  Check Program
-     */
+    virtual void CheckShader();
+
     static void CheckProgram();
 
     /**
-     *  Accessor
+     *  Accessors
      */
     GLuint shader_id() { return shader_id_; }
-
-    /** Global GL Program ID */
-    static GLuint sProgramId;
 
 protected:
 
     /**
-     *  Default Construtor
      *  Protected scope ensures Abstract Class Design
      */
     Shader(std::string shader_filepath);
 
-    /** Shader relative path */
     std::string shader_filepath_;
 
-    /** Shader GL ID */
     GLuint shader_id_;
-
 };
 
 } // namespace renderer

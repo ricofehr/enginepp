@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h>
 
 #include "nextfloor/universe/universe.h"
+#include "nextfloor/renderer/game_window.h"
 
 /**
  *  @namespace nextfloor
@@ -35,7 +36,7 @@ public:
     /**
      *  Constructor, ensure only one instance is created
      */
-    GameLoop();
+    GameLoop(nextfloor::renderer::GameWindow* game_window);
 
     /**
      *  Default Move constructor
@@ -65,18 +66,17 @@ public:
     ~GameLoop();
 
     /**
-     *  Setup the GL Scene
-     */
-    void InitGL();
-
-    /**
      *  Loop and Record Events
      *  @param universe is The universe of the program
      */
     void Loop(nextfloor::universe::Universe* universe);
 
-    /** A Global variable for the GL Matrix */
-    static GLuint sMatrixId;
+private:
+
+    void LoopLog(nextfloor::universe::Universe* universe);
+
+    nextfloor::renderer::GameWindow* game_window_{nullptr};
+
 };
 
 } // namespace renderer

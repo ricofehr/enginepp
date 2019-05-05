@@ -46,6 +46,7 @@ set(physics_SRCS
     src/nextfloor/physics/serial_collision_engine.cc)
 
 set(renderer_SRCS
+    src/nextfloor/renderer/game_window.cc
     src/nextfloor/renderer/shader.cc
     src/nextfloor/renderer/fragment_shader.cc
     src/nextfloor/renderer/vertex_shader.cc)
@@ -107,6 +108,7 @@ set(physics_HDRS
     src/nextfloor/physics/serial_collision_engine.h)
 
 set(renderer_HDRS
+    src/nextfloor/renderer/game_window.h
     src/nextfloor/renderer/shader.h
     src/nextfloor/renderer/fragment_shader.h
     src/nextfloor/renderer/vertex_shader.h)

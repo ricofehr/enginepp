@@ -9,35 +9,35 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "nextfloor/renderer/game_window.h"
 #include "nextfloor/universe/dynamic/camera.h"
-#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
 namespace graphics {
 
-float Shape3D::sMoveFactor = 1.0f;
+glm::vec4 Shape3D::move() const {
+    using nextfloor::renderer::GameWindow;
+    return move_ * GameWindow::getMoveFactor();
+}
 
 void Shape3D::ComputeMVP()
 {
-    using nextfloor::core::CommonServices;
-    float window_width = CommonServices::getConfig().getSetting<float>("width");
-    float window_height = CommonServices::getConfig().getSetting<float>("height");
-
-    /* Get active Camera, TODO: find another way to pass Camera Object */
+    using nextfloor::renderer::GameWindow;
     using nextfloor::universe::dynamic::Camera;
-    auto cam = Camera::active();
+
+    nextfloor::universe::dynamic::Camera* camera = GameWindow::getCamera();
 
     /* Projection Matrix */
-    glm::mat4 projection = glm::perspective(glm::radians(cam->fov()),
-                                            window_width / window_height,
+    glm::mat4 projection = glm::perspective(glm::radians(camera->fov()),
+                                            GameWindow::getWidth() / GameWindow::getHeight(),
                                             0.1f, 300.0f);
 
     /* View Matrix */
     glm::mat4 view = glm::lookAt(
-        cam->location(),
-        cam->location() + cam->direction(),
-        cam->head()
+        camera->location(),
+        camera->location() + camera->direction(),
+        camera->head()
     );
 
     /* Compute New location_ coords */

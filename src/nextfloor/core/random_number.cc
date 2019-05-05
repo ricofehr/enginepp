@@ -7,6 +7,7 @@
 #include "nextfloor/core/random_number.h"
 
 #include <cassert>
+#include <time.h>
 
 namespace nextfloor {
 
@@ -22,6 +23,9 @@ RandomNumber::RandomNumber()
 {
     assert(!sInstanciated);
     sInstanciated = true;
+
+    /* Reset seed */
+    srand(time(NULL));
 }
 
 RandomNumber::~RandomNumber()

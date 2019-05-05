@@ -10,16 +10,16 @@
 #include "nextfloor/universe/factory/random_universe_factory.h"
 #include "nextfloor/core/common_services.h"
 #include "nextfloor/job/game_loop.h"
+#include "nextfloor/renderer/game_window.h"
 
 int main(int argc, char* argv[])
 {
     using nextfloor::universe::Universe;
+    using nextfloor::universe::dynamic::Camera;
     using nextfloor::universe::factory::RandomUniverseFactory;
     using nextfloor::job::GameLoop;
+    using nextfloor::renderer::GameWindow;
     using nextfloor::core::CommonServices;
-
-    /* Reset seed */
-    srand(time(NULL));
 
     /* Init Config */
     CommonServices::getConfig().Initialize();
@@ -35,11 +35,13 @@ int main(int argc, char* argv[])
 
 	/* Init world */
     RandomUniverseFactory factory;
-    GameLoop game_loop;
-    game_loop.InitGL();
+    GameWindow game_window;
+    GameLoop game_loop(&game_window);
+    game_window.Initialization();
     factory.GenerateBuffers();
     std::unique_ptr<Universe> universe{factory.GenerateUniverse()};
 
     /* Launch GL Scene */
+    game_window.SetCamera((Camera*)universe->get_camera());
     game_loop.Loop(universe.get());
 }

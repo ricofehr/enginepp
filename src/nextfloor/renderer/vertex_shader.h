@@ -9,59 +9,29 @@
 
 #include "nextfloor/renderer/shader.h"
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace renderer
- *  @brief rederer namespace
- */
 namespace renderer {
 
 /**
- *  VertexShader class, manage fragments for gl tunnel
+ *  VertexShader class, manage vertex for gl tunnel
  */
 class VertexShader : public Shader {
 
 public:
 
-    /**
-     *  Construtor
-     *  @param shader_filename is the shader relative path
-     */
     VertexShader(std::string shader_path) : Shader(shader_path) {};
 
-    /**
-     *  Default Move constructor
-     */
     VertexShader(VertexShader&&) = default;
 
-    /**
-     *  Default Move assignment
-     */
     VertexShader& operator=(VertexShader&&) = default;
 
-    /**
-     *  Default Copy constructor
-     */
     VertexShader(const VertexShader&) = default;
 
-    /**
-     *  Default Copy assignment
-     */
     VertexShader& operator=(const VertexShader&) = default;
 
-    /**
-     *  Default destructor
-     */
     ~VertexShader() = default;
 
-    /**
-     *  Load the Shader
-     */
     void LoadShader() override final;
 };
 

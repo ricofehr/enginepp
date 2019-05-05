@@ -8,91 +8,34 @@
 
 #include <cassert>
 
-#include "nextfloor/renderer/fragment_shader.h"
-#include "nextfloor/renderer/vertex_shader.h"
-
+#include "nextfloor/universe/universe.h"
 #include "nextfloor/universe/dynamic/camera.h"
 #include "nextfloor/hid/input_handler.h"
-#include "nextfloor/graphics/shape3d.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
 namespace job {
 
-/* Define GameLoop global static class variables */
-GLuint GameLoop::sMatrixId = -1;
-
 namespace {
 
-/** Init (private) instanciated flag */
 static bool sInstanciated = false;
 
-static nextfloor::universe::Universe* sUniverse = nullptr;
-static GLFWwindow* sGLWindow = nullptr;
+} // anonymous namespace
 
-/**
- *   Compile and Load shader from files to ram
- *   2 shaders are compiled: vertex and fragment shaders.
- */
-void LoadShaders()
+GameLoop::GameLoop(nextfloor::renderer::GameWindow* game_window)
 {
-    using nextfloor::renderer::Shader;
-    using nextfloor::renderer::VertexShader;
-    using nextfloor::renderer::FragmentShader;
+    assert(!sInstanciated);
+    sInstanciated = true;
 
-    const char* vertex_file_path = "glsl/SimpleVertexShader.vertexshader";
-    const char* fragment_file_path = "glsl/SimpleFragmentShader.fragmentshader";
-
-    VertexShader vertex_shader(vertex_file_path);
-    FragmentShader fragment_shader(fragment_file_path);
-
-    vertex_shader.LoadShader();
-    fragment_shader.LoadShader();
-    vertex_shader.LinkShader();
-    fragment_shader.LinkShader();
-    Shader::CheckProgram();
-    vertex_shader.DetachShader();
-    fragment_shader.DetachShader();
-}
-
-/**
- *    Draw Current Universe
- */
-void Draw()
-{
-    using nextfloor::core::CommonServices;
-    using nextfloor::renderer::Shader;
-
-    /* Enable depth test */
-    glEnable(GL_DEPTH_TEST);
-
-    /* Accept fragment if it closer to the camera than the former one */
-    glDepthFunc(GL_LESS);
-
-    /* Clear the scene */
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    /* Use defined shaders */
-    glUseProgram(Shader::sProgramId);
-
-    /* Fill polygon */
-    if (CommonServices::getConfig().getSetting<bool>("grid")) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    } else {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-
-    sUniverse->Draw();
-
-    /* Swap buffers and poll */
-    glfwSwapBuffers(sGLWindow);
+    game_window_ = game_window;
+    assert(game_window_ != nullptr);
 }
 
 /**
  *   Display global details for each seconds
  */
-void LoopLog()
+void GameLoop::LoopLog(nextfloor::universe::Universe* universe)
 {
     using nextfloor::core::CommonServices;
     using nextfloor::graphics::Shape3D;
@@ -113,18 +56,18 @@ void LoopLog()
         }
 
         if (debug == CommonServices::getConfig().kDEBUG_PERF || debug == CommonServices::getConfig().kDEBUG_ALL) {
-            std::cout << CommonServices::getTimer().getFps() << " fps (move facor: " << Shape3D::sMoveFactor << ") - ";
-            std::cout << sUniverse->countRoomsChilds(false) << " objects ("
-                      << sUniverse->countRoomsChilds(true) << " displayed) in ";
-            std::cout << sUniverse->countRooms(false) << " rooms (" << sUniverse->countRooms(true) << " displayed)";
+            std::cout << CommonServices::getTimer().getFps() << " fps (move facor: " << game_window_->getMoveFactor() << ") - ";
+            std::cout << universe->countRoomsChilds(false) << " objects ("
+                      << universe->countRoomsChilds(true) << " displayed) in ";
+            std::cout << universe->countRooms(false) << " rooms (" << universe->countRooms(true) << " displayed)";
             std::cout << std::endl;
         }
 
         /* Test datas output */
         if (debug == CommonServices::getConfig().kDEBUG_TEST) {
             std::cout << CommonServices::getTimer().getFps() << ":";
-            std::cout << sUniverse->countRoomsChilds(true) << ":"
-                      << sUniverse->countRoomsMovingChilds(true) << std::endl;
+            std::cout << universe->countRoomsChilds(true) << ":"
+                      << universe->countRoomsMovingChilds(true) << std::endl;
         }
 
         /* First loop is ok */
@@ -132,123 +75,40 @@ void LoopLog()
     }
 }
 
-} // anonymous namespace
-
-GameLoop::GameLoop()
-{
-    assert(!sInstanciated);
-    sInstanciated = true;
-}
-
-void GameLoop::InitGL()
-{
-    using nextfloor::core::CommonServices;
-
-    /* Default value for width and height */
-    float window_width = 1200.0f;
-    float window_height = 740.0f;
-
-    /* Initialise GLFW */
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW\n";
-        exit(-1);
-    }
-
-    /* Check width and height into config file and ensure values are setted */
-    window_width = CommonServices::getConfig().getSetting<float>("width");
-    window_height = CommonServices::getConfig().getSetting<float>("height");
-
-    glfwWindowHint(GLFW_SAMPLES, 4); /* 4x antialiasing */
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); /* OpenGL 4.1 */
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, false);
-
-    /* Open a window and create its OpenGL context (use glfwGetPrimaryMonitor() on third parameter for FS) */
-    sGLWindow = glfwCreateWindow(window_width, window_height, "=== Engine ===", nullptr, nullptr);
-    if(sGLWindow == nullptr) {
-        std::cerr << "Failed to open GLFW window\n";
-        glfwTerminate();
-        exit(-1);
-    }
-    glfwSetInputMode(sGLWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwMakeContextCurrent(sGLWindow);
-    glewExperimental = true;
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW\n";
-        exit(-1);
-    }
-
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-    /* VAO */
-    GLuint vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-}
-
-void GameLoop::Loop(nextfloor::universe::Universe* uni)
+void GameLoop::Loop(nextfloor::universe::Universe* universe)
 {
     using nextfloor::core::CommonServices;
     using nextfloor::universe::commands::Command;
     using nextfloor::universe::dynamic::Camera;
-    using nextfloor::renderer::Shader;
-    using nextfloor::graphics::Shape3D;
-    using nextfloor::universe::Model3D;
+    using nextfloor::hid::InputHandler;
 
-    sUniverse = uni;
-
-    nextfloor::hid::InputHandler input_handler(sGLWindow);
-
-    if (!CommonServices::getConfig().getSetting<bool>("vsync")) {
-        glfwSwapInterval(0);
-    }
-
-    LoadShaders();
-
-    /* Get a handle for our "MVP" uniform */
-    GameLoop::sMatrixId = glGetUniformLocation(Shader::sProgramId, "MVP");
-
-    auto gl_monitor = glfwGetPrimaryMonitor();
-    assert(gl_monitor != NULL);
-    auto gl_mode = glfwGetVideoMode(gl_monitor);
-    assert(gl_mode != NULL);
-    int monitor_refresh_rate = gl_mode->refreshRate;
-
-    /* Ensure prerequisite */
-    assert(sUniverse != nullptr);
-    assert(GameLoop::sMatrixId != -1);
-    assert(Shader::sProgramId != -1);
-
-    Model3D* camera = sUniverse->get_camera();
+    InputHandler input_handler(game_window_->glfw_window());
+    Camera* camera = game_window_->getCamera();
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
         CommonServices::getTimer().Loop();
-        ((Camera *)camera)->ComputeFOV(input_handler.RecordFOV());
-        ((Camera *)camera)->ComputeOrientation(input_handler.RecordHIDPointer());
+        camera->ComputeFOV(input_handler.RecordFOV());
+        camera->ComputeOrientation(input_handler.RecordHIDPointer());
         Command* command = input_handler.HandlerInput();
         if (command) {
             command->execute(camera);
         }
 
         if (CommonServices::getTimer().getFps() != 0) {
-            /* Update movefactor for objects */
-            auto fps_real = CommonServices::getTimer().getFps();
-            if (fps_real > monitor_refresh_rate) {
-                fps_real = monitor_refresh_rate;
-            }
-            Shape3D::sMoveFactor = (float)Shape3D::kFpsBase / fps_real;
-            sUniverse->toready();
+            game_window_->UpdateMoveFactor();
+            universe->toready();
         }
 
-        Draw();
-        LoopLog();
+        game_window_->PrepareDisplay();
+        universe->Draw();
+        game_window_->SwapBuffers();
+        LoopLog(universe);
 
         glfwPollEvents();
     }
-    while (glfwGetKey(sGLWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS
-           && glfwWindowShouldClose(sGLWindow) == 0);
+    while (glfwGetKey(game_window_->glfw_window(), GLFW_KEY_ESCAPE) != GLFW_PRESS
+           && glfwWindowShouldClose(game_window_->glfw_window()) == 0);
 }
 
 GameLoop::~GameLoop()

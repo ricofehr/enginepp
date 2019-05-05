@@ -236,7 +236,7 @@ public:
     /**
      *  Return Speed (scale factor of move)
      */
-    float get_speed() { return 3.5f / nextfloor::graphics::Shape3D::sMoveFactor; }
+    float get_speed();
 
     /**
      *  Compute the first point of the grid

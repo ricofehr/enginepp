@@ -6,8 +6,7 @@
 
 #include "nextfloor/graphics/quad.h"
 
-#include "nextfloor/renderer/shader.h"
-#include "nextfloor/job/game_loop.h"
+#include "nextfloor/renderer/game_window.h"
 
 namespace nextfloor {
 
@@ -63,15 +62,14 @@ Quad::Quad(int face, glm::vec3 scale, glm::vec4 location,
 
 void Quad::Draw() noexcept
 {
-    using nextfloor::job::GameLoop;
-    using nextfloor::renderer::Shader;
+    using nextfloor::renderer::GameWindow;
 
     if (vertexbuffer_ == 0) {
         return;
     }
 
     glDisable(GL_CULL_FACE);
-    glUniformMatrix4fv(GameLoop::sMatrixId, 1, GL_FALSE, &mvp_[0][0]);
+    glUniformMatrix4fv(GameWindow::getMatrixId(), 1, GL_FALSE, &mvp_[0][0]);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
     /* 3 attributes: vertex, color, and textures */
@@ -87,7 +85,7 @@ void Quad::Draw() noexcept
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
                           8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-    glUniform1i(glGetUniformLocation(Shader::sProgramId, "tex"), texturebuffer_);
+    glUniform1i(glGetUniformLocation(GameWindow::getProgramId(), "tex"), texturebuffer_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sElementBuffer);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glDisableVertexAttribArray(0);

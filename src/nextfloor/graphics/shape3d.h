@@ -132,9 +132,9 @@ public:
      *  Accessors
      */
     float distance() const { return fabs(distance_); }
-    glm::vec4 move() const { return move_ * sMoveFactor; }
     glm::vec4 location() const { return location_; }
     glm::vec3 scale() const { return scale_; }
+    glm::vec4 move() const;
 
     /*
      *  Mutators
@@ -143,15 +143,6 @@ public:
     void set_move(glm::vec4 move) { move_ = move; }
     void set_move(glm::vec3 move) { move_ = glm::vec4(move, 0.0f); }
     void InverseMove() { move_ = -move_; }
-
-    /**
-     *  Define a global move factor who depends about fps
-     *  and is calculated in real time
-     */
-    static float sMoveFactor;
-
-    /** Fps target for speed movement compute on Engine */
-    static constexpr int kFpsBase = 60.0f;
 
 protected:
 

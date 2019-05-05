@@ -26,6 +26,7 @@
 #include "nextfloor/physics/serial_collision_engine.h"
 #include "nextfloor/physics/tbb_collision_engine.h"
 #include "nextfloor/core/common_services.h"
+#include "nextfloor/renderer/game_window.h"
 
 namespace nextfloor {
 
@@ -54,6 +55,14 @@ bool operator==(const Model3D& o1, const Model3D& o2)
 bool operator!=(const Model3D& o1, const Model3D& o2)
 {
     return o1.id() != o2.id();
+}
+
+/**
+ *  Return Speed (scale factor of move)
+ */
+float Model3D::get_speed() {
+    using nextfloor::renderer::GameWindow;
+    return 3.5f / GameWindow::getMoveFactor();
 }
 
 void Model3D::InitCollisionEngine()

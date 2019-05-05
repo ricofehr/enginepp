@@ -6,8 +6,7 @@
 
 #include "nextfloor/graphics/cube.h"
 
-#include "nextfloor/renderer/shader.h"
-#include "nextfloor/job/game_loop.h"
+#include "nextfloor/renderer/game_window.h"
 
 namespace nextfloor {
 
@@ -86,15 +85,14 @@ Cube::Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move,
 
 void Cube::Draw() noexcept
 {
-    using nextfloor::job::GameLoop;
-    using nextfloor::renderer::Shader;
+    using nextfloor::renderer::GameWindow;
 
     if (vertexbuffer_ == 0) {
         return;
     }
 
     glEnable(GL_CULL_FACE);
-    glUniformMatrix4fv(GameLoop::sMatrixId, 1, GL_FALSE, &mvp_[0][0]);
+    glUniformMatrix4fv(GameWindow::getMatrixId(), 1, GL_FALSE, &mvp_[0][0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
@@ -114,7 +112,7 @@ void Cube::Draw() noexcept
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
                           8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-    glUniform1i(glGetUniformLocation(Shader::sProgramId, "tex"), texturebuffer_);
+    glUniform1i(glGetUniformLocation(GameWindow::getProgramId(), "tex"), texturebuffer_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sElementBuffer);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glDisableVertexAttribArray(0);
