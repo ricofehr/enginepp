@@ -85,8 +85,8 @@ bool KeyboardMouse::isPressed(GLFWwindow* window, int ACTION_BUTTON)
 HIDPointer KeyboardMouse::RecordHIDPointer(GLFWwindow* window)
 {
     using nextfloor::core::CommonServices;
-    float window_width = CommonServices::getConfig().getSetting<float>("width");
-    float window_height = CommonServices::getConfig().getSetting<float>("width");
+    float window_width = CommonServices::getConfig()->getWindowWidth();
+    float window_height = CommonServices::getConfig()->getWindowHeight();
 
     const float hid_speed = 0.1f;
 
@@ -103,8 +103,8 @@ HIDPointer KeyboardMouse::RecordHIDPointer(GLFWwindow* window)
     }
 
 
-    HIDPointer pointer = { hid_speed * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * static_cast<float>(window_width/2 - xpos),
-                           hid_speed * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * static_cast<float>(window_height/2 - ypos) };
+    HIDPointer pointer = { hid_speed * CommonServices::getTimer()->getDeltaTimeSinceLastLoop() * static_cast<float>(window_width/2 - xpos),
+                           hid_speed * CommonServices::getTimer()->getDeltaTimeSinceLastLoop() * static_cast<float>(window_height/2 - ypos) };
 
    /* Reset Cursor position at center of screen */
     glfwSetCursorPos(window, window_width/2, window_height/2);

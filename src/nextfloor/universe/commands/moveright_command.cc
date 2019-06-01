@@ -37,7 +37,7 @@ void MoveRightCommand::execute(nextfloor::universe::Model3D* actor)
 
     /* Right vector */
     glm::vec3 right = glm::cross(actor->direction(), actor->head());
-    actor->set_move(right * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * actor->get_speed());
+    actor->set_move(right * CommonServices::getTimer()->getDeltaTimeSinceLastLoop() * actor->get_speed());
 }
 
 } // namespace commands

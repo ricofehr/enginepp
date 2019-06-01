@@ -71,7 +71,7 @@ void Model3D::InitCollisionEngine()
     using nextfloor::core::CommonServices;
 
     /* Get parallell type from config */
-    int type_parallell = CommonServices::getConfig().getSetting<int>("parallell");
+    int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
 
     switch (type_parallell) {
         case CollisionEngine::kPARALLELL_TBB:
@@ -539,10 +539,11 @@ glm::vec3 Model3D::GetNeighborCoordsBySide(int i, int j, int k, int side) const
 
 void Model3D::Move() noexcept
 {
-    border_->MoveCoords();
+    border_->ComputeNewLocation();
 
     tbb::parallel_for (0, (int)elements_.size(), 1, [&](int cnt) {
-        elements_[cnt]->ComputeMVP();
+        elements_[cnt]->MoveLocation();
+        elements_[cnt]->UpdateModelViewProjectionMatrix();
     });
 
     if (collision_countdown_ == 0) {
@@ -569,7 +570,7 @@ void Model3D::Move() noexcept
 
     /* New placements in parent grid */
     if (IsMoved()) {
-        ComputePlacements();
+        ComputePlacementsInGrid();
     }
 
     if (countChilds() == 0) {
@@ -592,14 +593,14 @@ void Model3D::Move() noexcept
     }
 }
 
-void Model3D::ComputePlacements() noexcept
+void Model3D::ComputePlacementsInGrid() noexcept
 {
     /* If no parent, no position placements */
     if (parent_ == nullptr) {
         return;
     }
 
-    std::vector<glm::vec3> coords = border_->ComputeCoords();
+    std::vector<glm::vec3> coords = border_->GetCoordsModelMatrixComputed();
     Model3D* parent_new{nullptr};
 
     auto x1 = coords.at(0)[0];
@@ -637,7 +638,7 @@ void Model3D::ComputePlacements() noexcept
         }
     }
 
-    auto grid0 = parent_->GetGrid0();
+    auto grid0 = parent_->ComputeFirstPointInGrid();
     auto grid_unit = glm::vec3(parent_->grid_unitx(), parent_->grid_unity(), parent_->grid_unitz());
 
     /* Reset current position placements */

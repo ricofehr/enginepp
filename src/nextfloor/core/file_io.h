@@ -7,7 +7,6 @@
 #ifndef NEXTFLOOR_CORE_FILEIO_H_
 #define NEXTFLOOR_CORE_FILEIO_H_
 
-#include <fstream>
 #include <iostream>
 
 /**
@@ -24,31 +23,29 @@ namespace core {
 
 /**
  *  @class FileIO
- *  @brief contains all FileIO Operations for the engine
+ *  @brief Abstract class for file operations
  */
 class FileIO {
 
 public:
 
-    FileIO();
-
     FileIO(FileIO&&) = default;
 
     FileIO& operator=(FileIO&&) = default;
 
-    /**
-     *  Copy constructor Deleted : Ensure a sole Instance
-     */
+    /*  Copy constructor Deleted : Ensure a sole Instance */
     FileIO(const FileIO&) = delete;
 
-    /**
-     *  Copy assignement Deleted: Ensure a sole Instance
-     */
+    /*  Copy assignement Deleted: Ensure a sole Instance */
     FileIO& operator=(const FileIO&) = delete;
 
-    ~FileIO();
+    virtual ~FileIO() = default;
 
-    std::string ReadFile(std::string file_path) const;
+    virtual std::string ReadFile(std::string file_path) const = 0;
+
+protected:
+
+    FileIO() = default;
 };
 
 } // namespace core

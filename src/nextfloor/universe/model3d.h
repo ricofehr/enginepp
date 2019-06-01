@@ -18,16 +18,8 @@
 #include "nextfloor/graphics/border.h"
 #include "nextfloor/physics/collision_engine.h"
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace nextfloor::universe
- *  @brief World elements
- */
 namespace universe {
 
 /**
@@ -90,7 +82,7 @@ public:
     static constexpr int kSIDES = 27;
 
     /*
-     *  Grid Square Use Constants
+     *  Grid Square Filled Constants
      */
     static constexpr int kGRID_UNKNOW = -1;
     static constexpr int kGRID_USED = 0;
@@ -101,14 +93,9 @@ public:
      */
     static constexpr int kCOLLISION_COUNTDOWN = 4;
 
-    /**
-     *  Default Move constructor
-     */
+
     Model3D(Model3D&&) = default;
 
-    /**
-     *  Default Move assignment
-     */
     Model3D& operator=(Model3D&&) = default;
 
     /**
@@ -129,9 +116,6 @@ public:
      */
     virtual ~Model3D();
 
-    /*
-     *  (In)Equality Operators
-     */
     friend bool operator==(const Model3D& o1, const Model3D& o2);
     friend bool operator!=(const Model3D& o1, const Model3D& o2);
 
@@ -139,35 +123,20 @@ public:
      *  Compute neighbors in respect with the clipping constraint
      *  All objects too far or hidden by current view are not included.
      *  @param level is clipping level (1 -> high clipping, 2 -> low clipping)
-     *  @return vector of neighbors
+     *  @return neighbors collection
      */
     std::vector<Model3D*> FindClippingNeighbors(int level) const noexcept;
 
     /**
-     *  Record HID events
-     */
-    inline virtual void RecordHID() noexcept {
-        if (get_camera() != nullptr) {
-            objects_[0]->RecordHID();
-        }
-    }
-
-    /**
-     *  Detect collision for current object and for his childs
+     *  Detect collision for current object and childs
      */
     void DetectCollision() noexcept;
 
-    /**
-     *  Proceed to move current object
-     */
     virtual void Move() noexcept;
 
-    /**
-     *  Draw the object and his childs
-     */
     inline virtual void Draw() noexcept
     {
-        /* Draw current object */
+        /* Draw meshes of current object */
         for (auto &element : elements_) {
             element->Draw();
         }
@@ -192,11 +161,6 @@ public:
      */
     void DisplayGrid() const noexcept;
 
-    /**
-     *  Test if 2 objects are in same direction
-     *  @param target is the other object to compare
-     *  @return true if the both are moving in same direction
-     */
     inline bool IsSameDirectionThan(const Model3D* target)
     {
         if (IsMovedX() != target->IsMovedX()) {
@@ -228,8 +192,6 @@ public:
     constexpr float grid_unitx() const { return grid_unit_x_; }
     constexpr float grid_unity() const { return grid_unit_y_; }
     constexpr float grid_unitz() const { return grid_unit_z_; }
-    inline bool IsFull() const { return missobjects_ <= 0 || objects_.size() >= grid_x_ * grid_y_ * grid_z_; }
-    virtual int countChilds() const { return objects_.size(); }
     glm::vec3 direction() const { return direction_; }
     glm::vec3 head() const { return head_; }
 
@@ -238,11 +200,13 @@ public:
      */
     float get_speed();
 
-    /**
-     *  Compute the first point of the grid
-     *  @return coords of the first point
-     */
-    inline glm::vec3 GetGrid0() const noexcept
+    inline bool IsFull() const
+    {
+        return missobjects_ <= 0 || objects_.size() >= grid_x_ * grid_y_ * grid_z_;
+    }
+    virtual int countChilds() const { return objects_.size(); }
+
+    inline glm::vec3 ComputeFirstPointInGrid() const noexcept
     {
         return location() - glm::vec3(grid_x_*grid_unit_x_/2, grid_y_*grid_unit_y_/2, grid_z_*grid_unit_z_/2);
     }
@@ -269,10 +233,6 @@ public:
         return nullptr;
     }
 
-    /**
-     *  Return number of Moving Object into childs
-     *  @return count of moving childs
-     */
     inline virtual int countMovingChilds() const
     {
         return tbb::parallel_reduce(
@@ -306,44 +266,38 @@ public:
      *  Mutators
      */
     void set_obstacle(Model3D* obstacle) { obstacle_ = obstacle; }
-    void reset_missobjects(int missobjects) { missobjects_ = 0; }
+    void reset_missobjects() { missobjects_ = 0; }
     void set_missobjects(int missobjects) { missobjects_ = missobjects; }
     void inc_missobjects(int missobjects) { missobjects_ += missobjects; }
     void set_parent(Model3D* parent) { parent_ = parent; }
     void flag_collision_with_camera() { is_collision_with_camera_ = true; }
     void set_move(glm::vec3 move_vector) { border_->set_move(move_vector); }
 
-    /**
-     *  Add a new child to the current object
-     *  @param obj is the new child to add
-     *  @return a raw pointer to the new object inserted
-     */
     inline Model3D* add_child(std::unique_ptr<Model3D> obj) noexcept
     {
-        /* Only non moved object can have child and grid */
+        /* Only no moving object can have child and grid */
         if (IsMoved()) {
             return nullptr;
         }
 
         auto obj_raw = obj.get();
-
         obj_raw->set_parent(this);
 
         lock();
         auto initial_objects_size = objects_.size();
-        /* Insert Camera as first element. Push on the last for others */
+        /* Insert Camera as first element. Push on the stack for others */
         if (obj_raw->IsCamera()) {
             objects_.insert(objects_.begin(), std::move(obj));
         } else {
             objects_.push_back(std::move(obj));
         }
-        /* Ensure object is inserted */
+        /* Ensure object is well added */
         assert(objects_.size() == initial_objects_size + 1);
         unlock();
 
-        obj_raw->ComputePlacements();
+        obj_raw->ComputePlacementsInGrid();
 
-        /* Dont decrement if Wall or Camera */
+        /* missobject define the number of targeted childs for the current object */
         if (!obj_raw->IsWall() && !obj_raw->IsCamera()) {
             --missobjects_;
         }
@@ -352,7 +306,7 @@ public:
     }
 
     /**
-     *  Set collision distance on the border and shape elements
+     *  Set collision distance for the border and meshe elements
      *  @param distance before the collision between this object and other
      */
     inline void set_distance(float distance) {
@@ -362,9 +316,6 @@ public:
         }
     }
 
-    /**
-     *  Inverse the Move direction of the current object
-     */
     inline void InverseMove() noexcept
     {
         border_->InverseMove();
@@ -373,34 +324,23 @@ public:
         }
     }
 
-    /**
-     *  Lock a mutex on the current object
-     */
     void lock() { object_mutex_.lock(); }
 
-    /**
-     *  Unlock a mutex on the current object
-     */
     void unlock() { object_mutex_.unlock(); }
 
 protected:
 
     /**
-     *  Constructor
      *  Protected scope ensures Abstract Class Design
      */
     Model3D();
 
     /**
      *  Allocate grid array dynamically
-     *  Use of raw pointers
+     *  Use of raw pointers !
      */
     void InitGrid();
 
-    /**
-     *  Return a list of all neighbors of current object
-     *  @return a vector of neighbors
-     */
     std::vector<Model3D*> FindAllNeighbors() const noexcept;
 
     /**
@@ -417,10 +357,6 @@ protected:
      */
     void PivotCollision() noexcept;
 
-    /**
-     *  Return a list of neighbors qualified for a collision with current object
-     *  @return a vector of neighbors
-     */
     std::vector<Model3D*> FindCollisionNeighbors() const noexcept;
 
     /**
@@ -430,10 +366,7 @@ protected:
      */
     std::vector<Model3D*> FindNeighborsSide(int side) const noexcept;
 
-    /**
-     *  Compute placements coords of the current object in the parent grid
-     */
-    void ComputePlacements() noexcept;
+    void ComputePlacementsInGrid() noexcept;
 
     /**
      *  Add a new coords child into the Grid
@@ -456,9 +389,6 @@ protected:
      */
     bool IsInside (glm::vec3 location_object) const;
 
-    /**
-     *  Flush all items into the grid
-     */
     void ResetGrid() noexcept;
 
     /*
@@ -501,7 +431,7 @@ protected:
     }
 
 
-    /** 3d shapes which composes the current object */
+    /** meshes which composes the current object */
     std::vector<std::unique_ptr<nextfloor::graphics::Shape3D>> elements_;
 
     /** the box which defines the border */
@@ -520,18 +450,18 @@ protected:
     float grid_unit_z_{0.0f};
 
     /** number of X unities in the grid (grid_x * grid_unit_x = grid width) */
-    int grid_x_{0};
+    unsigned int grid_x_{0};
 
     /** number of Y unities in the grid (grid_y * grid_unit_y = grid height) */
-    int grid_y_{0};
+    unsigned int grid_y_{0};
 
     /** number of Z unities in the grid (grid_z * grid_unit_z = grid depth) */
-    int grid_z_{0};
+    unsigned int grid_z_{0};
 
     /** Type of 3d object */
     int type_{10000};
 
-    /** VIew direction vector */
+    /** View direction vector */
     glm::vec3 direction_;
 
     /** Head coords */
@@ -599,7 +529,7 @@ private:
     /** Placements coordinates into the parent grid */
     std::vector<std::vector<int>> placements_;
 
-    /** If setted, obstacle_ is the collision partner */
+    /** If setted, the collision partner */
     Model3D* obstacle_{nullptr};
 
     /** Mutex ensures thread safe instructions */
@@ -617,7 +547,7 @@ private:
     /** Frames count before test again collision with id_last_collision */
     int collision_countdown_{0};
 
-    /** Count of childs who are still missing */
+    /** Count of childs who still are missing */
     int missobjects_{0};
 
     /** Collision with Camera is a special case and need to be flagged */

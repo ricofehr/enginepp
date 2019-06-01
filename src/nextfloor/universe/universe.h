@@ -71,14 +71,14 @@ public:
     /*
      *  Accessors
      */
-    const bool ready() const { return ready_; }
+    bool ready() const { return ready_; }
 
     /**
      *  Return count of childs (rooms)
      *  @param display for count all rooms (=false), or only displayed rooms (=true)
      *  @return the count of rooms
      */
-    inline const int countRooms(bool display) const {
+    inline int countRooms(bool display) const {
         if (display) {
             return display_rooms_.size();
         }
@@ -90,7 +90,7 @@ public:
      *  @param display for count all (=false), or only displayed (=true)
      *  @return the count of objects inside rooms
      */
-    inline const int countRoomsChilds(bool display) const {
+    inline int countRoomsChilds(bool display) const {
         if (display) {
             return tbb::parallel_reduce(
                 tbb::blocked_range<int>(0, display_rooms_.size()),
@@ -127,7 +127,7 @@ public:
      *  @param display for count all moving (=false), or only displayed (=true)
      *  @return the count of moving objects inside rooms
      */
-    inline const int countRoomsMovingChilds(bool display) const {
+    inline int countRoomsMovingChilds(bool display) const {
         if (display) {
             return tbb::parallel_reduce(
                 tbb::blocked_range<int>(0, display_rooms_.size()),

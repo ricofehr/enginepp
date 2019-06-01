@@ -33,7 +33,7 @@ void MoveUpCommand::execute(nextfloor::universe::Model3D* actor)
 {
     using nextfloor::core::CommonServices;
 
-    actor->set_move(actor->direction() * CommonServices::getTimer().getDeltaTimeSinceLastLoop() * actor->get_speed());
+    actor->set_move(actor->direction() * CommonServices::getTimer()->getDeltaTimeSinceLastLoop() * actor->get_speed());
 }
 
 } // namespace commands

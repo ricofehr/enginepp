@@ -1,10 +1,10 @@
 /**
- *  @file random_universe_factory.cc
- *  @brief RandomUniverseFactory class file
+ *  @file demo_universe_factory.cc
+ *  @brief DemoUniverseFactory class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/universe/factory/random_universe_factory.h"
+#include "nextfloor/universe/factory/demo_universe_factory.h"
 
 #include <string>
 #include <tbb/tbb.h>
@@ -17,179 +17,59 @@ namespace universe {
 
 namespace factory {
 
-std::unique_ptr<nextfloor::universe::Universe> RandomUniverseFactory::GenerateUniverse() const
+std::unique_ptr<nextfloor::universe::Universe> DemoUniverseFactory::GenerateUniverse() const
 {
     using nextfloor::core::CommonServices;
 
-    auto universe = std::make_unique<nextfloor::universe::Universe>();
-
-    /* Check objects count into config file */
-    universe->set_missobjects(CommonServices::getConfig()->getRoomsCount());
+    auto uni = std::make_unique<nextfloor::universe::Universe>();
+    uni->set_missobjects(4);
 
     std::vector<Room*> rooms;
-    while (!universe->IsFull()) {
-        rooms.push_back(GenerateRoom(universe.get()));
+    while (!uni->IsFull()) {
+        rooms.push_back(GenerateRoom(uni.get()));
     }
 
-    /* Init Doors for Rooms */
-    universe->InitDoorsForRooms();
-
-    /* Display Universe Grid if Standard Debug mode */
-    if (CommonServices::getConfig()->getDebugLevel() > CommonServices::getLog()->kDEBUG_TEST) {
-        universe->DisplayGrid();
-    }
+    uni->InitDoorsForRooms();
+    uni->DisplayGrid();
 
     for (auto &room : rooms) {
-        /* Generate Walls of Room */
         GenerateWalls(room);
-
-        /* If sequentially object creation, return */
-        if (CommonServices::getConfig()->getObjectsLoadFrequency() == 0.0f) {
-            while (!room->IsFull()) {
-                GenerateBrick(room);
-            }
+        while (!room->IsFull()) {
+            GenerateBrick(room);
         }
-
-        /* Display Room Grid only if Full Debug mode */
-        if (CommonServices::getConfig()->getDebugLevel() >= CommonServices::getLog()->kDEBUG_ALL) {
-            room->DisplayGrid();
-        }
+        room->DisplayGrid();
     }
 
-    return universe;
+    return uni;
 }
 
-nextfloor::universe::Room* RandomUniverseFactory::GenerateRoom(nextfloor::universe::Universe* universe) const
+nextfloor::universe::Room* DemoUniverseFactory::GenerateRoom(nextfloor::universe::Universe* universe) const
 {
-    using nextfloor::core::CommonServices;
-
-    /* Entropy value */
-    auto r = CommonServices::getRandomGenerator()->GenerateNumber();
-    auto s = CommonServices::getRandomGenerator()->GenerateNumber();
-    auto t = CommonServices::getRandomGenerator()->GenerateNumber();
-
-    /* Init local vars from Room object attributes */
-    auto grid_x = universe->gridx();
-    auto grid_y = universe->gridy();
-    auto grid_z = universe->gridz();
-    auto grid_unit_x = universe->grid_unitx();
-    auto grid_unit_y = universe->grid_unity();
-    auto grid_unit_z = universe->grid_unitz();
-
-    /* Starting location */
     auto grid_0 = universe->ComputeFirstPointInGrid();
 
-    auto i = r;
-    auto j = s;
-    auto k = t;
-    auto cnt = 0;
+    assert(universe->countChilds() < 4);
 
-    /* Generate and place randomly object into rooms grid */
-    while (cnt++ < grid_x * grid_y * grid_z) {
+    /* Romm placement into square grid */
+    float l = int(universe->countChilds() >> 1) + 0.5f;
+    float n = universe->countChilds() % 2 + 0.5f;
+    auto loc_x = grid_0[0] + l * universe->grid_unitx();
+    auto loc_z = grid_0[2] + n * universe->grid_unitz();
+    auto location = glm::vec4(loc_x, grid_0[1], loc_z, 0.0f);
 
-        auto l = r % grid_x;
-        auto m = s % grid_y;
-        auto n = t % grid_z;
+    auto room_ptr{std::make_unique<Room>(location)};
+    /* Define 6 moving objects into Room */
+    room_ptr->set_missobjects(6);
 
-        auto loc_x = grid_0[0] + l * grid_unit_x + grid_unit_x/2;
-        auto loc_y = grid_0[1] + m * grid_unit_y + grid_unit_y/2;
-        auto loc_z = grid_0[2] + n * grid_unit_z + grid_unit_z/2;
-
-        /* 2 cases: grid is empty or need another room nearest */
-        if (universe->countChilds() == 0 ||
-            (universe->IsPositionInTheGridEmpty(l, m, n) == 1 &&
-             (!universe->IsPositionInTheGridEmpty(l-1, m, n) ||
-              !universe->IsPositionInTheGridEmpty(l, m-1, n) ||
-              !universe->IsPositionInTheGridEmpty(l, m, n-1) ||
-              !universe->IsPositionInTheGridEmpty(l+1, m, n) ||
-              !universe->IsPositionInTheGridEmpty(l, m+1, n) ||
-              !universe->IsPositionInTheGridEmpty(l, m, n+1)))) {
-
-            auto location = glm::vec4(loc_x, loc_y, loc_z, 0.0f);
-            auto room_ptr{std::make_unique<Room>(location)};
-
-            /* Define moving objects into Room */
-            room_ptr->set_missobjects(CommonServices::getConfig()->getObjectsCount());
-
-            /* Init Camera for the first room */
-            if (universe->countChilds() == 0) {
-                room_ptr->add_child(std::move(GenerateCamera(location)));
-            }
-
-            auto room = dynamic_cast<Room*>(universe->add_child(std::move(room_ptr)));
-
-            return room;
-        }
-
-        /* Compute next grid coordinates for ensure entropy */
-        switch (cnt % 6) {
-            case 0:
-                if (++t - k == grid_z) {
-                    t = k;
-                    if (++s - j == grid_y) {
-                        s = j;
-                        ++r;
-                    }
-                }
-                break;
-
-            case 1:
-                if (++s - j == grid_z) {
-                    s = j;
-                    if (++r - i == grid_x) {
-                        r = i;
-                        ++t;
-                    }
-                }
-                break;
-
-            case 2:
-                if (++t - k == grid_z) {
-                    t = k;
-                    if (++r - i == grid_x) {
-                        r = i;
-                        ++s;
-                    }
-                }
-                break;
-
-            case 3:
-                if (++s - j == grid_y) {
-                    s = j;
-                    if (++t - k == grid_z) {
-                        t = k;
-                        ++r;
-                    }
-                }
-                break;
-
-            case 4:
-                if (++r - i == grid_x) {
-                    r = i;
-                    if (++t - k == grid_z) {
-                        t = k;
-                        ++s;
-                    }
-                }
-                break;
-
-            case 5:
-                if (++r - i == grid_x) {
-                    r = i;
-                    if (++s - j == grid_y) {
-                        s = j;
-                        ++t;
-                    }
-                }
-                break;
-        }
+    /* Init Camera for the first room */
+    if (universe->countChilds() == 0) {
+        room_ptr->add_child(std::move(GenerateCamera(location)));
     }
 
-    /* Dont find empty square, try again with different entropy */
-    return GenerateRoom(universe);
+    auto room = dynamic_cast<Room*>(universe->add_child(std::move(room_ptr)));
+    return room;
 }
 
-void RandomUniverseFactory::GenerateWalls(nextfloor::universe::Room* room) const
+void DemoUniverseFactory::GenerateWalls(nextfloor::universe::Room* room) const
 {
     GenerateWallYFixed(room, Model3D::kFLOOR);
     GenerateWallYFixed(room, Model3D::kROOF);
@@ -200,7 +80,7 @@ void RandomUniverseFactory::GenerateWalls(nextfloor::universe::Room* room) const
 }
 
 /* TODO: refacto, because too much things,less of clarity, and redundancy with the 2 other ones */
-void RandomUniverseFactory::GenerateWallYFixed(nextfloor::universe::Room* room, int side) const
+void DemoUniverseFactory::GenerateWallYFixed(nextfloor::universe::Room* room, int side) const
 {
     using nextfloor::universe::stationary::Wall;
 
@@ -251,7 +131,7 @@ void RandomUniverseFactory::GenerateWallYFixed(nextfloor::universe::Room* room, 
 }
 
 /* TODO: refacto, because too much things,less of clarity, and redundancy with the 2 other ones */
-void RandomUniverseFactory::GenerateWallXFixed(nextfloor::universe::Room* room, int side) const
+void DemoUniverseFactory::GenerateWallXFixed(nextfloor::universe::Room* room, int side) const
 {
     using nextfloor::universe::stationary::Wall;
 
@@ -299,7 +179,7 @@ void RandomUniverseFactory::GenerateWallXFixed(nextfloor::universe::Room* room, 
 }
 
 /* TODO: refacto, because too much things,less of clarity, and redundancy with the 2 other ones */
-void RandomUniverseFactory::GenerateWallZFixed(nextfloor::universe::Room* room, int side) const
+void DemoUniverseFactory::GenerateWallZFixed(nextfloor::universe::Room* room, int side) const
 {
     using nextfloor::universe::stationary::Wall;
 
@@ -346,7 +226,8 @@ void RandomUniverseFactory::GenerateWallZFixed(nextfloor::universe::Room* room, 
     });
 }
 
-void RandomUniverseFactory::GenerateBrick(nextfloor::universe::Room* room) const
+/* TODO: refacto, because too much things,less of clarity, and redundancy */
+void DemoUniverseFactory::GenerateBrick(nextfloor::universe::Room* room) const
 {
     float move_x = 0.0f, move_y = 0.0f, move_z = 0.0f;
     float scale = 1.0f;
@@ -481,7 +362,7 @@ void RandomUniverseFactory::GenerateBrick(nextfloor::universe::Room* room) const
     return GenerateBrick(room);
 }
 
-std::unique_ptr<dynamic::Camera> RandomUniverseFactory::GenerateCamera(glm::vec4 location) const
+std::unique_ptr<dynamic::Camera> DemoUniverseFactory::GenerateCamera(glm::vec4 location) const
 {
     using nextfloor::universe::dynamic::Camera;
 
@@ -494,7 +375,7 @@ std::unique_ptr<dynamic::Camera> RandomUniverseFactory::GenerateCamera(glm::vec4
                                     0.0f, 1.0f, 0.0f);
 }
 
-void RandomUniverseFactory::GenerateBuffers() const
+void DemoUniverseFactory::GenerateBuffers() const
 {
     /* Generate Buffers Once */
     dynamic::Brick::CreateBuffers();

@@ -48,21 +48,8 @@ static void CreateElementBuffer() {
 
 } // anonymous namespace
 
-Cube::Cube(float scale, glm::vec4 location)
-     :Cube(scale, location, glm::vec4(0.0f), 0, 0) {}
-
-Cube::Cube(float scale, glm::vec4 location, glm::vec4 move)
-     :Cube(scale, location, move, 0, 0) {}
-
-Cube::Cube(glm::vec3 scale, glm::vec4 location)
-     :Cube(scale, location, glm::vec4(0.0f), 0, 0) {}
-
 Cube::Cube(glm::vec3 scale, glm::vec4 location, glm::vec4 move)
      :Cube(scale, location, move, 0, 0) {}
-
-Cube::Cube(float scale, glm::vec4 location,
-           GLuint vertexbuffer, GLuint texturebuffer)
-     :Cube(scale, location, glm::vec4(0.0f), vertexbuffer, texturebuffer) {}
 
 Cube::Cube(float scale, glm::vec4 location, glm::vec4 move,
            GLuint vertexbuffer, GLuint texturebuffer)

@@ -1,11 +1,11 @@
 /**
- *  @file random_universe_factory.h
- *  @brief Random World Factory Class for universe objects
+ *  @file demo_universe_factory.h
+ *  @brief Demo World Factory Class for universe objects
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
-#define NEXTFLOOR_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
+#ifndef NEXTFLOOR_UNIVERSE_DEMOUNIVERSEFACTORY_H_
+#define NEXTFLOOR_UNIVERSE_DEMOUNIVERSEFACTORY_H_
 
 #include <memory>
 #include <glm/glm.hpp>
@@ -19,24 +19,24 @@ namespace universe {
 namespace factory {
 
 /**
- *  @class RandomUniverseFactory
- *  @brief Implements the abstract UniverseFactory, generate Objects For Universe in Random manner
+ *  @class DemoUniverseFactory
+ *  @brief Implements the abstract UniverseFactory, generate Objects For Universe in Static manner for a sandbox demo
  */
-class RandomUniverseFactory : public UniverseFactory {
+class DemoUniverseFactory : public UniverseFactory {
 
 public:
 
-    RandomUniverseFactory() = default;
+    DemoUniverseFactory() = default;
 
-    RandomUniverseFactory(RandomUniverseFactory&&) = default;
+    DemoUniverseFactory(DemoUniverseFactory&&) = default;
 
-    RandomUniverseFactory& operator=(RandomUniverseFactory&&) = default;
+    DemoUniverseFactory& operator=(DemoUniverseFactory&&) = default;
 
-    RandomUniverseFactory(const RandomUniverseFactory&) = default;
+    DemoUniverseFactory(const DemoUniverseFactory&) = default;
 
-    RandomUniverseFactory& operator=(const RandomUniverseFactory&) = default;
+    DemoUniverseFactory& operator=(const DemoUniverseFactory&) = default;
 
-    virtual ~RandomUniverseFactory() override = default;
+    virtual ~DemoUniverseFactory() override = default;
 
     virtual std::unique_ptr<nextfloor::universe::Universe> GenerateUniverse() const override final;
 
@@ -55,7 +55,6 @@ private:
     void GenerateWallXFixed(nextfloor::universe::Room* room, int side) const;
     void GenerateWallYFixed(nextfloor::universe::Room* room, int side) const;
     void GenerateWallZFixed(nextfloor::universe::Room* room, int side) const;
-
 };
 
 } // namespace factory
@@ -64,4 +63,4 @@ private:
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_RANDOMUNIVERSEFACTORY_H_
+#endif // NEXTFLOOR_UNIVERSE_DEMOUNIVERSEFACTORY_H_

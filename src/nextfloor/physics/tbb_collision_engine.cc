@@ -16,7 +16,7 @@ namespace physics {
 
 void TbbCollisionEngine::InitCollisionEngine() {
     using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig().getSetting<int>("granularity");
+    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 }
 
 float TbbCollisionEngine::ComputeCollision(float box1[], float box2[])

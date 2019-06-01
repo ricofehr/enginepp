@@ -72,8 +72,8 @@ void GameWindow::InitWindowSize()
 {
     using nextfloor::core::CommonServices;
 
-    window_width_ = CommonServices::getConfig().getSetting<float>("width");
-    window_height_ = CommonServices::getConfig().getSetting<float>("height");
+    window_width_ = CommonServices::getConfig()->getWindowWidth();
+    window_height_ = CommonServices::getConfig()->getWindowHeight();
 }
 
 void GameWindow::CreateWindow()
@@ -109,7 +109,7 @@ void GameWindow::InitVSync()
 {
     using nextfloor::core::CommonServices;
 
-    is_vsync_enabled_ = CommonServices::getConfig().getSetting<bool>("vsync");
+    is_vsync_enabled_ = CommonServices::getConfig()->isVsync();
     if (!is_vsync_enabled_) {
         glfwSwapInterval(0);
     }
@@ -146,7 +146,7 @@ void GameWindow::InitPolygonMode()
 {
     using nextfloor::core::CommonServices;
 
-    if (CommonServices::getConfig().getSetting<bool>("grid")) {
+    if (CommonServices::getConfig()->isGridMode()) {
         polygon_mode_ = GL_LINE;
     } else {
         polygon_mode_ = GL_FILL;
@@ -205,7 +205,7 @@ void GameWindow::UpdateMoveFactor()
     using nextfloor::core::CommonServices;
 
     /** Fps displayed can't be greater than monitor refresh rate */
-    auto fps_real = CommonServices::getTimer().getFps();
+    auto fps_real = CommonServices::getTimer()->getLoopCountBySecond();
     if (fps_real > monitor_refresh_rate_) {
         fps_real = monitor_refresh_rate_;
     }

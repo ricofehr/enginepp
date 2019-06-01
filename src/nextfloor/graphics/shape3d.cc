@@ -21,33 +21,44 @@ glm::vec4 Shape3D::move() const {
     return move_ * GameWindow::getMoveFactor();
 }
 
-void Shape3D::ComputeMVP()
+void Shape3D::UpdateModelViewProjectionMatrix()
+{
+    glm::mat4 projection_matrix = GetProjectionMatrix();
+    glm::mat4 view_matrix = GetViewMatrix();
+    glm::mat4 model_matrix = GetModelMatrix();
+
+    /* Our ModelViewProjection : multiplication of our 3 matrices */
+    mvp_ = projection_matrix * view_matrix * model_matrix * glm::scale(scale_);
+}
+
+glm::mat4 Shape3D::GetProjectionMatrix()
 {
     using nextfloor::renderer::GameWindow;
-    using nextfloor::universe::dynamic::Camera;
 
-    nextfloor::universe::dynamic::Camera* camera = GameWindow::getCamera();
-
-    /* Projection Matrix */
-    glm::mat4 projection = glm::perspective(glm::radians(camera->fov()),
+    auto camera = GameWindow::getCamera();
+    glm::mat4 projection_matrix = glm::perspective(glm::radians(camera->fov()),
                                             GameWindow::getWidth() / GameWindow::getHeight(),
                                             0.1f, 300.0f);
+    return projection_matrix;
+}
 
-    /* View Matrix */
-    glm::mat4 view = glm::lookAt(
+glm::mat4 Shape3D::GetViewMatrix()
+{
+    using nextfloor::renderer::GameWindow;
+
+    auto camera = GameWindow::getCamera();
+    glm::mat4 view_matrix = glm::lookAt(
         camera->location(),
         camera->location() + camera->direction(),
         camera->head()
     );
 
-    /* Compute New location_ coords */
-    MoveLocation();
+    return view_matrix;
+}
 
-    /* Model Matrix */
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location_));
-
-    /* Our ModelViewProjection : multiplication of our 3 matrices */
-    mvp_ = projection * view * model * glm::scale(scale_);
+glm::mat4 Shape3D::GetModelMatrix()
+{
+    return glm::translate(glm::mat4(1.0f), glm::vec3(location_));
 }
 
 } // namespace graphics

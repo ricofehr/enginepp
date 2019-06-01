@@ -49,7 +49,7 @@ void Universe::Draw() noexcept
 {
     using nextfloor::core::CommonServices;
 
-    auto clipping = CommonServices::getConfig().getSetting<int>("clipping");
+    auto clipping = CommonServices::getConfig()->getClippingLevel();
 
     /* Detect current room */
     int active_index = -1;
@@ -108,7 +108,7 @@ void Universe::Draw() noexcept
 
     /* GL functions during object generate, then needs serial execution */
     float freq = 0.0f;
-    if ((freq = CommonServices::getConfig().getSetting<float>("load_objects_freq")) > 0.0f) {
+    if ((freq = CommonServices::getConfig()->getObjectsLoadFrequency()) > 0.0f) {
         nextfloor::universe::factory::RandomUniverseFactory factory;
         double current_time = glfwGetTime();
         for (auto &r : objects_) {

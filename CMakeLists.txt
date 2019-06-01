@@ -18,18 +18,17 @@ ENDIF()
 
 set(graphics_SRCS
     src/nextfloor/graphics/shape3d.cc
-    src/nextfloor/graphics/quad.cc
     src/nextfloor/graphics/cube.cc
     src/nextfloor/graphics/border.cc)
 
 set(core_SRCS
     src/nextfloor/core/common_services.cc
-    src/nextfloor/core/exit_program.cc
-    src/nextfloor/core/file_io.cc
-    src/nextfloor/core/global_log.cc
-    src/nextfloor/core/global_config.cc
-    src/nextfloor/core/global_timer.cc
-    src/nextfloor/core/random_number.cc)
+    src/nextfloor/core/config_file.cc
+    src/nextfloor/core/frame_timer.cc
+    src/nextfloor/core/generic_file_io.cc
+    src/nextfloor/core/program_exit.cc
+    src/nextfloor/core/standard_random_generator.cc
+    src/nextfloor/core/terminal_log.cc)
 
 set(hid_SRCS
     src/nextfloor/hid/input_handler.cc
@@ -61,6 +60,7 @@ set(universe_SRCS
     src/nextfloor/universe/commands/run_command.cc
     src/nextfloor/universe/dynamic/camera.cc
     src/nextfloor/universe/dynamic/brick.cc
+    src/nextfloor/universe/factory/demo_universe_factory.cc
     src/nextfloor/universe/factory/random_universe_factory.cc
     src/nextfloor/universe/stationary/wall.cc
     src/nextfloor/universe/model3d.cc
@@ -79,16 +79,21 @@ set(nextfloor_SRCS
 
 set(core_HDRS
     src/nextfloor/core/common_services.h
-    src/nextfloor/core/exit_program.h
+    src/nextfloor/core/config.h
+    src/nextfloor/core/exit.h
+    src/nextfloor/core/config_file.h
     src/nextfloor/core/file_io.h
-    src/nextfloor/core/global_log.h
-    src/nextfloor/core/global_config.h
-    src/nextfloor/core/global_timer.h
-    src/nextfloor/core/random_number.h)
+    src/nextfloor/core/frame_timer.h
+    src/nextfloor/core/generic_file_io.h
+    src/nextfloor/core/log.h
+    src/nextfloor/core/program_exit.h
+    src/nextfloor/core/random_generator.h
+    src/nextfloor/core/standard_random_generator.h
+    src/nextfloor/core/terminal_log.h
+    src/nextfloor/core/timer.h)
 
 set(graphics_HDRS
     src/nextfloor/graphics/shape3d.h
-    src/nextfloor/graphics/quad.h
     src/nextfloor/graphics/cube.h
     src/nextfloor/graphics/border.h)
 
@@ -122,6 +127,7 @@ set(universe_HDRS
     src/nextfloor/universe/commands/moveright_command.h
     src/nextfloor/universe/commands/moveup_command.h
     src/nextfloor/universe/commands/run_command.h
+    src/nextfloor/universe/factory/demo_universe_factory.h
     src/nextfloor/universe/factory/random_universe_factory.h
     src/nextfloor/universe/factory/universe_factory.h
     src/nextfloor/universe/dynamic/camera.h
@@ -149,7 +155,7 @@ find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenCL REQUIRED)
 find_library(SOIL REQUIRED)
-add_definitions("-std=gnu++17")
+add_definitions("-std=gnu++17 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
 include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${Config++_INCLUDE_DIRS})
 target_link_libraries(nextfloor ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY} config++ tbb)
 target_compile_features(nextfloor PUBLIC cxx_nullptr)

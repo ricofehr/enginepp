@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/file_io.h"
+#include "nextfloor/core/generic_file_io.h"
 
 #include <cassert>
 
@@ -18,13 +18,13 @@ static bool sInstanciated = false;
 
 }
 
-FileIO::FileIO()
+GenericFileIO::GenericFileIO()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-std::string FileIO::ReadFile(std::string file_path) const
+std::string GenericFileIO::ReadFile(std::string file_path) const
 {
     std::string file_str;
     std::ifstream file_stream(file_path, std::ios::in);
@@ -43,7 +43,7 @@ std::string FileIO::ReadFile(std::string file_path) const
     return file_str;
 }
 
-FileIO::~FileIO()
+GenericFileIO::~GenericFileIO()
 {
     assert(sInstanciated);
     sInstanciated = false;

@@ -23,7 +23,7 @@ void CLCollisionEngine::InitCollisionEngine()
     size_t num;
 
     using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig().getSetting<int>("granularity");
+    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 
     try {
         /* Query for platforms */

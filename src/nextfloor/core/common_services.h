@@ -7,47 +7,106 @@
 #ifndef NEXTFLOOR_CORE_COMMONSERVICES_H_
 #define NEXTFLOOR_CORE_COMMONSERVICES_H_
 
-#include "nextfloor/core/global_config.h"
+#include "nextfloor/core/config.h"
 #include "nextfloor/core/file_io.h"
-#include "nextfloor/core/global_timer.h"
-#include "nextfloor/core/random_number.h"
-#include "nextfloor/core/global_log.h"
-#include "nextfloor/core/exit_program.h"
+#include "nextfloor/core/timer.h"
+#include "nextfloor/core/random_generator.h"
+#include "nextfloor/core/log.h"
+#include "nextfloor/core/exit.h"
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace nextfloor::core
- *  @brief Core system
- */
 namespace core {
 
 /**
  *  @class CommonServices
- *  @brief CommonServices is an unique entry point qho provides global services to other program modules\n
+ *  @brief CommonServices is an unique entry point who provides global services to other program modules\n
  *  Implement ServiceLocator Pattern
  */
 class CommonServices {
 
 public:
-    static GlobalConfig& getConfig() { return config_; }
-    static const FileIO& getFileIO() { return file_io_; }
-    static GlobalTimer& getTimer() { return timer_; }
-    static const GlobalLog& getLog() { return log_; }
-    static const RandomNumber& getRandomNumber() { return random_number_; }
-    static const ExitProgram& getExit() { return exit_; }
+
+    /*
+     *  Service Accessors
+     */
+    static Config* getConfig()
+    {
+        assert(config_ != nullptr);
+        return config_;
+    }
+
+    static const FileIO* getFileIO()
+    {
+        assert(file_io_ != nullptr);
+        return file_io_;
+    }
+
+    static Timer* getTimer()
+    {
+        assert(timer_ != nullptr);
+        return timer_;
+    }
+
+    static const Log* getLog()
+    {
+        assert(log_ != nullptr);
+        return log_;
+    }
+
+    static const RandomGenerator* getRandomGenerator()
+    {
+        assert(random_generator_ != nullptr);
+        return random_generator_;
+    }
+
+    static const Exit* getExit()
+    {
+        assert(exit_ != nullptr);
+        return exit_;
+    }
+
+    /*
+     *  Service Mutators
+     */
+    static void provideConfig(Config *config)
+    {
+        config_ = config;
+    }
+
+    static void provideFileIO(FileIO *file_io)
+    {
+        file_io_ = file_io;
+    }
+
+    static void provideTimer(Timer *timer)
+    {
+        timer_ = timer;
+    }
+
+    static void provideLog(Log *log)
+    {
+        log_ = log;
+    }
+
+    static void provideRandomGenerator(RandomGenerator *generator)
+    {
+        random_generator_ = generator;
+    }
+
+    static void provideExit(Exit *exit)
+    {
+        exit_ = exit;
+    }
 
 private:
-    static GlobalConfig config_;
-    static FileIO file_io_;
-    static GlobalTimer timer_;
-    static GlobalLog log_;
-    static RandomNumber random_number_;
-    static ExitProgram exit_;
+
+    static Config* config_;
+    static FileIO* file_io_;
+    static Timer* timer_;
+    static Log* log_;
+    static RandomGenerator* random_generator_;
+    static Exit* exit_;
 };
 
 } // namespace core

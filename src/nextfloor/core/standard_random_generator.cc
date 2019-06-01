@@ -1,10 +1,10 @@
 /**
- *  @file random_number.cc
+ *  @file standard_random_generator.cc
  *  @brief Generate Random Numbers on the fly
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/random_number.h"
+#include "nextfloor/core/standard_random_generator.h"
 
 #include <cassert>
 #include <time.h>
@@ -19,16 +19,21 @@ static bool sInstanciated = false;
 
 }
 
-RandomNumber::RandomNumber()
+StandardRandomGenerator::StandardRandomGenerator()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 
     /* Reset seed */
-    srand(time(NULL));
+    srand(static_cast<unsigned int>(time(nullptr)));
 }
 
-RandomNumber::~RandomNumber()
+int StandardRandomGenerator::GenerateNumber() const
+{
+    return rand();
+}
+
+StandardRandomGenerator::~StandardRandomGenerator()
 {
     assert(sInstanciated);
     sInstanciated = false;

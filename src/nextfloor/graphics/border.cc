@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <tbb/tbb.h>
+#include <memory>
 
 namespace nextfloor {
 
@@ -53,11 +54,6 @@ static const std::vector<glm::vec3> sDefaultCoords = {
 
 } // anonymous namespace
 
-Border::Border()
-    :Border(1.0f, glm::vec4(0.0f), sDefaultCoords) {}
-
-Border::Border(float scale, glm::vec4 location)
-    :Border(glm::vec3(scale), location) {}
 
 Border::Border(glm::vec3 scale, glm::vec4 location)
     :Border(scale, location, glm::vec4(0.0f), sDefaultCoords) {}
@@ -68,12 +64,6 @@ Border::Border(float scale, glm::vec4 location, glm::vec4 move)
 Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move)
     :Border(scale, location, move, sDefaultCoords) {}
 
-Border::Border(float scale, glm::vec4 location, std::vector<glm::vec3> coords)
-        : Border(glm::vec3(scale), location, glm::vec4(0.0f), coords) {}
-
-Border::Border(glm::vec3 scale, glm::vec4 location, std::vector<glm::vec3> coords)
-        : Border(scale, location, glm::vec4(0.0f), coords) {}
-
 Border::Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
         : Border(glm::vec3(scale), location, move, coords) {}
 
@@ -83,20 +73,26 @@ Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<
     coords_ = coords;
 }
 
-std::vector<glm::vec3> Border::ComputeCoords() const
+std::vector<glm::vec3> Border::GetCoordsModelMatrixComputed() const
 {
-    std::vector<glm::vec3> ret(coords_.size());
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(location())) * glm::scale(scale());
+    std::vector<glm::vec3> coords_model_matrix_computed(coords_.size());
+    glm::mat4 model_matrix = GetModelMatrix();
 
     /* Parallell coords compute with tbb */
-    tbb::parallel_for (0, (int)coords_.size(), 1, [&](int i) {
-        ret[i] = glm::vec3(model * glm::vec4(coords_[i], 1.0f));
+    tbb::parallel_for (0, static_cast<int>(coords_.size()), 1, [&](int i) {
+        unsigned long index = static_cast<unsigned long>(i);
+        coords_model_matrix_computed[index] = glm::vec3(model_matrix * glm::vec4(coords_[index], 1.0f));
     });
 
-    return ret;
+    return coords_model_matrix_computed;
 }
 
-void Border::MoveCoords()
+glm::mat4 Border::GetModelMatrix() const
+{
+    return glm::translate(glm::mat4(1.0f), glm::vec3(location())) * glm::scale(scale());
+}
+
+void Border::ComputeNewLocation()
 {
     if (!IsMoved()) {
         set_distance(1.0f);

@@ -42,21 +42,21 @@ void GameLoop::LoopLog(nextfloor::universe::Universe* universe)
 
     static bool sFirstLoop = true;
 
-    if (CommonServices::getTimer().IsNewSecondElapsed()) {
-        int debug = CommonServices::getConfig().getSetting<int>("debug");
+    if (CommonServices::getTimer()->IsNewSecondElapsed()) {
+        int debug = CommonServices::getConfig()->getDebugLevel();
 
         /* Header for test datas output */
         if (sFirstLoop &&
-            debug == CommonServices::getConfig().kDEBUG_TEST) {
+            debug == CommonServices::getLog()->kDEBUG_TEST) {
             std::cout << "TIME:FPS:NBOBJALL:NBOBJMOVE" << std::endl;
         }
         /* Print if debug */
-        if (debug == CommonServices::getConfig().kDEBUG_ALL) {
-            std::cout << 1000.0 / static_cast<double>(CommonServices::getTimer().getFps()) << " ms/frame - ";
+        if (debug == CommonServices::getLog()->kDEBUG_ALL) {
+            std::cout << 1000.0 / static_cast<double>(CommonServices::getTimer()->getLoopCountBySecond()) << " ms/frame - ";
         }
 
-        if (debug == CommonServices::getConfig().kDEBUG_PERF || debug == CommonServices::getConfig().kDEBUG_ALL) {
-            std::cout << CommonServices::getTimer().getFps() << " fps (move facor: " << game_window_->getMoveFactor() << ") - ";
+        if (debug == CommonServices::getLog()->kDEBUG_PERF || debug == CommonServices::getLog()->kDEBUG_ALL) {
+            std::cout << CommonServices::getTimer()->getLoopCountBySecond() << " fps (move facor: " << game_window_->getMoveFactor() << ") - ";
             std::cout << universe->countRoomsChilds(false) << " objects ("
                       << universe->countRoomsChilds(true) << " displayed) in ";
             std::cout << universe->countRooms(false) << " rooms (" << universe->countRooms(true) << " displayed)";
@@ -64,8 +64,8 @@ void GameLoop::LoopLog(nextfloor::universe::Universe* universe)
         }
 
         /* Test datas output */
-        if (debug == CommonServices::getConfig().kDEBUG_TEST) {
-            std::cout << CommonServices::getTimer().getFps() << ":";
+        if (debug == CommonServices::getLog()->kDEBUG_TEST) {
+            std::cout << CommonServices::getTimer()->getLoopCountBySecond() << ":";
             std::cout << universe->countRoomsChilds(true) << ":"
                       << universe->countRoomsMovingChilds(true) << std::endl;
         }
@@ -87,7 +87,7 @@ void GameLoop::Loop(nextfloor::universe::Universe* universe)
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
-        CommonServices::getTimer().Loop();
+        CommonServices::getTimer()->Loop();
         camera->ComputeFOV(input_handler.RecordFOV());
         camera->ComputeOrientation(input_handler.RecordHIDPointer());
         Command* command = input_handler.HandlerInput();
@@ -95,7 +95,7 @@ void GameLoop::Loop(nextfloor::universe::Universe* universe)
             command->execute(camera);
         }
 
-        if (CommonServices::getTimer().getFps() != 0) {
+        if (CommonServices::getTimer()->getLoopCountBySecond() != 0) {
             game_window_->UpdateMoveFactor();
             universe->toready();
         }

@@ -10,12 +10,12 @@ namespace nextfloor {
 
 namespace core {
 
-GlobalConfig CommonServices::config_;
-FileIO CommonServices::file_io_;
-GlobalTimer CommonServices::timer_;
-GlobalLog CommonServices::log_;
-RandomNumber CommonServices::random_number_;
-ExitProgram CommonServices::exit_;
+Config* CommonServices::config_ = nullptr;
+FileIO* CommonServices::file_io_ = nullptr;
+Timer* CommonServices::timer_ = nullptr;
+Log* CommonServices::log_ = nullptr;
+RandomGenerator* CommonServices::random_generator_ = nullptr;
+Exit* CommonServices::exit_ = nullptr;
 
 } // namespace core
 

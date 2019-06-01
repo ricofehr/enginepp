@@ -14,16 +14,9 @@
 
 #include "nextfloor/graphics/cube.h"
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
+
 namespace nextfloor {
 
-/**
- *  @namespace nextfloor::graphics
- *  @brief Elementary 3d graphic classes
- */
 namespace graphics {
 
 /**
@@ -36,121 +29,33 @@ class Border {
 
 public:
 
-    /**
-     *  Constructor
-     */
-    Border();
-
-    /**
-     *  Constructor
-     *  @param scale is a float factor applied to the native coords array
-     *  @param location is the center point of the Border
-     */
-    Border(float scale, glm::vec4 location);
-
-    /**
-     *  Constructor
-     *  @param scale is a 3 axis factor applied to the native coords array
-     *  @param location is the center point of the Border
-     */
     Border(glm::vec3 scale, glm::vec4 location);
 
-    /**
-     *  Constructor
-     *  @param scale is a float factor applied to the native coords array
-     *  @param location is the center point of the Border
-     *  @param move is the translation vector
-     */
     Border(float scale, glm::vec4 location, glm::vec4 move);
 
-    /**
-     *  Constructor
-     *  @param scale is a 3 axis factor applied to the native coords array
-     *  @param location is the center point of the Border
-     *  @param move is the translation vector
-     */
     Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move);
 
-    /**
-     *  Constructor
-     *  @param scale is a float factor applied to the native coords array
-     *  @param location is the center point of the Border
-     *  @param coords is the native coords of the cube border
-     */
-    Border(float scale, glm::vec4 location, std::vector<glm::vec3> coords);
-
-    /**
-     *  Constructor
-     *  @param scale is a 3 axis factor applied to the native coords array
-     *  @param location is the center point of the Border
-     *  @param coords is the native coords of the cube border
-     */
-    Border(glm::vec3 scale, glm::vec4 location, std::vector<glm::vec3> coords);
-
-    /**
-     *  Constructor
-     *  @param scale is a float factor applied to the native coords array
-     *  @param location is the center point of the Border
-     *  @param move is the translation vector
-     *  @param coords is the native coords of the cube border
-     */
     Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
 
-    /**
-     *  Constructor
-     *  @param scale is a 3 axis factor applied to the native coords array
-     *  @param location is the center point of the Border
-     *  @param move is the translation vector
-     *  @param coords is the native coords of the cube border
-     */
     Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
 
-    /**
-     *  Default Move constructor
-     */
     Border(Border&&) = default;
 
-    /**
-     *  Default Move assignment
-     */
     Border& operator=(Border&&) = default;
 
-    /**
-     *  Copy constructor Deleted
-     *  Because cube_ is unique_ptr
-     */
+    /* Copy constructor Deleted because cube_ is unique_ptr */
     Border(const Border&) = delete;
 
-    /**
-     *  Copy assignment Deleted
-     *  Because cube_ is unique_ptr
-     */
+    /* Copy assignment Deleted because cube_ is unique_ptr */
     Border& operator=(const Border&) = delete;
 
-    /**
-     *  Default destructor
-     */
     ~Border() = default;
 
-    /**
-     *  Compute and return coords computed with current model matrix
-     *  @return border coords computed
-     */
-    std::vector<glm::vec3> ComputeCoords() const;
+    std::vector<glm::vec3> GetCoordsModelMatrixComputed() const;
 
-    /**
-     *  Compute new location for the next move
-     */
-    void MoveCoords();
+    void ComputeNewLocation();
 
-    /**
-     *  Delegate Move
-     */
-    void MoveLocation() { cube_->MoveLocation(); }
-
-    /*
-     *  Delegate Accessors
-     */
+    /* Delegate Accessors */
     bool IsMoved() const { return cube_->IsMoved(); }
     int IsMovedX() const { return cube_->IsMovedX(); }
     int IsMovedY() const { return cube_->IsMovedY(); }
@@ -160,16 +65,19 @@ public:
     glm::vec4 move() const { return cube_->move(); }
     float distance() const { return cube_->distance(); }
 
-    /*
-     *  Delegate Mutators
-     */
+    /* Delegate Mutators */
     void set_distance(float distance) { cube_->set_distance(distance); }
     void set_move(glm::vec3 move) { cube_->set_move(move); }
     void InverseMove() { cube_->InverseMove(); }
 
 private:
 
-    /** Represents the border */
+    glm::mat4 GetModelMatrix() const;
+
+    /* Delegate action */
+    void MoveLocation() { cube_->MoveLocation(); }
+
+    /** Design the border */
     std::unique_ptr<Cube> cube_{nullptr};
 
     /** Border coords */

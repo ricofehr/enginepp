@@ -53,7 +53,7 @@ public:
     static nextfloor::universe::dynamic::Camera*  getCamera()
     {
         using nextfloor::universe::dynamic::Camera;
-        return (Camera*) camera_;
+        return dynamic_cast<Camera*>(camera_);
     }
     static GLuint getMatrixId() { return matrix_id_; }
     static GLuint getProgramId() { return program_id_; }
@@ -62,6 +62,9 @@ public:
     static float getMoveFactor() { return move_factor_; }
 
 private:
+
+    /** Fps target for speed movement compute on Engine */
+    static constexpr float kFpsBase = 60.0f;
 
     void LoadShaders();
     void InitVAO();
@@ -82,9 +85,6 @@ private:
 
     std::unique_ptr<FragmentShader> fragment_shader_{nullptr};
     std::unique_ptr<VertexShader> vertex_shader_{nullptr};
-
-    /** Fps target for speed movement compute on Engine */
-    static constexpr float kFpsBase = 60.0f;
 
     static nextfloor::universe::Model3D* camera_;
     static float window_width_;

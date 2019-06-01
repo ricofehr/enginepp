@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/exit_program.h"
+#include "nextfloor/core/program_exit.h"
 
 #include <cassert>
 
@@ -18,13 +18,23 @@ static bool sInstanciated = false;
 
 }
 
-ExitProgram::ExitProgram()
+ProgramExit::ProgramExit()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-ExitProgram::~ExitProgram()
+void ProgramExit::ExitOnError() const noexcept
+{
+    exit(1);
+}
+
+void ProgramExit::ExitOnSuccess() const noexcept
+{
+    exit(0);
+}
+
+ProgramExit::~ProgramExit()
 {
     assert(sInstanciated);
     sInstanciated = false;

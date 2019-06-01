@@ -1,10 +1,10 @@
 /**
- *  @file global_log.cc
- *  @brief Log Operations
+ *  @file terminal_log.cc
+ *  @brief LOG output to current bash terminal
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/global_log.h"
+#include "nextfloor/core/terminal_log.h"
 
 #include <cassert>
 
@@ -18,13 +18,18 @@ static bool sInstanciated = false;
 
 }
 
-GlobalLog::GlobalLog()
+TerminalLog::TerminalLog()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-GlobalLog::~GlobalLog()
+void TerminalLog::Write(const std::string& log_line)
+{
+    std::cout << log_line << std::endl;
+}
+
+TerminalLog::~TerminalLog()
 {
     assert(sInstanciated);
     sInstanciated = false;

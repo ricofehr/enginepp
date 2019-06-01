@@ -16,7 +16,7 @@ namespace physics {
 
 void SerialCollisionEngine::InitCollisionEngine() {
     using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig().getSetting<int>("granularity");
+    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 }
 
 float SerialCollisionEngine::ComputeCollision(float box1[], float box2[])

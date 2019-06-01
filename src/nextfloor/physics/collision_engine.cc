@@ -27,8 +27,8 @@ void CollisionEngine::DetectCollision(nextfloor::universe::Model3D* target,
 
     const Border* border1 = target->border();
     const Border* border2 = obstacle->border();
-    std::vector<glm::vec3> coords1 = border1->ComputeCoords();
-    std::vector<glm::vec3> coords2 = border2->ComputeCoords();
+    std::vector<glm::vec3> coords1 = border1->GetCoordsModelMatrixComputed();
+    std::vector<glm::vec3> coords2 = border2->GetCoordsModelMatrixComputed();
 
     /* First polygon point (x,y,z) and dimensions (h,w,d) */
     GLfloat x1, y1, z1, h1, w1, d1;
@@ -79,7 +79,7 @@ void CollisionEngine::DetectCollision(nextfloor::universe::Model3D* target,
 
         /* Print debug if setting */
         using nextfloor::core::CommonServices;
-        if (CommonServices::getConfig().getSetting<int>("debug") >= CommonServices::getConfig().kDEBUG_COLLISION) {
+        if (CommonServices::getConfig()->getDebugLevel() >= CommonServices::getLog()->kDEBUG_COLLISION) {
             std::cerr << "Object::" << target->id() << " - Obstacle::" << obstacle->id() << " - Distance::" << distance << std::endl;
         }
     }
