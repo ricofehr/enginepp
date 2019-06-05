@@ -6,6 +6,8 @@
 
 #include "nextfloor/core/standard_random_generator.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <cassert>
 #include <time.h>
 

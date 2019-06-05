@@ -6,6 +6,7 @@
 
 #include "nextfloor/core/program_exit.h"
 
+#include <stdlib.h>
 #include <cassert>
 
 namespace nextfloor {

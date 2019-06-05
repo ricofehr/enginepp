@@ -7,6 +7,8 @@
 #ifndef NEXTFLOOR_CORE_COMMONSERVICES_H_
 #define NEXTFLOOR_CORE_COMMONSERVICES_H_
 
+#include <cassert>
+
 #include "nextfloor/core/config.h"
 #include "nextfloor/core/file_io.h"
 #include "nextfloor/core/timer.h"
