@@ -71,23 +71,109 @@ Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<
 {
     cube_ = std::make_unique<Cube>(scale, location, move);
     coords_ = coords;
+    ComputesModelMatrixCoords();
 }
 
-std::vector<glm::vec3> Border::GetCoordsModelMatrixComputed() const
+std::vector<glm::vec3> Border::getCoordsModelMatrixComputed() const
 {
-    std::vector<glm::vec3> coords_model_matrix_computed(coords_.size());
-    glm::mat4 model_matrix = GetModelMatrix();
+    return coords_model_matrix_computed_;
+}
+
+void Border::ComputesModelMatrixCoords()
+{
+    glm::mat4 model_matrix = CalculateModelMatrix();
+
+    coords_model_matrix_computed_.resize(coords_.size());
 
     /* Parallell coords compute with tbb */
     tbb::parallel_for (0, static_cast<int>(coords_.size()), 1, [&](int i) {
         unsigned long index = static_cast<unsigned long>(i);
-        coords_model_matrix_computed[index] = glm::vec3(model_matrix * glm::vec4(coords_[index], 1.0f));
+        coords_model_matrix_computed_[index] = glm::vec3(model_matrix * glm::vec4(coords_[index], 1.0f));
     });
-
-    return coords_model_matrix_computed;
 }
 
-glm::mat4 Border::GetModelMatrix() const
+float Border::CalculateWidth()
+{
+    return coords_model_matrix_computed_.at(1).x - getFirstPoint().x;
+}
+
+float Border::CalculateHeight()
+{
+    return coords_model_matrix_computed_.at(3).y - getFirstPoint().y;
+}
+
+float Border::CalculateDepth()
+{
+    return coords_model_matrix_computed_.at(4).z - getFirstPoint().z;
+}
+
+glm::vec3 Border::getFirstPoint()
+{
+    return coords_model_matrix_computed_.at(0);
+}
+
+glm::vec3 Border::RetrieveFirstPointAfterPartedMove(float move_part)
+{
+    return getFirstPoint() + move_part * glm::vec3(move().x, move().y, move().z);
+}
+
+bool Border::IsObstacleInCollisionAfterPartedMove(Border* obstacle, float move_part)
+{
+    if (!IsObstacleInSameWidthAfterPartedMove(obstacle, move_part)) {
+        return false;
+    }
+
+    if (!IsObstacleInSameHeightAfterPartedMove(obstacle, move_part)) {
+        return false;
+    }
+
+    if (!IsObstacleInSameDepthAfterPartedMove(obstacle, move_part)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool Border::IsObstacleInSameWidthAfterPartedMove(Border* obstacle, float move_part)
+{
+    auto current_x_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).x;
+    auto obstacle_x_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).x;
+
+    if (current_x_afer_parted_move <= obstacle_x_afer_parted_move + obstacle->CalculateWidth() &&
+        obstacle_x_afer_parted_move <= current_x_afer_parted_move + CalculateWidth()) {
+        return true;
+    }
+
+    return false;
+}
+
+bool Border::IsObstacleInSameHeightAfterPartedMove(Border* obstacle, float move_part)
+{
+    auto current_y_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).y;
+    auto obstacle_y_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).y;
+
+    if (current_y_afer_parted_move >= obstacle_y_afer_parted_move + obstacle->CalculateHeight() &&
+        obstacle_y_afer_parted_move >= current_y_afer_parted_move + CalculateHeight()) {
+        return true;
+    }
+
+    return false;
+}
+
+bool Border::IsObstacleInSameDepthAfterPartedMove(Border* obstacle, float move_part)
+{
+    auto current_z_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).z;
+    auto obstacle_z_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).z;
+
+    if (current_z_afer_parted_move >= obstacle_z_afer_parted_move + obstacle->CalculateDepth() &&
+        obstacle_z_afer_parted_move >= current_z_afer_parted_move + CalculateDepth()) {
+        return true;
+    }
+
+    return false;
+}
+
+glm::mat4 Border::CalculateModelMatrix() const
 {
     return glm::translate(glm::mat4(1.0f), glm::vec3(location())) * glm::scale(scale());
 }
@@ -101,6 +187,7 @@ void Border::ComputeNewLocation()
 
     /* Compute new location coords for border */
     MoveLocation();
+    ComputesModelMatrixCoords();
 }
 
 } // namespace graphics

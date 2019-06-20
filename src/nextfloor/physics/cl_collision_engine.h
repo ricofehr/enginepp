@@ -16,6 +16,7 @@
 #include <vector>
 #include <tbb/mutex.h>
 
+#include <GL/glew.h>
 #ifdef __APPLE__
     #include <OpenCL/cl2.hpp>
 #else
@@ -24,16 +25,8 @@
 
 #include "nextfloor/physics/collision_engine.h"
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace nextfloor::physics
- *  @brief Physics and collision engines
- */
 namespace physics {
 
 /**
@@ -44,31 +37,14 @@ class CLCollisionEngine : public CollisionEngine {
 
 public:
 
-    /**
-     *  Default Move constructor
-     */
     CLCollisionEngine(CLCollisionEngine&&) = default;
 
-    /**
-     *  Default Move assignment
-     */
     CLCollisionEngine& operator=(CLCollisionEngine&&) = default;
 
-    /**
-     *  Copy constructor Deleted
-     *  Ensure a sole Instance
-     */
     CLCollisionEngine(const CLCollisionEngine&) = delete;
 
-    /**
-     *  Copy assignment Deleted
-     *  Ensure a sole Instance
-     */
     CLCollisionEngine& operator=(const CLCollisionEngine&) = delete;
 
-    /**
-     *  Default destructor
-     */
     ~CLCollisionEngine() override = default;
 
     /**
@@ -77,46 +53,18 @@ public:
      */
     inline static CLCollisionEngine* Instance()
     {
-        static bool sIsInit = false;
-        /* Raw pointers because static vars */
         static auto sInstance = new CLCollisionEngine;
-        static auto collision_mutex = new tbb::mutex;
-
-        /*
-         *  Init the context if not already done
-         */
-        collision_mutex->lock();
-        if (!sIsInit) {
-            sInstance->InitCollisionEngine();
-            sIsInit = true;
-        }
-        collision_mutex->unlock();
-
         return sInstance;
     }
 
-    /**
-     *  Compute collision distance between borders of 2 objects
-     *  Thanks to opencl paralell processing
-     *  @param box1 includes the coords for the first border and the moving vector
-     *  @param box2 includes the coords for the second border and the moving vector
-     *  @return distance between the 2 borders
-     */
-    float ComputeCollision(float box1[], float box2[]) override final;
+    virtual float ComputeCollision(nextfloor::universe::Model3D* target,
+                                   nextfloor::universe::Model3D* obstacle) override final;
 
 protected:
 
-    /**
-     *  Default Constructor
-     *  Protected scope ensure sole instance
-     */
-    CLCollisionEngine() = default;
+    CLCollisionEngine();
 
-    /**
-     *  Init opencl parallell context
-     */
-    void InitCollisionEngine() override final;
-
+    virtual void InitCollisionEngine() override final;
 
     /** Opencl Kernel Object */
     cl::Kernel cl_kernel_;

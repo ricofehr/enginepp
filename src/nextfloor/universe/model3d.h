@@ -324,6 +324,10 @@ public:
         }
     }
 
+    bool IsLastObstacle(Model3D *obstacle);
+
+    void UpdateObstacleIfNearer(Model3D *obstacle, float distance);
+
     void lock() { object_mutex_.lock(); }
 
     void unlock() { object_mutex_.unlock(); }

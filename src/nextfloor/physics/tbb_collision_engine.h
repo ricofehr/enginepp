@@ -11,16 +11,8 @@
 
 #include "nextfloor/physics/collision_engine.h"
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace nextfloor::physics
- *  @brief Physics and collision engines
- */
 namespace physics {
 
 /**
@@ -31,31 +23,14 @@ class TbbCollisionEngine : public CollisionEngine {
 
 public:
 
-    /**
-     *  Default Move constructor
-     */
     TbbCollisionEngine(TbbCollisionEngine&&) = default;
 
-    /**
-     *  Default Move assignment
-     */
     TbbCollisionEngine& operator=(TbbCollisionEngine&&) = default;
 
-    /**
-     *  Copy constructor Deleted
-     *  Ensure a sole Instance
-     */
     TbbCollisionEngine(const TbbCollisionEngine&) = delete;
 
-    /**
-     *  Copy assignment Deleted
-     *  Ensure a sole Instance
-     */
     TbbCollisionEngine& operator=(const TbbCollisionEngine&) = delete;
 
-    /**
-     *  Default destructor
-     */
     ~TbbCollisionEngine() override = default;
 
     /**
@@ -64,45 +39,18 @@ public:
      */
     inline static TbbCollisionEngine* Instance()
     {
-        static bool sIsInit = false;
-        /* Raw pointers because static vars */
         static auto sInstance = new TbbCollisionEngine;
-        static auto collision_mutex = new tbb::mutex;
-
-        /*
-         *  Init the engine if not already done
-         */
-        collision_mutex->lock();
-        if (!sIsInit) {
-            sInstance->InitCollisionEngine();
-            sIsInit = true;
-        }
-        collision_mutex->unlock();
-
         return sInstance;
     }
 
-    /**
-     *  Compute collision distance between borders of 2 objects
-     *  Thanks to tbbplus paralell processing
-     *  @param box1 includes the coords for the first border and the moving vector
-     *  @param box2 includes the coords for the second border and the moving vector
-     *  @return distance between the 2 borders
-     */
-    float ComputeCollision(float box1[], float box2[]) override final;
+    virtual float ComputeCollision(nextfloor::universe::Model3D* target,
+                                   nextfloor::universe::Model3D* obstacle) override final;
 
 private:
 
-    /**
-     *  Default Constructor
-     *  Protected scope ensure sole instance
-     */
-    TbbCollisionEngine() = default;
+    TbbCollisionEngine();
 
-    /**
-     *  Init tbbplus parallell context
-     */
-    void InitCollisionEngine() override final;
+    virtual void InitCollisionEngine() override final;
 };
 
 } // namespace parallell

@@ -9,11 +9,17 @@
 #include <iostream>
 #include <fstream>
 
+#include "nextfloor/universe/model3d.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
 namespace physics {
+
+CLCollisionEngine::CLCollisionEngine()
+{
+    InitCollisionEngine();
+}
 
 void CLCollisionEngine::InitCollisionEngine()
 {
@@ -88,13 +94,51 @@ void CLCollisionEngine::InitCollisionEngine()
     }
 }
 
-float CLCollisionEngine::ComputeCollision(float box1[], float box2[])
+float CLCollisionEngine::ComputeCollision(nextfloor::universe::Model3D* target,
+                                          nextfloor::universe::Model3D* obstacle)
 {
+    auto target_border = target->border();
+    auto obstacle_border = obstacle->border();
+
     /* All tbb threads share same opencl objects, need mutex */
     collision_mutex_.lock();
 
     float* distances_ptr = new float[granularity_];
     float ret = 1.0f;
+
+    std::vector<glm::vec3> coords1 = target_border->getCoordsModelMatrixComputed();
+    std::vector<glm::vec3> coords2 = obstacle_border->getCoordsModelMatrixComputed();
+
+    /* First polygon point (x,y,z) and dimensions (h,w,d) */
+    GLfloat x1, y1, z1, h1, w1, d1;
+    GLfloat x2, y2, z2, h2, w2, d2;
+    GLfloat move1x, move1y, move1z, move2x, move2y, move2z;
+
+    x1 = coords1.at(0)[0];
+    y1 = coords1.at(0)[1];
+    z1 = coords1.at(0)[2];
+    x2 = coords2.at(0)[0];
+    y2 = coords2.at(0)[1];
+    z2 = coords2.at(0)[2];
+
+    h1 = coords1.at(3)[1] - y1;
+    w1 = coords1.at(1)[0] - x1;
+    d1 = coords1.at(4)[2] - z1;
+    h2 = coords2.at(3)[1] - y2;
+    w2 = coords2.at(1)[0] - x2;
+    d2 = coords2.at(4)[2] - z2;
+
+    move1x = target_border->move()[0];
+    move1y = target_border->move()[1];
+    move1z = target_border->move()[2];
+    move2x = obstacle_border->move()[0];
+    move2y = obstacle_border->move()[1];
+    move2z = obstacle_border->move()[2];
+
+    /* Prepare arrays for computecollision */
+    float box1[9] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
+    float box2[9] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
+
 
     /* Copy the input data to the input buffer */
     cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);

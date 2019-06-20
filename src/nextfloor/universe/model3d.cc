@@ -600,7 +600,7 @@ void Model3D::ComputePlacementsInGrid() noexcept
         return;
     }
 
-    std::vector<glm::vec3> coords = border_->GetCoordsModelMatrixComputed();
+    std::vector<glm::vec3> coords = border_->getCoordsModelMatrixComputed();
     Model3D* parent_new{nullptr};
 
     auto x1 = coords.at(0)[0];
@@ -1009,6 +1009,28 @@ bool Model3D::IsInside(glm::vec3 location_object) const
     }
 
     return false;
+}
+
+bool Model3D::IsLastObstacle(Model3D *obstacle)
+{
+    return obstacle_ == obstacle;
+}
+
+void Model3D::UpdateObstacleIfNearer(Model3D *obstacle, float obstacle_distance)
+{
+    /* Update obstacle and distance if lower than former */
+    lock();
+    if (obstacle_distance < distance()) {
+        obstacle_ = obstacle;
+        set_distance(-obstacle_distance);
+
+        /* Print debug if setting */
+        using nextfloor::core::CommonServices;
+        if (CommonServices::getConfig()->getDebugLevel() >= CommonServices::getLog()->kDEBUG_COLLISION) {
+            std::cerr << "Object::" << id() << " - Obstacle::" << obstacle->id() << " - Distance::" << obstacle_distance << std::endl;
+        }
+    }
+    unlock();
 }
 
 void Model3D::ResetGrid() noexcept

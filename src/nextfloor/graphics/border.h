@@ -7,6 +7,7 @@
 #ifndef NEXTFLOOR_GRAPHICS_BORDER_H_
 #define NEXTFLOOR_GRAPHICS_BORDER_H_
 
+//#define GLM_SWIZZLE
 #include <glm/glm.hpp>
 
 #include <vector>
@@ -51,9 +52,11 @@ public:
 
     ~Border() = default;
 
-    std::vector<glm::vec3> GetCoordsModelMatrixComputed() const;
+    std::vector<glm::vec3> getCoordsModelMatrixComputed() const;
 
     void ComputeNewLocation();
+
+    bool IsObstacleInCollisionAfterPartedMove(Border* obstacle, float move_part);
 
     /* Delegate Accessors */
     bool IsMoved() const { return cube_->IsMoved(); }
@@ -72,16 +75,30 @@ public:
 
 private:
 
-    glm::mat4 GetModelMatrix() const;
+    glm::mat4 CalculateModelMatrix() const;
 
     /* Delegate action */
     void MoveLocation() { cube_->MoveLocation(); }
+
+    void ComputesModelMatrixCoords();
+
+    float CalculateWidth();
+    float CalculateHeight();
+    float CalculateDepth();
+    glm::vec3 getFirstPoint();
+    glm::vec3 RetrieveFirstPointAfterPartedMove(float move_part);
+    bool IsObstacleInSameWidthAfterPartedMove(Border* obstacle, float move_part);
+    bool IsObstacleInSameHeightAfterPartedMove(Border* obstacle, float move_part);
+    bool IsObstacleInSameDepthAfterPartedMove(Border* obstacle, float move_part);
 
     /** Design the border */
     std::unique_ptr<Cube> cube_{nullptr};
 
     /** Border coords */
     std::vector<glm::vec3> coords_;
+
+    /** Border coords in Model Matrix */
+    std::vector<glm::vec3> coords_model_matrix_computed_;
 };
 
 } // namespace graphics
