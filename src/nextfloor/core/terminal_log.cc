@@ -26,7 +26,7 @@ TerminalLog::TerminalLog()
 
 void TerminalLog::Write(const std::string& log_line)
 {
-    std::cout << log_line << std::endl;
+    std::cerr << log_line << std::endl;
 }
 
 TerminalLog::~TerminalLog()

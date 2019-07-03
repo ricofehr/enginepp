@@ -13,8 +13,7 @@
 #include <cassert>
 
 #include "nextfloor/core/common_services.h"
-#include "nextfloor/physics/collision_engine.h"
-#include "nextfloor/universe/factory/universe_factory.h"
+#include "nextfloor/factory/universe_factory.h"
 
 namespace nextfloor {
 
@@ -93,11 +92,11 @@ void ConfigFile::InitDefaultValues()
 
 void ConfigFile::SetDefaultParallellValueIfEmpty()
 {
-    using nextfloor::physics::CollisionEngine;
+    // using nextfloor::physics::CollisionEngine;
 
-    if (!IsExist("parallell")) {
-        setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_SERIAL);
-    }
+    // if (!IsExist("parallell")) {
+    //     setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_SERIAL);
+    // }
 }
 
 void ConfigFile::SetDefaultParallellThreadCountValueIfEmpty()
@@ -187,7 +186,7 @@ void ConfigFile::SetDefaultExecutionTimeValueIfEmpty()
 
 void ConfigFile::SetDefaultUniverseFactoryValueIfEmpty()
 {
-    using nextfloor::universe::factory::UniverseFactory;
+    using nextfloor::factory::UniverseFactory;
 
     if (!IsExist("factory_type")) {
         setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_DEMO);
@@ -345,21 +344,21 @@ void ConfigFile::ManageObjectCountParameter(const std::string& parameter_name,
 void ConfigFile::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
                                                   const std::string& parameter_value)
 {
-    using nextfloor::physics::CollisionEngine;
+    // using nextfloor::physics::CollisionEngine;
 
-    if (parameter_name == "-p") {
-        if (parameter_value == "serial") {
-            setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_SERIAL);
-        }
+    // if (parameter_name == "-p") {
+    //     if (parameter_value == "serial") {
+    //         setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_SERIAL);
+    //     }
 
-        if (parameter_value == "tbb") {
-            setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_TBB);
-        }
+    //     if (parameter_value == "tbb") {
+    //         setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_TBB);
+    //     }
 
-        if (parameter_value == "opencl") {
-            setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_CL);
-        }
-    }
+    //     if (parameter_value == "opencl") {
+    //         setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_CL);
+    //     }
+    // }
 }
 
 void ConfigFile::ManageRoomCountParameter(const std::string& parameter_name,
@@ -396,18 +395,18 @@ void ConfigFile::ManageWorkerCountParameter(const std::string& parameter_name,
 
 void ConfigFile::EnsureCoherentWorkerSetting()
 {
-    using nextfloor::physics::CollisionEngine;
+ //   using nextfloor::physics::CollisionEngine;
 
     /* Disable tbb usage when serial parallel algorithm is setted */
-    if (getSetting<int>("parallell") == CollisionEngine::kPARALLELL_SERIAL) {
+   // if (getSetting<int>("parallell") == CollisionEngine::kPARALLELL_SERIAL) {
         setSetting("workers_count", libconfig::Setting::TypeInt, 1);
-    }
+    //}
 }
 
 void ConfigFile::ManageUniverseFactoryTypeParameter(const std::string& parameter_name,
                                                     const std::string& parameter_value)
 {
-    using nextfloor::universe::factory::UniverseFactory;
+    using nextfloor::factory::UniverseFactory;
 
     if (parameter_name == "-f") {
         if (parameter_value == "demo") {

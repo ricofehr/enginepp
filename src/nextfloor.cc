@@ -7,9 +7,8 @@
 #include <memory>
 #include <tbb/tbb.h>
 
-#include "nextfloor/universe/factory/demo_universe_factory.h"
-#include "nextfloor/universe/factory/random_universe_factory.h"
-#include "nextfloor/job/game_loop.h"
+#include "nextfloor/factory/demo_universe_factory.h"
+#include "nextfloor/controller/game_loop.h"
 #include "nextfloor/renderer/game_window.h"
 
 #include "nextfloor/core/common_services.h"
@@ -22,12 +21,11 @@
 
 int main(int argc, char* argv[])
 {
-    using nextfloor::universe::Universe;
-    using nextfloor::universe::dynamic::Camera;
-    using nextfloor::universe::factory::UniverseFactory;
-    using nextfloor::universe::factory::RandomUniverseFactory;
-    using nextfloor::universe::factory::DemoUniverseFactory;
-    using nextfloor::job::GameLoop;
+    using nextfloor::objects::Universe;
+    using nextfloor::objects::Camera;
+    using nextfloor::factory::UniverseFactory;
+    using nextfloor::factory::DemoUniverseFactory;
+    using nextfloor::controller::GameLoop;
     using nextfloor::renderer::GameWindow;
     using nextfloor::core::CommonServices;
     using nextfloor::core::TerminalLog;
@@ -63,14 +61,10 @@ int main(int argc, char* argv[])
         tbb_threads_config = std::make_unique<tbb::task_scheduler_init>(CommonServices::getConfig()->getThreadsCount());
     }
 
-	/* Init world */
+    /* Init world */
     std::unique_ptr<UniverseFactory> factory{nullptr};
     if (CommonServices::getConfig()->getUniverseFactoryType() == UniverseFactory::kUNIVERSEFACTORY_DEMO) {
         factory = std::make_unique<DemoUniverseFactory>();
-    } else if (CommonServices::getConfig()->getUniverseFactoryType() == UniverseFactory::kUNIVERSEFACTORY_RANDOM) {
-        factory = std::make_unique<RandomUniverseFactory>();
-    } else {
-        CommonServices::getExit()->ExitOnError();
     }
 
     GameWindow game_window;
@@ -80,7 +74,7 @@ int main(int argc, char* argv[])
     std::unique_ptr<Universe> universe{factory->GenerateUniverse()};
 
     /* Launch GL Scene */
-    game_window.SetCamera((Camera*)universe->get_camera());
+    game_window.SetCamera(Camera::active());
     game_loop.Loop(universe.get());
 
     CommonServices::getExit()->ExitOnSuccess();

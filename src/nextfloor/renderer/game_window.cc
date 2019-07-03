@@ -55,7 +55,7 @@ static void ClearWindow()
 /**
  *  GameWindow Global Variables Init
  */
-nextfloor::universe::Model3D* GameWindow::camera_ = nullptr;
+nextfloor::objects::EngineObject* GameWindow::camera_ = nullptr;
 float GameWindow::window_width_ = 1200.0f;
 float GameWindow::window_height_ = 740.0f;
 GLuint GameWindow::matrix_id_ = -1;
@@ -213,7 +213,7 @@ void GameWindow::UpdateMoveFactor()
     move_factor_ = kFpsBase / fps_real;
 }
 
-void GameWindow::SetCamera(nextfloor::universe::dynamic::Camera* camera)
+void GameWindow::SetCamera(nextfloor::objects::Camera* camera)
 {
     camera_ = camera;
 }

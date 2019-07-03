@@ -16,10 +16,8 @@ IF(APPLE)
     LINK_DIRECTORIES(/usr/local/lib)
 ENDIF()
 
-set(graphics_SRCS
-    src/nextfloor/graphics/shape3d.cc
-    src/nextfloor/graphics/cube.cc
-    src/nextfloor/graphics/border.cc)
+set(controller_SRCS
+    src/nextfloor/controller/game_loop.cc)
 
 set(core_SRCS
     src/nextfloor/core/common_services.cc
@@ -30,19 +28,33 @@ set(core_SRCS
     src/nextfloor/core/standard_random_generator.cc
     src/nextfloor/core/terminal_log.cc)
 
-set(hid_SRCS
-    src/nextfloor/hid/input_handler.cc
-    src/nextfloor/hid/keyboard_mouse.cc
-    src/nextfloor/hid/pad.cc)
+set(factory_SRCS
+    src/nextfloor/factory/demo_universe_factory.cc)
 
-set(job_SRCS
-    src/nextfloor/job/game_loop.cc)
+set(objects_SRCS
+    src/nextfloor/objects/border.cc
+    src/nextfloor/objects/brick.cc
+    src/nextfloor/objects/camera.cc
+    src/nextfloor/objects/grid.cc
+    src/nextfloor/objects/grid_box.cc
+    src/nextfloor/objects/model.cc
+    src/nextfloor/objects/room.cc
+    src/nextfloor/objects/room_grid.cc
+    src/nextfloor/objects/room_grid_box.cc
+    src/nextfloor/objects/universe.cc
+    src/nextfloor/objects/universe_grid.cc
+    src/nextfloor/objects/universe_grid_box.cc
+    src/nextfloor/objects/wall.cc)
 
 set(physics_SRCS
-    src/nextfloor/physics/collision_engine.cc
     src/nextfloor/physics/cl_collision_engine.cc
-    src/nextfloor/physics/tbb_collision_engine.cc
-    src/nextfloor/physics/serial_collision_engine.cc)
+    src/nextfloor/physics/collision_engine.cc
+    src/nextfloor/physics/serial_collision_engine.cc
+    src/nextfloor/physics/tbb_collision_engine.cc)
+
+set(polygons_SRCS
+    src/nextfloor/polygons/polygon.cc
+    src/nextfloor/polygons/cube.cc)
 
 set(renderer_SRCS
     src/nextfloor/renderer/game_window.cc
@@ -50,32 +62,17 @@ set(renderer_SRCS
     src/nextfloor/renderer/fragment_shader.cc
     src/nextfloor/renderer/vertex_shader.cc)
 
-set(universe_SRCS
-    src/nextfloor/universe/commands/fire_command.cc
-    src/nextfloor/universe/commands/jump_command.cc
-    src/nextfloor/universe/commands/movedown_command.cc
-    src/nextfloor/universe/commands/moveleft_command.cc
-    src/nextfloor/universe/commands/moveright_command.cc
-    src/nextfloor/universe/commands/moveup_command.cc
-    src/nextfloor/universe/commands/run_command.cc
-    src/nextfloor/universe/dynamic/camera.cc
-    src/nextfloor/universe/dynamic/brick.cc
-    src/nextfloor/universe/factory/demo_universe_factory.cc
-    src/nextfloor/universe/factory/random_universe_factory.cc
-    src/nextfloor/universe/stationary/wall.cc
-    src/nextfloor/universe/model3d.cc
-    src/nextfloor/universe/room.cc
-    src/nextfloor/universe/universe.cc)
-
 set(nextfloor_SRCS
-    ${graphics_SRCS}
+    ${controller_SRCS}
     ${core_SRCS}
-    ${hid_SRCS}
-    ${job_SRCS}
+    ${factory_SRCS}
+    ${objects_SRCS}
+    ${polygons_SRCS}
     ${renderer_SRCS}
-    ${physics_SRCS}
-    ${universe_SRCS}
     src/nextfloor.cc)
+
+set(controller_HDRS
+    src/nextfloor/controller/game_loop.h)
 
 set(core_HDRS
     src/nextfloor/core/common_services.h
@@ -92,25 +89,37 @@ set(core_HDRS
     src/nextfloor/core/terminal_log.h
     src/nextfloor/core/timer.h)
 
-set(graphics_HDRS
-    src/nextfloor/graphics/shape3d.h
-    src/nextfloor/graphics/cube.h
-    src/nextfloor/graphics/border.h)
+set(factory_HDRS
+    src/nextfloor/factory/demo_universe_factory.h
+    src/nextfloor/factory/universe_factory.h)
 
-set(hid_HDRS
-    src/nextfloor/hid/hid.h
-    src/nextfloor/hid/input_handler.h
-    src/nextfloor/hid/keyboard_mouse.h
-    src/nextfloor/hid/pad.h)
-
-set(job_HDRS
-    src/nextfloor/job/game_loop.h)
+set(objects_HDRS
+    src/nextfloor/objects/border.h
+    src/nextfloor/objects/brick.h
+    src/nextfloor/objects/camera.h
+    src/nextfloor/objects/engine_grid.h
+    src/nextfloor/objects/engine_grid_box.h
+    src/nextfloor/objects/engine_object.h
+    src/nextfloor/objects/grid.h
+    src/nextfloor/objects/grid_box.h
+    src/nextfloor/objects/room_grid_box.h
+    src/nextfloor/objects/model.h
+    src/nextfloor/objects/room.h
+    src/nextfloor/objects/room_grid.h
+    src/nextfloor/objects/universe.h
+    src/nextfloor/objects/universe_grid.h
+    src/nextfloor/objects/universe_grid_box.h
+    src/nextfloor/objects/wall.h)
 
 set(physics_HDRS
-    src/nextfloor/physics/collision_engine.h
     src/nextfloor/physics/cl_collision_engine.h
-    src/nextfloor/physics/tbb_collision_engine.h
-    src/nextfloor/physics/serial_collision_engine.h)
+    src/nextfloor/physics/collision_engine.h
+    src/nextfloor/physics/serial_collision_engine.h
+    src/nextfloor/physics/tbb_collision_engine.h)
+
+set(polygons_HDRS
+    src/nextfloor/polygons/polygon.h
+    src/nextfloor/polygons/cube.h)
 
 set(renderer_HDRS
     src/nextfloor/renderer/game_window.h
@@ -118,33 +127,13 @@ set(renderer_HDRS
     src/nextfloor/renderer/fragment_shader.h
     src/nextfloor/renderer/vertex_shader.h)
 
-set(universe_HDRS
-    src/nextfloor/universe/commands/command.h
-    src/nextfloor/universe/commands/fire_command.h
-    src/nextfloor/universe/commands/jump_command.h
-    src/nextfloor/universe/commands/movedown_command.h
-    src/nextfloor/universe/commands/moveleft_command.h
-    src/nextfloor/universe/commands/moveright_command.h
-    src/nextfloor/universe/commands/moveup_command.h
-    src/nextfloor/universe/commands/run_command.h
-    src/nextfloor/universe/factory/demo_universe_factory.h
-    src/nextfloor/universe/factory/random_universe_factory.h
-    src/nextfloor/universe/factory/universe_factory.h
-    src/nextfloor/universe/dynamic/camera.h
-    src/nextfloor/universe/dynamic/brick.h
-    src/nextfloor/universe/stationary/wall.h
-    src/nextfloor/universe/model3d.h
-    src/nextfloor/universe/room.h
-    src/nextfloor/universe/universe.h)
-
 set(nextfloor_HDRS
-    ${graphics_HDRS}
+    ${controller_HDRS}
     ${core_HDRS}
-    ${hid_HDRS}
-    ${job_HDRS}
-    ${renderer_HDRS}
-    ${physics_HDRS}
-    ${universe_HDRS})
+    ${factory_HDRS}
+    ${objects_HDRS}
+    ${polygons_HDRS}
+    ${renderer_HDRS})
 
 add_executable(nextfloor ${nextfloor_SRCS} ${nextfloor_HDRS})
 
