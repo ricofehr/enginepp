@@ -23,12 +23,9 @@ class Wall : public Model {
 
 public:
 
-    /*
-     *  Side texture constants
-     */
-    static constexpr int kTEXTURE_TOP = 0;
-    static constexpr int kTEXTURE_WALL = 1;
-    static constexpr int kTEXTURE_FLOOR = 2;
+    static constexpr char kWALL_TEXTURE_FILE[] = "assets/wall.png";
+    static constexpr char kSKY_TEXTURE_FILE[] = "assets/sky.png";
+    static constexpr char kFLOOR_TEXTURE_FILE[] = "assets/floor.png";
 
     Wall(glm::vec3 scale, glm::vec4 location, std::unique_ptr<EngineRenderer> renderer);
 

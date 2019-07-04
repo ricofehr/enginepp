@@ -9,8 +9,6 @@
 
 #include "nextfloor/objects/model.h"
 
-#include <glm/glm.hpp>
-
 #include "nextfloor/objects/engine_renderer.h"
 
 namespace nextfloor {
@@ -25,36 +23,22 @@ class Brick : public Model {
 
 public:
 
+    static constexpr char kTEXTURE_FILE[] = "assets/brique.png";
+
     /**
      *  Constructor
      *  @param scale is the float scale factor of native coords
      *  @param location is the center point of the brick
+     *  @param renderer is the renderer object
      */
     Brick(float scale, glm::vec4 location, std::unique_ptr<EngineRenderer> renderer);
 
-    /**
-     *  Default Move constructor
-     */
     Brick(Brick&&) = default;
-
-    /**
-     *  Default Move assignment
-     */
     Brick& operator=(Brick&&) = default;
 
-    /**
-     *  Copy constructor Deleted (Model3D Inherit)
-     */
     Brick(const Brick&) = delete;
-
-    /**
-     *  Copy assignment Deleted (Model3D Inherit)
-     */
     Brick& operator=(const Brick&) = delete;
 
-    /**
-     *  Default destructor
-     */
     ~Brick() override = default;
 };
 

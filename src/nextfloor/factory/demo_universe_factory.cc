@@ -158,7 +158,7 @@ void DemoUniverseFactory::GenerateWallYFixed(nextfloor::objects::Room* room, int
             auto grid_coords = glm::ivec3(j,i,k);
             if (room->IsInsideWall(grid_coords)) {
                 auto location_wall = CalculateLocationWallYFixed(grid, grid_coords);
-                auto renderer = std::make_unique<GlCubeRenderer>((i == 0) ? "assets/floor.png" : "assets/sky.png");
+                auto renderer = std::make_unique<GlCubeRenderer>((i == 0) ? Wall::kFLOOR_TEXTURE_FILE : Wall::kSKY_TEXTURE_FILE);
                 auto wall_ptr{std::make_unique<Wall>(scale_wall, location_wall, std::move(renderer))};
                 room->add_child(std::move(wall_ptr));
             }
@@ -182,7 +182,7 @@ void DemoUniverseFactory::GenerateWallXFixed(nextfloor::objects::Room* room, int
             auto grid_coords = glm::ivec3(i,j,k);
             if (room->IsInsideWall(grid_coords)) {
                 auto location_wall = CalculateLocationWallXFixed(grid, grid_coords);
-                auto renderer = std::make_unique<GlCubeRenderer>("assets/wall.png");
+                auto renderer = std::make_unique<GlCubeRenderer>(Wall::kWALL_TEXTURE_FILE);
                 auto wall_ptr{std::make_unique<Wall>(scale_wall, location_wall, std::move(renderer))};
                 room->add_child(std::move(wall_ptr));
             }
@@ -206,7 +206,7 @@ void DemoUniverseFactory::GenerateWallZFixed(nextfloor::objects::Room* room, int
             auto grid_coords = glm::ivec3(k,j,i);
             if (room->IsInsideWall(grid_coords)) {
                 auto location_wall = CalculateLocationWallZFixed(grid, grid_coords);
-                auto renderer = std::make_unique<GlCubeRenderer>("assets/wall.png");
+                auto renderer = std::make_unique<GlCubeRenderer>(Wall::kWALL_TEXTURE_FILE);
                 auto wall_ptr{std::make_unique<Wall>(scale_wall, location_wall, std::move(renderer))};
                 room->add_child(std::move(wall_ptr));
             }
@@ -221,9 +221,8 @@ void DemoUniverseFactory::GenerateBrick(nextfloor::objects::Room* room) const
     auto location_brick = grid->CalculateFirstPointInGrid() + glm::vec3(3.0f);
 
     using nextfloor::renderer::GlCubeRenderer;
-    auto renderer = std::make_unique<GlCubeRenderer>("assets/brique.png");
-
     using nextfloor::objects::Brick;
+    auto renderer = std::make_unique<GlCubeRenderer>(Brick::kTEXTURE_FILE);
     auto obj = std::make_unique<Brick>(scale,
                                        glm::vec4(location_brick, 0.0f),
                                        std::move(renderer));
