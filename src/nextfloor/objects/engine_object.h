@@ -35,6 +35,8 @@ public:
 
     virtual ~EngineObject() = default;
 
+    virtual void InitBorder(std::unique_ptr<EngineBorder> border) noexcept = 0;
+
     virtual void Draw() = 0;
 
     virtual EngineObject* add_child(std::unique_ptr<EngineObject> child) noexcept = 0;

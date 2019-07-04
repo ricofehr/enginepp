@@ -4,16 +4,16 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_ROOMGRID_H_
-#define NEXTFLOOR_OBJECTS_ROOMGRID_H_
+#ifndef NEXTFLOOR_GRID_ROOMGRID_H_
+#define NEXTFLOOR_GRID_ROOMGRID_H_
 
-#include "nextfloor/objects/grid.h"
+#include "nextfloor/grid/grid.h"
 
 #include "nextfloor/objects/engine_object.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 /**
  *  @class RoomGrid
@@ -33,7 +33,7 @@ public:
 
     RoomGrid& operator=(const RoomGrid&) = delete;
 
-    ~RoomGrid();
+    virtual ~RoomGrid() override;
 
 protected:
 

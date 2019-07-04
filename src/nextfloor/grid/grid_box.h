@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_GRIDBOX_H_
-#define NEXTFLOOR_OBJECTS_GRIDBOX_H_
+#ifndef NEXTFLOOR_GRID_GRIDBOX_H_
+#define NEXTFLOOR_GRID_GRIDBOX_H_
 
 #include "nextfloor/objects/engine_grid_box.h"
 
@@ -16,7 +16,11 @@
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
+
+using nextfloor::objects::EngineGridBox;
+using nextfloor::objects::EngineGrid;
+using nextfloor::objects::EngineObject;
 
 /**
  *  @class GridBox

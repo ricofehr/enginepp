@@ -31,22 +31,24 @@ set(core_SRCS
 set(factory_SRCS
     src/nextfloor/factory/demo_universe_factory.cc)
 
+set(grid_SRCS
+    src/nextfloor/grid/grid.cc
+    src/nextfloor/grid/grid_box.cc
+    src/nextfloor/grid/room_grid.cc
+    src/nextfloor/grid/room_grid_box.cc
+    src/nextfloor/grid/universe_grid.cc
+    src/nextfloor/grid/universe_grid_box.cc)
+
 set(objects_SRCS
-    src/nextfloor/objects/border.cc
     src/nextfloor/objects/brick.cc
     src/nextfloor/objects/camera.cc
-    src/nextfloor/objects/grid.cc
-    src/nextfloor/objects/grid_box.cc
     src/nextfloor/objects/model.cc
     src/nextfloor/objects/room.cc
-    src/nextfloor/objects/room_grid.cc
-    src/nextfloor/objects/room_grid_box.cc
     src/nextfloor/objects/universe.cc
-    src/nextfloor/objects/universe_grid.cc
-    src/nextfloor/objects/universe_grid_box.cc
     src/nextfloor/objects/wall.cc)
 
 set(physics_SRCS
+    src/nextfloor/physics/border.cc
     src/nextfloor/physics/cl_collision.cc
     src/nextfloor/physics/collision.cc
     src/nextfloor/physics/serial_collision.cc
@@ -67,6 +69,7 @@ set(nextfloor_SRCS
     ${controller_SRCS}
     ${core_SRCS}
     ${factory_SRCS}
+    ${grid_SRCS}
     ${objects_SRCS}
     ${physics_SRCS}
     ${polygons_SRCS}
@@ -95,8 +98,15 @@ set(factory_HDRS
     src/nextfloor/factory/demo_universe_factory.h
     src/nextfloor/factory/universe_factory.h)
 
+set(grid_HDRS
+    src/nextfloor/grid/grid.h
+    src/nextfloor/grid/grid_box.h
+    src/nextfloor/grid/room_grid.h
+    src/nextfloor/grid/room_grid_box.h
+    src/nextfloor/grid/universe_grid.h
+    src/nextfloor/grid/universe_grid_box.h)
+
 set(objects_HDRS
-    src/nextfloor/objects/border.h
     src/nextfloor/objects/brick.h
     src/nextfloor/objects/camera.h
     src/nextfloor/objects/engine_border.h
@@ -105,18 +115,13 @@ set(objects_HDRS
     src/nextfloor/objects/engine_grid_box.h
     src/nextfloor/objects/engine_object.h
     src/nextfloor/objects/engine_renderer.h
-    src/nextfloor/objects/grid.h
-    src/nextfloor/objects/grid_box.h
-    src/nextfloor/objects/room_grid_box.h
     src/nextfloor/objects/model.h
     src/nextfloor/objects/room.h
-    src/nextfloor/objects/room_grid.h
     src/nextfloor/objects/universe.h
-    src/nextfloor/objects/universe_grid.h
-    src/nextfloor/objects/universe_grid_box.h
     src/nextfloor/objects/wall.h)
 
 set(physics_HDRS
+    src/nextfloor/physics/border.h
     src/nextfloor/physics/cl_collision.h
     src/nextfloor/physics/collision.h
     src/nextfloor/physics/serial_collision.h
@@ -138,7 +143,9 @@ set(nextfloor_HDRS
     ${controller_HDRS}
     ${core_HDRS}
     ${factory_HDRS}
+    ${grid_HDRS}
     ${objects_HDRS}
+    ${physics_HDRS}
     ${polygons_HDRS}
     ${renderer_HDRS})
 

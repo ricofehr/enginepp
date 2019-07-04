@@ -4,13 +4,13 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/universe_grid_box.h"
+#include "nextfloor/grid/universe_grid_box.h"
 
 #include "nextfloor/objects/room.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 
 UniverseGridBox::UniverseGridBox(glm::vec3 coords, EngineGrid* owner)
@@ -36,6 +36,6 @@ void UniverseGridBox::AddRoomWindow(int side)
     }
 }
 
-} // namespace objects
+} // namespace grid
 
 } // namespace nextfloor

@@ -4,11 +4,11 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/grid_box.h"
+#include "nextfloor/grid/grid_box.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 
 GridBox::GridBox(glm::vec3 coords, EngineGrid* owner)
@@ -55,6 +55,6 @@ bool GridBox::IsEmpty() const noexcept
     return occupants_.size() == 0;
 }
 
-} // namespace objects
+} // namespace grid
 
 } // namespace nextfloor

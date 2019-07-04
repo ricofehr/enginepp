@@ -23,21 +23,21 @@ class Wall : public Model {
 
 public:
 
-    static constexpr char kWALL_TEXTURE_FILE[] = "assets/wall.png";
-    static constexpr char kSKY_TEXTURE_FILE[] = "assets/sky.png";
-    static constexpr char kFLOOR_TEXTURE_FILE[] = "assets/floor.png";
+    static constexpr char kWALL_TEXTURE[] = "assets/wall.png";
+    static constexpr char kSKY_TEXTURE[] = "assets/sky.png";
+    static constexpr char kFLOOR_TEXTURE[] = "assets/floor.png";
 
-    Wall(glm::vec3 scale, glm::vec4 location, std::unique_ptr<EngineRenderer> renderer);
+    Wall(glm::vec3 scale, glm::vec4 location);
 
     Wall(Wall&&) = default;
-
     Wall& operator=(Wall&&) = default;
 
     Wall(const Wall&) = delete;
-
     Wall& operator=(const Wall&) = delete;
 
     ~Wall() override = default;
+
+    void InitRenderer(std::unique_ptr<EngineRenderer> renderer) noexcept;
 };
 
 } // namespace objects

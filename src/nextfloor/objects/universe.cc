@@ -11,8 +11,8 @@
 #include <iostream>
 #include <tbb/tbb.h>
 
-#include "nextfloor/objects/border.h"
-#include "nextfloor/objects/universe_grid.h"
+#include "nextfloor/objects/engine_border.h"
+#include "nextfloor/objects/engine_grid.h"
 #include "nextfloor/objects/room.h"
 #include "nextfloor/core/common_services.h"
 
@@ -23,13 +23,17 @@ namespace objects {
 Universe::Universe()
 {
     type_ = kMODEL_UNIVERSE;
-    grid_ = std::make_unique<UniverseGrid>(this);
-    border_ = std::make_unique<Border>(grid_->scale_vector(),
-                                       glm::vec4(0.0f));
+}
+
+void Universe::InitGrid(std::unique_ptr<EngineGrid> grid) noexcept
+{
+    grid_ = std::move(grid);
 }
 
 void Universe::Draw() noexcept
 {
+    assert(grid_ != nullptr);
+    assert(border_ != nullptr);
     //using nextfloor::core::CommonServices;
 
     //auto clipping = CommonServices::getConfig()->getClippingLevel();
@@ -77,7 +81,7 @@ void Universe::Draw() noexcept
 
 void Universe::InitDoorsForRooms() noexcept
 {
-    dynamic_cast<UniverseGrid*>(grid_.get())->InitDoorsAndWindowsForRooms();
+    grid_->InitDoorsAndWindows();
 }
 
 } // namespace objects

@@ -1,17 +1,17 @@
 /**
- *  @file grid_box.h
- *  @brief GridBox class header
+ *  @file universe_grid_box.h
+ *  @brief UniverseGridBox class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_UNIVERSEGRIDBOX_H_
-#define NEXTFLOOR_OBJECTS_UNIVERSEGRIDBOX_H_
+#ifndef NEXTFLOOR_GRID_UNIVERSEGRIDBOX_H_
+#define NEXTFLOOR_GRID_UNIVERSEGRIDBOX_H_
 
-#include "nextfloor/objects/grid_box.h"
+#include "nextfloor/grid/grid_box.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 /**
  *  @class UniverseGridBox
@@ -38,8 +38,8 @@ public:
     void AddRoomWindow(int side);
 };
 
-} // namespace objects
+} // namespace grid
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_UNIVERSEGRIDBOX_H_
+#endif // NEXTFLOOR_GRID_UNIVERSEGRIDBOX_H_

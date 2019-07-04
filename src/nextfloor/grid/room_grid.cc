@@ -4,17 +4,17 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/room_grid.h"
+#include "nextfloor/grid/room_grid.h"
 
-#include "nextfloor/objects/room_grid_box.h"
+#include "nextfloor/grid/room_grid_box.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 
-RoomGrid::RoomGrid(EngineObject* owner) 
-: Grid(owner)
+RoomGrid::RoomGrid(EngineObject* owner)
+   :Grid(owner)
 {
     type_ = kGRID_ROOM;
     InitGrid();
@@ -30,6 +30,6 @@ RoomGrid::~RoomGrid()
     DeleteGrid();
 }
 
-} // namespace objects
+} // namespace grid
 
 } // namespace nextfloor

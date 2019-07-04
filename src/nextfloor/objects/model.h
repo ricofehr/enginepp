@@ -65,6 +65,8 @@ public:
     friend bool operator==(const Model& o1, const Model& o2);
     friend bool operator!=(const Model& o1, const Model& o2);
 
+    virtual void InitBorder(std::unique_ptr<EngineBorder> border) noexcept override final;
+
     virtual void Draw() noexcept override;
 
     virtual EngineObject* add_child(std::unique_ptr<EngineObject> object) noexcept override final;

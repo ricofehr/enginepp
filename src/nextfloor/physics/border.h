@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_BORDER_H_
-#define NEXTFLOOR_OBJECTS_BORDER_H_
+#ifndef NEXTFLOOR_PHYSICS_BORDER_H_
+#define NEXTFLOOR_PHYSICS_BORDER_H_
 
 #include "nextfloor/objects/engine_border.h"
 
@@ -20,7 +20,9 @@
 
 namespace nextfloor {
 
-namespace objects {
+namespace physics {
+
+using nextfloor::objects::EngineBorder;
 
 /**
  *  @class Border
@@ -109,5 +111,5 @@ private:
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_BORDER_H_
+#endif // NEXTFLOOR_PHYSICS_BORDER_H_
 

@@ -31,7 +31,7 @@ public:
      *  @param location is the center point of the brick
      *  @param renderer is the renderer object
      */
-    Brick(float scale, glm::vec4 location, std::unique_ptr<EngineRenderer> renderer);
+    Brick(float scale, glm::vec4 location);
 
     Brick(Brick&&) = default;
     Brick& operator=(Brick&&) = default;
@@ -40,6 +40,8 @@ public:
     Brick& operator=(const Brick&) = delete;
 
     ~Brick() override = default;
+
+    void InitRenderer(std::unique_ptr<EngineRenderer> renderer) noexcept;
 };
 
 } // namespace objects

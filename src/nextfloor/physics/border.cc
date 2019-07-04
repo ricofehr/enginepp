@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/border.h"
+#include "nextfloor/physics/border.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -13,7 +13,7 @@
 
 namespace nextfloor {
 
-namespace objects {
+namespace physics {
 
 namespace {
 

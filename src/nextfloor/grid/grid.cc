@@ -4,16 +4,16 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/grid.h"
+#include "nextfloor/grid/grid.h"
 
 #include <tbb/tbb.h>
 #include <iostream>
 
-#include "nextfloor/objects/grid_box.h"
+#include "nextfloor/grid/grid_box.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 namespace {
 
@@ -245,110 +245,9 @@ void Grid::DisplayGrid() const noexcept
     }
 }
 
-// std::vector<EngineObject*> Grid::FindItemsInGrid(glm::ivec3 box_coords_in_grid) const noexcept
-// {
-//     auto x = box_coords_in_grid.x;
-//     auto y = box_coords_in_grid.y;
-//     auto z = box_coords_in_grid.z;
-
-//     return boxes_[x][y][z]->occupants();
-// }
-
 void Grid::ComputePlacementsInGrid() noexcept
 {
     std::cout << "ComputePlacements" << std::endl;
-
-    // std::vector<glm::vec3> coords = border_->getCoordsModelMatrixComputed();
-    // Model3D* parent_new{nullptr};
-
-    // auto x1 = coords.at(0)[0];
-    // auto y1 = coords.at(0)[1];
-    // auto z1 = coords.at(0)[2];
-
-    // auto x2 = coords.at(0)[0];
-    // auto y2 = coords.at(0)[1];
-    // auto z2 = coords.at(0)[2];
-
-    // /* Find the extremities coordinates of the border */
-    // for (auto &point : coords) {
-    //     if (point[0] < x1) {
-    //         x1 = point[0];
-    //     }
-
-    //     if (point[1] < y1) {
-    //         y1 = point[1];
-    //     }
-
-    //     if (point[2] < z1) {
-    //         z1 = point[2];
-    //     }
-
-    //     if (point[0] > x2) {
-    //         x2 = point[0];
-    //     }
-
-    //     if (point[1] > y2) {
-    //         y2 = point[1];
-    //     }
-
-    //     if (point[2] > z2) {
-    //         z2 = point[2];
-    //     }
-    // }
-
-    // auto grid0 = parent_->ComputeFirstPointInGrid();
-    // auto grid_unit = glm::vec3(parent_->grid_unitx(), parent_->grid_unity(), parent_->grid_unitz());
-
-    // /* Reset current position placements */
-    // clear_placements();
-
-    // int size_x = static_cast<int>(ceil((x2 - x1) / grid_unit[0]));
-    // int size_y = static_cast<int>(ceil((y2 - y1) / grid_unit[1]));
-    // int size_z = static_cast<int>(ceil((z2 - z1) / grid_unit[2]));
-
-    // tbb::parallel_for (0, size_x, 1, [&](int cnt_x) {
-    //     tbb::parallel_for (0, size_y, 1, [&](int cnt_y) {
-    //         tbb::parallel_for (0, size_z, 1, [&](int cnt_z) {
-    //             parent_new = parent_;
-
-    //             float x = x1 + cnt_x * grid_unit[0];
-    //             float y = y1 + cnt_y * grid_unit[1];
-    //             float z = z1 + cnt_z * grid_unit[2];
-
-    //             auto tmp = (glm::vec3(x, y, z) - grid0) / grid_unit;
-    //             auto i = static_cast<int>(tmp[0]);
-    //             auto j = static_cast<int>(tmp[1]);
-    //             auto k = static_cast<int>(tmp[2]);
-
-    //             /* if i,j,k are not valid, select the good side where to search */
-    //             auto parent_side = parent_->BeInTheRightPlace(i, j, k);
-
-    //             /* Find a new parent */
-    //             if (parent_side != kSAME) {
-    //                 parent_new = parent_->FindNeighborSide(parent_side);
-    //             }
-
-    //             /* Add placement only if a parent exist and doesnt change */
-    //             if (parent_new != nullptr && parent_new == parent_) {
-    //                 add_placement(i, j, k);
-    //             }
-    //         });
-    //     });
-    // });
-
-    // /* All coords are into other parent */
-    // if (parent_new != nullptr &&
-    //     parent_new != parent_ &&
-    //     placements_.size() == 0) {
-    //     /* change parent compute */
-    //     parent_new->add_child(std::move(parent_->TransfertChild(this)));
-    // }
-
-    // /* No one parent, the current object
-    //    is outside World, reverse direction */
-    // if (IsMoved() && placements_.size() == 0) {
-    //     InverseMove();
-    // }
 }
 
 bool Grid::IsInside(glm::vec3 location_object) const noexcept
@@ -395,6 +294,6 @@ void Grid::DeleteGrid() noexcept
     }
 }
 
-} // namespace objects
+} // namespace grid
 
 } // namespace nextfloor

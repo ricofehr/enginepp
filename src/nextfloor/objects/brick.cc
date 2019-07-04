@@ -8,22 +8,24 @@
 
 #include <memory>
 
-#include "nextfloor/objects/border.h"
 #include "nextfloor/polygons/cube.h"
 
 namespace nextfloor {
 
 namespace objects {
 
-Brick::Brick(float scale, glm::vec4 location, std::unique_ptr<EngineRenderer> renderer)
+Brick::Brick(float scale, glm::vec4 location)
 {
     using nextfloor::polygons::Cube;
 
     type_ = kMODEL_BRICK;
-    renderer_ = std::move(renderer);
-    border_ = std::make_unique<Border>(scale, location); //, move);
     auto cube_ptr {std::make_unique<Cube>(scale, location)};
     meshes_.push_back(std::move(cube_ptr));
+}
+
+void Brick::InitRenderer(std::unique_ptr<EngineRenderer> renderer) noexcept
+{
+    renderer_ = std::move(renderer);
 }
 
 } // namespace objects

@@ -4,16 +4,16 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_UNIVERSEGRID_H_
-#define NEXTFLOOR_OBJECTS_UNIVERSEGRID_H_
+#ifndef NEXTFLOOR_GRID_UNIVERSEGRID_H_
+#define NEXTFLOOR_GRID_UNIVERSEGRID_H_
 
-#include "nextfloor/objects/grid.h"
+#include "nextfloor/grid/grid.h"
 
 #include "nextfloor/objects/engine_object.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 /**
  *  @class UniverseGrid
@@ -35,7 +35,7 @@ public:
 
     virtual ~UniverseGrid() override;
 
-    void InitDoorsAndWindowsForRooms() noexcept;
+    virtual void InitDoorsAndWindows() noexcept override final;
 
 protected:
 
@@ -90,8 +90,8 @@ private:
     static constexpr float kZ_LENGTH_BY_UNIVERSE_BOX = 16.0f;
 };
 
-} // namespace physics
+} // namespace grid
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_GRID_H_
+#endif // NEXTFLOOR_GRID_GRID_H_

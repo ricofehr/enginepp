@@ -4,16 +4,16 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/room_grid_box.h"
+#include "nextfloor/grid/room_grid_box.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
 
 
 RoomGridBox::RoomGridBox(glm::vec3 coords, EngineGrid* owner)
 :GridBox(coords, owner) { }
 
-} // namespace objects
+} // namespace grid
 
 } // namespace nextfloor

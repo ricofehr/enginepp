@@ -57,6 +57,7 @@ public:
      */
     void InitDoorsForRooms() noexcept;
 
+    void InitGrid(std::unique_ptr<EngineGrid> grid) noexcept;
 
 private:
 

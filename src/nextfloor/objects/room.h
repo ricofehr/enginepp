@@ -35,19 +35,17 @@ public:
     static constexpr int kSIDE_ROOF = 5;
 
     Room(glm::vec4 location);
-
     Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows);
 
     Room(Room&&) = default;
-
     Room& operator=(Room&&) = default;
 
     Room(const Room&) = delete;
-
     Room& operator=(const Room&) = delete;
 
     ~Room() override = default;
 
+    void InitGrid(std::unique_ptr<EngineGrid> grid) noexcept;
     bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;
 
     /*

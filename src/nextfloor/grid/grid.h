@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_GRID_H_
-#define NEXTFLOOR_OBJECTS_GRID_H_
+#ifndef NEXTFLOOR_GRID_GRID_H_
+#define NEXTFLOOR_GRID_GRID_H_
 
 #include <memory>
 #include <tbb/mutex.h>
@@ -14,7 +14,11 @@
 
 namespace nextfloor {
 
-namespace objects {
+namespace grid {
+
+using nextfloor::objects::EngineGrid;
+using nextfloor::objects::EngineGridBox;
+using nextfloor::objects::EngineObject;
 
 /**
  *  @class Grid
@@ -43,14 +47,14 @@ public:
     static constexpr int kCOLLISION_COUNTDOWN = 4;
 
     Grid(Grid&&) = default;
-
     Grid& operator=(Grid&&) = default;
 
     Grid(const Grid&) = delete;
-
     Grid& operator=(const Grid&) = delete;
 
     virtual ~Grid() override = default;
+
+    virtual void InitDoorsAndWindows() noexcept override {}
 
     virtual int IsPositionInTheGridEmpty(glm::ivec3 box_coords_in_grid) const noexcept override;
 
@@ -154,8 +158,8 @@ private:
     std::unique_ptr<EngineGridBox> ***boxes_;
 };
 
-} // namespace physics
+} // namespace grid
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_GRID_H_
+#endif // NEXTFLOOR_GRID_GRID_H_

@@ -6,9 +6,6 @@
 
 #include "nextfloor/objects/room.h"
 
-#include "nextfloor/objects/border.h"
-#include "nextfloor/objects/room_grid.h"
-
 namespace nextfloor {
 
 namespace objects {
@@ -20,9 +17,11 @@ Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_
     type_ = kMODEL_ROOM;
     doors_ = is_doors;
     windows_ = is_windows;
-    grid_ = std::make_unique<RoomGrid>(this);
-    border_ = std::make_unique<Border>(grid_->scale_vector(),
-                                       location);
+}
+
+void Room::InitGrid(std::unique_ptr<EngineGrid> grid) noexcept
+{
+    grid_ = std::move(grid);
 }
 
 bool Room::IsInsideWall(glm::ivec3 grid_coords) const noexcept

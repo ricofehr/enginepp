@@ -6,8 +6,6 @@
 
 #include "nextfloor/objects/camera.h"
 
-#include "nextfloor/objects/border.h"
-
 namespace nextfloor {
 
 namespace objects {
@@ -63,7 +61,6 @@ Camera::Camera(glm::vec4 location, float horizontal_angle, float vertical_angle)
     vertical_angle_ = vertical_angle;
     fov_ = 45.0f;
     type_ = kMODEL_CAMERA;
-    border_ = std::make_unique<Border>(1.0f, location);
 
     ComputeOrientation();
 

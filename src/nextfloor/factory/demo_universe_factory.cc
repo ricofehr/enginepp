@@ -11,6 +11,9 @@
 
 #include "nextfloor/core/common_services.h"
 #include "nextfloor/renderer/gl_cube_renderer.h"
+#include "nextfloor/physics/border.h"
+#include "nextfloor/grid/universe_grid.h"
+#include "nextfloor/grid/room_grid.h"
 
 namespace nextfloor {
 
@@ -101,9 +104,14 @@ glm::vec4 CalculateLocationWallZFixed(nextfloor::objects::EngineGrid* grid, glm:
 std::unique_ptr<nextfloor::objects::Universe> DemoUniverseFactory::GenerateUniverse() const
 {
     using nextfloor::objects::Room;
+    using nextfloor::grid::UniverseGrid;
+    using nextfloor::physics::Border;
     using nextfloor::core::CommonServices;
 
     auto universe = std::make_unique<nextfloor::objects::Universe>();
+    universe->InitGrid(std::make_unique<UniverseGrid>(universe.get()));
+    universe->InitBorder(std::make_unique<Border>(universe->grid()->scale_vector(), glm::vec4(0.0f)));
+
     std::vector<Room*> rooms;
     rooms.push_back(GenerateRoom(universe.get()));
     universe->InitDoorsForRooms();
@@ -121,13 +129,18 @@ std::unique_ptr<nextfloor::objects::Universe> DemoUniverseFactory::GenerateUnive
 nextfloor::objects::Room* DemoUniverseFactory::GenerateRoom(nextfloor::objects::Universe* universe) const
 {
     using nextfloor::objects::Room;
+    using nextfloor::grid::RoomGrid;
+    using nextfloor::physics::Border;
 
     auto location = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    auto room_ptr{std::make_unique<Room>(location)};
-    room_ptr->add_child(GenerateCamera(location));
+    auto room = std::make_unique<Room>(location);
+    room->InitGrid(std::make_unique<RoomGrid>(room.get()));
+    room->InitBorder(std::make_unique<Border>(room->grid()->scale_vector(), location));
 
-    auto room = dynamic_cast<Room*>(universe->add_child(std::move(room_ptr)));
-    return room;
+    room->add_child(GenerateCamera(location));
+
+    auto room_raw = dynamic_cast<Room*>(universe->add_child(std::move(room)));
+    return room_raw;
 }
 
 void DemoUniverseFactory::GenerateWalls(nextfloor::objects::Room* room) const
@@ -147,6 +160,7 @@ void DemoUniverseFactory::GenerateWallYFixed(nextfloor::objects::Room* room, int
     using nextfloor::objects::Wall;
     using nextfloor::objects::Room;
     using nextfloor::renderer::GlCubeRenderer;
+    using nextfloor::physics::Border;
 
     auto grid = room->grid();
     auto box_counts = grid->box_counts();
@@ -158,9 +172,10 @@ void DemoUniverseFactory::GenerateWallYFixed(nextfloor::objects::Room* room, int
             auto grid_coords = glm::ivec3(j,i,k);
             if (room->IsInsideWall(grid_coords)) {
                 auto location_wall = CalculateLocationWallYFixed(grid, grid_coords);
-                auto renderer = std::make_unique<GlCubeRenderer>((i == 0) ? Wall::kFLOOR_TEXTURE_FILE : Wall::kSKY_TEXTURE_FILE);
-                auto wall_ptr{std::make_unique<Wall>(scale_wall, location_wall, std::move(renderer))};
-                room->add_child(std::move(wall_ptr));
+                auto wall = std::make_unique<Wall>(scale_wall, location_wall);
+                wall->InitRenderer(std::make_unique<GlCubeRenderer>((i == 0) ? Wall::kFLOOR_TEXTURE : Wall::kSKY_TEXTURE));
+                wall->InitBorder(std::make_unique<Border>(scale_wall, location_wall));
+                room->add_child(std::move(wall));
             }
         });
     });
@@ -171,6 +186,7 @@ void DemoUniverseFactory::GenerateWallXFixed(nextfloor::objects::Room* room, int
     using nextfloor::objects::Wall;
     using nextfloor::objects::Room;
     using nextfloor::renderer::GlCubeRenderer;
+    using nextfloor::physics::Border;
 
     auto grid = room->grid();
     auto box_counts = grid->box_counts();
@@ -182,9 +198,10 @@ void DemoUniverseFactory::GenerateWallXFixed(nextfloor::objects::Room* room, int
             auto grid_coords = glm::ivec3(i,j,k);
             if (room->IsInsideWall(grid_coords)) {
                 auto location_wall = CalculateLocationWallXFixed(grid, grid_coords);
-                auto renderer = std::make_unique<GlCubeRenderer>(Wall::kWALL_TEXTURE_FILE);
-                auto wall_ptr{std::make_unique<Wall>(scale_wall, location_wall, std::move(renderer))};
-                room->add_child(std::move(wall_ptr));
+                auto wall = std::make_unique<Wall>(scale_wall, location_wall);
+                wall->InitRenderer(std::make_unique<GlCubeRenderer>(Wall::kWALL_TEXTURE));
+                wall->InitBorder(std::make_unique<Border>(scale_wall, location_wall));
+                room->add_child(std::move(wall));
             }
         });
     });
@@ -195,6 +212,7 @@ void DemoUniverseFactory::GenerateWallZFixed(nextfloor::objects::Room* room, int
     using nextfloor::objects::Wall;
     using nextfloor::objects::Room;
     using nextfloor::renderer::GlCubeRenderer;
+    using nextfloor::physics::Border;
 
     auto grid = room->grid();
     auto box_counts = grid->box_counts();
@@ -206,9 +224,10 @@ void DemoUniverseFactory::GenerateWallZFixed(nextfloor::objects::Room* room, int
             auto grid_coords = glm::ivec3(k,j,i);
             if (room->IsInsideWall(grid_coords)) {
                 auto location_wall = CalculateLocationWallZFixed(grid, grid_coords);
-                auto renderer = std::make_unique<GlCubeRenderer>(Wall::kWALL_TEXTURE_FILE);
-                auto wall_ptr{std::make_unique<Wall>(scale_wall, location_wall, std::move(renderer))};
-                room->add_child(std::move(wall_ptr));
+                auto wall = std::make_unique<Wall>(scale_wall, location_wall);
+                wall->InitRenderer(std::make_unique<GlCubeRenderer>(Wall::kWALL_TEXTURE));
+                wall->InitBorder(std::make_unique<Border>(scale_wall, location_wall));
+                room->add_child(std::move(wall));
             }
         });
     });
@@ -216,25 +235,28 @@ void DemoUniverseFactory::GenerateWallZFixed(nextfloor::objects::Room* room, int
 
 void DemoUniverseFactory::GenerateBrick(nextfloor::objects::Room* room) const
 {
+    using nextfloor::renderer::GlCubeRenderer;
+    using nextfloor::objects::Brick;
+    using nextfloor::physics::Border;
+
     float scale = 1.0f;
     auto grid = room->grid();
     auto location_brick = grid->CalculateFirstPointInGrid() + glm::vec3(3.0f);
 
-    using nextfloor::renderer::GlCubeRenderer;
-    using nextfloor::objects::Brick;
-    auto renderer = std::make_unique<GlCubeRenderer>(Brick::kTEXTURE_FILE);
-    auto obj = std::make_unique<Brick>(scale,
-                                       glm::vec4(location_brick, 0.0f),
-                                       std::move(renderer));
-
-    room->add_child(std::move(obj));
+    auto brick = std::make_unique<Brick>(scale, glm::vec4(location_brick, 0.0f));
+    brick->InitBorder(std::make_unique<Border>(scale, glm::vec4(location_brick, 0.0f)));
+    brick->InitRenderer(std::make_unique<GlCubeRenderer>(Brick::kTEXTURE_FILE));
+    room->add_child(std::move(brick));
 }
 
 std::unique_ptr<nextfloor::objects::Camera> DemoUniverseFactory::GenerateCamera(glm::vec3 location) const
 {
     using nextfloor::objects::Camera;
-    return std::make_unique<Camera>(glm::vec4(location.x, location.y, location.z + 5.0f, 0.0f),
-                                    3.14f, 0.0f);
+    using nextfloor::physics::Border;
+    auto location_camera = glm::vec4(location.x, location.y, location.z + 5.0f, 0.0f);
+    auto camera = std::make_unique<Camera>(location_camera, 3.14f, 0.0f);
+    camera->InitBorder(std::make_unique<Border>(1.0f, location_camera));
+    return camera;
 }
 
 } // namespace factory

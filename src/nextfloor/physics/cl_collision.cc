@@ -95,7 +95,7 @@ void ClCollision::InitCollisionEngine()
 }
 
 float ClCollision::ComputeCollision(nextfloor::objects::EngineObject* target,
-                                          nextfloor::objects::EngineObject* obstacle)
+                                    nextfloor::objects::EngineObject* obstacle)
 {
     auto target_border = target->border();
     auto obstacle_border = obstacle->border();
