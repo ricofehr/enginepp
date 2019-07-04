@@ -25,15 +25,10 @@ class GameWindow {
 public:
 
     GameWindow();
-
     GameWindow(GameWindow&&) = default;
-
     GameWindow& operator=(GameWindow&&) = default;
-
     GameWindow(const GameWindow&) = default;
-
     GameWindow& operator=(const GameWindow&) = default;
-
     ~GameWindow();
 
     void Initialization();

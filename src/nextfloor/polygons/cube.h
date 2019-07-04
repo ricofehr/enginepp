@@ -7,11 +7,9 @@
 #ifndef NEXTFLOOR_POLYGONS_CUBE_H_
 #define NEXTFLOOR_POLYGONS_CUBE_H_
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-
 #include "nextfloor/polygons/polygon.h"
 
+#include <glm/glm.hpp>
 
 namespace nextfloor {
 
@@ -27,9 +25,7 @@ public:
 
     Cube(glm::vec3 scale, glm::vec4 location);
 
-    Cube(float scale, glm::vec4 location, GLuint vertexbuffer, GLuint texturebuffer);
-
-    Cube(glm::vec3 scale, glm::vec4 location, GLuint vertexbuffer, GLuint texturebuffer);
+    Cube(float scale, glm::vec4 location);
 
     Cube(Cube&&) = default;
 
@@ -41,15 +37,7 @@ public:
 
     virtual ~Cube() override = default;
 
-    void Draw() noexcept override final;
-
-private:
-
-    /** The vertex buffer reference */
-    GLuint vertexbuffer_;
-
-    /** The texture buffer reference */
-    GLuint texturebuffer_;
+    void Draw(nextfloor::objects::EngineRenderer* renderer) noexcept override final;
 };
 
 } // namespace polygons

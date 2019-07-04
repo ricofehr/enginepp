@@ -47,8 +47,6 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::Camera> GenerateCamera(glm::vec3 location) const override final;
 
-    virtual void GenerateBuffers() const override final;
-
 private:
 
     void GenerateWallXFixed(nextfloor::objects::Room* room, int side) const;

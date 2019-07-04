@@ -11,6 +11,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "nextfloor/objects/engine_border.h"
+
 namespace nextfloor {
 
 namespace objects {
@@ -55,6 +57,12 @@ public:
     virtual int id() = 0;
 
     virtual glm::vec3 location() const noexcept = 0;
+
+    virtual EngineBorder* border() const noexcept = 0;
+
+    virtual bool IsLastObstacle(EngineObject* obstacle) const noexcept = 0;
+
+    virtual void UpdateObstacleIfNearer(EngineObject* obstacle, float obstacle_distance) noexcept = 0;
 
 protected:
 

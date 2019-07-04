@@ -121,17 +121,17 @@ glm::vec3 Border::RetrieveFirstPointAfterPartedMove(float move_part)
     return getFirstPoint() + move_part * glm::vec3(move().x, move().y, move().z);
 }
 
-bool Border::IsObstacleInCollisionAfterPartedMove(Border* obstacle, float move_part)
+bool Border::IsObstacleInCollisionAfterPartedMove(EngineBorder* obstacle, float move_part)
 {
-    if (!IsObstacleInSameWidthAfterPartedMove(obstacle, move_part)) {
+    if (!IsObstacleInSameWidthAfterPartedMove(dynamic_cast<Border*>(obstacle), move_part)) {
         return false;
     }
 
-    if (!IsObstacleInSameHeightAfterPartedMove(obstacle, move_part)) {
+    if (!IsObstacleInSameHeightAfterPartedMove(dynamic_cast<Border*>(obstacle), move_part)) {
         return false;
     }
 
-    if (!IsObstacleInSameDepthAfterPartedMove(obstacle, move_part)) {
+    if (!IsObstacleInSameDepthAfterPartedMove(dynamic_cast<Border*>(obstacle), move_part)) {
         return false;
     }
 

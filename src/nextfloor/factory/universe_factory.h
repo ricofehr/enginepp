@@ -51,8 +51,6 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::Camera> GenerateCamera(glm::vec3 location) const = 0;
 
-    virtual void GenerateBuffers() const = 0;
-
 protected:
 
     UniverseFactory() = default;

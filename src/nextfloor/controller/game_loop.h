@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h>
 
 #include "nextfloor/objects/universe.h"
+#include "nextfloor/objects/engine_collision.h"
 #include "nextfloor/renderer/game_window.h"
 
 namespace nextfloor {
@@ -25,7 +26,8 @@ class GameLoop {
 
 public:
 
-    GameLoop(nextfloor::renderer::GameWindow* game_window);
+    GameLoop(nextfloor::renderer::GameWindow* game_window,
+             nextfloor::objects::EngineCollision* engine_collision);
 
     GameLoop(GameLoop&&) = default;
 
@@ -47,6 +49,7 @@ private:
 
     nextfloor::renderer::GameWindow* game_window_{nullptr};
 
+    nextfloor::objects::EngineCollision* engine_collision_{nullptr};
 };
 
 } // namespace renderer

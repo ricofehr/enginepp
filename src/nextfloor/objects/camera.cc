@@ -6,6 +6,8 @@
 
 #include "nextfloor/objects/camera.h"
 
+#include "nextfloor/objects/border.h"
+
 namespace nextfloor {
 
 namespace objects {

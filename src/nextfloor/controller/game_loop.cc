@@ -21,12 +21,14 @@ static bool sInstanciated = false;
 
 } // anonymous namespace
 
-GameLoop::GameLoop(nextfloor::renderer::GameWindow* game_window)
+GameLoop::GameLoop(nextfloor::renderer::GameWindow* game_window,
+                   nextfloor::objects::EngineCollision* engine_collision)
 {
     assert(!sInstanciated);
     sInstanciated = true;
 
     game_window_ = game_window;
+    engine_collision_ = engine_collision;
     assert(game_window_ != nullptr);
 }
 

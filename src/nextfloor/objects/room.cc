@@ -6,6 +6,7 @@
 
 #include "nextfloor/objects/room.h"
 
+#include "nextfloor/objects/border.h"
 #include "nextfloor/objects/room_grid.h"
 
 namespace nextfloor {

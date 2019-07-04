@@ -19,6 +19,8 @@
 #include "nextfloor/core/common_services.h"
 #include "nextfloor/renderer/game_window.h"
 
+#include "nextfloor/objects/engine_collision.h"
+
 namespace nextfloor {
 
 namespace objects {
@@ -48,7 +50,7 @@ void Model::Draw() noexcept
     /* Draw meshes of current object */
     for (auto &mesh : meshes_) {
         mesh->UpdateModelViewProjectionMatrix();
-        mesh->Draw();
+        mesh->Draw(renderer_.get());
     }
 
     /* Draw childs objects */
@@ -97,6 +99,28 @@ std::unique_ptr<EngineObject> Model::remove_child(EngineObject* child) noexcept
     }
 
     return ret;
+}
+
+bool Model::IsLastObstacle(EngineObject* obstacle) const noexcept
+{
+    return obstacle_ == obstacle;
+}
+
+void Model::UpdateObstacleIfNearer(EngineObject* obstacle, float obstacle_distance) noexcept
+{
+    /* Update obstacle and distance if lower than former */
+    lock();
+    if (obstacle_distance < border_->distance()) {
+        obstacle_ = obstacle;
+        border_->set_distance(-obstacle_distance);
+
+        /* Print debug if setting */
+        using nextfloor::core::CommonServices;
+        if (CommonServices::getConfig()->getDebugLevel() >= CommonServices::getLog()->kDEBUG_COLLISION) {
+            std::cerr << "Object::" << id() << " - Obstacle::" << obstacle->id() << " - Distance::" << obstacle_distance << std::endl;
+        }
+    }
+    unlock();
 }
 
 } // namespace objects

@@ -7,9 +7,11 @@
 #ifndef NEXTFLOOR_OBJECTS_BRICK_H_
 #define NEXTFLOOR_OBJECTS_BRICK_H_
 
+#include "nextfloor/objects/model.h"
+
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/model.h"
+#include "nextfloor/objects/engine_renderer.h"
 
 namespace nextfloor {
 
@@ -25,15 +27,10 @@ public:
 
     /**
      *  Constructor
-     */
-    Brick();
-
-    /**
-     *  Constructor
      *  @param scale is the float scale factor of native coords
      *  @param location is the center point of the brick
      */
-    Brick(float scale, glm::vec4 location);
+    Brick(float scale, glm::vec4 location, std::unique_ptr<EngineRenderer> renderer);
 
     /**
      *  Default Move constructor
@@ -59,12 +56,6 @@ public:
      *  Default destructor
      */
     ~Brick() override = default;
-
-    /**
-     *  Fill vertex and texture into GL Buffers
-     *  Needs a sole execution for all Bricks object.
-     */
-    static void CreateBuffers() noexcept;
 };
 
 } // namespace objects

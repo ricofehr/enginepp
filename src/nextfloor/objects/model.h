@@ -16,8 +16,9 @@
 #include <tbb/tbb.h>
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/border.h"
+#include "nextfloor/objects/engine_border.h"
 #include "nextfloor/objects/engine_grid.h"
+#include "nextfloor/objects/engine_renderer.h"
 #include "nextfloor/polygons/polygon.h"
 
 namespace nextfloor {
@@ -67,13 +68,10 @@ public:
     virtual void Draw() noexcept override;
 
     virtual EngineObject* add_child(std::unique_ptr<EngineObject> object) noexcept override final;
-
     virtual std::unique_ptr<EngineObject> remove_child(EngineObject* child) noexcept override;
 
     virtual void lock() override final { object_mutex_.lock(); }
-
     virtual void unlock() override final { object_mutex_.unlock(); }
-
     virtual int id() override { return id_; }
 
     virtual void set_parent(EngineObject* parent) override { parent_ = parent; }
@@ -92,6 +90,15 @@ public:
         return border_->getCoordsModelMatrixComputed();
     }
 
+    virtual EngineBorder* border() const noexcept override final
+    {
+        return border_.get();
+    }
+
+    virtual bool IsLastObstacle(EngineObject* obstacle) const noexcept override final;
+
+    virtual void UpdateObstacleIfNearer(EngineObject* obstacle, float obstacle_distance) noexcept override final;
+
 protected:
 
     Model();
@@ -109,16 +116,20 @@ protected:
     /** Parent of the current 3d model */
     EngineObject* parent_{nullptr};
 
-    std::unique_ptr<Border> border_{nullptr};
+    std::unique_ptr<EngineBorder> border_{nullptr};
+
+    std::unique_ptr<EngineRenderer> renderer_{nullptr};
 
 private:
 
     void InitCollisionEngine();
 
+    int id_{0};
+
     /** Mutex ensures thread safe instructions */
     tbb::mutex object_mutex_;
 
-    int id_{0};
+    EngineObject* obstacle_{nullptr};
 };
 
 } // namespace graphics

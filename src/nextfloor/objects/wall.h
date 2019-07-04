@@ -30,7 +30,7 @@ public:
     static constexpr int kTEXTURE_WALL = 1;
     static constexpr int kTEXTURE_FLOOR = 2;
 
-    Wall(glm::vec3 scale, glm::vec4 location, int face);
+    Wall(glm::vec3 scale, glm::vec4 location, std::unique_ptr<EngineRenderer> renderer);
 
     Wall(Wall&&) = default;
 
@@ -41,12 +41,6 @@ public:
     Wall& operator=(const Wall&) = delete;
 
     ~Wall() override = default;
-
-    /**
-     *  Fill vertex and texture into GL Buffers
-     *  Needs a sole execution for all Walls object.
-     */
-    static void CreateBuffers();
 };
 
 } // namespace objects

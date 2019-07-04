@@ -8,8 +8,9 @@
 #define NEXTFLOOR_POLYGONS_POLYGON_H_
 
 #include <math.h>
-#include <GL/glew.h>
 #include <glm/glm.hpp>
+
+#include "nextfloor/objects/engine_renderer.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -32,7 +33,7 @@ public:
 
     void UpdateModelViewProjectionMatrix();
 
-    virtual void Draw() = 0;
+    virtual void Draw(nextfloor::objects::EngineRenderer* renderer) = 0;
 
 
     inline void MoveLocation() noexcept

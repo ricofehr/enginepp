@@ -11,6 +11,7 @@
 #include <iostream>
 #include <tbb/tbb.h>
 
+#include "nextfloor/objects/border.h"
 #include "nextfloor/objects/universe_grid.h"
 #include "nextfloor/objects/room.h"
 #include "nextfloor/core/common_services.h"

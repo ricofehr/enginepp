@@ -47,19 +47,20 @@ set(objects_SRCS
     src/nextfloor/objects/wall.cc)
 
 set(physics_SRCS
-    src/nextfloor/physics/cl_collision_engine.cc
-    src/nextfloor/physics/collision_engine.cc
-    src/nextfloor/physics/serial_collision_engine.cc
-    src/nextfloor/physics/tbb_collision_engine.cc)
+    src/nextfloor/physics/cl_collision.cc
+    src/nextfloor/physics/collision.cc
+    src/nextfloor/physics/serial_collision.cc
+    src/nextfloor/physics/tbb_collision.cc)
 
 set(polygons_SRCS
     src/nextfloor/polygons/polygon.cc
     src/nextfloor/polygons/cube.cc)
 
 set(renderer_SRCS
-    src/nextfloor/renderer/game_window.cc
-    src/nextfloor/renderer/shader.cc
     src/nextfloor/renderer/fragment_shader.cc
+    src/nextfloor/renderer/game_window.cc
+    src/nextfloor/renderer/gl_cube_renderer.cc
+    src/nextfloor/renderer/shader.cc
     src/nextfloor/renderer/vertex_shader.cc)
 
 set(nextfloor_SRCS
@@ -67,6 +68,7 @@ set(nextfloor_SRCS
     ${core_SRCS}
     ${factory_SRCS}
     ${objects_SRCS}
+    ${physics_SRCS}
     ${polygons_SRCS}
     ${renderer_SRCS}
     src/nextfloor.cc)
@@ -97,9 +99,12 @@ set(objects_HDRS
     src/nextfloor/objects/border.h
     src/nextfloor/objects/brick.h
     src/nextfloor/objects/camera.h
+    src/nextfloor/objects/engine_border.h
+    src/nextfloor/objects/engine_collision.h
     src/nextfloor/objects/engine_grid.h
     src/nextfloor/objects/engine_grid_box.h
     src/nextfloor/objects/engine_object.h
+    src/nextfloor/objects/engine_renderer.h
     src/nextfloor/objects/grid.h
     src/nextfloor/objects/grid_box.h
     src/nextfloor/objects/room_grid_box.h
@@ -112,19 +117,21 @@ set(objects_HDRS
     src/nextfloor/objects/wall.h)
 
 set(physics_HDRS
-    src/nextfloor/physics/cl_collision_engine.h
-    src/nextfloor/physics/collision_engine.h
-    src/nextfloor/physics/serial_collision_engine.h
-    src/nextfloor/physics/tbb_collision_engine.h)
+    src/nextfloor/physics/cl_collision.h
+    src/nextfloor/physics/collision.h
+    src/nextfloor/physics/serial_collision.h
+    src/nextfloor/physics/tbb_collision.h)
 
 set(polygons_HDRS
     src/nextfloor/polygons/polygon.h
     src/nextfloor/polygons/cube.h)
 
 set(renderer_HDRS
-    src/nextfloor/renderer/game_window.h
-    src/nextfloor/renderer/shader.h
     src/nextfloor/renderer/fragment_shader.h
+    src/nextfloor/renderer/game_window.h
+    src/nextfloor/renderer/gl_cube_renderer.h
+    src/nextfloor/renderer/gl_renderer.h
+    src/nextfloor/renderer/shader.h
     src/nextfloor/renderer/vertex_shader.h)
 
 set(nextfloor_HDRS
