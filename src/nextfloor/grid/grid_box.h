@@ -40,7 +40,7 @@ public:
 
     GridBox& operator=(const GridBox&) = default;
 
-    virtual ~GridBox() = default;
+    virtual ~GridBox() override = default;
 
     virtual bool IsInside(EngineObject* object) const noexcept override;
 
@@ -53,6 +53,10 @@ public:
     virtual bool IsEmpty() const noexcept override;
 
     //std::vector<EngineObject*> occupants() const noexcept { return occupants_; }
+    virtual int size() const noexcept override
+    {
+        return occupants_.size();
+    }
 
 protected:
 

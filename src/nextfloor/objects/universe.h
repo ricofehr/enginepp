@@ -42,27 +42,12 @@ public:
      */
     void Draw() noexcept override final;
 
-    /*
-     *  Accessors
-     */
-    bool ready() const { return ready_; }
-
-    /*
-     *  Mutators
-     */
-    void toready() { ready_ = true; }
-
     /**
      *   Add Doors and Windows for Rooms object
      */
     void InitDoorsForRooms() noexcept;
 
-    void InitGrid(std::unique_ptr<EngineGrid> grid) noexcept;
-
 private:
-
-    /** turn to true after 10 firt frames */
-    bool ready_{false};
 
     /** filtering only rooms with display state */
     std::vector<EngineObject*> display_rooms_;

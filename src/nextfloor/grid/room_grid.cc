@@ -6,7 +6,7 @@
 
 #include "nextfloor/grid/room_grid.h"
 
-#include "nextfloor/grid/room_grid_box.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -22,7 +22,8 @@ RoomGrid::RoomGrid(EngineObject* owner)
 
 std::unique_ptr<EngineGridBox> RoomGrid::AllocateGridBox(glm::ivec3 grid_coords)
 {
-    return std::make_unique<RoomGridBox>(grid_coords, this);
+    using nextfloor::core::CommonServices;
+    return CommonServices::getFactory()->MakeRoomGridBox(grid_coords, this);
 }
 
 RoomGrid::~RoomGrid()

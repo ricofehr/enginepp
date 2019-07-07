@@ -16,7 +16,7 @@ namespace nextfloor {
 
 namespace polygons {
 
-glm::vec4 Polygon::move() const {
+glm::vec3 Polygon::move() const {
     using nextfloor::renderer::GameWindow;
     return move_ * GameWindow::getMoveFactor();
 }
@@ -58,7 +58,7 @@ glm::mat4 Polygon::GetViewMatrix()
 
 glm::mat4 Polygon::GetModelMatrix()
 {
-    return glm::translate(glm::mat4(1.0f), glm::vec3(location_));
+    return glm::translate(glm::mat4(1.0f), location_);
 }
 
 } // namespace graphics

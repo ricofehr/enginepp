@@ -16,6 +16,8 @@
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/exit.h"
 
+#include "nextfloor/factory/engine_factory.h"
+
 namespace nextfloor {
 
 namespace core {
@@ -68,6 +70,12 @@ public:
         return exit_;
     }
 
+    static const nextfloor::factory::EngineFactory* getFactory()
+    {
+        assert(factory_ != nullptr);
+        return factory_;
+    }
+
     /*
      *  Service Mutators
      */
@@ -101,6 +109,11 @@ public:
         exit_ = exit;
     }
 
+    static void provideFactory(nextfloor::factory::EngineFactory *factory)
+    {
+        factory_ = factory;
+    }
+
 private:
 
     static Config* config_;
@@ -109,6 +122,7 @@ private:
     static Log* log_;
     static RandomGenerator* random_generator_;
     static Exit* exit_;
+    static nextfloor::factory::EngineFactory* factory_;
 };
 
 } // namespace core

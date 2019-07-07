@@ -32,7 +32,7 @@ public:
      */
     Camera();
 
-    Camera(glm::vec4 location, float horizontal_angle, float vertical_angle);
+    Camera(glm::vec3 location, float horizontal_angle, float vertical_angle);
 
     Camera(Camera&&) = default;
 

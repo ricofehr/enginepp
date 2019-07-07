@@ -34,17 +34,13 @@ class Border : public EngineBorder {
 
 public:
 
-    Border(glm::vec3 scale, glm::vec4 location);
+    Border(glm::vec3 location, glm::vec3 scale);
 
-    Border(float scale, glm::vec4 location);
+    Border(glm::vec3 location, float scale);
 
-    Border(float scale, glm::vec4 location, glm::vec4 move);
+    Border(glm::vec3 location, float scale, std::vector<glm::vec3> coords);
 
-    Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move);
-
-    Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
-
-    Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords);
+    Border(glm::vec3 location, glm::vec3 scale, std::vector<glm::vec3> coords);
 
     Border(Border&&) = default;
 
@@ -66,17 +62,17 @@ public:
 
     /* Delegate Accessors */
     bool IsMoved() const { return cube_->IsMoved(); }
-    int IsMovedX() const { return cube_->IsMovedX(); }
-    int IsMovedY() const { return cube_->IsMovedY(); }
-    int IsMovedZ() const { return cube_->IsMovedZ(); }
-    virtual glm::vec4 location() const override final { return cube_->location(); }
+    // int IsMovedX() const { return cube_->IsMovedX(); }
+    // int IsMovedY() const { return cube_->IsMovedY(); }
+    // int IsMovedZ() const { return cube_->IsMovedZ(); }
+    virtual glm::vec3 location() const override final { return cube_->location(); }
     glm::vec3 scale() const { return cube_->scale(); }
-    virtual glm::vec4 move() const override final { return cube_->move(); }
+    virtual glm::vec3 move() const override final { return cube_->move(); }
     virtual float distance() const override final { return cube_->distance(); }
 
     /* Delegate Mutators */
     virtual void set_distance(float distance) override final { cube_->set_distance(distance); }
-    virtual void set_move(glm::vec3 move) override final { cube_->set_move(move); }
+    //virtual void set_move(glm::vec3 move) override final { cube_->set_move(move); }
     virtual void InverseMove() override final { cube_->InverseMove(); }
 
 private:
@@ -98,7 +94,7 @@ private:
     bool IsObstacleInSameDepthAfterPartedMove(Border* obstacle, float move_part);
 
     /** Design the border */
-    std::unique_ptr<nextfloor::polygons::Cube> cube_{nullptr};
+    std::unique_ptr<nextfloor::objects::EnginePolygon> cube_{nullptr};
 
     /** Border coords */
     std::vector<glm::vec3> coords_;

@@ -7,10 +7,10 @@
 #ifndef NEXTFLOOR_POLYGONS_POLYGON_H_
 #define NEXTFLOOR_POLYGONS_POLYGON_H_
 
+#include "nextfloor/objects/engine_polygon.h"
+
 #include <math.h>
 #include <glm/glm.hpp>
-
-#include "nextfloor/objects/engine_renderer.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -22,7 +22,7 @@ namespace polygons {
  *  @class Shape3D
  *  @brief Interface which must be implemented to define any 3d graphic object.
  */
-class Polygon {
+class Polygon : public nextfloor::objects::EnginePolygon {
 
 public:
 
@@ -31,12 +31,12 @@ public:
      */
     virtual ~Polygon() = default;
 
-    void UpdateModelViewProjectionMatrix();
+    virtual void UpdateModelViewProjectionMatrix() override;
 
-    virtual void Draw(nextfloor::objects::EngineRenderer* renderer) = 0;
+    //virtual void Draw(nextfloor::objects::EngineRenderer* renderer) = 0;
 
 
-    inline void MoveLocation() noexcept
+    virtual inline void MoveLocation() noexcept override
     {
         location_ += move() * distance();
 
@@ -47,7 +47,7 @@ public:
         distance_ = 1.0f;
     }
 
-    bool IsMoved() const 
+    virtual bool IsMoved() const override
     {
         return move_[0] != 0.0f || move_[1] != 0.0f || move_[2] != 0.0f;
     }
@@ -113,21 +113,19 @@ public:
     /*
      *  Accessors
      */
-    float distance() const { return fabs(distance_); }
-    glm::vec4 move() const;
+    virtual float distance() const override { return fabs(distance_); }
+    virtual glm::vec3 move() const override;
 
     /*
      *  Mutators
      */
-    void set_distance(float distance) { distance_ = distance; }
-    void set_move(glm::vec4 move) { move_ = move; }
-    void set_move(glm::vec3 move) { move_ = glm::vec4(move, 0.0f); }
-    void InverseMove() { move_ = -move_; }
+    virtual void set_distance(float distance) override { distance_ = distance; }
+    void set_move(glm::vec3 move) { move_ = move; }
+    virtual void InverseMove() override { move_ = -move_; }
 
 
-
-    glm::vec4 location() const { return location_; }
-    glm::vec3 scale() const { return scale_; }
+    virtual glm::vec3 location() const override { return location_; }
+    virtual glm::vec3 scale() const override { return scale_; }
 
 protected:
 
@@ -146,13 +144,13 @@ protected:
     glm::mat4 mvp_;
 
     /** Center point */
-    glm::vec4 location_;
+    glm::vec3 location_;
 
     /** Scale factor for base coords */
     glm::vec3 scale_;
 
         /** Translation Vector */
-    glm::vec4 move_;
+    glm::vec3 move_;
 
     /** Distance with collision shape (-1 -> no collision detected) */
     float distance_{-1.0f};

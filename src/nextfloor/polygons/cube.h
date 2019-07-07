@@ -23,9 +23,9 @@ class Cube : public Polygon {
 
 public:
 
-    Cube(glm::vec3 scale, glm::vec4 location);
+    Cube(glm::vec3 location, glm::vec3 scale);
 
-    Cube(float scale, glm::vec4 location);
+    Cube(glm::vec3 location, float scale);
 
     Cube(Cube&&) = default;
 

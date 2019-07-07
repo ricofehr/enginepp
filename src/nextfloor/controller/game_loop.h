@@ -41,11 +41,11 @@ public:
 
     ~GameLoop();
 
-    void Loop(nextfloor::objects::Universe* universe);
+    void Loop(nextfloor::objects::EngineObject* universe);
 
 private:
 
-    void LoopLog(nextfloor::objects::Universe* universe);
+    void LoopLog(nextfloor::objects::EngineObject* universe);
 
     nextfloor::renderer::GameWindow* game_window_{nullptr};
 

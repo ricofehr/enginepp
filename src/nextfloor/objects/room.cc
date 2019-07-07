@@ -6,22 +6,200 @@
 
 #include "nextfloor/objects/room.h"
 
+#include "nextfloor/core/common_services.h"
+
 namespace nextfloor {
 
 namespace objects {
 
-Room::Room(glm::vec4 location)
-     :Room(location, std::vector<bool>(6, false), std::vector<bool>(6, false)){}
+Room::Room(glm::vec3 location) {
+    using nextfloor::core::CommonServices;
 
-Room::Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows) {
     type_ = kMODEL_ROOM;
-    doors_ = is_doors;
-    windows_ = is_windows;
+    grid_ = CommonServices::getFactory()->MakeRoomGrid(this);
+    border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale_vector());
+
+    add_child(CommonServices::getFactory()->MakeCamera(glm::vec3(location.x, location.y, location.z + 5.0f)));
+
+    AddFloor();
+    AddLeftWall();
+    AddRightWall();
+    AddBackWall();
+    AddFrontWall();
+    AddRoof();
+
+    add_child(CommonServices::getFactory()->MakeRock(grid_->CalculateFirstPointInGrid() + glm::vec3(3.0f)));
+    grid_->DisplayGrid();
 }
 
-void Room::InitGrid(std::unique_ptr<EngineGrid> grid) noexcept
+void Room::AddFloor() noexcept
 {
-    grid_ = std::move(grid);
+    auto box_counts = grid_->box_counts();
+
+    tbb::parallel_for (0, box_counts.x, box_counts.x/4, [&](int j) {
+        tbb::parallel_for (0, box_counts.z, box_counts.z/4, [&](int k) {
+            auto grid_coords = glm::ivec3(j,0,k);
+            if (IsInsideWall(grid_coords)) {
+                auto location = CalculateBrickWallLocation(grid_coords, CalculatePaddingFloor());
+                AddFloorBrick(location, CalculateScaleWallYFixed());
+            }
+        });
+    });
+}
+
+glm::vec3 Room::CalculatePaddingFloor() const noexcept
+{
+    return CalculateScaleWallYFixed();
+}
+
+void Room::AddFloorBrick(glm::vec3 location, glm::vec3 scale) noexcept
+{
+    using nextfloor::core::CommonServices;
+    add_child(CommonServices::getFactory()->MakeFloorBrick(location, scale));
+}
+
+void Room::AddRoof() noexcept
+{
+    auto box_counts = grid_->box_counts();
+
+    tbb::parallel_for (0, box_counts.x, box_counts.x/4, [&](int j) {
+        tbb::parallel_for (0, box_counts.z, box_counts.z/4, [&](int k) {
+            auto grid_coords = glm::ivec3(j,box_counts.y,k);
+            if (IsInsideWall(grid_coords)) {
+                auto location = CalculateBrickWallLocation(grid_coords, CalculatePaddingRoof());
+                AddRoofBrick(location, CalculateScaleWallYFixed());
+            }
+        });
+    });
+}
+
+void Room::AddRoofBrick(glm::vec3 location, glm::vec3 scale) noexcept
+{
+    using nextfloor::core::CommonServices;
+    add_child(CommonServices::getFactory()->MakeRoofBrick(location, scale));
+}
+
+glm::vec3 Room::CalculatePaddingRoof() const noexcept
+{
+    auto box_dimension = grid_->box_dimension();
+    return CalculateScaleWallYFixed() - glm::vec3(0.0f, box_dimension.y/2, 0.0f);
+}
+
+glm::vec3 Room::CalculateScaleWallYFixed() const noexcept
+{
+    auto box_counts = grid_->box_counts();
+    auto box_dimension = grid_->box_dimension();
+    return glm::vec3((box_counts.x/8)*box_dimension.x, box_dimension.y/4, (box_counts.z/8)*box_dimension.z);
+}
+
+void Room::AddLeftWall() noexcept
+{
+    auto box_counts = grid_->box_counts();
+
+    tbb::parallel_for (0, box_counts.y, box_counts.y/3, [&](int j) {
+        tbb::parallel_for (0, box_counts.z, box_counts.z/4, [&](int k) {
+            auto grid_coords = glm::ivec3(0,j,k);
+            if (IsInsideWall(grid_coords)) {
+                auto location = CalculateBrickWallLocation(grid_coords, CalculatePaddingLeftWall());
+                AddSideWallBrick(location, CalculateScaleWallXFixed());
+            }
+        });
+    });
+
+}
+
+glm::vec3 Room::CalculatePaddingLeftWall() const noexcept
+{
+    return CalculateScaleWallXFixed();
+}
+
+
+void Room::AddRightWall() noexcept
+{
+    auto box_counts = grid_->box_counts();
+
+    tbb::parallel_for (0, box_counts.y, box_counts.y/3, [&](int j) {
+        tbb::parallel_for (0, box_counts.z, box_counts.z/4, [&](int k) {
+            auto grid_coords = glm::ivec3(box_counts.x,j,k);
+            if (IsInsideWall(grid_coords)) {
+                auto location = CalculateBrickWallLocation(grid_coords, CalculatePaddingRightWall());
+                AddSideWallBrick(location, CalculateScaleWallXFixed());
+            }
+        });
+    });
+
+}
+
+glm::vec3 Room::CalculatePaddingRightWall() const noexcept
+{
+    auto box_dimension = grid_->box_dimension();
+    return CalculateScaleWallXFixed() - glm::vec3(box_dimension.x/2, 0.0f, 0.0f);
+}
+
+glm::vec3 Room::CalculateScaleWallXFixed() const noexcept
+{
+    auto box_counts = grid_->box_counts();
+    auto box_dimension = grid_->box_dimension();
+    return glm::vec3(box_dimension.x/4, (box_counts.y/6)*box_dimension.y, (box_counts.z/8)*box_dimension.z);
+}
+
+void Room::AddFrontWall() noexcept
+{
+    auto box_counts = grid_->box_counts();
+
+    tbb::parallel_for (0, box_counts.y, box_counts.y/3, [&](int j) {
+        tbb::parallel_for (0, box_counts.x, box_counts.x/4, [&](int k) {
+            auto grid_coords = glm::ivec3(k,j,0);
+            if (IsInsideWall(grid_coords)) {
+                auto location = CalculateBrickWallLocation(grid_coords, CalculatePaddingFrontWall());
+                AddSideWallBrick(location, CalculateScaleWallZFixed());
+            }
+        });
+    });
+}
+
+glm::vec3 Room::CalculatePaddingFrontWall() const noexcept
+{
+    return CalculateScaleWallZFixed();
+}
+
+void Room::AddBackWall() noexcept
+{
+    auto box_counts = grid_->box_counts();
+
+    tbb::parallel_for (0, box_counts.y, box_counts.y/3, [&](int j) {
+        tbb::parallel_for (0, box_counts.x, box_counts.x/4, [&](int k) {
+            auto grid_coords = glm::ivec3(k,j,box_counts.z);
+            if (IsInsideWall(grid_coords)) {
+                auto location = CalculateBrickWallLocation(grid_coords, CalculatePaddingBackWall());
+                AddSideWallBrick(location, CalculateScaleWallZFixed());
+            }
+        });
+    });
+}
+
+glm::vec3 Room::CalculatePaddingBackWall() const noexcept
+{
+    auto box_dimension = grid_->box_dimension();
+    return CalculateScaleWallZFixed() - glm::vec3(0.0f, 0.0f, box_dimension.z/2);
+}
+
+glm::vec3 Room::CalculateScaleWallZFixed() const noexcept
+{
+    auto box_counts = grid_->box_counts();
+    auto box_dimension = grid_->box_dimension();
+    return glm::vec3((box_counts.x/8)*box_dimension.x, (box_counts.y/6)*box_dimension.y, box_dimension.z/4);
+}
+
+glm::vec3 Room::CalculateBrickWallLocation(glm::ivec3 grid_coords, glm::vec3 padding) const noexcept
+{
+    return grid_->CalculateAbsoluteCoordinates(grid_coords) + padding;
+}
+
+void Room::AddSideWallBrick(glm::vec3 location, glm::vec3 scale) noexcept
+{
+    using nextfloor::core::CommonServices;
+    add_child(CommonServices::getFactory()->MakeSideWallBrick(location, scale));
 }
 
 bool Room::IsInsideWall(glm::ivec3 grid_coords) const noexcept
@@ -32,7 +210,7 @@ bool Room::IsInsideWall(glm::ivec3 grid_coords) const noexcept
         return IsInsideLeftWall(grid_coords);
     }
 
-    if (grid_coords.x == box_counts.x - 1) {
+    if (grid_coords.x == box_counts.x) {
         return IsInsideRightWall(grid_coords);
     }
 
@@ -40,7 +218,7 @@ bool Room::IsInsideWall(glm::ivec3 grid_coords) const noexcept
         return IsInsideFloor(grid_coords);
     }
 
-    if (grid_coords.y == box_counts.y - 1) {
+    if (grid_coords.y == box_counts.y) {
         return IsInsideRoof(grid_coords);
     }
 
@@ -48,7 +226,7 @@ bool Room::IsInsideWall(glm::ivec3 grid_coords) const noexcept
         return IsInsideFrontWall(grid_coords);
     }
 
-    if (grid_coords.z == box_counts.z - 1) {
+    if (grid_coords.z == box_counts.z) {
         return IsInsideBackWall(grid_coords);
     }
 
@@ -177,6 +355,6 @@ bool Room::IsInsideBackWall(glm::ivec3 grid_coords) const noexcept
     return true;
 }
 
-} // namespace universe
+} // namespace objects
 
 } // namespace nextfloor

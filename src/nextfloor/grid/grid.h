@@ -64,6 +64,8 @@ public:
 
     virtual void ComputePlacementsInGrid() noexcept override;
 
+    virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept override;
+
     virtual void AddItemToGrid(EngineObject* object) noexcept override;
 
     virtual void RemoveItemToGrid(glm::ivec3 box_coords_in_grid, EngineObject* object) noexcept override;
@@ -130,7 +132,7 @@ protected:
         return boxes_[grid_coords.x][grid_coords.y][grid_coords.z].get();
     }
 
-    virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords);
+    virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) = 0;
 
     virtual int count_width_boxes() const = 0;
     virtual int count_height_boxes() const = 0;
@@ -148,6 +150,8 @@ private:
     void ComputeGridUnits() noexcept;
     void ParseGridForObjectPlacements(EngineObject *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept;
     glm::ivec3 PointToGridIndexes(glm::vec3 point) noexcept;
+    glm::ivec3 CalculateLengthIndexes(glm::vec3 point_min, glm::vec3 point_max);
+    bool IsCooordsAreCorrect(glm::ivec3 coords);
 
     glm::vec3 grid_units_;
 

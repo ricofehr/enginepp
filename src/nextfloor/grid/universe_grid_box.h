@@ -33,9 +33,9 @@ public:
 
     virtual ~UniverseGridBox() = default;
 
-    void AddRoomDoor(int side);
+    virtual void AddRoomDoor(int side) override;
 
-    void AddRoomWindow(int side);
+    virtual void AddRoomWindow(int side) override;
 };
 
 } // namespace grid

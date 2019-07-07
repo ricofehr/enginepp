@@ -32,6 +32,10 @@ public:
     RoomGridBox& operator=(const RoomGridBox&) = default;
 
     virtual ~RoomGridBox() = default;
+
+    virtual void AddRoomDoor(int side) override {}
+
+    virtual void AddRoomWindow(int side) override {}
 };
 
 } // namespace grid

@@ -6,18 +6,14 @@
 
 #include "nextfloor/polygons/cube.h"
 
-#include "nextfloor/renderer/game_window.h"
-
-#include <iostream>
-
 namespace nextfloor {
 
 namespace polygons {
 
-Cube::Cube(float scale, glm::vec4 location)
-    :Cube(glm::vec3(scale), location) {}
+Cube::Cube(glm::vec3 location, float scale)
+    :Cube(location, glm::vec3(scale)) {}
 
-Cube::Cube(glm::vec3 scale, glm::vec4 location)
+Cube::Cube(glm::vec3 location, glm::vec3 scale)
 {
     location_ = location;
     scale_ = scale;

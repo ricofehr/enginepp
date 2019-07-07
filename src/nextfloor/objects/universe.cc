@@ -11,9 +11,6 @@
 #include <iostream>
 #include <tbb/tbb.h>
 
-#include "nextfloor/objects/engine_border.h"
-#include "nextfloor/objects/engine_grid.h"
-#include "nextfloor/objects/room.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -22,12 +19,16 @@ namespace objects {
 
 Universe::Universe()
 {
-    type_ = kMODEL_UNIVERSE;
-}
+    using nextfloor::core::CommonServices;
 
-void Universe::InitGrid(std::unique_ptr<EngineGrid> grid) noexcept
-{
-    grid_ = std::move(grid);
+    auto location = glm::vec3(0.0f);
+    type_ = kMODEL_UNIVERSE;
+    grid_ = CommonServices::getFactory()->MakeUniverseGrid(this);
+    border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale_vector());
+
+    add_child(CommonServices::getFactory()->MakeRoom(location));
+    //InitDoorsForRooms();
+    grid_->DisplayGrid();
 }
 
 void Universe::Draw() noexcept

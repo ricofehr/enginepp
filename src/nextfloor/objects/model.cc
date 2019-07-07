@@ -8,8 +8,6 @@
 
 #include "nextfloor/objects/model.h"
 
-#include <SOIL/SOIL.h>
-
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -17,9 +15,7 @@
 #include <tbb/tbb.h>
 
 #include "nextfloor/core/common_services.h"
-#include "nextfloor/renderer/game_window.h"
 
-#include "nextfloor/objects/engine_collision.h"
 
 namespace nextfloor {
 
@@ -77,6 +73,11 @@ EngineObject* Model::add_child(std::unique_ptr<EngineObject> object) noexcept
     } else {
         objects_.push_back(std::move(object));
     }
+
+    static int count = 0;
+    //std::cout << y << "-" << x << "-" << z << std::endl;
+    std::cout << "Model:" << object_raw->id() << "(" << count++ << ")" << std::endl;
+
     grid_->AddItemToGrid(object_raw);
     /* Ensure object is well added */
     assert(objects_.size() == initial_objects_size + 1);

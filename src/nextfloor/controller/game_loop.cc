@@ -35,7 +35,7 @@ GameLoop::GameLoop(nextfloor::renderer::GameWindow* game_window,
 /**
  *   Display global details for each seconds
  */
-void GameLoop::LoopLog(nextfloor::objects::Universe* universe)
+void GameLoop::LoopLog(nextfloor::objects::EngineObject* universe)
 {
     using nextfloor::core::CommonServices;
 
@@ -69,7 +69,7 @@ void GameLoop::LoopLog(nextfloor::objects::Universe* universe)
     }
 }
 
-void GameLoop::Loop(nextfloor::objects::Universe* universe)
+void GameLoop::Loop(nextfloor::objects::EngineObject* universe)
 {
     using nextfloor::core::CommonServices;
 

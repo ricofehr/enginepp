@@ -41,6 +41,12 @@ public:
 
     virtual bool IsEmpty() const noexcept = 0;
 
+    virtual void AddRoomDoor(int side) = 0;
+
+    virtual void AddRoomWindow(int side) = 0;
+
+    virtual int size() const noexcept = 0;
+
 protected:
 
     EngineGridBox() = default;

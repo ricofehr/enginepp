@@ -6,6 +6,8 @@
 
 #include "nextfloor/objects/camera.h"
 
+#include "nextfloor/core/common_services.h"
+
 namespace nextfloor {
 
 namespace objects {
@@ -53,14 +55,17 @@ static const std::vector<glm::vec3> sCameraCoords = {
 Camera* Camera::active_ = nullptr;
 
 Camera::Camera()
-       :Camera(glm::vec4(0.0f), 3.14f, 0.0f) {}
+       :Camera(glm::vec3(0.0f), 3.14f, 0.0f) {}
 
-Camera::Camera(glm::vec4 location, float horizontal_angle, float vertical_angle)
+Camera::Camera(glm::vec3 location, float horizontal_angle, float vertical_angle)
 {
+    using nextfloor::core::CommonServices;
+
+    type_ = kMODEL_CAMERA;
+    border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(1.0f));
     horizontal_angle_ = horizontal_angle;
     vertical_angle_ = vertical_angle;
     fov_ = 45.0f;
-    type_ = kMODEL_CAMERA;
 
     ComputeOrientation();
 

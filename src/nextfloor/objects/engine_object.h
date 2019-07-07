@@ -66,6 +66,10 @@ public:
 
     virtual void UpdateObstacleIfNearer(EngineObject* obstacle, float obstacle_distance) noexcept = 0;
 
+    virtual bool ready() const = 0;
+
+    virtual void toready() = 0;
+
 protected:
 
     EngineObject() = default;

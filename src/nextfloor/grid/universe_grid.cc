@@ -7,7 +7,8 @@
 #include "nextfloor/grid/universe_grid.h"
 
 #include "nextfloor/objects/room.h"
-#include "nextfloor/grid/universe_grid_box.h"
+
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -23,7 +24,8 @@ UniverseGrid::UniverseGrid(EngineObject* owner)
 
 std::unique_ptr<EngineGridBox> UniverseGrid::AllocateGridBox(glm::ivec3 grid_coords)
 {
-    return std::make_unique<UniverseGridBox>(grid_coords, this);
+    using nextfloor::core::CommonServices;
+    return CommonServices::getFactory()->MakeUniverseGridBox(grid_coords, this);
 }
 
 void UniverseGrid::InitLeftDoorAndWindowForRoom(glm::ivec3 coords) noexcept
@@ -32,9 +34,9 @@ void UniverseGrid::InitLeftDoorAndWindowForRoom(glm::ivec3 coords) noexcept
 
     if (coords.x != 0 &&
         IsPositionInTheGridEmpty(glm::ivec3(coords.x-1,coords.y,coords.z)) == kGRID_USED) {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomDoor(Room::kSIDE_LEFT);
+        getGridBox(coords)->AddRoomDoor(Room::kSIDE_LEFT);
     } else {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomWindow(Room::kSIDE_LEFT);
+        getGridBox(coords)->AddRoomWindow(Room::kSIDE_LEFT);
     }
 }
 
@@ -44,9 +46,9 @@ void UniverseGrid::InitRightDoorAndWindowForRoom(glm::ivec3 coords) noexcept
 
     if (coords.x != count_width_boxes() - 1 &&
         IsPositionInTheGridEmpty(glm::ivec3(coords.x+1,coords.y,coords.z)) == kGRID_USED) {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomDoor(Room::kSIDE_RIGHT);
+        getGridBox(coords)->AddRoomDoor(Room::kSIDE_RIGHT);
     } else {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomWindow(Room::kSIDE_RIGHT);
+        getGridBox(coords)->AddRoomWindow(Room::kSIDE_RIGHT);
     }
 }
 
@@ -57,9 +59,9 @@ void UniverseGrid::InitFrontDoorAndWindowForRoom(glm::ivec3 coords) noexcept
 
     if (coords.z != 0 &&
         IsPositionInTheGridEmpty(glm::ivec3(coords.x,coords.y,coords.z-1)) == kGRID_USED) {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomDoor(Room::kSIDE_FRONT);
+        getGridBox(coords)->AddRoomDoor(Room::kSIDE_FRONT);
     } else {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomWindow(Room::kSIDE_FRONT);
+        getGridBox(coords)->AddRoomWindow(Room::kSIDE_FRONT);
     }
 }
 
@@ -69,9 +71,9 @@ void UniverseGrid::InitBackDoorAndWindowForRoom(glm::ivec3 coords) noexcept
 
     if (coords.z != count_depth_boxes() - 1 &&
         IsPositionInTheGridEmpty(glm::ivec3(coords.x,coords.y,coords.z+1)) == kGRID_USED) {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomDoor(Room::kSIDE_BACK);
+        getGridBox(coords)->AddRoomDoor(Room::kSIDE_BACK);
     } else {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomWindow(Room::kSIDE_BACK);
+        getGridBox(coords)->AddRoomWindow(Room::kSIDE_BACK);
     }
 }
 
@@ -81,7 +83,7 @@ void UniverseGrid::InitFloorDoorAndWindowForRoom(glm::ivec3 coords) noexcept
 
     if (coords.y != 0 &&
         IsPositionInTheGridEmpty(glm::ivec3(coords.x,coords.y-1,coords.z)) == kGRID_USED) {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomDoor(Room::kSIDE_FLOOR);
+        getGridBox(coords)->AddRoomDoor(Room::kSIDE_FLOOR);
     }
 }
 
@@ -91,7 +93,7 @@ void UniverseGrid::InitRoofDoorAndWindowForRoom(glm::ivec3 coords) noexcept
 
     if (coords.y != count_height_boxes() - 1 &&
         IsPositionInTheGridEmpty(glm::ivec3(coords.x,coords.y+1,coords.z)) == kGRID_USED) {
-        dynamic_cast<UniverseGridBox*>(getGridBox(coords))->AddRoomDoor(Room::kSIDE_ROOF);
+        getGridBox(coords)->AddRoomDoor(Room::kSIDE_ROOF);
     }
 }
 

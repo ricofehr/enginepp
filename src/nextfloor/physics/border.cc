@@ -11,6 +11,8 @@
 #include <tbb/tbb.h>
 #include <memory>
 
+#include "nextfloor/core/common_services.h"
+
 namespace nextfloor {
 
 namespace physics {
@@ -55,25 +57,19 @@ static const std::vector<glm::vec3> sDefaultCoords = {
 } // anonymous namespace
 
 
-Border::Border(glm::vec3 scale, glm::vec4 location)
-    :Border(scale, location, glm::vec4(0.0f), sDefaultCoords) {}
+Border::Border(glm::vec3 location, glm::vec3 scale)
+    :Border(location, scale, sDefaultCoords) {}
 
-Border::Border(float scale, glm::vec4 location)
-    :Border(glm::vec3(scale), location, glm::vec4(1.0f)) {}
+Border::Border(glm::vec3 location, float scale)
+    :Border(location, glm::vec3(scale), sDefaultCoords) {}
 
-Border::Border(float scale, glm::vec4 location, glm::vec4 move)
-    :Border(glm::vec3(scale), location, move) {}
+Border::Border(glm::vec3 location, float scale, std::vector<glm::vec3> coords)
+        : Border(location, glm::vec3(scale), coords) {}
 
-Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move)
-    :Border(scale, location, move, sDefaultCoords) {}
-
-Border::Border(float scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
-        : Border(glm::vec3(scale), location, move, coords) {}
-
-Border::Border(glm::vec3 scale, glm::vec4 location, glm::vec4 move, std::vector<glm::vec3> coords)
+Border::Border(glm::vec3 location, glm::vec3 scale, std::vector<glm::vec3> coords)
 {
-    using nextfloor::polygons::Cube;
-    cube_ = std::make_unique<Cube>(scale, location);//, move);
+    using nextfloor::core::CommonServices;
+    cube_ = CommonServices::getFactory()->MakeCube(location, glm::vec3(scale));
     coords_ = coords;
     ComputesModelMatrixCoords();
 }
@@ -179,7 +175,7 @@ bool Border::IsObstacleInSameDepthAfterPartedMove(Border* obstacle, float move_p
 
 glm::mat4 Border::CalculateModelMatrix() const
 {
-    return glm::translate(glm::mat4(1.0f), glm::vec3(location())) * glm::scale(scale());
+    return glm::translate(glm::mat4(1.0f), location()) * glm::scale(scale());
 }
 
 void Border::ComputeNewLocation()

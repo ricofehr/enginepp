@@ -29,7 +29,7 @@ set(core_SRCS
     src/nextfloor/core/terminal_log.cc)
 
 set(factory_SRCS
-    src/nextfloor/factory/demo_universe_factory.cc)
+    src/nextfloor/factory/factory.cc)
 
 set(grid_SRCS
     src/nextfloor/grid/grid.cc
@@ -40,12 +40,12 @@ set(grid_SRCS
     src/nextfloor/grid/universe_grid_box.cc)
 
 set(objects_SRCS
-    src/nextfloor/objects/brick.cc
     src/nextfloor/objects/camera.cc
     src/nextfloor/objects/model.cc
+    src/nextfloor/objects/rock.cc
     src/nextfloor/objects/room.cc
     src/nextfloor/objects/universe.cc
-    src/nextfloor/objects/wall.cc)
+    src/nextfloor/objects/wallbrick.cc)
 
 set(physics_SRCS
     src/nextfloor/physics/border.cc
@@ -95,8 +95,8 @@ set(core_HDRS
     src/nextfloor/core/timer.h)
 
 set(factory_HDRS
-    src/nextfloor/factory/demo_universe_factory.h
-    src/nextfloor/factory/universe_factory.h)
+    src/nextfloor/factory/engine_factory.h
+    src/nextfloor/factory/factory.h)
 
 set(grid_HDRS
     src/nextfloor/grid/grid.h
@@ -107,18 +107,19 @@ set(grid_HDRS
     src/nextfloor/grid/universe_grid_box.h)
 
 set(objects_HDRS
-    src/nextfloor/objects/brick.h
     src/nextfloor/objects/camera.h
     src/nextfloor/objects/engine_border.h
     src/nextfloor/objects/engine_collision.h
     src/nextfloor/objects/engine_grid.h
     src/nextfloor/objects/engine_grid_box.h
     src/nextfloor/objects/engine_object.h
+    src/nextfloor/objects/engine_polygon.h
     src/nextfloor/objects/engine_renderer.h
     src/nextfloor/objects/model.h
+    src/nextfloor/objects/rock.h
     src/nextfloor/objects/room.h
     src/nextfloor/objects/universe.h
-    src/nextfloor/objects/wall.h)
+    src/nextfloor/objects/wallbrick.h)
 
 set(physics_HDRS
     src/nextfloor/physics/border.h

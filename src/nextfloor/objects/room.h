@@ -34,8 +34,7 @@ public:
     static constexpr int kSIDE_FLOOR = 4;
     static constexpr int kSIDE_ROOF = 5;
 
-    Room(glm::vec4 location);
-    Room(glm::vec4 location, std::vector<bool> is_doors, std::vector<bool> is_windows);
+    Room(glm::vec3 location);
 
     Room(Room&&) = default;
     Room& operator=(Room&&) = default;
@@ -45,7 +44,6 @@ public:
 
     ~Room() override = default;
 
-    void InitGrid(std::unique_ptr<EngineGrid> grid) noexcept;
     bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;
 
     /*
@@ -55,6 +53,30 @@ public:
     void addWindow(int ind) { windows_[ind] = true; }
 
 private:
+
+    void AddFloor() noexcept;
+    void AddLeftWall() noexcept;
+    void AddRightWall() noexcept;
+    void AddBackWall() noexcept;
+    void AddFrontWall() noexcept;
+    void AddRoof() noexcept;
+
+    glm::vec3 CalculatePaddingFloor() const noexcept;
+    glm::vec3 CalculatePaddingRoof() const noexcept;
+    glm::vec3 CalculatePaddingLeftWall() const noexcept;
+    glm::vec3 CalculatePaddingRightWall() const noexcept;
+    glm::vec3 CalculatePaddingFrontWall() const noexcept;
+    glm::vec3 CalculatePaddingBackWall() const noexcept;
+
+    void AddFloorBrick(glm::vec3 location, glm::vec3 scale) noexcept;
+    void AddRoofBrick(glm::vec3 location, glm::vec3 scale) noexcept;
+    void AddSideWallBrick(glm::vec3 location, glm::vec3 scale) noexcept;
+
+    glm::vec3 CalculateScaleWallYFixed() const noexcept;
+    glm::vec3 CalculateScaleWallXFixed() const noexcept;
+    glm::vec3 CalculateScaleWallZFixed() const noexcept;
+
+    glm::vec3 CalculateBrickWallLocation(glm::ivec3 grid_coords, glm::vec3 padding) const noexcept;
 
     bool IsInsideFloor(glm::ivec3 grid_coords) const noexcept;
     bool IsInsideRoof(glm::ivec3 grid_coords) const noexcept;

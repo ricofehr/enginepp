@@ -7,7 +7,7 @@
 #include <memory>
 #include <tbb/tbb.h>
 
-#include "nextfloor/factory/demo_universe_factory.h"
+#include "nextfloor/factory/factory.h"
 #include "nextfloor/controller/game_loop.h"
 #include "nextfloor/renderer/game_window.h"
 
@@ -26,10 +26,10 @@
 
 int main(int argc, char* argv[])
 {
-    using nextfloor::objects::Universe;
     using nextfloor::objects::Camera;
-    using nextfloor::factory::UniverseFactory;
-    using nextfloor::factory::DemoUniverseFactory;
+    // using nextfloor::factory::UniverseFactory;
+    // using nextfloor::factory::DemoUniverseFactory;
+    using nextfloor::factory::Factory;
     using nextfloor::controller::GameLoop;
     using nextfloor::renderer::GameWindow;
     using nextfloor::core::CommonServices;
@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
     using nextfloor::core::GenericFileIO;
     using nextfloor::core::StandardRandomGenerator;
     using nextfloor::objects::EngineCollision;
+    using nextfloor::objects::EngineObject;
     using nextfloor::physics::Collision;
     using nextfloor::physics::ClCollision;
     using nextfloor::physics::SerialCollision;
@@ -58,6 +59,8 @@ int main(int argc, char* argv[])
     CommonServices::provideFileIO(generic_file_io.get());
     std::unique_ptr<StandardRandomGenerator> standard_random_generator = std::make_unique<StandardRandomGenerator>();
     CommonServices::provideRandomGenerator(standard_random_generator.get());
+    std::unique_ptr<Factory> factory = std::make_unique<Factory>();
+    CommonServices::provideFactory(factory.get());
 
     /* Init Config */
     CommonServices::getConfig()->Initialize();
@@ -72,37 +75,18 @@ int main(int argc, char* argv[])
     }
 
     /* Init world */
-    std::unique_ptr<UniverseFactory> factory{nullptr};
-    if (CommonServices::getConfig()->getUniverseFactoryType() == UniverseFactory::kUNIVERSEFACTORY_DEMO) {
-        factory = std::make_unique<DemoUniverseFactory>();
-    }
-
-    std::unique_ptr<EngineCollision> engine_collision{nullptr};
-
-    /* Get parallell type from config */
-    int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
-
-    switch (type_parallell) {
-        case Collision::kPARALLELL_TBB:
-            engine_collision = std::make_unique<TbbCollision>();
-            break;
-        case Collision::kPARALLELL_CL:
-            engine_collision = std::make_unique<ClCollision>();
-            break;
-        default:
-            engine_collision = std::make_unique<SerialCollision>();
-            break;
-    }
-
-    assert(engine_collision != nullptr);
-
+    // std::unique_ptr<UniverseFactory> factory{nullptr};
+    // if (CommonServices::getConfig()->getUniverseFactoryType() == UniverseFactory::kUNIVERSEFACTORY_DEMO) {
+    //     factory = std::make_unique<DemoUniverseFactory>();
+    // }
 
     GameWindow game_window;
+    std::unique_ptr<EngineCollision> engine_collision{factory->MakeCollisionEngine()};
     GameLoop game_loop(&game_window, engine_collision.get());
     game_window.Initialization();
-    std::unique_ptr<Universe> universe{factory->GenerateUniverse()};
 
     /* Launch GL Scene */
+    std::unique_ptr<EngineObject> universe = factory->MakeUniverse();
     game_window.SetCamera(Camera::active());
     game_loop.Loop(universe.get());
 

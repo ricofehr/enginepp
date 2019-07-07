@@ -62,6 +62,8 @@ public:
 
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept = 0;
 
+    virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const = 0;
+
     virtual void InitDoorsAndWindows() noexcept = 0;
 
 protected:

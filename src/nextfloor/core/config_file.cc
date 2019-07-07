@@ -13,7 +13,6 @@
 #include <cassert>
 
 #include "nextfloor/core/common_services.h"
-#include "nextfloor/factory/universe_factory.h"
 
 namespace nextfloor {
 
@@ -186,11 +185,11 @@ void ConfigFile::SetDefaultExecutionTimeValueIfEmpty()
 
 void ConfigFile::SetDefaultUniverseFactoryValueIfEmpty()
 {
-    using nextfloor::factory::UniverseFactory;
+    // using nextfloor::factory::UniverseFactory;
 
-    if (!IsExist("factory_type")) {
-        setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_DEMO);
-    }
+    // if (!IsExist("factory_type")) {
+    //     setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_DEMO);
+    // }
 }
 
 
@@ -406,17 +405,17 @@ void ConfigFile::EnsureCoherentWorkerSetting()
 void ConfigFile::ManageUniverseFactoryTypeParameter(const std::string& parameter_name,
                                                     const std::string& parameter_value)
 {
-    using nextfloor::factory::UniverseFactory;
+    // using nextfloor::factory::UniverseFactory;
 
-    if (parameter_name == "-f") {
-        if (parameter_value == "demo") {
-            setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_DEMO);
-        }
+    // if (parameter_name == "-f") {
+    //     if (parameter_value == "demo") {
+    //         setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_DEMO);
+    //     }
 
-        if (parameter_value == "random") {
-            setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_RANDOM);
-        }
-    }
+    //     if (parameter_value == "random") {
+    //         setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_RANDOM);
+    //     }
+    // }
 }
 
 ConfigFile::~ConfigFile()

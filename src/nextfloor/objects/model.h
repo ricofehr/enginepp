@@ -19,7 +19,7 @@
 #include "nextfloor/objects/engine_border.h"
 #include "nextfloor/objects/engine_grid.h"
 #include "nextfloor/objects/engine_renderer.h"
-#include "nextfloor/polygons/polygon.h"
+#include "nextfloor/objects/engine_polygon.h"
 
 namespace nextfloor {
 
@@ -101,12 +101,17 @@ public:
 
     virtual void UpdateObstacleIfNearer(EngineObject* obstacle, float obstacle_distance) noexcept override final;
 
+    virtual bool ready() const override { return ready_; }
+
+    virtual void toready() override { ready_ = true; }
+
+
 protected:
 
     Model();
 
     /** meshes which composes the current object */
-    std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> meshes_;
+    std::vector<std::unique_ptr<EnginePolygon>> meshes_;
 
     /** childs of the current object */
     std::vector<std::unique_ptr<EngineObject>> objects_;
@@ -127,6 +132,9 @@ private:
     void InitCollisionEngine();
 
     int id_{0};
+
+    /** turn to true after 10 firt frames */
+    bool ready_{false};
 
     /** Mutex ensures thread safe instructions */
     tbb::mutex object_mutex_;
