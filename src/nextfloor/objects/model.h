@@ -42,7 +42,7 @@ public:
     static constexpr int kMODEL_WALL = 3;
     static constexpr int kMODEL_WINDOW = 4;
     static constexpr int kMODEL_DOOR = 5;
-    static constexpr int kMODEL_BRICK = 6;
+    static constexpr int kMODEL_ROCK = 6;
 
     /*
      *  Initial collision countdown value
@@ -125,7 +125,7 @@ protected:
 
     std::unique_ptr<EngineBorder> border_{nullptr};
 
-    std::unique_ptr<EngineRenderer> renderer_{nullptr};
+    EngineRenderer* renderer_{nullptr};
 
 private:
 

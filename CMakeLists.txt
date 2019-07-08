@@ -29,7 +29,8 @@ set(core_SRCS
     src/nextfloor/core/terminal_log.cc)
 
 set(factory_SRCS
-    src/nextfloor/factory/factory.cc)
+    src/nextfloor/factory/factory.cc
+    src/nextfloor/factory/renderer_factory.cc)
 
 set(grid_SRCS
     src/nextfloor/grid/grid.cc
@@ -96,7 +97,9 @@ set(core_HDRS
 
 set(factory_HDRS
     src/nextfloor/factory/engine_factory.h
-    src/nextfloor/factory/factory.h)
+    src/nextfloor/factory/engine_renderer_factory.h
+    src/nextfloor/factory/factory.h
+    src/nextfloor/factory/renderer_factory.h)
 
 set(grid_HDRS
     src/nextfloor/grid/grid.h

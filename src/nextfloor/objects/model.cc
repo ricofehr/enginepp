@@ -51,7 +51,7 @@ void Model::Draw() noexcept
     /* Draw meshes of current object */
     for (auto &mesh : meshes_) {
         mesh->UpdateModelViewProjectionMatrix();
-        mesh->Draw(renderer_.get());
+        mesh->Draw(renderer_);
     }
 
     /* Draw childs objects */

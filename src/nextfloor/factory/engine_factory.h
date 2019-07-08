@@ -10,12 +10,6 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-// #include "nextfloor/objects/universe.h"
-// #include "nextfloor/objects/room.h"
-// #include "nextfloor/objects/wall.h"
-// #include "nextfloor/objects/brick.h"
-// #include "nextfloor/objects/camera.h"
-
 #include "nextfloor/objects/engine_object.h"
 #include "nextfloor/objects/engine_border.h"
 #include "nextfloor/objects/engine_renderer.h"
@@ -74,7 +68,7 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::EngineGridBox> MakeUniverseGridBox(glm::vec3 grid_coords, nextfloor::objects::EngineGrid* universe_grid) const noexcept = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::EngineRenderer> MakeCubeRenderer(std::string texture) const noexcept = 0;
+    virtual nextfloor::objects::EngineRenderer* MakeCubeRenderer(std::string texture) const noexcept = 0;
 
     virtual std::unique_ptr<nextfloor::objects::EngineCollision> MakeCollisionEngine() const noexcept = 0;
 

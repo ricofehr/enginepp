@@ -25,7 +25,7 @@ class Rock : public Model {
 
 public:
 
-    static constexpr char kTEXTURE[] = "assets/brique.png";
+    static constexpr char kTEXTURE[] = "assets/rock.jpg";
 
     /**
      *  Constructor

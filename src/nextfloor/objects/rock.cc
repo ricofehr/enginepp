@@ -16,7 +16,7 @@ Rock::Rock(glm::vec3 location, float scale)
 {
     using nextfloor::core::CommonServices;
 
-    type_ = kMODEL_BRICK;
+    type_ = kMODEL_ROCK;
     auto cube = CommonServices::getFactory()->MakeCube(location, glm::vec3(scale));
     meshes_.push_back(std::move(cube));
     border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(scale));

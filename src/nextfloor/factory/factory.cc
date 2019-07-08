@@ -7,6 +7,7 @@
 
 #include "nextfloor/factory/factory.h"
 
+#include "nextfloor/factory/renderer_factory.h"
 
 #include "nextfloor/objects/universe.h"
 #include "nextfloor/objects/room.h"
@@ -26,9 +27,8 @@
 #include "nextfloor/physics/serial_collision.h"
 #include "nextfloor/physics/cl_collision.h"
 
-#include "nextfloor/renderer/gl_cube_renderer.h"
-
 #include "nextfloor/core/common_services.h"
+
 
 namespace nextfloor {
 
@@ -43,6 +43,7 @@ static bool sInstanciated = false;
 Factory::Factory()
 {
     assert(!sInstanciated);
+    renderer_factory_ = std::make_unique<RendererFactory>();
     sInstanciated = true;
 }
 
@@ -136,10 +137,11 @@ std::unique_ptr<nextfloor::objects::EngineGridBox> Factory::MakeUniverseGridBox(
     return std::make_unique<UniverseGridBox>(grid_coords, universe_grid);
 }
 
-std::unique_ptr<nextfloor::objects::EngineRenderer> Factory::MakeCubeRenderer(std::string texture) const noexcept
+nextfloor::objects::EngineRenderer* Factory::MakeCubeRenderer(std::string texture) const noexcept
 {
-    using nextfloor::renderer::GlCubeRenderer;
-    return std::make_unique<GlCubeRenderer>(texture);
+    return renderer_factory_->MakeCubeRenderer(texture);
+    // using nextfloor::renderer::GlCubeRenderer;
+    // return std::make_unique<GlCubeRenderer>(texture);
 }
 
 std::unique_ptr<nextfloor::objects::EngineCollision> Factory::MakeCollisionEngine() const noexcept

@@ -9,6 +9,8 @@
 
 #include "nextfloor/factory/engine_factory.h"
 
+#include "nextfloor/factory/engine_renderer_factory.h"
+
 namespace nextfloor {
 
 namespace factory {
@@ -61,7 +63,7 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::EngineGridBox> MakeUniverseGridBox(glm::vec3 grid_coords, nextfloor::objects::EngineGrid* universe_grid) const noexcept override;
 
-    virtual std::unique_ptr<nextfloor::objects::EngineRenderer> MakeCubeRenderer(std::string texture) const noexcept override;
+    virtual nextfloor::objects::EngineRenderer* MakeCubeRenderer(std::string texture) const noexcept override;
 
     virtual std::unique_ptr<nextfloor::objects::EngineCollision> MakeCollisionEngine() const noexcept override;
 
@@ -69,6 +71,7 @@ private:
 
     std::unique_ptr<nextfloor::objects::EngineObject> MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept;
 
+    std::unique_ptr<EngineRendererFactory> renderer_factory_;
 };
 
 } // namespace factory
