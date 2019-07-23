@@ -67,6 +67,8 @@ public:
     // int IsMovedZ() const { return cube_->IsMovedZ(); }
     virtual glm::vec3 location() const override final { return cube_->location(); }
     glm::vec3 scale() const { return cube_->scale(); }
+    /* Coords are a 2.0f width cube, so dimension is 2 * scale */
+    virtual glm::vec3 dimension() const override final { return 2.0f * cube_->scale(); }
     virtual glm::vec3 move() const override final { return cube_->move(); }
     virtual float distance() const override final { return cube_->distance(); }
 

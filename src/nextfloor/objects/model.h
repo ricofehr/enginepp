@@ -18,6 +18,7 @@
 
 #include "nextfloor/objects/engine_border.h"
 #include "nextfloor/objects/engine_grid.h"
+#include "nextfloor/objects/engine_grid_box.h"
 #include "nextfloor/objects/engine_renderer.h"
 #include "nextfloor/objects/engine_polygon.h"
 
@@ -105,10 +106,43 @@ public:
 
     virtual void toready() override { ready_ = true; }
 
+    virtual void PrepareDraw() override {}
+
+    virtual bool IsFrontPositionFilled() const noexcept override
+    {
+        return coords_list_[0]->IsFrontPositionFilled();
+    }
+
+    virtual bool IsRightPositionFilled() const noexcept override
+    {
+        return coords_list_[0]->IsRightPositionFilled();
+    }
+
+    virtual bool IsLeftPositionFilled() const noexcept override
+    {
+        return coords_list_[0]->IsLeftPositionFilled();
+    }
+
+    virtual bool IsBackPositionFilled() const noexcept override
+    {
+        return coords_list_[0]->IsBackPositionFilled();
+    }
+
+    virtual bool IsFloorPositionFilled() const noexcept override
+    {
+        return coords_list_[0]->IsFloorPositionFilled();
+    }
+
+    virtual bool IsRoofPositionFilled() const noexcept override
+    {
+        return coords_list_[0]->IsRoofPositionFilled();
+    }
 
 protected:
 
     Model();
+
+    void RemoveItemToGrid(EngineObject* object) noexcept;
 
     /** meshes which composes the current object */
     std::vector<std::unique_ptr<EnginePolygon>> meshes_;
@@ -120,6 +154,8 @@ protected:
 
     std::unique_ptr<EngineGrid> grid_{nullptr};
 
+    std::vector<EngineGridBox*> coords_list_;
+
     /** Parent of the current 3d model */
     EngineObject* parent_{nullptr};
 
@@ -130,6 +166,8 @@ protected:
 private:
 
     void InitCollisionEngine();
+    void AddItemToGrid(EngineObject* object) noexcept;
+    void set_gridcoords(std::vector<EngineGridBox*> coords_list) { coords_list_ = coords_list; }
 
     int id_{0};
 

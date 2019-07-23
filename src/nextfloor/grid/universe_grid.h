@@ -23,7 +23,7 @@ class UniverseGrid : public Grid {
 
 public:
 
-    UniverseGrid(EngineObject* owner);
+    UniverseGrid(nextfloor::objects::EngineObject* owner);
 
     UniverseGrid(UniverseGrid&&) = default;
 
@@ -35,63 +35,25 @@ public:
 
     virtual ~UniverseGrid() override;
 
-    virtual void InitDoorsAndWindows() noexcept override final;
-
 protected:
 
-    virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
+    virtual std::unique_ptr<nextfloor::objects::EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
 
-    void InitLeftDoorAndWindowForRoom(glm::ivec3 coords) noexcept;
-    void InitRightDoorAndWindowForRoom(glm::ivec3 coords) noexcept;
-    void InitFrontDoorAndWindowForRoom(glm::ivec3 coords) noexcept;
-    void InitBackDoorAndWindowForRoom(glm::ivec3 coords) noexcept;
-    void InitRoofDoorAndWindowForRoom(glm::ivec3 coords) noexcept;
-    void InitFloorDoorAndWindowForRoom(glm::ivec3 coords) noexcept;
-
-    virtual int count_width_boxes() const override final
-    {
-        return kBOXES_IN_UNIVERSE_WIDTH;
-    }
-
-    virtual int count_height_boxes() const override final
-    {
-        return kBOXES_IN_UNIVERSE_HEIGHT;
-    }
-
-    virtual int count_depth_boxes() const override final
-    {
-        return kBOXES_IN_UNIVERSE_DEPTH;
-    }
-
-    virtual float x_length_by_box() const override final
-    {
-        return kX_LENGTH_BY_UNIVERSE_BOX;
-    }
-
-    virtual float y_length_by_box() const override final
-    {
-        return kY_LENGTH_BY_UNIVERSE_BOX;
-    }
-
-    virtual float z_length_by_box() const override final
-    {
-        return kZ_LENGTH_BY_UNIVERSE_BOX;
-    }
 private:
 
     /*
      *  Grid Constants For Romm Setting
      */
-    static constexpr int kBOXES_IN_UNIVERSE_WIDTH = 8;
-    static constexpr int kBOXES_IN_UNIVERSE_HEIGHT = 4;
-    static constexpr int kBOXES_IN_UNIVERSE_DEPTH = 8;
-    static constexpr float kX_LENGTH_BY_UNIVERSE_BOX = 16.0f;
-    static constexpr float kY_LENGTH_BY_UNIVERSE_BOX = 12.0f;
-    static constexpr float kZ_LENGTH_BY_UNIVERSE_BOX = 16.0f;
+    static constexpr int kWIDTH_BOXES_COUNT = 8;
+    static constexpr int kHEIGHT_BOXES_COUNT = 4;
+    static constexpr int kDEPTH_BOXES_COUNT = 8;
+    static constexpr float kBOX_WIDTH = 16.0f;
+    static constexpr float kBOX_HEIGHT = 12.0f;
+    static constexpr float kBOX_DEPTH = 16.0f;
 };
 
 } // namespace grid
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_GRID_GRID_H_
+#endif // NEXTFLOOR_GRID_UNIVERSEGRID_H_

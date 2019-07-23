@@ -21,7 +21,7 @@ class RoomGridBox : public GridBox {
 
 public:
 
-    RoomGridBox(glm::vec3 coords, EngineGrid* owner);
+    RoomGridBox(glm::vec3 coords, nextfloor::objects::EngineGrid* owner);
 
     RoomGridBox(RoomGridBox&&) = default;
 
@@ -32,10 +32,6 @@ public:
     RoomGridBox& operator=(const RoomGridBox&) = default;
 
     virtual ~RoomGridBox() = default;
-
-    virtual void AddRoomDoor(int side) override {}
-
-    virtual void AddRoomWindow(int side) override {}
 };
 
 } // namespace grid

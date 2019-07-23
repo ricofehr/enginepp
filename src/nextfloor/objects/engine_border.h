@@ -46,6 +46,7 @@ public:
     // int IsMovedY() const { return cube_->IsMovedY(); }
     // int IsMovedZ() const { return cube_->IsMovedZ(); }
     virtual glm::vec3 location() const = 0;
+    virtual glm::vec3 dimension() const = 0;
     // glm::vec3 scale() const { return cube_->scale(); }
     virtual glm::vec3 move() const = 0;
     virtual float distance() const = 0;

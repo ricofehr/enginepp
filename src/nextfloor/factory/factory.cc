@@ -11,14 +11,22 @@
 
 #include "nextfloor/objects/universe.h"
 #include "nextfloor/objects/room.h"
-#include "nextfloor/objects/wallbrick.h"
+#include "nextfloor/objects/front_wall.h"
+#include "nextfloor/objects/right_wall.h"
+#include "nextfloor/objects/back_wall.h"
+#include "nextfloor/objects/left_wall.h"
+#include "nextfloor/objects/floor.h"
+#include "nextfloor/objects/roof.h"
+#include "nextfloor/objects/wall_brick.h"
 #include "nextfloor/objects/rock.h"
 #include "nextfloor/objects/camera.h"
 
+#include "nextfloor/grid/object_grid.h"
 #include "nextfloor/grid/room_grid.h"
 #include "nextfloor/grid/universe_grid.h"
 #include "nextfloor/grid/room_grid_box.h"
 #include "nextfloor/grid/universe_grid_box.h"
+#include "nextfloor/grid/grid_box.h"
 
 #include "nextfloor/polygons/cube.h"
 
@@ -59,28 +67,46 @@ std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeRoom(glm::vec3 lo
     return std::make_unique<nextfloor::objects::Room>(location);
 }
 
-std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeFloorBrick(glm::vec3 location, glm::vec3 scale) const noexcept
+std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeFrontWall(glm::vec3 location, glm::vec3 scale) const noexcept
 {
-    using nextfloor::objects::WallBrick;
-    return MakeWallBrick(location, scale, WallBrick::kFLOOR_TEXTURE);
+    using nextfloor::objects::FrontWall;
+    return std::make_unique<nextfloor::objects::FrontWall>(location, scale);
 }
 
-std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeSideWallBrick(glm::vec3 location, glm::vec3 scale) const noexcept
+std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeRightWall(glm::vec3 location, glm::vec3 scale) const noexcept
 {
-    using nextfloor::objects::WallBrick;
-    return MakeWallBrick(location, scale, WallBrick::kWALL_TEXTURE);
+    using nextfloor::objects::RightWall;
+    return std::make_unique<nextfloor::objects::RightWall>(location, scale);
 }
 
-std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeRoofBrick(glm::vec3 location, glm::vec3 scale) const noexcept
+std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeBackWall(glm::vec3 location, glm::vec3 scale) const noexcept
 {
-    using nextfloor::objects::WallBrick;
-    return MakeWallBrick(location, scale, WallBrick::kROOF_TEXTURE);
+    using nextfloor::objects::BackWall;
+    return std::make_unique<nextfloor::objects::BackWall>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeLeftWall(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::LeftWall;
+    return std::make_unique<nextfloor::objects::LeftWall>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeFloor(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::Floor;
+    return std::make_unique<nextfloor::objects::Floor>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeRoof(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::Roof;
+    return std::make_unique<nextfloor::objects::Roof>(location, scale);
 }
 
 std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept
 {
     using nextfloor::objects::WallBrick;
-    return std::make_unique<WallBrick>(location, scale, texture);
+    return std::make_unique<nextfloor::objects::WallBrick>(location, scale, texture);
 }
 
 std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeRock(glm::vec3 location) const noexcept
@@ -125,6 +151,12 @@ std::unique_ptr<nextfloor::objects::EngineGrid> Factory::MakeRoomGrid(nextfloor:
     return std::make_unique<RoomGrid>(room);
 }
 
+std::unique_ptr<nextfloor::objects::EngineGrid> Factory::MakeGrid(nextfloor::objects::EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension) const noexcept
+{
+    using nextfloor::grid::ObjectGrid;
+    return std::make_unique<ObjectGrid>(owner, boxes_count, box_dimension);
+}
+
 std::unique_ptr<nextfloor::objects::EngineGridBox> Factory::MakeRoomGridBox(glm::vec3 grid_coords, nextfloor::objects::EngineGrid* room_grid) const noexcept
 {
     using nextfloor::grid::RoomGridBox;
@@ -137,11 +169,15 @@ std::unique_ptr<nextfloor::objects::EngineGridBox> Factory::MakeUniverseGridBox(
     return std::make_unique<UniverseGridBox>(grid_coords, universe_grid);
 }
 
+std::unique_ptr<nextfloor::objects::EngineGridBox> Factory::MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::EngineGrid* grid) const noexcept
+{
+    using nextfloor::grid::GridBox;
+    return std::make_unique<GridBox>(grid_coords, grid);
+}
+
 nextfloor::objects::EngineRenderer* Factory::MakeCubeRenderer(std::string texture) const noexcept
 {
     return renderer_factory_->MakeCubeRenderer(texture);
-    // using nextfloor::renderer::GlCubeRenderer;
-    // return std::make_unique<GlCubeRenderer>(texture);
 }
 
 std::unique_ptr<nextfloor::objects::EngineCollision> Factory::MakeCollisionEngine() const noexcept

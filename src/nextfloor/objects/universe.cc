@@ -24,10 +24,9 @@ Universe::Universe()
     auto location = glm::vec3(0.0f);
     type_ = kMODEL_UNIVERSE;
     grid_ = CommonServices::getFactory()->MakeUniverseGrid(this);
-    border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale_vector());
+    border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale());
 
     add_child(CommonServices::getFactory()->MakeRoom(location));
-    //InitDoorsForRooms();
     grid_->DisplayGrid();
 }
 
@@ -35,24 +34,8 @@ void Universe::Draw() noexcept
 {
     assert(grid_ != nullptr);
     assert(border_ != nullptr);
-    //using nextfloor::core::CommonServices;
-
-    //auto clipping = CommonServices::getConfig()->getClippingLevel();
 
     int active_index = 0;
-    /* Detect current room */
-    // int active_index = -1;
-    // tbb::parallel_for (0, (int)objects_.size(), 1, [&](int cnt) {
-    //     if (objects_[cnt]->get_camera() != nullptr) {
-    //         active_index = cnt;
-    //     }
-    // });
-
-    // /* if no active Room, return */
-    // if (active_index == -1) {
-    //     return;
-    // }
-
     /* Lock current universe */
     lock();
 
@@ -78,11 +61,6 @@ void Universe::Draw() noexcept
             r->Draw();
         }
     }
-}
-
-void Universe::InitDoorsForRooms() noexcept
-{
-    grid_->InitDoorsAndWindows();
 }
 
 } // namespace objects

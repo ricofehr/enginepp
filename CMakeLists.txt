@@ -35,18 +35,28 @@ set(factory_SRCS
 set(grid_SRCS
     src/nextfloor/grid/grid.cc
     src/nextfloor/grid/grid_box.cc
+    src/nextfloor/grid/object_grid.cc
     src/nextfloor/grid/room_grid.cc
     src/nextfloor/grid/room_grid_box.cc
     src/nextfloor/grid/universe_grid.cc
     src/nextfloor/grid/universe_grid_box.cc)
 
 set(objects_SRCS
+    src/nextfloor/objects/back_wall.cc
     src/nextfloor/objects/camera.cc
+    src/nextfloor/objects/depth_wall.cc
+    src/nextfloor/objects/floor.cc
+    src/nextfloor/objects/front_wall.cc
+    src/nextfloor/objects/left_wall.cc
     src/nextfloor/objects/model.cc
+    src/nextfloor/objects/right_wall.cc
     src/nextfloor/objects/rock.cc
+    src/nextfloor/objects/roof.cc
     src/nextfloor/objects/room.cc
     src/nextfloor/objects/universe.cc
-    src/nextfloor/objects/wallbrick.cc)
+    src/nextfloor/objects/wall.cc
+    src/nextfloor/objects/wall_brick.cc
+    src/nextfloor/objects/width_wall.cc)
 
 set(physics_SRCS
     src/nextfloor/physics/border.cc
@@ -104,13 +114,18 @@ set(factory_HDRS
 set(grid_HDRS
     src/nextfloor/grid/grid.h
     src/nextfloor/grid/grid_box.h
+    src/nextfloor/grid/object_grid.h
     src/nextfloor/grid/room_grid.h
     src/nextfloor/grid/room_grid_box.h
     src/nextfloor/grid/universe_grid.h
     src/nextfloor/grid/universe_grid_box.h)
 
 set(objects_HDRS
+    src/nextfloor/objects/back_wall.h
     src/nextfloor/objects/camera.h
+    src/nextfloor/objects/depth_wall.h
+    src/nextfloor/objects/floor.h
+    src/nextfloor/objects/front_wall.h
     src/nextfloor/objects/engine_border.h
     src/nextfloor/objects/engine_collision.h
     src/nextfloor/objects/engine_grid.h
@@ -118,11 +133,16 @@ set(objects_HDRS
     src/nextfloor/objects/engine_object.h
     src/nextfloor/objects/engine_polygon.h
     src/nextfloor/objects/engine_renderer.h
+    src/nextfloor/objects/left_wall.h
     src/nextfloor/objects/model.h
+    src/nextfloor/objects/right_wall.h
     src/nextfloor/objects/rock.h
+    src/nextfloor/objects/roof.h
     src/nextfloor/objects/room.h
     src/nextfloor/objects/universe.h
-    src/nextfloor/objects/wallbrick.h)
+    src/nextfloor/objects/wall.h
+    src/nextfloor/objects/wall_brick.h
+    src/nextfloor/objects/width_wall.h)
 
 set(physics_HDRS
     src/nextfloor/physics/border.h

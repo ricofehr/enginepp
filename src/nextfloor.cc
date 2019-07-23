@@ -27,8 +27,6 @@
 int main(int argc, char* argv[])
 {
     using nextfloor::objects::Camera;
-    // using nextfloor::factory::UniverseFactory;
-    // using nextfloor::factory::DemoUniverseFactory;
     using nextfloor::factory::Factory;
     using nextfloor::controller::GameLoop;
     using nextfloor::renderer::GameWindow;
@@ -75,11 +73,6 @@ int main(int argc, char* argv[])
     }
 
     /* Init world */
-    // std::unique_ptr<UniverseFactory> factory{nullptr};
-    // if (CommonServices::getConfig()->getUniverseFactoryType() == UniverseFactory::kUNIVERSEFACTORY_DEMO) {
-    //     factory = std::make_unique<DemoUniverseFactory>();
-    // }
-
     GameWindow game_window;
     std::unique_ptr<EngineCollision> engine_collision{factory->MakeCollisionEngine()};
     GameLoop game_loop(&game_window, engine_collision.get());

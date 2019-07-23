@@ -46,50 +46,18 @@ public:
 
     bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;
 
-    /*
-     *  Mutators
-     */
-    void addDoor(int ind) { doors_[ind] = true; }
-    void addWindow(int ind) { windows_[ind] = true; }
+    void AddCamera() noexcept;
+    void AddRock(glm::vec3 relative_location) noexcept;
 
 private:
 
-    void AddFloor() noexcept;
-    void AddLeftWall() noexcept;
+    void AddWalls() noexcept;
+    void AddFrontWall() noexcept;
     void AddRightWall() noexcept;
     void AddBackWall() noexcept;
-    void AddFrontWall() noexcept;
+    void AddLeftWall() noexcept;
+    void AddFloor() noexcept;
     void AddRoof() noexcept;
-
-    glm::vec3 CalculatePaddingFloor() const noexcept;
-    glm::vec3 CalculatePaddingRoof() const noexcept;
-    glm::vec3 CalculatePaddingLeftWall() const noexcept;
-    glm::vec3 CalculatePaddingRightWall() const noexcept;
-    glm::vec3 CalculatePaddingFrontWall() const noexcept;
-    glm::vec3 CalculatePaddingBackWall() const noexcept;
-
-    void AddFloorBrick(glm::vec3 location, glm::vec3 scale) noexcept;
-    void AddRoofBrick(glm::vec3 location, glm::vec3 scale) noexcept;
-    void AddSideWallBrick(glm::vec3 location, glm::vec3 scale) noexcept;
-
-    glm::vec3 CalculateScaleWallYFixed() const noexcept;
-    glm::vec3 CalculateScaleWallXFixed() const noexcept;
-    glm::vec3 CalculateScaleWallZFixed() const noexcept;
-
-    glm::vec3 CalculateBrickWallLocation(glm::ivec3 grid_coords, glm::vec3 padding) const noexcept;
-
-    bool IsInsideFloor(glm::ivec3 grid_coords) const noexcept;
-    bool IsInsideRoof(glm::ivec3 grid_coords) const noexcept;
-    bool IsInsideRightWall(glm::ivec3 grid_coords) const noexcept;
-    bool IsInsideLeftWall(glm::ivec3 grid_coords) const noexcept;
-    bool IsInsideFrontWall(glm::ivec3 grid_coords) const noexcept;
-    bool IsInsideBackWall(glm::ivec3 grid_coords) const noexcept;
-
-    /** select room side with a Door */
-    std::vector<bool> doors_{false, false, false, false, false, false};
-
-    /** select room side with a Window */
-    std::vector<bool> windows_{false, false, false, false, false, false};
 };
 
 } // namespace objects

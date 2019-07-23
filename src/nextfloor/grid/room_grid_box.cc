@@ -11,7 +11,7 @@ namespace nextfloor {
 namespace grid {
 
 
-RoomGridBox::RoomGridBox(glm::vec3 coords, EngineGrid* owner)
+RoomGridBox::RoomGridBox(glm::vec3 coords, nextfloor::objects::EngineGrid* owner)
 :GridBox(coords, owner) { }
 
 } // namespace grid

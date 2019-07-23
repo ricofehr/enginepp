@@ -8,6 +8,7 @@
 #define NEXTFLOOR_FACTORY_ENGINEFACTORY_H_
 
 #include <memory>
+#include <string>
 #include <glm/glm.hpp>
 
 #include "nextfloor/objects/engine_object.h"
@@ -44,11 +45,19 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeRoom(glm::vec3 location) const noexcept = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeFloorBrick(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeFrontWall(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeSideWallBrick(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeRightWall(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeRoofBrick(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeBackWall(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
+
+    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeLeftWall(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
+
+    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeFloor(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
+
+    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeRoof(glm::vec3 location, glm::vec3 scale) const noexcept = 0;
+
+    virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept = 0;
 
     virtual std::unique_ptr<nextfloor::objects::EngineObject> MakeRock(glm::vec3 location) const noexcept = 0;
 
@@ -64,9 +73,13 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::EngineGrid> MakeRoomGrid(nextfloor::objects::EngineObject* room) const noexcept = 0;
 
+    virtual std::unique_ptr<nextfloor::objects::EngineGrid> MakeGrid(nextfloor::objects::EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension) const noexcept = 0;
+
     virtual std::unique_ptr<nextfloor::objects::EngineGridBox> MakeRoomGridBox(glm::vec3 grid_coords, nextfloor::objects::EngineGrid* room_grid) const noexcept = 0;
 
     virtual std::unique_ptr<nextfloor::objects::EngineGridBox> MakeUniverseGridBox(glm::vec3 grid_coords, nextfloor::objects::EngineGrid* universe_grid) const noexcept = 0;
+
+    virtual std::unique_ptr<nextfloor::objects::EngineGridBox> MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::EngineGrid* grid) const noexcept = 0;
 
     virtual nextfloor::objects::EngineRenderer* MakeCubeRenderer(std::string texture) const noexcept = 0;
 

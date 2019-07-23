@@ -18,19 +18,15 @@ namespace nextfloor {
 
 namespace grid {
 
-using nextfloor::objects::EngineGridBox;
-using nextfloor::objects::EngineGrid;
-using nextfloor::objects::EngineObject;
-
 /**
  *  @class GridBox
  *  @brief Abstract class who defines generic grid object
  */
-class GridBox : public EngineGridBox {
+class GridBox : public nextfloor::objects::EngineGridBox {
 
 public:
 
-    GridBox(glm::vec3 coords, EngineGrid* owner);
+    GridBox(glm::vec3 coords, nextfloor::objects::EngineGrid* owner);
 
     GridBox(GridBox&&) = default;
 
@@ -42,25 +38,32 @@ public:
 
     virtual ~GridBox() override = default;
 
-    virtual bool IsInside(EngineObject* object) const noexcept override;
+    virtual bool IsInside(nextfloor::objects::EngineObject* object) const noexcept override;
 
-    virtual void add(EngineObject* object) noexcept override;
+    virtual void add(nextfloor::objects::EngineObject* object) noexcept override;
 
-    virtual void remove(EngineObject* object) noexcept override;
+    virtual void remove(nextfloor::objects::EngineObject* object) noexcept override;
 
     virtual void clear() noexcept override;
 
     virtual bool IsEmpty() const noexcept override;
+    virtual bool IsFilled() const noexcept override;
 
-    //std::vector<EngineObject*> occupants() const noexcept { return occupants_; }
     virtual int size() const noexcept override
     {
         return occupants_.size();
     }
 
+    virtual bool IsFrontPositionFilled() const noexcept override;
+    virtual bool IsRightPositionFilled() const noexcept override;
+    virtual bool IsLeftPositionFilled() const noexcept override;
+    virtual bool IsBackPositionFilled() const noexcept override;
+    virtual bool IsFloorPositionFilled() const noexcept override;
+    virtual bool IsRoofPositionFilled() const noexcept override;
+
 protected:
 
-    EngineObject* getFirstOccupant()
+    nextfloor::objects::EngineObject* getFirstOccupant()
     {
         if (occupants_.size() == 0)
         {
@@ -70,11 +73,12 @@ protected:
         return occupants_[0];
     }
 
+    glm::vec3 coords_;
+    nextfloor::objects::EngineGrid* owner_;
+
 private:
 
-    glm::vec3 coords_;
-    EngineGrid* owner_;
-    std::vector<EngineObject*> occupants_;
+    std::vector<nextfloor::objects::EngineObject*> occupants_;
 };
 
 } // namespace objects

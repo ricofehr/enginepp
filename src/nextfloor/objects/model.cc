@@ -48,6 +48,8 @@ bool operator!=(const Model& o1, const Model& o2)
 
 void Model::Draw() noexcept
 {
+    PrepareDraw();
+
     /* Draw meshes of current object */
     for (auto &mesh : meshes_) {
         mesh->UpdateModelViewProjectionMatrix();
@@ -74,11 +76,7 @@ EngineObject* Model::add_child(std::unique_ptr<EngineObject> object) noexcept
         objects_.push_back(std::move(object));
     }
 
-    static int count = 0;
-    //std::cout << y << "-" << x << "-" << z << std::endl;
-    std::cout << "Model:" << object_raw->id() << "(" << count++ << ")" << std::endl;
-
-    grid_->AddItemToGrid(object_raw);
+    AddItemToGrid(object_raw);
     /* Ensure object is well added */
     assert(objects_.size() == initial_objects_size + 1);
     unlock();
@@ -86,10 +84,23 @@ EngineObject* Model::add_child(std::unique_ptr<EngineObject> object) noexcept
     return object_raw;
 }
 
+void Model::AddItemToGrid(EngineObject* object) noexcept
+{
+    if (grid_ == nullptr) {
+        if (parent_ != nullptr) {
+            dynamic_cast<Model*>(parent_)->AddItemToGrid(object);
+        }
+    } else {
+        auto coords_list = grid_->AddItemToGrid(object);
+        dynamic_cast<Model*>(object)->set_gridcoords(coords_list);
+    }
+}
+
 std::unique_ptr<EngineObject> Model::remove_child(EngineObject* child) noexcept
 {
     std::unique_ptr<EngineObject> ret{nullptr};
 
+    RemoveItemToGrid(child);
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         if (objects_[cnt].get() == child) {
             lock();
@@ -105,6 +116,17 @@ std::unique_ptr<EngineObject> Model::remove_child(EngineObject* child) noexcept
     }
 
     return ret;
+}
+
+void Model::RemoveItemToGrid(EngineObject* object) noexcept
+{
+    if (grid_ == nullptr) {
+        if (parent_ != nullptr) {
+            dynamic_cast<Model*>(parent_)->RemoveItemToGrid(object);
+        }
+    } else {
+        grid_->RemoveItemToGrid(object);
+    }
 }
 
 bool Model::IsLastObstacle(EngineObject* obstacle) const noexcept

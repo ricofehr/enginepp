@@ -39,47 +39,17 @@ protected:
 
     virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
 
-    virtual int count_width_boxes() const override final
-    {
-        return kBOXES_IN_ROOM_WIDTH;
-    }
-
-    virtual int count_height_boxes() const override final
-    {
-        return kBOXES_IN_ROOM_HEIGHT;
-    }
-
-    virtual int count_depth_boxes() const override final
-    {
-        return kBOXES_IN_ROOM_DEPTH;
-    }
-
-    virtual float x_length_by_box() const override final
-    {
-        return kX_LENGTH_BY_ROOM_BOX;
-    }
-
-    virtual float y_length_by_box() const override final
-    {
-        return kY_LENGTH_BY_ROOM_BOX;
-    }
-
-    virtual float z_length_by_box() const override final
-    {
-        return kZ_LENGTH_BY_ROOM_BOX;
-    }
-
 private:
 
     /*
      *  Grid Constants For Romm Setting
      */
-    static constexpr int kBOXES_IN_ROOM_WIDTH = 8;
-    static constexpr int kBOXES_IN_ROOM_HEIGHT = 6;
-    static constexpr int kBOXES_IN_ROOM_DEPTH = 8;
-    static constexpr float kX_LENGTH_BY_ROOM_BOX = 2.0f;
-    static constexpr float kY_LENGTH_BY_ROOM_BOX = 2.0f;
-    static constexpr float kZ_LENGTH_BY_ROOM_BOX = 2.0f;
+    static constexpr int kWIDTH_BOXES_COUNT = 8;
+    static constexpr int kHEIGHT_BOXES_COUNT = 6;
+    static constexpr int kDEPTH_BOXES_COUNT = 8;
+    static constexpr float kBOX_WIDTH = 2.0f;
+    static constexpr float kBOX_HEIGHT = 2.0f;
+    static constexpr float kBOX_DEPTH = 2.0f;
 
 };
 

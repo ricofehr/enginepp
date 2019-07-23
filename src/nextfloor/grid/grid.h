@@ -29,22 +29,11 @@ class Grid : public EngineGrid {
 public:
 
     /*
-     *  Grid Square Filled Constants
-     */
-    static constexpr int kGRID_UNKNOW = -1;
-    static constexpr int kGRID_USED = 0;
-    static constexpr int kGRID_EMPTY = 1;
-
-    /*
-     *  Grid Type Constants
-     */
-    static constexpr int kGRID_UNIVERSE = 0;
-    static constexpr int kGRID_ROOM = 1;
-
-    /*
      *  Initial collision countdown value
      */
     static constexpr int kCOLLISION_COUNTDOWN = 4;
+
+    Grid(EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension);
 
     Grid(Grid&&) = default;
     Grid& operator=(Grid&&) = default;
@@ -52,48 +41,54 @@ public:
     Grid(const Grid&) = delete;
     Grid& operator=(const Grid&) = delete;
 
-    virtual ~Grid() override = default;
+    virtual ~Grid() override
+    {
+        DeleteGrid();
+    }
 
-    virtual void InitDoorsAndWindows() noexcept override {}
-
-    virtual int IsPositionInTheGridEmpty(glm::ivec3 box_coords_in_grid) const noexcept override;
+    virtual bool IsPositionEmpty(glm::ivec3 coords) const noexcept override;
+    virtual bool IsFrontPositionFilled(glm::ivec3 coords) const noexcept override;
+    virtual bool IsRightPositionFilled(glm::ivec3 coords) const noexcept override;
+    virtual bool IsLeftPositionFilled(glm::ivec3 coords) const noexcept override;
+    virtual bool IsBackPositionFilled(glm::ivec3 coords) const noexcept override;
+    virtual bool IsFloorPositionFilled(glm::ivec3 coords) const noexcept override;
+    virtual bool IsRoofPositionFilled(glm::ivec3 coords) const noexcept override;
+    virtual bool IsPositionFilled(glm::ivec3 coords) const noexcept override;
 
     virtual void DisplayGrid() const noexcept override;
-
-    //virtual std::vector<EngineObject*> FindItemsInGrid(glm::ivec3 box_coords_in_grid) const noexcept override;
 
     virtual void ComputePlacementsInGrid() noexcept override;
 
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept override;
 
-    virtual void AddItemToGrid(EngineObject* object) noexcept override;
+    virtual std::vector<EngineGridBox*> AddItemToGrid(EngineObject* object) noexcept override;
 
-    virtual void RemoveItemToGrid(glm::ivec3 box_coords_in_grid, EngineObject* object) noexcept override;
+    virtual void RemoveItemToGrid(EngineObject* object) noexcept override;
 
     virtual void ResetGrid() noexcept override;
 
     virtual bool IsInside(glm::vec3 location_object) const noexcept override;
 
-    virtual float width_magnitude() const noexcept override final
+    virtual float width() const noexcept override final
     {
-        return count_width_boxes() * x_length_by_box();
+        return width_boxes_count() * box_width();
     }
 
-    virtual float height_magnitude() const noexcept override final
+    virtual float height() const noexcept override final
     {
-        return count_height_boxes() * y_length_by_box();
+        return height_boxes_count() * box_height();
     }
 
-    virtual float depth_magnitude() const noexcept override final
+    virtual float depth() const noexcept override final
     {
-        return count_depth_boxes() * z_length_by_box();
+        return depth_boxes_count() * box_depth();
     }
 
-    virtual glm::vec3 scale_vector() const noexcept override final
+    virtual glm::vec3 scale() const noexcept override final
     {
-        return glm::vec3(width_magnitude()/2,
-                         height_magnitude()/2,
-                         depth_magnitude()/2);
+        return glm::vec3(width()/2,
+                         height()/2,
+                         depth()/2);
     }
 
     virtual void lock() override final
@@ -108,52 +103,88 @@ public:
 
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept override final;
 
-    virtual glm::ivec3 box_counts() const override final
+    virtual glm::ivec3 boxes_count() const override final
     {
-        return glm::ivec3(count_width_boxes(), count_height_boxes(), count_depth_boxes());
+        return glm::ivec3(width_boxes_count(), height_boxes_count(), depth_boxes_count());
     }
 
     virtual glm::vec3 box_dimension() const override final
     {
-        return glm::vec3(x_length_by_box(), y_length_by_box(), z_length_by_box());
+        return glm::vec3(box_width(), box_height(), box_depth());
     }
 
-protected:
+    virtual glm::vec3 CalculateFrontSideLocation() const noexcept override;
+    virtual glm::vec3 CalculateFloorSideLocation() const noexcept override;
+    virtual glm::vec3 CalculateRoofSideLocation() const noexcept override;
+    virtual glm::vec3 CalculateRightSideLocation() const noexcept override;
+    virtual glm::vec3 CalculateBackSideLocation() const noexcept override;
+    virtual glm::vec3 CalculateLeftSideLocation() const noexcept override;
+    virtual glm::vec3 CalculateFrontSideBorderScale() const noexcept override;
+    virtual glm::vec3 CalculateRightSideBorderScale() const noexcept override;
+    virtual glm::vec3 CalculateBackSideBorderScale() const noexcept override;
+    virtual glm::vec3 CalculateLeftSideBorderScale() const noexcept override;
+    virtual glm::vec3 CalculateFloorSideBorderScale() const noexcept override;
+    virtual glm::vec3 CalculateRoofSideBorderScale() const noexcept override;
 
-    Grid(EngineObject* owner);
+protected:
 
     void InitGrid() noexcept;
     void InitBoxes() noexcept;
     void DeleteGrid() noexcept;
-    void AddItemToGrid(glm::ivec3 box_coords_in_grid, EngineObject* object) noexcept;
 
-    EngineGridBox* getGridBox(glm::ivec3 grid_coords)
+    EngineGridBox* getGridBox(glm::ivec3 coords)
     {
-        return boxes_[grid_coords.x][grid_coords.y][grid_coords.z].get();
+        return boxes_[coords.x][coords.y][coords.z].get();
     }
 
-    virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) = 0;
+    virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 coords) = 0;
 
-    virtual int count_width_boxes() const = 0;
-    virtual int count_height_boxes() const = 0;
-    virtual int count_depth_boxes() const = 0;
+    virtual int width_boxes_count() const
+    {
+        return boxes_count_.x;
+    }
 
-    virtual float x_length_by_box() const = 0;
-    virtual float y_length_by_box() const = 0;
-    virtual float z_length_by_box() const = 0;
+    virtual int height_boxes_count() const
+    {
+        return boxes_count_.y;
+    }
+
+    virtual int depth_boxes_count() const
+    {
+        return boxes_count_.z;
+    }
+
+    virtual float box_width() const
+    {
+        return box_dimension_.x;
+    }
+
+    virtual float box_height() const
+    {
+        return box_dimension_.y;
+    }
+
+    virtual float box_depth() const
+    {
+        return box_dimension_.z;
+    }
 
     int type_{10000};
 
+    glm::vec3 box_dimension_;
+
+    glm::ivec3 boxes_count_;
+
 private:
 
+    EngineGridBox* AddItemToGrid(glm::ivec3 coords, EngineObject* object) noexcept;
+    void RemoveItemToGrid(glm::ivec3 coords, EngineObject* object) noexcept;
+
     void ComputeFirstPointInGrid() noexcept;
-    void ComputeGridUnits() noexcept;
-    void ParseGridForObjectPlacements(EngineObject *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept;
+    std::vector<EngineGridBox*> ParseGridForObjectPlacements(EngineObject *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept;
     glm::ivec3 PointToGridIndexes(glm::vec3 point) noexcept;
     glm::ivec3 CalculateLengthIndexes(glm::vec3 point_min, glm::vec3 point_max);
     bool IsCooordsAreCorrect(glm::ivec3 coords);
-
-    glm::vec3 grid_units_;
 
     tbb::mutex grid_mutex_;
 

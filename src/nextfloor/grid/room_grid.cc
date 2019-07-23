@@ -14,10 +14,9 @@ namespace grid {
 
 
 RoomGrid::RoomGrid(EngineObject* owner)
-   :Grid(owner)
+:Grid(owner, glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT), glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
 {
-    type_ = kGRID_ROOM;
-    InitGrid();
+    InitBoxes();
 }
 
 std::unique_ptr<EngineGridBox> RoomGrid::AllocateGridBox(glm::ivec3 grid_coords)
@@ -28,7 +27,7 @@ std::unique_ptr<EngineGridBox> RoomGrid::AllocateGridBox(glm::ivec3 grid_coords)
 
 RoomGrid::~RoomGrid()
 {
-    DeleteGrid();
+    //DeleteGrid();
 }
 
 } // namespace grid

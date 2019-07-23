@@ -21,7 +21,7 @@ class UniverseGridBox : public GridBox {
 
 public:
 
-    UniverseGridBox(glm::vec3 coords, EngineGrid* owner);
+    UniverseGridBox(glm::vec3 coords, nextfloor::objects::EngineGrid* owner);
 
     UniverseGridBox(UniverseGridBox&&) = default;
 
@@ -32,10 +32,6 @@ public:
     UniverseGridBox& operator=(const UniverseGridBox&) = default;
 
     virtual ~UniverseGridBox() = default;
-
-    virtual void AddRoomDoor(int side) override;
-
-    virtual void AddRoomWindow(int side) override;
 };
 
 } // namespace grid

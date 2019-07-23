@@ -40,12 +40,16 @@ public:
     virtual void clear() noexcept = 0;
 
     virtual bool IsEmpty() const noexcept = 0;
-
-    virtual void AddRoomDoor(int side) = 0;
-
-    virtual void AddRoomWindow(int side) = 0;
+    virtual bool IsFilled() const noexcept = 0;
 
     virtual int size() const noexcept = 0;
+
+    virtual bool IsFrontPositionFilled() const noexcept = 0;
+    virtual bool IsRightPositionFilled() const noexcept = 0;
+    virtual bool IsLeftPositionFilled() const noexcept = 0;
+    virtual bool IsBackPositionFilled() const noexcept = 0;
+    virtual bool IsFloorPositionFilled() const noexcept = 0;
+    virtual bool IsRoofPositionFilled() const noexcept = 0;
 
 protected:
 

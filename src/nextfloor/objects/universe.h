@@ -42,11 +42,6 @@ public:
      */
     void Draw() noexcept override final;
 
-    /**
-     *   Add Doors and Windows for Rooms object
-     */
-    void InitDoorsForRooms() noexcept;
-
 private:
 
     /** filtering only rooms with display state */
