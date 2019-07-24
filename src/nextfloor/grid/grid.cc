@@ -63,21 +63,17 @@ glm::vec3 GetMaxPointFromPoints(std::vector<glm::vec3> points)
 }
 
 
-Grid::Grid(EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
+Grid::Grid(nextfloor::objects::EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
 {
     owner_ = owner;
     boxes_count_ = boxes_count;
     box_dimension_ = box_dimension;
 }
 
-
-void Grid::InitGrid() noexcept
-{
-    InitBoxes();
-}
-
 void Grid::InitBoxes() noexcept
 {
+    using nextfloor::objects::EngineGridBox;
+
     boxes_ = new std::unique_ptr<EngineGridBox> **[width_boxes_count()];
 
     /* Ensure pointer is allocated */
@@ -110,9 +106,7 @@ glm::vec3 Grid::CalculateFirstPointInGrid() const noexcept
 glm::vec3 Grid::CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
-    auto dimension = box_dimension();
-
-    return grid0 + glm::vec3(coords.x*dimension.x, coords.y*dimension.y, coords.z*dimension.z);
+    return grid0 + glm::vec3(coords.x * box_dimension_.x, coords.y * box_dimension_.y, coords.z * box_dimension_.z);
 }
 
 bool Grid::IsPositionEmpty(glm::ivec3 coords) const noexcept
@@ -140,12 +134,12 @@ bool Grid::IsBackPositionFilled(glm::ivec3 coords) const noexcept
     return (coords.z != depth_boxes_count() - 1) && IsPositionFilled(glm::ivec3(coords.x,coords.y,coords.z+1));
 }
 
-bool Grid::IsFloorPositionFilled(glm::ivec3 coords) const noexcept
+bool Grid::IsBottomPositionFilled(glm::ivec3 coords) const noexcept
 {
     return coords.y != 0 && IsPositionFilled(glm::ivec3(coords.x,coords.y-1,coords.z));
 }
 
-bool Grid::IsRoofPositionFilled(glm::ivec3 coords) const noexcept
+bool Grid::IsTopPositionFilled(glm::ivec3 coords) const noexcept
 {
     return (coords.y != height_boxes_count() - 1) && IsPositionFilled(glm::ivec3(coords.x,coords.y+1,coords.z));
 }
@@ -155,18 +149,18 @@ bool Grid::IsPositionFilled(glm::ivec3 coords) const noexcept
     return boxes_[coords.x][coords.y][coords.z]->IsFilled();
 }
 
-std::vector<EngineGridBox*> Grid::AddItemToGrid(EngineObject* object) noexcept
+std::vector<nextfloor::objects::EngineGridBox*> Grid::AddItemToGrid(nextfloor::objects::EngineObject* object) noexcept
 {
     std::vector<glm::vec3> points = object->getCoordsModelMatrixComputed();
 
     auto point_min = GetMinPointFromPoints(points);
     auto point_max = GetMaxPointFromPoints(points);
-    auto lengths = CalculateLengthIndexes(point_min, point_max);
+    auto lengths = CalculateCoordsLengthBetweenPoints(point_min, point_max);
 
     return ParseGridForObjectPlacements(object, point_min, lengths);
 }
 
-glm::ivec3 Grid::CalculateLengthIndexes(glm::vec3 point_min, glm::vec3 point_max)
+glm::ivec3 Grid::CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, glm::vec3 point_max)
 {
     int length_x = static_cast<int>(ceil((point_max.x - point_min.x) / box_dimension_.x));
     int length_y = static_cast<int>(ceil((point_max.y - point_min.y) / box_dimension_.y));
@@ -175,16 +169,16 @@ glm::ivec3 Grid::CalculateLengthIndexes(glm::vec3 point_min, glm::vec3 point_max
     return glm::ivec3(length_x, length_y, length_z);
 }
 
-std::vector<EngineGridBox*> Grid::ParseGridForObjectPlacements(EngineObject *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept
+std::vector<nextfloor::objects::EngineGridBox*> Grid::ParseGridForObjectPlacements(nextfloor::objects::EngineObject *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept
 {
-    std::vector<EngineGridBox*> coords_list;
+    std::vector<nextfloor::objects::EngineGridBox*> coords_list;
 
     tbb::parallel_for (0, lengths.x, 1, [&](int cnt_x) {
         tbb::parallel_for (0, lengths.y, 1, [&](int cnt_y) {
             tbb::parallel_for (0, lengths.z, 1, [&](int cnt_z) {
                 auto cnt = glm::vec3(cnt_x, cnt_y, cnt_z);
                 auto intermediary_point = point_min + cnt * box_dimension_;
-                auto coords = PointToGridIndexes(intermediary_point);
+                auto coords = PointToCoords(intermediary_point);
 
                 if (IsCooordsAreCorrect(coords)) {
                     coords_list.push_back(AddItemToGrid(coords, object));
@@ -196,15 +190,15 @@ std::vector<EngineGridBox*> Grid::ParseGridForObjectPlacements(EngineObject *obj
     return coords_list;
 }
 
-glm::ivec3 Grid::PointToGridIndexes(glm::vec3 point) noexcept
+glm::ivec3 Grid::PointToCoords(glm::vec3 point) noexcept
 {
     glm::vec3 grid0 = CalculateFirstPointInGrid();
-    glm::vec3 indexes = (glm::vec3(point.x, point.y, point.z) - grid0) / box_dimension_;
+    glm::vec3 coords = (glm::vec3(point.x, point.y, point.z) - grid0) / box_dimension_;
 
-    return glm::ivec3(static_cast<int>(floor(indexes.x)), static_cast<int>(floor(indexes.y)), static_cast<int>(floor(indexes.z)));
+    return glm::ivec3(static_cast<int>(floor(coords.x)), static_cast<int>(floor(coords.y)), static_cast<int>(floor(coords.z)));
 }
 
-EngineGridBox* Grid::AddItemToGrid(glm::ivec3 coords, EngineObject* object) noexcept
+nextfloor::objects::EngineGridBox* Grid::AddItemToGrid(glm::ivec3 coords, nextfloor::objects::EngineObject* object) noexcept
 {
     assert(IsCooordsAreCorrect(coords));
 
@@ -232,7 +226,7 @@ bool Grid::IsCooordsAreCorrect(glm::ivec3 coords)
     return true;
 }
 
-void Grid::RemoveItemToGrid(EngineObject* object) noexcept
+void Grid::RemoveItemToGrid(nextfloor::objects::EngineObject* object) noexcept
 {
     for (auto i = 0; i < width_boxes_count(); i++) {
         for (auto j = 0; j < height_boxes_count(); j++) {
@@ -243,7 +237,7 @@ void Grid::RemoveItemToGrid(EngineObject* object) noexcept
     }
 }
 
-void Grid::RemoveItemToGrid(glm::ivec3 coords, EngineObject* object) noexcept
+void Grid::RemoveItemToGrid(glm::ivec3 coords, nextfloor::objects::EngineObject* object) noexcept
 {
     boxes_[coords.x][coords.y][coords.z]->remove(object);
 }
@@ -252,23 +246,12 @@ void Grid::DisplayGrid() const noexcept
 {
     std::string object_type{"MODEL3D"};
 
-    if (owner_->IsUniverse()) {
-        object_type = "UNIVERSE";
-    } else if (owner_->IsRoom()) {
-        object_type = "ROOM";
-    }
-
     std::cout << "=== GRID FOR " << object_type << " ID " << owner_->id() << " ===" << std::endl << std::endl;
     for (auto y = 0; y < height_boxes_count(); y++) {
         std::cout << "=== Floor " << y << std::endl;
         for (auto z = 0; z < depth_boxes_count(); z++) {
             for (auto x = 0; x < width_boxes_count(); x++) {
                 std::cout << "  " << boxes_[x][y][z]->size();
-                // if (boxes_[x][y][z]->IsEmpty()) {
-                //     std::cout << "  x";
-                // } else {
-                //     std::cout << "  o";
-                // }
             }
 
             std::cout << std::endl;
@@ -306,13 +289,13 @@ glm::vec3 Grid::CalculateLeftSideLocation() const noexcept
     return grid0 + glm::vec3(0.25f, height()/2, depth()/2);
 }
 
-glm::vec3 Grid::CalculateFloorSideLocation() const noexcept
+glm::vec3 Grid::CalculateBottomSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(width()/2, 0.25f, depth()/2);
 }
 
-glm::vec3 Grid::CalculateRoofSideLocation() const noexcept
+glm::vec3 Grid::CalculateTopSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(width()/2, height() - 0.25f, depth()/2);
@@ -338,12 +321,12 @@ glm::vec3 Grid::CalculateLeftSideBorderScale() const noexcept
     return glm::vec3(0.25f, height()/2, depth()/2);
 }
 
-glm::vec3 Grid::CalculateFloorSideBorderScale() const noexcept
+glm::vec3 Grid::CalculateBottomSideBorderScale() const noexcept
 {
     return glm::vec3(width()/2, 0.25f, depth()/2);
 }
 
-glm::vec3 Grid::CalculateRoofSideBorderScale() const noexcept
+glm::vec3 Grid::CalculateTopSideBorderScale() const noexcept
 {
     return glm::vec3(width()/2, 0.25f, depth()/2);
 }

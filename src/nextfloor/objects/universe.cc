@@ -22,12 +22,10 @@ Universe::Universe()
     using nextfloor::core::CommonServices;
 
     auto location = glm::vec3(0.0f);
-    type_ = kMODEL_UNIVERSE;
     grid_ = CommonServices::getFactory()->MakeUniverseGrid(this);
     border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale());
 
     add_child(CommonServices::getFactory()->MakeRoom(location));
-    grid_->DisplayGrid();
 }
 
 void Universe::Draw() noexcept

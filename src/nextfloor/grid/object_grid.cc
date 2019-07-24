@@ -13,13 +13,13 @@ namespace nextfloor {
 namespace grid {
 
 
-ObjectGrid::ObjectGrid(EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
+ObjectGrid::ObjectGrid(nextfloor::objects::EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
 :Grid(owner, boxes_count, box_dimension)
 {
     InitBoxes();
 }
 
-std::unique_ptr<EngineGridBox> ObjectGrid::AllocateGridBox(glm::ivec3 grid_coords)
+std::unique_ptr<nextfloor::objects::EngineGridBox> ObjectGrid::AllocateGridBox(glm::ivec3 grid_coords)
 {
     using nextfloor::core::CommonServices;
     return CommonServices::getFactory()->MakeGridBox(grid_coords, this);
@@ -27,7 +27,7 @@ std::unique_ptr<EngineGridBox> ObjectGrid::AllocateGridBox(glm::ivec3 grid_coord
 
 ObjectGrid::~ObjectGrid()
 {
-    //DeleteGrid();
+    DeleteGrid();
 }
 
 } // namespace grid

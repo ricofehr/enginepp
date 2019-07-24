@@ -27,39 +27,31 @@ class GridBox : public nextfloor::objects::EngineGridBox {
 public:
 
     GridBox(glm::vec3 coords, nextfloor::objects::EngineGrid* owner);
-
     GridBox(GridBox&&) = default;
-
     GridBox& operator=(GridBox&&) = default;
-
     GridBox(const GridBox&) = default;
-
     GridBox& operator=(const GridBox&) = default;
-
     virtual ~GridBox() override = default;
 
-    virtual bool IsInside(nextfloor::objects::EngineObject* object) const noexcept override;
-
     virtual void add(nextfloor::objects::EngineObject* object) noexcept override;
-
     virtual void remove(nextfloor::objects::EngineObject* object) noexcept override;
-
     virtual void clear() noexcept override;
 
+    virtual bool IsInside(nextfloor::objects::EngineObject* object) const noexcept override;
     virtual bool IsEmpty() const noexcept override;
     virtual bool IsFilled() const noexcept override;
-
-    virtual int size() const noexcept override
-    {
-        return occupants_.size();
-    }
 
     virtual bool IsFrontPositionFilled() const noexcept override;
     virtual bool IsRightPositionFilled() const noexcept override;
     virtual bool IsLeftPositionFilled() const noexcept override;
     virtual bool IsBackPositionFilled() const noexcept override;
-    virtual bool IsFloorPositionFilled() const noexcept override;
-    virtual bool IsRoofPositionFilled() const noexcept override;
+    virtual bool IsBottomPositionFilled() const noexcept override;
+    virtual bool IsTopPositionFilled() const noexcept override;
+
+    virtual int size() const noexcept override
+    {
+        return occupants_.size();
+    }
 
 protected:
 
@@ -73,12 +65,11 @@ protected:
         return occupants_[0];
     }
 
-    glm::vec3 coords_;
-    nextfloor::objects::EngineGrid* owner_;
-
 private:
 
     std::vector<nextfloor::objects::EngineObject*> occupants_;
+    nextfloor::objects::EngineGrid* owner_;
+    glm::vec3 coords_;
 };
 
 } // namespace objects

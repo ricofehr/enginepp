@@ -52,60 +52,21 @@ public:
 
 
     Model(Model&&) = default;
-
     Model& operator=(Model&&) = default;
-
-    /* Copy constructor Deleted : border_ is unique_ptr */
     Model(const Model&) = delete;
-
-    /* Copy assignment Deleted :  border_ is unique_ptr */
     Model& operator=(const Model&) = delete;
-
     virtual ~Model() override = default;
 
     friend bool operator==(const Model& o1, const Model& o2);
     friend bool operator!=(const Model& o1, const Model& o2);
-
-    virtual void InitBorder(std::unique_ptr<EngineBorder> border) noexcept override final;
 
     virtual void Draw() noexcept override;
 
     virtual EngineObject* add_child(std::unique_ptr<EngineObject> object) noexcept override final;
     virtual std::unique_ptr<EngineObject> remove_child(EngineObject* child) noexcept override;
 
-    virtual void lock() override final { object_mutex_.lock(); }
-    virtual void unlock() override final { object_mutex_.unlock(); }
-    virtual int id() override { return id_; }
-
-    virtual void set_parent(EngineObject* parent) override { parent_ = parent; }
-
-    virtual bool IsUniverse() const override { return type_ == kMODEL_UNIVERSE; }
-    virtual bool IsRoom() const override { return type_ == kMODEL_ROOM; }
-    virtual bool IsWall() const override { return type_ == kMODEL_WALL; }
-    virtual bool IsCamera() const override { return type_ == kMODEL_CAMERA; }
-
-    virtual glm::vec3 location() const noexcept override { return border_->location(); }
-
-    EngineGrid* grid() const noexcept { return grid_.get(); }
-
-    virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept override final
-    {
-        return border_->getCoordsModelMatrixComputed();
-    }
-
-    virtual EngineBorder* border() const noexcept override final
-    {
-        return border_.get();
-    }
-
     virtual bool IsLastObstacle(EngineObject* obstacle) const noexcept override final;
-
     virtual void UpdateObstacleIfNearer(EngineObject* obstacle, float obstacle_distance) noexcept override final;
-
-    virtual bool ready() const override { return ready_; }
-
-    virtual void toready() override { ready_ = true; }
-
     virtual void PrepareDraw() override {}
 
     virtual bool IsFrontPositionFilled() const noexcept override
@@ -128,15 +89,38 @@ public:
         return coords_list_[0]->IsBackPositionFilled();
     }
 
-    virtual bool IsFloorPositionFilled() const noexcept override
+    virtual bool IsBottomPositionFilled() const noexcept override
     {
-        return coords_list_[0]->IsFloorPositionFilled();
+        return coords_list_[0]->IsBottomPositionFilled();
     }
 
-    virtual bool IsRoofPositionFilled() const noexcept override
+    virtual bool IsTopPositionFilled() const noexcept override
     {
-        return coords_list_[0]->IsRoofPositionFilled();
+        return coords_list_[0]->IsTopPositionFilled();
     }
+
+    virtual bool IsCamera() const override { return type_ == kMODEL_CAMERA; }
+    virtual void set_parent(EngineObject* parent) override { parent_ = parent; }
+    virtual void lock() override final { object_mutex_.lock(); }
+    virtual void unlock() override final { object_mutex_.unlock(); }
+    virtual int id() override { return id_; }
+    virtual glm::vec3 location() const noexcept override { return border_->location(); }
+    EngineGrid* grid() const noexcept { return grid_.get(); }
+
+    virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept override final
+    {
+        return border_->getCoordsModelMatrixComputed();
+    }
+
+    virtual EngineBorder* border() const noexcept override final
+    {
+        return border_.get();
+    }
+
+    virtual bool ready() const override { return ready_; }
+
+    virtual void toready() override { ready_ = true; }
+
 
 protected:
 

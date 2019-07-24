@@ -80,14 +80,14 @@ bool GridBox::IsBackPositionFilled() const noexcept
     return owner_->IsBackPositionFilled(coords_);
 }
 
-bool GridBox::IsFloorPositionFilled() const noexcept
+bool GridBox::IsBottomPositionFilled() const noexcept
 {
-    return owner_->IsFloorPositionFilled(coords_);
+    return owner_->IsBottomPositionFilled(coords_);
 }
 
-bool GridBox::IsRoofPositionFilled() const noexcept
+bool GridBox::IsTopPositionFilled() const noexcept
 {
-    return owner_->IsRoofPositionFilled(coords_);
+    return owner_->IsTopPositionFilled(coords_);
 }
 
 } // namespace grid

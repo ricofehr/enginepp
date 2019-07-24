@@ -23,21 +23,16 @@ class ObjectGrid : public Grid {
 
 public:
 
-    ObjectGrid(EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension);
-
+    ObjectGrid(nextfloor::objects::EngineObject* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension);
     ObjectGrid(ObjectGrid&&) = default;
-
     ObjectGrid& operator=(ObjectGrid&&) = default;
-
     ObjectGrid(const ObjectGrid&) = delete;
-
     ObjectGrid& operator=(const ObjectGrid&) = delete;
-
     virtual ~ObjectGrid() override;
 
 protected:
 
-    virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
+    virtual std::unique_ptr<nextfloor::objects::EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
 
 };
 

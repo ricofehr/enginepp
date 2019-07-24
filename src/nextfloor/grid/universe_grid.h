@@ -24,15 +24,10 @@ class UniverseGrid : public Grid {
 public:
 
     UniverseGrid(nextfloor::objects::EngineObject* owner);
-
     UniverseGrid(UniverseGrid&&) = default;
-
     UniverseGrid& operator=(UniverseGrid&&) = default;
-
     UniverseGrid(const UniverseGrid&) = delete;
-
     UniverseGrid& operator=(const UniverseGrid&) = delete;
-
     virtual ~UniverseGrid() override;
 
 protected:

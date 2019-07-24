@@ -26,63 +26,41 @@ class EngineObject {
 public:
 
     EngineObject(EngineObject&&) = default;
-
     EngineObject& operator=(EngineObject&&) = default;
-
     EngineObject(const EngineObject&) = delete;
-
     EngineObject& operator=(const EngineObject&) = delete;
-
     virtual ~EngineObject() = default;
 
-    virtual void InitBorder(std::unique_ptr<EngineBorder> border) noexcept = 0;
-
     virtual void Draw() = 0;
-
-    virtual EngineObject* add_child(std::unique_ptr<EngineObject> child) noexcept = 0;
-
-    virtual std::unique_ptr<EngineObject> remove_child(EngineObject* child) noexcept = 0;
-
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept = 0;
 
-    virtual void lock() = 0;
-
-    virtual void unlock() = 0;
-
-    virtual void set_parent(EngineObject* parent) = 0;
-
-    virtual bool IsUniverse() const = 0;
-    virtual bool IsRoom() const = 0;
-    virtual bool IsWall() const = 0;
-    virtual bool IsCamera() const = 0;
-
-    virtual int id() = 0;
-
-    virtual glm::vec3 location() const noexcept = 0;
-
-    virtual EngineBorder* border() const noexcept = 0;
+    virtual EngineObject* add_child(std::unique_ptr<EngineObject> child) noexcept = 0;
+    virtual std::unique_ptr<EngineObject> remove_child(EngineObject* child) noexcept = 0;
 
     virtual bool IsLastObstacle(EngineObject* obstacle) const noexcept = 0;
-
     virtual void UpdateObstacleIfNearer(EngineObject* obstacle, float obstacle_distance) noexcept = 0;
-
-    virtual bool ready() const = 0;
-
-    virtual void toready() = 0;
 
     virtual void PrepareDraw() = 0;
 
     virtual bool IsFrontPositionFilled() const noexcept = 0;
-
     virtual bool IsRightPositionFilled() const noexcept = 0;
-
     virtual bool IsLeftPositionFilled() const noexcept = 0;
-
     virtual bool IsBackPositionFilled() const noexcept = 0;
+    virtual bool IsBottomPositionFilled() const noexcept = 0;
+    virtual bool IsTopPositionFilled() const noexcept = 0;
 
-    virtual bool IsFloorPositionFilled() const noexcept = 0;
+    virtual int id() = 0;
+    virtual glm::vec3 location() const noexcept = 0;
+    virtual EngineBorder* border() const noexcept = 0;
 
-    virtual bool IsRoofPositionFilled() const noexcept = 0;
+    virtual void lock() = 0;
+    virtual void unlock() = 0;
+    virtual void set_parent(EngineObject* parent) = 0;
+
+    virtual bool ready() const = 0;
+    virtual void toready() = 0;
+
+    virtual bool IsCamera() const = 0;
 
 protected:
 

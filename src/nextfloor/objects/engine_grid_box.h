@@ -22,23 +22,16 @@ class EngineGridBox {
 public:
 
     EngineGridBox(EngineGridBox&&) = default;
-
     EngineGridBox& operator=(EngineGridBox&&) = default;
-
     EngineGridBox(const EngineGridBox&) = delete;
-
     EngineGridBox& operator=(const EngineGridBox&) = delete;
-
     virtual ~EngineGridBox() = default;
 
-    virtual bool IsInside(EngineObject* object) const noexcept = 0;
-
     virtual void add(EngineObject* object) noexcept = 0;
-
     virtual void remove(EngineObject* object) noexcept = 0;
-
     virtual void clear() noexcept = 0;
 
+    virtual bool IsInside(EngineObject* object) const noexcept = 0;
     virtual bool IsEmpty() const noexcept = 0;
     virtual bool IsFilled() const noexcept = 0;
 
@@ -48,8 +41,8 @@ public:
     virtual bool IsRightPositionFilled() const noexcept = 0;
     virtual bool IsLeftPositionFilled() const noexcept = 0;
     virtual bool IsBackPositionFilled() const noexcept = 0;
-    virtual bool IsFloorPositionFilled() const noexcept = 0;
-    virtual bool IsRoofPositionFilled() const noexcept = 0;
+    virtual bool IsBottomPositionFilled() const noexcept = 0;
+    virtual bool IsTopPositionFilled() const noexcept = 0;
 
 protected:
 

@@ -13,13 +13,13 @@ namespace nextfloor {
 namespace grid {
 
 
-RoomGrid::RoomGrid(EngineObject* owner)
-:Grid(owner, glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT), glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
+RoomGrid::RoomGrid(nextfloor::objects::EngineObject* owner)
+    :Grid(owner, glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT), glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
 {
     InitBoxes();
 }
 
-std::unique_ptr<EngineGridBox> RoomGrid::AllocateGridBox(glm::ivec3 grid_coords)
+std::unique_ptr<nextfloor::objects::EngineGridBox> RoomGrid::AllocateGridBox(glm::ivec3 grid_coords)
 {
     using nextfloor::core::CommonServices;
     return CommonServices::getFactory()->MakeRoomGridBox(grid_coords, this);
@@ -27,7 +27,7 @@ std::unique_ptr<EngineGridBox> RoomGrid::AllocateGridBox(glm::ivec3 grid_coords)
 
 RoomGrid::~RoomGrid()
 {
-    //DeleteGrid();
+    DeleteGrid();
 }
 
 } // namespace grid

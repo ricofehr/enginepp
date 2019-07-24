@@ -45,7 +45,7 @@ void Roof::AddWindow() noexcept {}
 
 void Roof::PrepareDraw() noexcept
 {
-    if (parent_->IsRoofPositionFilled()) {
+    if (parent_->IsTopPositionFilled()) {
         AddDoor();
     }
 }

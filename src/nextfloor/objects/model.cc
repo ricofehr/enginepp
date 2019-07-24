@@ -31,11 +31,6 @@ Model::Model()
     id_ = sObjectId++;
 }
 
-void Model::InitBorder(std::unique_ptr<EngineBorder> border) noexcept
-{
-    border_ = std::move(border);
-}
-
 bool operator==(const Model& o1, const Model& o2)
 {
     return o1.id_ == o2.id_;

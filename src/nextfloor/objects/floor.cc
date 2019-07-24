@@ -44,7 +44,7 @@ void Floor::AddWindow() noexcept {}
 
 void Floor::PrepareDraw() noexcept
 {
-    if (parent_->IsFloorPositionFilled()) {
+    if (parent_->IsBottomPositionFilled()) {
         AddDoor();
     }
 }

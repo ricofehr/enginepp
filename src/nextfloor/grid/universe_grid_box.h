@@ -22,15 +22,10 @@ class UniverseGridBox : public GridBox {
 public:
 
     UniverseGridBox(glm::vec3 coords, nextfloor::objects::EngineGrid* owner);
-
     UniverseGridBox(UniverseGridBox&&) = default;
-
     UniverseGridBox& operator=(UniverseGridBox&&) = default;
-
     UniverseGridBox(const UniverseGridBox&) = default;
-
     UniverseGridBox& operator=(const UniverseGridBox&) = default;
-
     virtual ~UniverseGridBox() = default;
 };
 

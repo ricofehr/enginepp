@@ -26,13 +26,9 @@ class EngineGrid {
 public:
 
     EngineGrid(EngineGrid&&) = default;
-
     EngineGrid& operator=(EngineGrid&&) = default;
-
     EngineGrid(const EngineGrid&) = delete;
-
     EngineGrid& operator=(const EngineGrid&) = delete;
-
     virtual ~EngineGrid() = default;
 
     virtual bool IsPositionEmpty(glm::ivec3 coords) const noexcept = 0;
@@ -40,47 +36,36 @@ public:
     virtual bool IsRightPositionFilled(glm::ivec3 coords) const noexcept = 0;
     virtual bool IsLeftPositionFilled(glm::ivec3 coords) const noexcept = 0;
     virtual bool IsBackPositionFilled(glm::ivec3 coords) const noexcept = 0;
-    virtual bool IsFloorPositionFilled(glm::ivec3 coords) const noexcept = 0;
-    virtual bool IsRoofPositionFilled(glm::ivec3 coords) const noexcept = 0;
+    virtual bool IsBottomPositionFilled(glm::ivec3 coords) const noexcept = 0;
+    virtual bool IsTopPositionFilled(glm::ivec3 coords) const noexcept = 0;
     virtual bool IsPositionFilled(glm::ivec3 coords) const noexcept = 0;
 
-    virtual void DisplayGrid() const noexcept = 0;
-
-    virtual void ComputePlacementsInGrid() noexcept = 0;
-    virtual std::vector<EngineGridBox*> AddItemToGrid(EngineObject* object) noexcept = 0;
-    virtual void RemoveItemToGrid(EngineObject* object) noexcept = 0;
-    virtual void ResetGrid() noexcept = 0;
-
-    virtual bool IsInside(glm::vec3 location_object) const noexcept = 0;
-
-    virtual float width() const noexcept = 0;
-    virtual float height() const noexcept = 0;
-    virtual float depth() const noexcept = 0;
-
-    virtual glm::vec3 scale() const noexcept = 0;
-
-    virtual void lock() = 0;
-    virtual void unlock() = 0;
-
-    virtual glm::ivec3 boxes_count() const = 0;
-    virtual glm::vec3 box_dimension() const = 0;
-
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept = 0;
-
+    virtual void ComputePlacementsInGrid() noexcept = 0;
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const = 0;
 
+    virtual std::vector<EngineGridBox*> AddItemToGrid(EngineObject* object) noexcept = 0;
+    virtual void RemoveItemToGrid(EngineObject* object) noexcept = 0;
+    virtual bool IsInside(glm::vec3 location_object) const noexcept = 0;
+
+    virtual void DisplayGrid() const noexcept = 0;
+    virtual void ResetGrid() noexcept = 0;
+
     virtual glm::vec3 CalculateFrontSideLocation() const noexcept = 0;
-    virtual glm::vec3 CalculateFloorSideLocation() const noexcept = 0;
-    virtual glm::vec3 CalculateRoofSideLocation() const noexcept = 0;
     virtual glm::vec3 CalculateRightSideLocation() const noexcept = 0;
     virtual glm::vec3 CalculateBackSideLocation() const noexcept = 0;
     virtual glm::vec3 CalculateLeftSideLocation() const noexcept = 0;
+    virtual glm::vec3 CalculateBottomSideLocation() const noexcept = 0;
+    virtual glm::vec3 CalculateTopSideLocation() const noexcept = 0;
+
     virtual glm::vec3 CalculateFrontSideBorderScale() const noexcept = 0;
     virtual glm::vec3 CalculateRightSideBorderScale() const noexcept = 0;
     virtual glm::vec3 CalculateBackSideBorderScale() const noexcept = 0;
     virtual glm::vec3 CalculateLeftSideBorderScale() const noexcept = 0;
-    virtual glm::vec3 CalculateFloorSideBorderScale() const noexcept = 0;
-    virtual glm::vec3 CalculateRoofSideBorderScale() const noexcept = 0;
+    virtual glm::vec3 CalculateBottomSideBorderScale() const noexcept = 0;
+    virtual glm::vec3 CalculateTopSideBorderScale() const noexcept = 0;
+
+    virtual glm::vec3 scale() const noexcept = 0;
 
 protected:
 

@@ -22,15 +22,10 @@ class RoomGridBox : public GridBox {
 public:
 
     RoomGridBox(glm::vec3 coords, nextfloor::objects::EngineGrid* owner);
-
     RoomGridBox(RoomGridBox&&) = default;
-
     RoomGridBox& operator=(RoomGridBox&&) = default;
-
     RoomGridBox(const RoomGridBox&) = default;
-
     RoomGridBox& operator=(const RoomGridBox&) = default;
-
     virtual ~RoomGridBox() = default;
 };
 

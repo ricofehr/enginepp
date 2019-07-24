@@ -23,21 +23,16 @@ class RoomGrid : public Grid {
 
 public:
 
-    RoomGrid(EngineObject* owner);
-
+    RoomGrid(nextfloor::objects::EngineObject* owner);
     RoomGrid(RoomGrid&&) = default;
-
     RoomGrid& operator=(RoomGrid&&) = default;
-
     RoomGrid(const RoomGrid&) = delete;
-
     RoomGrid& operator=(const RoomGrid&) = delete;
-
     virtual ~RoomGrid() override;
 
 protected:
 
-    virtual std::unique_ptr<EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
+    virtual std::unique_ptr<nextfloor::objects::EngineGridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
 
 private:
 

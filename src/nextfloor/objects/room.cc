@@ -22,8 +22,6 @@ Room::Room(glm::vec3 location) {
     AddWalls();
     AddCamera();
     AddRock(glm::vec3(3.0f));
-
-    grid_->DisplayGrid();
 }
 
 void Room::AddWalls() noexcept
@@ -54,7 +52,6 @@ void Room::AddFrontWall() noexcept
     add_child(CommonServices::getFactory()->MakeFrontWall(grid()->CalculateFrontSideLocation(), grid()->CalculateFrontSideBorderScale()));
 }
 
-
 void Room::AddRightWall() noexcept
 {
     using nextfloor::core::CommonServices;
@@ -76,13 +73,13 @@ void Room::AddLeftWall() noexcept
 void Room::AddFloor() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeFloor(grid()->CalculateFloorSideLocation(), grid()->CalculateFloorSideBorderScale()));
+    add_child(CommonServices::getFactory()->MakeFloor(grid()->CalculateBottomSideLocation(), grid()->CalculateBottomSideBorderScale()));
 }
 
 void Room::AddRoof() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeRoof(grid()->CalculateRoofSideLocation(), grid()->CalculateRoofSideBorderScale()));
+    add_child(CommonServices::getFactory()->MakeRoof(grid()->CalculateTopSideLocation(), grid()->CalculateTopSideBorderScale()));
 }
 
 } // namespace objects
