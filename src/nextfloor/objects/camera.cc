@@ -12,46 +12,6 @@ namespace nextfloor {
 
 namespace objects {
 
-namespace {
-
-/* Camera coords, used for collision computes */
-static const std::vector<glm::vec3> sCameraCoords = {
-    /* Back */
-    {-0.25f,  0.5f,  0.25f},
-    { 0.25f,  0.5f,  0.25f},
-    { 0.25f, -0.5f,  0.25f},
-    {-0.25f, -0.5f,  0.25f},
-    /* Front */
-    {-0.25f,  0.5f, -0.25f},
-    { 0.25f,  0.5f, -0.25f},
-    { 0.25f, -0.5f, -0.25f},
-    {-0.25f, -0.5f, -0.25f},
-    /* Left */
-    {-0.25f,  0.5f,  0.25f},
-    {-0.25f,  0.5f, -0.25f},
-    {-0.25f, -0.5f, -0.25f},
-    {-0.25f, -0.5f,  0.25f},
-    /* Right */
-    { 0.25f,  0.5f,  0.25f},
-    { 0.25f,  0.5f, -0.25f},
-    { 0.25f, -0.5f, -0.25f},
-    { 0.25f, -0.5f,  0.25f},
-    /* Top */
-    {-0.25f,  0.5f,  0.25f},
-    {-0.25f,  0.5f, -0.25f},
-    { 0.25f,  0.5f, -0.25f},
-    { 0.25f,  0.5f,  0.25f},
-    /* Roof */
-    {-0.25f, -0.5f,  0.25f},
-    {-0.25f, -0.5f, -0.25f},
-    { 0.25f, -0.5f, -0.25f},
-    { 0.25f, -0.5f,  0.25f},
-};
-
-
-} // anonymous namespace
-
-/* Define global active camera */
 Camera* Camera::active_ = nullptr;
 
 Camera::Camera()
@@ -95,6 +55,7 @@ void Camera::ComputeOrientation() noexcept
 void Camera::ComputeFOV(float delta_fov) noexcept
 {
     fov_ = fov_ + delta_fov;
+    /* fov cant be less than 5° and more than 130° */
     fov_ = fov_ < 5.0f ? 5.0f : fov_;
     fov_ = fov_ > 130.0f ? 130.0f : fov_;
 }

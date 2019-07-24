@@ -19,11 +19,6 @@
 #include "nextfloor/core/generic_file_io.h"
 #include "nextfloor/core/standard_random_generator.h"
 
-#include "nextfloor/objects/engine_collision.h"
-#include "nextfloor/physics/cl_collision.h"
-#include "nextfloor/physics/serial_collision.h"
-#include "nextfloor/physics/tbb_collision.h"
-
 int main(int argc, char* argv[])
 {
     using nextfloor::objects::Camera;
@@ -39,10 +34,6 @@ int main(int argc, char* argv[])
     using nextfloor::core::StandardRandomGenerator;
     using nextfloor::objects::EngineCollision;
     using nextfloor::objects::EngineObject;
-    using nextfloor::physics::Collision;
-    using nextfloor::physics::ClCollision;
-    using nextfloor::physics::SerialCollision;
-    using nextfloor::physics::TbbCollision;
 
     /* Init CommonServices */
     std::unique_ptr<TerminalLog> terminal_log = std::make_unique<TerminalLog>();

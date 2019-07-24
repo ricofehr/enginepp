@@ -9,11 +9,8 @@
 
 #include "nextfloor/objects/engine_object.h"
 
-#include <memory>
 #include <vector>
-#include <map>
 #include <tbb/mutex.h>
-#include <tbb/tbb.h>
 #include <glm/glm.hpp>
 
 #include "nextfloor/objects/engine_border.h"
@@ -37,19 +34,7 @@ public:
     /*
      *  Model Type Constants
      */
-    static constexpr int kMODEL_UNIVERSE = 0;
-    static constexpr int kMODEL_ROOM = 1;
     static constexpr int kMODEL_CAMERA = 2;
-    static constexpr int kMODEL_WALL = 3;
-    static constexpr int kMODEL_WINDOW = 4;
-    static constexpr int kMODEL_DOOR = 5;
-    static constexpr int kMODEL_ROCK = 6;
-
-    /*
-     *  Initial collision countdown value
-     */
-    static constexpr int kCOLLISION_COUNTDOWN = 4;
-
 
     Model(Model&&) = default;
     Model& operator=(Model&&) = default;
@@ -101,8 +86,6 @@ public:
 
     virtual bool IsCamera() const override { return type_ == kMODEL_CAMERA; }
     virtual void set_parent(EngineObject* parent) override { parent_ = parent; }
-    virtual void lock() override final { object_mutex_.lock(); }
-    virtual void unlock() override final { object_mutex_.unlock(); }
     virtual int id() override { return id_; }
     virtual glm::vec3 location() const noexcept override { return border_->location(); }
     EngineGrid* grid() const noexcept { return grid_.get(); }
@@ -118,7 +101,6 @@ public:
     }
 
     virtual bool ready() const override { return ready_; }
-
     virtual void toready() override { ready_ = true; }
 
 
@@ -128,24 +110,19 @@ protected:
 
     void RemoveItemToGrid(EngineObject* object) noexcept;
 
-    /** meshes which composes the current object */
+    virtual void lock() override final { mutex_.lock(); }
+    virtual void unlock() override final { mutex_.unlock(); }
+
+    EngineObject* parent_{nullptr};
+    std::vector<EngineGridBox*> coords_list_;
+    std::unique_ptr<EngineGrid> grid_{nullptr};
+    std::vector<std::unique_ptr<EngineObject>> objects_;
     std::vector<std::unique_ptr<EnginePolygon>> meshes_;
 
-    /** childs of the current object */
-    std::vector<std::unique_ptr<EngineObject>> objects_;
+    std::unique_ptr<EngineBorder> border_{nullptr};
+    EngineRenderer* renderer_{nullptr};
 
     int type_{10000};
-
-    std::unique_ptr<EngineGrid> grid_{nullptr};
-
-    std::vector<EngineGridBox*> coords_list_;
-
-    /** Parent of the current 3d model */
-    EngineObject* parent_{nullptr};
-
-    std::unique_ptr<EngineBorder> border_{nullptr};
-
-    EngineRenderer* renderer_{nullptr};
 
 private:
 
@@ -155,13 +132,13 @@ private:
 
     int id_{0};
 
+    EngineObject* obstacle_{nullptr};
+
     /** turn to true after 10 firt frames */
     bool ready_{false};
 
     /** Mutex ensures thread safe instructions */
-    tbb::mutex object_mutex_;
-
-    EngineObject* obstacle_{nullptr};
+    tbb::mutex mutex_;
 };
 
 } // namespace graphics

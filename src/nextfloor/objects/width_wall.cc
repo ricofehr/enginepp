@@ -6,9 +6,6 @@
 
 #include "nextfloor/objects/width_wall.h"
 
-#include <memory>
-#include <iostream>
-
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {

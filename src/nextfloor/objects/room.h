@@ -18,30 +18,17 @@ namespace objects {
 
 /**
  *  @class Room
- *  @brief Define a Room (inside with walls and moving objects), inherits Model3D abstract class
+ *  @brief Define a Room, inherits Model abstract class
  */
 class Room : public Model {
 
 public:
 
-    /*
-     *  Wall Side constants
-     */
-    static constexpr int kSIDE_FRONT = 0;
-    static constexpr int kSIDE_RIGHT = 1;
-    static constexpr int kSIDE_BACK = 2;
-    static constexpr int kSIDE_LEFT = 3;
-    static constexpr int kSIDE_FLOOR = 4;
-    static constexpr int kSIDE_ROOF = 5;
-
     Room(glm::vec3 location);
-
     Room(Room&&) = default;
     Room& operator=(Room&&) = default;
-
     Room(const Room&) = delete;
     Room& operator=(const Room&) = delete;
-
     ~Room() override = default;
 
     bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;

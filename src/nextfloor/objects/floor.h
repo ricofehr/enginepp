@@ -18,27 +18,22 @@ namespace nextfloor {
 namespace objects {
 
 /**
- *  @class Wall
- *  @brief Wall 3d model
+ *  @class Floor
+ *  @brief Define Floor in a Room
  */
 class Floor : public Wall {
 
 public:
 
     Floor(glm::vec3 location, glm::vec3 scale);
-
     Floor(Floor&&) = default;
     Floor& operator=(Floor&&) = default;
-
     Floor(const Floor&) = delete;
     Floor& operator=(const Floor&) = delete;
-
     ~Floor() override = default;
 
     virtual void AddDoor() noexcept override;
-
     virtual void AddWindow() noexcept override;
-
     virtual void PrepareDraw() noexcept override;
 
 private:

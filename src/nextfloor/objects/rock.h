@@ -1,6 +1,6 @@
 /**
- *  @file brick.h
- *  @brief Brick class header
+ *  @file rock.h
+ *  @brief Rock class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -19,29 +19,22 @@ namespace objects {
 
 /**
  *  @class Rock
- *  @brief Rock 3d model, inherits Model3D abstract class
+ *  @brief Rock 3d model
  */
 class Rock : public Model {
 
 public:
 
-    static constexpr char kTEXTURE[] = "assets/rock.jpg";
-
-    /**
-     *  Constructor
-     *  @param scale is the float scale factor of native coords
-     *  @param location is the center point of the brick
-     *  @param renderer is the renderer object
-     */
     Rock(glm::vec3 location, float scale);
-
     Rock(Rock&&) = default;
     Rock& operator=(Rock&&) = default;
-
     Rock(const Rock&) = delete;
     Rock& operator=(const Rock&) = delete;
-
     ~Rock() override = default;
+
+private:
+
+    static constexpr char kTEXTURE[] = "assets/rock.jpg";
 };
 
 } // namespace objects

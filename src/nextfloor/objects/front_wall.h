@@ -10,8 +10,6 @@
 #include "nextfloor/objects/width_wall.h"
 
 #include <glm/glm.hpp>
-#include <string>
-
 
 namespace nextfloor {
 
@@ -19,20 +17,17 @@ namespace objects {
 
 /**
  *  @class FrontWall
- *  @brief FrontWall
+ *  @brief FrontWall : define front wall side in a Room
  */
 class FrontWall : public WidthWall {
 
 public:
 
     FrontWall(glm::vec3 location, glm::vec3 scale);
-
     FrontWall(FrontWall&&) = default;
     FrontWall& operator=(FrontWall&&) = default;
-
     FrontWall(const FrontWall&) = delete;
     FrontWall& operator=(const FrontWall&) = delete;
-
     ~FrontWall() override = default;
 
     virtual void PrepareDraw() noexcept override;

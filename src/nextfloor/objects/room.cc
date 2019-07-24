@@ -6,14 +6,14 @@
 
 #include "nextfloor/objects/room.h"
 
-#include "nextfloor/objects/wall.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
 namespace objects {
 
-Room::Room(glm::vec3 location) {
+Room::Room(glm::vec3 location)
+{
     using nextfloor::core::CommonServices;
 
     grid_ = CommonServices::getFactory()->MakeRoomGrid(this);
@@ -43,7 +43,7 @@ void Room::AddCamera() noexcept
 void Room::AddRock(glm::vec3 relative_location) noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeRock(grid_->CalculateFirstPointInGrid() + relative_location));
+    add_child(CommonServices::getFactory()->MakeRock(grid()->CalculateFirstPointInGrid() + relative_location));
 }
 
 void Room::AddFrontWall() noexcept

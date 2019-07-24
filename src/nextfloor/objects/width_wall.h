@@ -19,25 +19,24 @@ namespace objects {
 
 /**
  *  @class WidthWall
- *  @brief WidthWall
+ *  @brief WidthWall is an Abstract class for front / back walls of a Room
  */
 class WidthWall : public Wall {
 
 public:
 
-    WidthWall(glm::vec3 location, glm::vec3 scale);
-
     WidthWall(WidthWall&&) = default;
     WidthWall& operator=(WidthWall&&) = default;
-
     WidthWall(const WidthWall&) = delete;
     WidthWall& operator=(const WidthWall&) = delete;
-
     ~WidthWall() override = default;
 
     virtual void AddDoor() noexcept override;
-
     virtual void AddWindow() noexcept override;
+
+protected:
+
+    WidthWall(glm::vec3 location, glm::vec3 scale);
 
 private:
 

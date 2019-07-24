@@ -12,32 +12,30 @@
 #include <glm/glm.hpp>
 #include <string>
 
-
 namespace nextfloor {
 
 namespace objects {
 
 /**
  *  @class DepthWall
- *  @brief DepthWall 3d model
+ *  @brief DepthWall is an Abstract class for left, and right wall of a Room
  */
 class DepthWall : public Wall {
 
 public:
 
-    DepthWall(glm::vec3 location, glm::vec3 scale);
-
     DepthWall(DepthWall&&) = default;
     DepthWall& operator=(DepthWall&&) = default;
-
     DepthWall(const DepthWall&) = delete;
     DepthWall& operator=(const DepthWall&) = delete;
-
     ~DepthWall() override = default;
 
     virtual void AddDoor() noexcept override;
-
     virtual void AddWindow() noexcept override;
+
+protected:
+
+    DepthWall(glm::vec3 location, glm::vec3 scale);
 
 private:
 

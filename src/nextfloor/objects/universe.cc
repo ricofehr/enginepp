@@ -6,11 +6,6 @@
 
 #include "nextfloor/objects/universe.h"
 
-#include <GLFW/glfw3.h>
-#include <map>
-#include <iostream>
-#include <tbb/tbb.h>
-
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {

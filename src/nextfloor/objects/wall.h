@@ -19,7 +19,7 @@ namespace objects {
 
 /**
  *  @class Wall
- *  @brief Wall 3d model
+ *  @brief Wall : define Abstract Wall class
  */
 class Wall : public Model {
 
@@ -27,14 +27,11 @@ public:
 
     Wall(Wall&&) = default;
     Wall& operator=(Wall&&) = default;
-
     Wall(const Wall&) = delete;
     Wall& operator=(const Wall&) = delete;
-
     virtual ~Wall() = default;
 
     virtual void AddDoor() noexcept = 0;
-
     virtual void AddWindow() noexcept = 0;
 
 protected:
@@ -46,7 +43,6 @@ protected:
     virtual std::string texture_file() const noexcept = 0;
 
     glm::vec3 brick_dimension_{0.0f};
-
     glm::ivec3 bricks_count_{0,0,0};
 };
 

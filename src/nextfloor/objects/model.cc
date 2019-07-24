@@ -8,12 +8,6 @@
 
 #include "nextfloor/objects/model.h"
 
-#include <cmath>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <tbb/tbb.h>
-
 #include "nextfloor/core/common_services.h"
 
 

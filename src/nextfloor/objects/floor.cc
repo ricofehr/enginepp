@@ -6,9 +6,6 @@
 
 #include "nextfloor/objects/floor.h"
 
-#include <memory>
-#include <iostream>
-
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {

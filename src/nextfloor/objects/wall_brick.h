@@ -7,10 +7,10 @@
 #ifndef NEXTFLOOR_OBJECTS_WALLBRICK_H_
 #define NEXTFLOOR_OBJECTS_WALLBRICK_H_
 
-#include <glm/glm.hpp>
-#include <string>
-
 #include "nextfloor/objects/model.h"
+
+#include <glm/glm.hpp>
+
 
 namespace nextfloor {
 
@@ -18,20 +18,17 @@ namespace objects {
 
 /**
  *  @class WallBrick
- *  @brief Wall 3d model, inherits Model3D abstract class
+ *  @brief WallBrick model, inherits Model abstract class
  */
 class WallBrick : public Model {
 
 public:
 
     WallBrick(glm::vec3 location, glm::vec3 scale, std::string texture);
-
     WallBrick(WallBrick&&) = default;
     WallBrick& operator=(WallBrick&&) = default;
-
     WallBrick(const WallBrick&) = delete;
     WallBrick& operator=(const WallBrick&) = delete;
-
     ~WallBrick() override = default;
 };
 

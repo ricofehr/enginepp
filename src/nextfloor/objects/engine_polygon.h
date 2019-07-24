@@ -26,41 +26,29 @@ class EnginePolygon {
 
 public:
 
-    /**
-     *  Abstract Class, define virtual destructor
-     */
+    EnginePolygon(EnginePolygon&&) = default;
+    EnginePolygon& operator=(EnginePolygon&&) = default;
+    EnginePolygon(const EnginePolygon&) = default;
+    EnginePolygon& operator=(const EnginePolygon&) = default;
     virtual ~EnginePolygon() = default;
 
     virtual void UpdateModelViewProjectionMatrix() = 0;
-
     virtual void Draw(nextfloor::objects::EngineRenderer* renderer) = 0;
 
-
     virtual void MoveLocation() noexcept = 0;
-
     virtual bool IsMoved() const = 0;
-
-    virtual float distance() const = 0;
-    virtual glm::vec3 move() const = 0;
 
     virtual void set_distance(float distance) = 0;
     virtual void InverseMove() = 0;
 
+    virtual float distance() const = 0;
+    virtual glm::vec3 move() const = 0;
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 scale() const = 0;
 
 protected:
 
     EnginePolygon() = default;
-
-    EnginePolygon(EnginePolygon&&) = default;
-
-    EnginePolygon& operator=(EnginePolygon&&) = default;
-
-    EnginePolygon(const EnginePolygon&) = default;
-
-    EnginePolygon& operator=(const EnginePolygon&) = default;
-
 };
 
 } // namespace objects

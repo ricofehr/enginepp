@@ -10,8 +10,6 @@
 #include "nextfloor/objects/depth_wall.h"
 
 #include <glm/glm.hpp>
-#include <string>
-
 
 namespace nextfloor {
 
@@ -19,20 +17,17 @@ namespace objects {
 
 /**
  *  @class RightWall
- *  @brief RightWall
+ *  @brief RightWall : define right wall side in a Room
  */
 class RightWall : public DepthWall {
 
 public:
 
     RightWall(glm::vec3 location, glm::vec3 scale);
-
     RightWall(RightWall&&) = default;
     RightWall& operator=(RightWall&&) = default;
-
     RightWall(const RightWall&) = delete;
     RightWall& operator=(const RightWall&) = delete;
-
     ~RightWall() override = default;
 
     virtual void PrepareDraw() noexcept override;
