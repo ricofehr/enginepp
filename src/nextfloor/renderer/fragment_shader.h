@@ -9,6 +9,8 @@
 
 #include "nextfloor/renderer/shader.h"
 
+#include <string>
+
 namespace nextfloor {
 
 namespace renderer {
@@ -23,16 +25,13 @@ public:
     FragmentShader(std::string shader_path) : Shader(shader_path) {};
 
     FragmentShader(FragmentShader&&) = default;
-
     FragmentShader& operator=(FragmentShader&&) = default;
-
     FragmentShader(const FragmentShader&) = default;
-
     FragmentShader& operator=(const FragmentShader&) = default;
 
-    ~FragmentShader() = default;
+    virtual ~FragmentShader() = default;
 
-    void LoadShader() override final;
+    virtual void LoadShader() override final;
 };
 
 } // namespace renderer

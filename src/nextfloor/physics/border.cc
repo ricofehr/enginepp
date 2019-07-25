@@ -9,7 +9,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <tbb/tbb.h>
-#include <memory>
 
 #include "nextfloor/core/common_services.h"
 
@@ -112,29 +111,24 @@ glm::vec3 Border::getFirstPoint()
     return coords_model_matrix_computed_.at(0);
 }
 
-glm::vec3 Border::RetrieveFirstPointAfterPartedMove(float move_part)
+bool Border::IsObstacleInCollisionAfterPartedMove(nextfloor::objects::EngineBorder* obstacle, float move_part)
 {
-    return getFirstPoint() + move_part * glm::vec3(move().x, move().y, move().z);
-}
-
-bool Border::IsObstacleInCollisionAfterPartedMove(EngineBorder* obstacle, float move_part)
-{
-    if (!IsObstacleInSameWidthAfterPartedMove(dynamic_cast<Border*>(obstacle), move_part)) {
+    if (!IsObstacleInSameWidthAfterPartedMove(obstacle, move_part)) {
         return false;
     }
 
-    if (!IsObstacleInSameHeightAfterPartedMove(dynamic_cast<Border*>(obstacle), move_part)) {
+    if (!IsObstacleInSameHeightAfterPartedMove(obstacle, move_part)) {
         return false;
     }
 
-    if (!IsObstacleInSameDepthAfterPartedMove(dynamic_cast<Border*>(obstacle), move_part)) {
+    if (!IsObstacleInSameDepthAfterPartedMove(obstacle, move_part)) {
         return false;
     }
 
     return true;
 }
 
-bool Border::IsObstacleInSameWidthAfterPartedMove(Border* obstacle, float move_part)
+bool Border::IsObstacleInSameWidthAfterPartedMove(nextfloor::objects::EngineBorder* obstacle, float move_part)
 {
     auto current_x_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).x;
     auto obstacle_x_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).x;
@@ -147,7 +141,7 @@ bool Border::IsObstacleInSameWidthAfterPartedMove(Border* obstacle, float move_p
     return false;
 }
 
-bool Border::IsObstacleInSameHeightAfterPartedMove(Border* obstacle, float move_part)
+bool Border::IsObstacleInSameHeightAfterPartedMove(nextfloor::objects::EngineBorder* obstacle, float move_part)
 {
     auto current_y_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).y;
     auto obstacle_y_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).y;
@@ -160,7 +154,7 @@ bool Border::IsObstacleInSameHeightAfterPartedMove(Border* obstacle, float move_
     return false;
 }
 
-bool Border::IsObstacleInSameDepthAfterPartedMove(Border* obstacle, float move_part)
+bool Border::IsObstacleInSameDepthAfterPartedMove(nextfloor::objects::EngineBorder* obstacle, float move_part)
 {
     auto current_z_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).z;
     auto obstacle_z_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).z;
@@ -171,6 +165,11 @@ bool Border::IsObstacleInSameDepthAfterPartedMove(Border* obstacle, float move_p
     }
 
     return false;
+}
+
+glm::vec3 Border::RetrieveFirstPointAfterPartedMove(float move_part)
+{
+    return getFirstPoint() + move_part * glm::vec3(move().x, move().y, move().z);
 }
 
 glm::mat4 Border::CalculateModelMatrix() const

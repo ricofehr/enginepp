@@ -9,6 +9,8 @@
 
 #include "nextfloor/renderer/shader.h"
 
+#include <string>
+
 namespace nextfloor {
 
 namespace renderer {
@@ -23,16 +25,13 @@ public:
     VertexShader(std::string shader_path) : Shader(shader_path) {};
 
     VertexShader(VertexShader&&) = default;
-
     VertexShader& operator=(VertexShader&&) = default;
-
     VertexShader(const VertexShader&) = default;
-
     VertexShader& operator=(const VertexShader&) = default;
 
-    ~VertexShader() = default;
+    virtual ~VertexShader() = default;
 
-    void LoadShader() override final;
+    virtual void LoadShader() override final;
 };
 
 } // namespace renderer

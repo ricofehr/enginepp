@@ -35,6 +35,12 @@
 #include "nextfloor/physics/serial_collision.h"
 #include "nextfloor/physics/cl_collision.h"
 
+#include "nextfloor/renderer/fragment_shader.h"
+#include "nextfloor/renderer/vertex_shader.h"
+
+#include "nextfloor/gameplay/demo_level.h"
+#include "nextfloor/gameplay/random_level.h"
+
 #include "nextfloor/core/common_services.h"
 
 
@@ -121,7 +127,7 @@ std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeLittleRock(glm::v
     return std::make_unique<Rock>(location, 0.5f);
 }
 
-std::unique_ptr<nextfloor::objects::EngineObject> Factory::MakeCamera(glm::vec3 location) const noexcept
+std::unique_ptr<nextfloor::objects::EngineCamera> Factory::MakeCamera(glm::vec3 location) const noexcept
 {
     using nextfloor::objects::Camera;
     return std::make_unique<Camera>(location, 3.14f, 0.0f);
@@ -180,6 +186,18 @@ nextfloor::objects::EngineRenderer* Factory::MakeCubeRenderer(std::string textur
     return renderer_factory_->MakeCubeRenderer(texture);
 }
 
+std::unique_ptr<nextfloor::renderer::Shader> Factory::MakeVertexShader(std::string shader_path) const noexcept
+{
+    using nextfloor::renderer::VertexShader;
+    return std::make_unique<VertexShader>(shader_path);
+}
+
+std::unique_ptr<nextfloor::renderer::Shader> Factory::MakeFragmentShader(std::string shader_path) const noexcept
+{
+    using nextfloor::renderer::FragmentShader;
+    return std::make_unique<FragmentShader>(shader_path);
+}
+
 std::unique_ptr<nextfloor::objects::EngineCollision> Factory::MakeCollisionEngine() const noexcept
 {
     using nextfloor::objects::EngineCollision;
@@ -211,6 +229,17 @@ std::unique_ptr<nextfloor::objects::EngineCollision> Factory::MakeCollisionEngin
     return engine_collision;
 }
 
+std::unique_ptr<nextfloor::gameplay::Level> Factory::MakeDemoLevel() const noexcept
+{
+    using nextfloor::gameplay::DemoLevel;
+    return std::make_unique<DemoLevel>();
+}
+
+std::unique_ptr<nextfloor::gameplay::Level> Factory::MakeRandomLevel() const noexcept
+{
+    using nextfloor::gameplay::RandomLevel;
+    return std::make_unique<RandomLevel>();
+}
 
 Factory::~Factory()
 {

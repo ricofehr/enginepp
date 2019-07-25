@@ -6,10 +6,6 @@
 
 #include "nextfloor/physics/collision.h"
 
-#include <iostream>
-#include <vector>
-
-#include "nextfloor/objects/engine_object.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {

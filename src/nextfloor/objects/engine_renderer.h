@@ -17,10 +17,6 @@ class EngineRenderer {
 
 public:
 
-    EngineRenderer(EngineRenderer&&) = default;
-    EngineRenderer& operator=(EngineRenderer&&) = default;
-    EngineRenderer(const EngineRenderer&) = default;
-    EngineRenderer& operator=(const EngineRenderer&) = default;
     virtual ~EngineRenderer() = default;
 
     virtual void Draw(const glm::mat4& mvp) noexcept = 0;
@@ -28,6 +24,12 @@ public:
 protected:
 
     EngineRenderer() = default;
+
+    EngineRenderer(EngineRenderer&&) = default;
+    EngineRenderer& operator=(EngineRenderer&&) = default;
+    EngineRenderer(const EngineRenderer&) = default;
+    EngineRenderer& operator=(const EngineRenderer&) = default;
+
 };
 
 } // namespace renderer

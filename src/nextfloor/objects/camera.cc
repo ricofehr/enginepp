@@ -12,7 +12,7 @@ namespace nextfloor {
 
 namespace objects {
 
-Camera* Camera::active_ = nullptr;
+EngineCamera* EngineCamera::active_ = nullptr;
 
 Camera::Camera()
        :Camera(glm::vec3(0.0f), 3.14f, 0.0f) {}

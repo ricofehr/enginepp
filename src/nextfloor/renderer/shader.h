@@ -9,7 +9,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
+#include <string>
 
 namespace nextfloor {
 
@@ -22,43 +22,28 @@ class Shader {
 
 public:
 
-    Shader(Shader&&) = default;
-
-    Shader& operator=(Shader&&) = default;
-
-    Shader(const Shader&) = default;
-
-    Shader& operator=(const Shader&) = default;
-
-    /**
-     *  Abstract Class, define virtual destructor
-     */
     virtual ~Shader() = default;
 
     virtual void LoadShader() = 0;
 
     virtual void LinkShader();
-
     virtual void DetachShader();
-
     virtual void CheckShader();
-
     static void CheckProgram();
 
-    /**
-     *  Accessors
-     */
     GLuint shader_id() { return shader_id_; }
 
 protected:
 
-    /**
-     *  Protected scope ensures Abstract Class Design
-     */
     Shader(std::string shader_filepath);
 
-    std::string shader_filepath_;
+    Shader(Shader&&) = default;
+    Shader& operator=(Shader&&) = default;
+    Shader(const Shader&) = default;
+    Shader& operator=(const Shader&) = default;
 
+
+    std::string shader_filepath_;
     GLuint shader_id_;
 };
 

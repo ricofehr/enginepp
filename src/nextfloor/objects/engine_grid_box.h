@@ -21,10 +21,6 @@ class EngineGridBox {
 
 public:
 
-    EngineGridBox(EngineGridBox&&) = default;
-    EngineGridBox& operator=(EngineGridBox&&) = default;
-    EngineGridBox(const EngineGridBox&) = delete;
-    EngineGridBox& operator=(const EngineGridBox&) = delete;
     virtual ~EngineGridBox() = default;
 
     virtual void add(EngineObject* object) noexcept = 0;
@@ -47,6 +43,12 @@ public:
 protected:
 
     EngineGridBox() = default;
+
+    EngineGridBox(EngineGridBox&&) = default;
+    EngineGridBox& operator=(EngineGridBox&&) = default;
+    EngineGridBox(const EngineGridBox&) = delete;
+    EngineGridBox& operator=(const EngineGridBox&) = delete;
+
 };
 
 } // namespace objects

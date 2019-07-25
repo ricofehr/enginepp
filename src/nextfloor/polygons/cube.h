@@ -24,15 +24,11 @@ class Cube : public Polygon {
 public:
 
     Cube(glm::vec3 location, glm::vec3 scale);
-
     Cube(glm::vec3 location, float scale);
 
     Cube(Cube&&) = default;
-
     Cube& operator=(Cube&&) = default;
-
     Cube(const Cube&) = default;
-
     Cube& operator=(const Cube&) = default;
 
     virtual ~Cube() override = default;

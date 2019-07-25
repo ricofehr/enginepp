@@ -24,11 +24,13 @@ class FrontWall : public WidthWall {
 public:
 
     FrontWall(glm::vec3 location, glm::vec3 scale);
+
     FrontWall(FrontWall&&) = default;
     FrontWall& operator=(FrontWall&&) = default;
     FrontWall(const FrontWall&) = delete;
     FrontWall& operator=(const FrontWall&) = delete;
-    ~FrontWall() override = default;
+
+    virtual ~FrontWall() override = default;
 
     virtual void PrepareDraw() noexcept override;
 };

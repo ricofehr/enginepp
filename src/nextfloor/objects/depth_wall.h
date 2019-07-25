@@ -18,17 +18,13 @@ namespace objects {
 
 /**
  *  @class DepthWall
- *  @brief DepthWall is an Abstract class for left, and right wall of a Room
+ *  @brief DepthWall is an Abstract class for left / right wall of a Room
  */
 class DepthWall : public Wall {
 
 public:
 
-    DepthWall(DepthWall&&) = default;
-    DepthWall& operator=(DepthWall&&) = default;
-    DepthWall(const DepthWall&) = delete;
-    DepthWall& operator=(const DepthWall&) = delete;
-    ~DepthWall() override = default;
+    virtual ~DepthWall() override = default;
 
     virtual void AddDoor() noexcept override;
     virtual void AddWindow() noexcept override;
@@ -36,6 +32,12 @@ public:
 protected:
 
     DepthWall(glm::vec3 location, glm::vec3 scale);
+
+    DepthWall(DepthWall&&) = default;
+    DepthWall& operator=(DepthWall&&) = default;
+    DepthWall(const DepthWall&) = delete;
+    DepthWall& operator=(const DepthWall&) = delete;
+
 
 private:
 

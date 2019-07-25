@@ -18,10 +18,12 @@ class GlCubeRenderer : public GlRenderer {
 public:
 
     GlCubeRenderer(std::string texture);
+
     GlCubeRenderer(GlCubeRenderer&&) = default;
     GlCubeRenderer& operator=(GlCubeRenderer&&) = default;
     GlCubeRenderer(const GlCubeRenderer&) = default;
     GlCubeRenderer& operator=(const GlCubeRenderer&) = default;
+
     virtual ~GlCubeRenderer() override = default;
 
     virtual void Draw(const glm::mat4& mvp) noexcept override final;

@@ -25,10 +25,6 @@ class EngineObject {
 
 public:
 
-    EngineObject(EngineObject&&) = default;
-    EngineObject& operator=(EngineObject&&) = default;
-    EngineObject(const EngineObject&) = delete;
-    EngineObject& operator=(const EngineObject&) = delete;
     virtual ~EngineObject() = default;
 
     virtual void Draw() = 0;
@@ -65,6 +61,12 @@ public:
 protected:
 
     EngineObject() = default;
+
+    EngineObject(EngineObject&&) = default;
+    EngineObject& operator=(EngineObject&&) = default;
+    EngineObject(const EngineObject&) = delete;
+    EngineObject& operator=(const EngineObject&) = delete;
+
 };
 
 } // namespace objects

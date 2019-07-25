@@ -40,14 +40,11 @@ public:
     ClCollision();
 
     ClCollision(ClCollision&&) = default;
-
     ClCollision& operator=(ClCollision&&) = default;
-
     ClCollision(const ClCollision&) = delete;
-
     ClCollision& operator=(const ClCollision&) = delete;
 
-    ~ClCollision() override = default;
+    virtual ~ClCollision() override = default;
 
     virtual float ComputeCollision(nextfloor::objects::EngineObject* target,
                                    nextfloor::objects::EngineObject* obstacle) override final;

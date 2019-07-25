@@ -7,6 +7,7 @@
 #include "nextfloor/renderer/shader.h"
 
 #include <vector>
+#include <iostream>
 
 #include "nextfloor/renderer/game_window.h"
 

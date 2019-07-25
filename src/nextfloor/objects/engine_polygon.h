@@ -26,10 +26,6 @@ class EnginePolygon {
 
 public:
 
-    EnginePolygon(EnginePolygon&&) = default;
-    EnginePolygon& operator=(EnginePolygon&&) = default;
-    EnginePolygon(const EnginePolygon&) = default;
-    EnginePolygon& operator=(const EnginePolygon&) = default;
     virtual ~EnginePolygon() = default;
 
     virtual void UpdateModelViewProjectionMatrix() = 0;
@@ -49,6 +45,12 @@ public:
 protected:
 
     EnginePolygon() = default;
+
+    EnginePolygon(EnginePolygon&&) = default;
+    EnginePolygon& operator=(EnginePolygon&&) = default;
+    EnginePolygon(const EnginePolygon&) = default;
+    EnginePolygon& operator=(const EnginePolygon&) = default;
+
 };
 
 } // namespace objects

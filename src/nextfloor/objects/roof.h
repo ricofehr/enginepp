@@ -29,16 +29,13 @@ public:
 
     Roof(Roof&&) = default;
     Roof& operator=(Roof&&) = default;
-
     Roof(const Roof&) = delete;
     Roof& operator=(const Roof&) = delete;
 
-    ~Roof() override = default;
+    virtual ~Roof() override = default;
 
     virtual void AddDoor() noexcept override;
-
     virtual void AddWindow() noexcept override;
-
     virtual void PrepareDraw() noexcept override;
 
 private:

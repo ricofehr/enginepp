@@ -25,11 +25,13 @@ class WallBrick : public Model {
 public:
 
     WallBrick(glm::vec3 location, glm::vec3 scale, std::string texture);
+
     WallBrick(WallBrick&&) = default;
     WallBrick& operator=(WallBrick&&) = default;
     WallBrick(const WallBrick&) = delete;
     WallBrick& operator=(const WallBrick&) = delete;
-    ~WallBrick() override = default;
+
+    virtual ~WallBrick() override = default;
 };
 
 } // namespace objects

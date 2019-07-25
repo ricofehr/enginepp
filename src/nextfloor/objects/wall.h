@@ -25,10 +25,6 @@ class Wall : public Model {
 
 public:
 
-    Wall(Wall&&) = default;
-    Wall& operator=(Wall&&) = default;
-    Wall(const Wall&) = delete;
-    Wall& operator=(const Wall&) = delete;
     virtual ~Wall() = default;
 
     virtual void AddDoor() noexcept = 0;
@@ -37,6 +33,11 @@ public:
 protected:
 
     Wall() = default;
+
+    Wall(Wall&&) = default;
+    Wall& operator=(Wall&&) = default;
+    Wall(const Wall&) = delete;
+    Wall& operator=(const Wall&) = delete;
 
     virtual void AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint) noexcept;
 

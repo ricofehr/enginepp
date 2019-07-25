@@ -20,7 +20,6 @@ WidthWall::WidthWall(glm::vec3 location, glm::vec3 scale)
     bricks_count_ = border_->dimension() / brick_dimension_;
     grid_ = CommonServices::getFactory()->MakeGrid(this, bricks_count_, brick_dimension_);
     AddBricks(location - scale, location + scale);
-    grid_->DisplayGrid();
 }
 
 void WidthWall::AddDoor() noexcept

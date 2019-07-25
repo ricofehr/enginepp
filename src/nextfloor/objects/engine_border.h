@@ -24,27 +24,33 @@ class EngineBorder {
 
 public:
 
-    EngineBorder(EngineBorder&&) = default;
-    EngineBorder& operator=(EngineBorder&&) = default;
-    EngineBorder(const EngineBorder&) = delete;
-    EngineBorder& operator=(const EngineBorder&) = delete;
     virtual ~EngineBorder() = default;
 
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const = 0;
     virtual void ComputeNewLocation() = 0;
     virtual bool IsObstacleInCollisionAfterPartedMove(EngineBorder* obstacle, float move_part) = 0;
 
+    virtual void set_distance(float distance) = 0;
+    virtual void InverseMove() = 0;
+
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 dimension() const = 0;
     virtual glm::vec3 move() const = 0;
     virtual float distance() const = 0;
 
-    virtual void set_distance(float distance) = 0;
-    virtual void InverseMove() = 0;
+    virtual float CalculateWidth() = 0;
+    virtual float CalculateHeight() = 0;
+    virtual float CalculateDepth() = 0;
+    virtual glm::vec3 RetrieveFirstPointAfterPartedMove(float move_part) = 0;
 
 protected:
 
     EngineBorder() = default;
+
+    EngineBorder(EngineBorder&&) = default;
+    EngineBorder& operator=(EngineBorder&&) = default;
+    EngineBorder(const EngineBorder&) = delete;
+    EngineBorder& operator=(const EngineBorder&) = delete;
 };
 
 } // namespace objects

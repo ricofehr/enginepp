@@ -9,7 +9,7 @@
 
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/model.h"
+#include "nextfloor/objects/engine_camera.h"
 
 namespace nextfloor {
 
@@ -22,32 +22,31 @@ namespace objects {
  *  All 3d objects are displaying thanks to the projection matrix computed from camera position\n
  *  @see Polygon
  */
-class Camera : public Model {
+class Camera : public EngineCamera {
 
 public:
 
     Camera();
     Camera(glm::vec3 location, float horizontal_angle, float vertical_angle);
+
     Camera(Camera&&) = default;
     Camera& operator=(Camera&&) = default;
     Camera(const Camera&) = delete;
     Camera& operator=(const Camera&) = delete;
-    ~Camera() override = default;
 
-    void ComputeOrientation() noexcept;
-    void ComputeFOV(float delta_fov) noexcept;
+    virtual ~Camera() override = default;
 
-    glm::vec3 direction() const { return direction_; }
-    glm::vec3 head() const { return head_; }
-    float fov() const { return fov_; }
-    static Camera* active() { return active_; }
+    virtual void ComputeOrientation() noexcept override;
+    virtual void ComputeFOV(float delta_fov) noexcept override;
 
-    void set_active() { active_ = this; }
+    virtual glm::vec3 direction() const override { return direction_; }
+    virtual glm::vec3 head() const override { return head_; }
+    virtual float fov() const override { return fov_; }
+    //virtual Camera* active() override { return active_; }
+
+    virtual void set_active() override { active_ = this; }
 
 private:
-
-    /* At least one and only one current active Camera */
-    static Camera* active_;
 
     float horizontal_angle_;
     float vertical_angle_;

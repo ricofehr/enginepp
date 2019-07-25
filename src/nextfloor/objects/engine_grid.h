@@ -25,10 +25,6 @@ class EngineGrid {
 
 public:
 
-    EngineGrid(EngineGrid&&) = default;
-    EngineGrid& operator=(EngineGrid&&) = default;
-    EngineGrid(const EngineGrid&) = delete;
-    EngineGrid& operator=(const EngineGrid&) = delete;
     virtual ~EngineGrid() = default;
 
     virtual bool IsPositionEmpty(glm::ivec3 coords) const noexcept = 0;
@@ -70,6 +66,12 @@ public:
 protected:
 
     EngineGrid() = default;
+
+    EngineGrid(EngineGrid&&) = default;
+    EngineGrid& operator=(EngineGrid&&) = default;
+    EngineGrid(const EngineGrid&) = delete;
+    EngineGrid& operator=(const EngineGrid&) = delete;
+
 };
 
 } // namespace objects

@@ -7,23 +7,24 @@
 #ifndef NEXTFLOOR_PHYSICS_COLLISION_H_
 #define NEXTFLOOR_PHYSICS_COLLISION_H_
 
+#include "nextfloor/objects/engine_collision.h"
+
 #include <tbb/mutex.h>
 
-#include "nextfloor/objects/engine_collision.h"
+#include "nextfloor/objects/engine_object.h"
+
 
 namespace nextfloor {
 
 namespace physics {
 
-using nextfloor::objects::EngineCollision;
-
 /**
  *  @class Collision
- *  @brief Interface who manage collisition computes between 3d models\n
+ *  @brief Abstract Class who manage collisition computes between 3d models\n
  *  Use Strategy / Template Method Patterns for this abstract class and subclasses,\n
- *  which proposes 3 differents Collision Algorithm: serial, cilkplus vernsion and opencl version
+ *  which proposes 3 differents Collision Algorithm: serial, cilkplus version and opencl version
  */
-class Collision : public EngineCollision {
+class Collision : public nextfloor::objects::EngineCollision {
 
 public:
 
@@ -31,15 +32,6 @@ public:
     static constexpr int kPARALLELL_TBB = 2;
     static constexpr int kPARALLELL_CL = 3;
 
-    Collision(Collision&&) = default;
-
-    Collision& operator=(Collision&&) = default;
-
-    Collision(const Collision&) = delete;
-
-    Collision& operator=(const Collision&) = delete;
-
-    /* Abstract Class, define virtual destructor */
     virtual ~Collision() = default;
 
     /* Template Method : Detect if a collision exists between target and obstacle. */
@@ -55,8 +47,12 @@ public:
 
 protected:
 
-    /* Default Construtor : Protected scope ensures Abstract Class Design */
     Collision() = default;
+
+    Collision(Collision&&) = default;
+    Collision& operator=(Collision&&) = default;
+    Collision(const Collision&) = delete;
+    Collision& operator=(const Collision&) = delete;
 
     virtual void InitCollisionEngine() = 0;
 

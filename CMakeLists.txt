@@ -32,6 +32,10 @@ set(factory_SRCS
     src/nextfloor/factory/factory.cc
     src/nextfloor/factory/renderer_factory.cc)
 
+set(gameplay_SRCS
+    src/nextfloor/gameplay/demo_level.cc
+    src/nextfloor/gameplay/random_level.cc)
+
 set(grid_SRCS
     src/nextfloor/grid/grid.cc
     src/nextfloor/grid/grid_box.cc
@@ -80,6 +84,7 @@ set(nextfloor_SRCS
     ${controller_SRCS}
     ${core_SRCS}
     ${factory_SRCS}
+    ${gameplay_SRCS}
     ${grid_SRCS}
     ${objects_SRCS}
     ${physics_SRCS}
@@ -110,6 +115,11 @@ set(factory_HDRS
     src/nextfloor/factory/engine_renderer_factory.h
     src/nextfloor/factory/factory.h
     src/nextfloor/factory/renderer_factory.h)
+
+set(gameplay_HDRS
+    src/nextfloor/gameplay/demo_level.h
+    src/nextfloor/gameplay/level.h
+    src/nextfloor/gameplay/random_level.h)
 
 set(grid_HDRS
     src/nextfloor/grid/grid.h
@@ -167,6 +177,7 @@ set(nextfloor_HDRS
     ${controller_HDRS}
     ${core_HDRS}
     ${factory_HDRS}
+    ${gameplay_HDRS}
     ${grid_HDRS}
     ${objects_HDRS}
     ${physics_HDRS}

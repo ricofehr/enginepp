@@ -19,9 +19,11 @@
 #include "nextfloor/core/generic_file_io.h"
 #include "nextfloor/core/standard_random_generator.h"
 
+#include "nextfloor/objects/engine_camera.h"
+
 int main(int argc, char* argv[])
 {
-    using nextfloor::objects::Camera;
+    using nextfloor::objects::EngineCamera;
     using nextfloor::factory::Factory;
     using nextfloor::controller::GameLoop;
     using nextfloor::renderer::GameWindow;
@@ -70,8 +72,8 @@ int main(int argc, char* argv[])
     game_window.Initialization();
 
     /* Launch GL Scene */
-    std::unique_ptr<EngineObject> universe = factory->MakeUniverse();
-    game_window.SetCamera(Camera::active());
+    std::unique_ptr<EngineObject> universe = factory->MakeDemoLevel()->GenerateUniverse();
+    game_window.SetCamera(EngineCamera::active());
     game_loop.Loop(universe.get());
 
     CommonServices::getExit()->ExitOnSuccess();

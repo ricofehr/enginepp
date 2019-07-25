@@ -25,11 +25,7 @@ class WidthWall : public Wall {
 
 public:
 
-    WidthWall(WidthWall&&) = default;
-    WidthWall& operator=(WidthWall&&) = default;
-    WidthWall(const WidthWall&) = delete;
-    WidthWall& operator=(const WidthWall&) = delete;
-    ~WidthWall() override = default;
+    virtual ~WidthWall() override = default;
 
     virtual void AddDoor() noexcept override;
     virtual void AddWindow() noexcept override;
@@ -37,6 +33,11 @@ public:
 protected:
 
     WidthWall(glm::vec3 location, glm::vec3 scale);
+
+    WidthWall(WidthWall&&) = default;
+    WidthWall& operator=(WidthWall&&) = default;
+    WidthWall(const WidthWall&) = delete;
+    WidthWall& operator=(const WidthWall&) = delete;
 
 private:
 

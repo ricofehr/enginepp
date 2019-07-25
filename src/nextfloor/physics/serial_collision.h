@@ -9,6 +9,8 @@
 
 #include "nextfloor/physics/collision.h"
 
+#include "nextfloor/objects/engine_object.h"
+
 namespace nextfloor {
 
 namespace physics {
@@ -24,14 +26,11 @@ public:
     SerialCollision();
 
     SerialCollision(SerialCollision&&) = default;
-
     SerialCollision& operator=(SerialCollision&&) = default;
-
     SerialCollision(const SerialCollision&) = delete;
-
     SerialCollision& operator=(const SerialCollision&) = delete;
 
-    ~SerialCollision() override = default;
+    virtual ~SerialCollision() override = default;
 
     virtual float ComputeCollision(nextfloor::objects::EngineObject* target,
                                    nextfloor::objects::EngineObject* obstacle) override final;

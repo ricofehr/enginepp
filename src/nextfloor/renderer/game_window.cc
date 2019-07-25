@@ -6,8 +6,6 @@
 
 #include "nextfloor/renderer/game_window.h"
 
-#include <vector>
-
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -55,7 +53,7 @@ static void ClearWindow()
 /**
  *  GameWindow Global Variables Init
  */
-nextfloor::objects::EngineObject* GameWindow::camera_ = nullptr;
+nextfloor::objects::EngineCamera* GameWindow::camera_ = nullptr;
 float GameWindow::window_width_ = 1200.0f;
 float GameWindow::window_height_ = 740.0f;
 GLuint GameWindow::matrix_id_ = -1;
@@ -122,11 +120,9 @@ void GameWindow::InitProgramId()
 
 void GameWindow::LoadShaders()
 {
-    const char* vertex_file_path = "glsl/SimpleVertexShader.vertexshader";
-    const char* fragment_file_path = "glsl/SimpleFragmentShader.fragmentshader";
-
-    vertex_shader_ = std::make_unique<VertexShader>(vertex_file_path);
-    fragment_shader_ = std::make_unique<FragmentShader>(fragment_file_path);
+    using nextfloor::core::CommonServices;
+    vertex_shader_ = CommonServices::getFactory()->MakeVertexShader(kVERTEXFILEPATH);
+    fragment_shader_ = CommonServices::getFactory()->MakeFragmentShader(kFRAGMENTFILEPATH);
 
     vertex_shader_->LoadShader();
     fragment_shader_->LoadShader();
@@ -213,7 +209,7 @@ void GameWindow::UpdateMoveFactor()
     move_factor_ = kFpsBase / fps_real;
 }
 
-void GameWindow::SetCamera(nextfloor::objects::Camera* camera)
+void GameWindow::SetCamera(nextfloor::objects::EngineCamera* camera)
 {
     camera_ = camera;
 }

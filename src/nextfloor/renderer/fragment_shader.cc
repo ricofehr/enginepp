@@ -6,8 +6,6 @@
 
 #include "nextfloor/renderer/fragment_shader.h"
 
-#include <vector>
-
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {

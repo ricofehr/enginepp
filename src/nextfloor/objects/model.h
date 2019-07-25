@@ -31,15 +31,8 @@ class Model : public EngineObject {
 
 public:
 
-    /*
-     *  Model Type Constants
-     */
     static constexpr int kMODEL_CAMERA = 2;
 
-    Model(Model&&) = default;
-    Model& operator=(Model&&) = default;
-    Model(const Model&) = delete;
-    Model& operator=(const Model&) = delete;
     virtual ~Model() override = default;
 
     friend bool operator==(const Model& o1, const Model& o2);
@@ -107,6 +100,11 @@ public:
 protected:
 
     Model();
+
+    Model(Model&&) = default;
+    Model& operator=(Model&&) = default;
+    Model(const Model&) = delete;
+    Model& operator=(const Model&) = delete;
 
     void RemoveItemToGrid(EngineObject* object) noexcept;
 

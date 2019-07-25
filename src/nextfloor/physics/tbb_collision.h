@@ -9,6 +9,8 @@
 
 #include "nextfloor/physics/collision.h"
 
+#include "nextfloor/objects/engine_object.h"
+
 namespace nextfloor {
 
 namespace physics {
@@ -24,14 +26,11 @@ public:
     TbbCollision();
 
     TbbCollision(TbbCollision&&) = default;
-
     TbbCollision& operator=(TbbCollision&&) = default;
-
     TbbCollision(const TbbCollision&) = delete;
-
     TbbCollision& operator=(const TbbCollision&) = delete;
 
-    ~TbbCollision() override = default;
+    virtual ~TbbCollision() override = default;
 
     virtual float ComputeCollision(nextfloor::objects::EngineObject* target,
                                    nextfloor::objects::EngineObject* obstacle) override final;

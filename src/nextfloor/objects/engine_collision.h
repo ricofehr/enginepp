@@ -21,10 +21,6 @@ class EngineCollision {
 
 public:
 
-    EngineCollision(EngineCollision&&) = default;
-    EngineCollision& operator=(EngineCollision&&) = default;
-    EngineCollision(const EngineCollision&) = delete;
-    EngineCollision& operator=(const EngineCollision&) = delete;
     virtual ~EngineCollision() = default;
 
     /* Template Method : Detect if a collision exists between target and obstacle. */
@@ -41,6 +37,12 @@ public:
 protected:
 
     EngineCollision() = default;
+
+    EngineCollision(EngineCollision&&) = default;
+    EngineCollision& operator=(EngineCollision&&) = default;
+    EngineCollision(const EngineCollision&) = delete;
+    EngineCollision& operator=(const EngineCollision&) = delete;
+
 };
 
 } // namespace objects

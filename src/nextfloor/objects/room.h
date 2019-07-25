@@ -25,11 +25,13 @@ class Room : public Model {
 public:
 
     Room(glm::vec3 location);
+
     Room(Room&&) = default;
     Room& operator=(Room&&) = default;
     Room(const Room&) = delete;
     Room& operator=(const Room&) = delete;
-    ~Room() override = default;
+
+    virtual ~Room() override = default;
 
     bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;
 

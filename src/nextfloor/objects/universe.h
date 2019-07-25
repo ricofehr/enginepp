@@ -24,11 +24,13 @@ class Universe : public Model {
 public:
 
     Universe();
+
     Universe(Universe&&) = default;
     Universe& operator=(Universe&&) = default;
     Universe(const Universe&) = delete;
     Universe& operator=(const Universe&) = delete;
-    ~Universe() override = default;
+
+    virtual ~Universe() override = default;
 
     void Draw() noexcept override final;
 

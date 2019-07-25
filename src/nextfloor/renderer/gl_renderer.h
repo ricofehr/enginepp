@@ -13,7 +13,6 @@
 #include <GLFW/glfw3.h>
 #include <SOIL/SOIL.h>
 
-#include <memory>
 #include <string>
 
 #include "nextfloor/objects/model.h"
@@ -22,9 +21,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-using nextfloor::objects::EngineRenderer;
-
-class GlRenderer : public EngineRenderer {
+class GlRenderer : public nextfloor::objects::EngineRenderer {
 
 public:
 
@@ -37,16 +34,14 @@ public:
     GlRenderer& operator=(GlRenderer&&) = default;
     GlRenderer(const GlRenderer&) = default;
     GlRenderer& operator=(const GlRenderer&) = default;
+
     virtual ~GlRenderer() override = default;
 
 protected:
 
     GLuint elementbuffer_;
-
     GLuint vertexbuffer_;
-
     GLuint texturebuffer_;
-
     std::string texture_;
 };
 

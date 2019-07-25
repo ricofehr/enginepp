@@ -26,11 +26,13 @@ class Rock : public Model {
 public:
 
     Rock(glm::vec3 location, float scale);
+
     Rock(Rock&&) = default;
     Rock& operator=(Rock&&) = default;
     Rock(const Rock&) = delete;
     Rock& operator=(const Rock&) = delete;
-    ~Rock() override = default;
+
+    virtual ~Rock() override = default;
 
 private:
 
