@@ -12,7 +12,7 @@ namespace nextfloor {
 
 namespace gameplay {
 
-std::unique_ptr<nextfloor::objects::EngineObject> RandomLevel::GenerateUniverse() noexcept
+std::unique_ptr<nextfloor::objects::Mesh> RandomLevel::GenerateUniverse() noexcept
 {
     using nextfloor::core::CommonServices;
     return CommonServices::getFactory()->MakeUniverse();

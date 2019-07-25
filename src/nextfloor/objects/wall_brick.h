@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_OBJECTS_WALLBRICK_H_
 #define NEXTFLOOR_OBJECTS_WALLBRICK_H_
 
-#include "nextfloor/objects/model.h"
+#include "nextfloor/objects/model_mesh.h"
 
 #include <glm/glm.hpp>
 
@@ -20,7 +20,7 @@ namespace objects {
  *  @class WallBrick
  *  @brief WallBrick model, inherits Model abstract class
  */
-class WallBrick : public Model {
+class WallBrick : public ModelMesh {
 
 public:
 

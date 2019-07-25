@@ -7,7 +7,7 @@
 #include <memory>
 #include <tbb/tbb.h>
 
-#include "nextfloor/factory/factory.h"
+#include "nextfloor/factory/game_factory.h"
 #include "nextfloor/controller/game_loop.h"
 #include "nextfloor/renderer/game_window.h"
 
@@ -16,15 +16,15 @@
 #include "nextfloor/core/frame_timer.h"
 #include "nextfloor/core/config_file.h"
 #include "nextfloor/core/program_exit.h"
-#include "nextfloor/core/generic_file_io.h"
-#include "nextfloor/core/standard_random_generator.h"
+#include "nextfloor/core/std_file_io.h"
+#include "nextfloor/core/pseudo_random_generator.h"
 
-#include "nextfloor/objects/engine_camera.h"
+#include "nextfloor/objects/camera.h"
 
 int main(int argc, char* argv[])
 {
-    using nextfloor::objects::EngineCamera;
-    using nextfloor::factory::Factory;
+    using nextfloor::objects::Camera;
+    using nextfloor::factory::GameFactory;
     using nextfloor::controller::GameLoop;
     using nextfloor::renderer::GameWindow;
     using nextfloor::core::CommonServices;
@@ -32,10 +32,10 @@ int main(int argc, char* argv[])
     using nextfloor::core::FrameTimer;
     using nextfloor::core::ConfigFile;
     using nextfloor::core::ProgramExit;
-    using nextfloor::core::GenericFileIO;
-    using nextfloor::core::StandardRandomGenerator;
-    using nextfloor::objects::EngineCollision;
-    using nextfloor::objects::EngineObject;
+    using nextfloor::core::StdFileIO;
+    using nextfloor::core::PseudoRandomGenerator;
+    using nextfloor::objects::CollisionEngine;
+    using nextfloor::objects::Mesh;
 
     /* Init CommonServices */
     std::unique_ptr<TerminalLog> terminal_log = std::make_unique<TerminalLog>();
@@ -46,11 +46,11 @@ int main(int argc, char* argv[])
     CommonServices::provideConfig(file_config.get());
     std::unique_ptr<ProgramExit> program_exit = std::make_unique<ProgramExit>();
     CommonServices::provideExit(program_exit.get());
-    std::unique_ptr<GenericFileIO> generic_file_io = std::make_unique<GenericFileIO>();
+    std::unique_ptr<StdFileIO> generic_file_io = std::make_unique<StdFileIO>();
     CommonServices::provideFileIO(generic_file_io.get());
-    std::unique_ptr<StandardRandomGenerator> standard_random_generator = std::make_unique<StandardRandomGenerator>();
+    std::unique_ptr<PseudoRandomGenerator> standard_random_generator = std::make_unique<PseudoRandomGenerator>();
     CommonServices::provideRandomGenerator(standard_random_generator.get());
-    std::unique_ptr<Factory> factory = std::make_unique<Factory>();
+    std::unique_ptr<GameFactory> factory = std::make_unique<GameFactory>();
     CommonServices::provideFactory(factory.get());
 
     /* Init Config */
@@ -67,13 +67,13 @@ int main(int argc, char* argv[])
 
     /* Init world */
     GameWindow game_window;
-    std::unique_ptr<EngineCollision> engine_collision{factory->MakeCollisionEngine()};
+    std::unique_ptr<CollisionEngine> engine_collision{factory->MakeCollisionEngine()};
     GameLoop game_loop(&game_window, engine_collision.get());
     game_window.Initialization();
 
     /* Launch GL Scene */
-    std::unique_ptr<EngineObject> universe = factory->MakeDemoLevel()->GenerateUniverse();
-    game_window.SetCamera(EngineCamera::active());
+    std::unique_ptr<Mesh> universe = factory->MakeDemoLevel()->GenerateUniverse();
+    game_window.SetCamera(Camera::active());
     game_loop.Loop(universe.get());
 
     CommonServices::getExit()->ExitOnSuccess();

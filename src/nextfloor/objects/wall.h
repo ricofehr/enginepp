@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_OBJECTS_WALL_H_
 #define NEXTFLOOR_OBJECTS_WALL_H_
 
-#include "nextfloor/objects/model.h"
+#include "nextfloor/objects/model_mesh.h"
 
 #include <glm/glm.hpp>
 #include <string>
@@ -21,7 +21,7 @@ namespace objects {
  *  @class Wall
  *  @brief Wall : define Abstract Wall class
  */
-class Wall : public Model {
+class Wall : public ModelMesh {
 
 public:
 

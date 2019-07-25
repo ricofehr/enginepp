@@ -19,7 +19,7 @@ Cube::Cube(glm::vec3 location, glm::vec3 scale)
     scale_ = scale;
 }
 
-void Cube::Draw(nextfloor::objects::EngineRenderer* renderer) noexcept
+void Cube::Draw(nextfloor::objects::RendererEngine* renderer) noexcept
 {
     renderer->Draw(mvp_);
 }

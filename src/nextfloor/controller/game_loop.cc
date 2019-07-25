@@ -22,7 +22,7 @@ static bool sInstanciated = false;
 } // anonymous namespace
 
 GameLoop::GameLoop(nextfloor::renderer::GameWindow* game_window,
-                   nextfloor::objects::EngineCollision* engine_collision)
+                   nextfloor::objects::CollisionEngine* engine_collision)
 {
     assert(!sInstanciated);
     sInstanciated = true;
@@ -35,7 +35,7 @@ GameLoop::GameLoop(nextfloor::renderer::GameWindow* game_window,
 /**
  *   Display global details for each seconds
  */
-void GameLoop::LoopLog(nextfloor::objects::EngineObject* universe)
+void GameLoop::LoopLog(nextfloor::objects::Mesh* universe)
 {
     using nextfloor::core::CommonServices;
 
@@ -69,7 +69,7 @@ void GameLoop::LoopLog(nextfloor::objects::EngineObject* universe)
     }
 }
 
-void GameLoop::Loop(nextfloor::objects::EngineObject* universe)
+void GameLoop::Loop(nextfloor::objects::Mesh* universe)
 {
     using nextfloor::core::CommonServices;
 

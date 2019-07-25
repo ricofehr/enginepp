@@ -1,17 +1,16 @@
 /**
  *  @file renderer_factory.h
- *  @brief RendererFactory Class for renderer flyweights objects
+ *  @brief Abstract Factory Class for renderer objects
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 #ifndef NEXTFLOOR_FACTORY_RENDERERFACTORY_H_
 #define NEXTFLOOR_FACTORY_RENDERERFACTORY_H_
 
-#include "nextfloor/factory/engine_renderer_factory.h"
+#include <memory>
+#include <glm/glm.hpp>
 
-#include <map>
-
-#include "nextfloor/objects/engine_renderer.h"
+#include "nextfloor/objects/renderer_engine.h"
 
 namespace nextfloor {
 
@@ -19,13 +18,11 @@ namespace factory {
 
 /**
  *  @class RendererFactory
- *  @brief RendererFactory Pattern for Universe Objects
+ *  @brief Abstract Factory Pattern for flyweight renderer objects
  */
-class RendererFactory : public EngineRendererFactory {
+class RendererFactory {
 
 public:
-
-    RendererFactory();
 
     RendererFactory(RendererFactory&&) = default;
 
@@ -35,18 +32,18 @@ public:
 
     RendererFactory& operator=(const RendererFactory&) = default;
 
-    virtual ~RendererFactory() override;
+    virtual ~RendererFactory() = default;
 
-    nextfloor::objects::EngineRenderer* MakeCubeRenderer(std::string texture) noexcept override;
+    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) noexcept = 0;
 
 
-private:
+protected:
 
-    std::map<std::string, std::unique_ptr<nextfloor::objects::EngineRenderer>> renderers_;
+    RendererFactory() = default;
 };
 
 } // namespace factory
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_FACTORY_ENGINEFACTORY_H_
+#endif // NEXTFLOOR_FACTORY_RENDERERFACTORY_H_

@@ -10,7 +10,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/model.h"
+#include "nextfloor/objects/model_mesh.h"
 
 namespace nextfloor {
 
@@ -20,7 +20,7 @@ namespace objects {
  *  @class Room
  *  @brief Define a Room, inherits Model abstract class
  */
-class Room : public Model {
+class Room : public ModelMesh {
 
 public:
 

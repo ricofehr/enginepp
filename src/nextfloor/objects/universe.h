@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_OBJECTS_UNIVERSE_H_
 #define NEXTFLOOR_OBJECTS_UNIVERSE_H_
 
-#include "nextfloor/objects/model.h"
+#include "nextfloor/objects/model_mesh.h"
 
 #include <vector>
 
@@ -19,7 +19,7 @@ namespace objects {
  *  @class Universe
  *  @brief Define an Universe (with rooms inside), inherits Model abstract class
  */
-class Universe : public Model {
+class Universe : public ModelMesh {
 
 public:
 
@@ -37,7 +37,7 @@ public:
 private:
 
     /** filtering only rooms with display state */
-    std::vector<EngineObject*> display_rooms_;
+    std::vector<Mesh*> display_rooms_;
 };
 
 } // namespace objects

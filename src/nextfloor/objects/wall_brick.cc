@@ -16,7 +16,7 @@ WallBrick::WallBrick(glm::vec3 location, glm::vec3 scale, std::string texture)
 {
     using nextfloor::core::CommonServices;
 
-    meshes_.push_back(CommonServices::getFactory()->MakeCube(location, scale));
+    polygons_.push_back(CommonServices::getFactory()->MakeCube(location, scale));
     border_ = CommonServices::getFactory()->MakeBorder(location, scale);
     renderer_ = CommonServices::getFactory()->MakeCubeRenderer(texture);
 }

@@ -16,7 +16,7 @@ Timer* CommonServices::timer_ = nullptr;
 Log* CommonServices::log_ = nullptr;
 RandomGenerator* CommonServices::random_generator_ = nullptr;
 Exit* CommonServices::exit_ = nullptr;
-nextfloor::factory::EngineFactory* CommonServices::factory_ = nullptr;
+nextfloor::factory::Factory* CommonServices::factory_ = nullptr;
 
 } // namespace core
 

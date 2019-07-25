@@ -203,12 +203,12 @@ void ConfigFile::Display() const
     std::cout << "Objects count: " << getSetting<int>("objects_count") << std::endl;
     std::cout << "Load objects frequency in time: " << getSetting<float>("load_objects_freq") << std::endl;
     std::cout << "Rooms count: " << getSetting<int>("rooms_count") << std::endl;
-    std::cout << "Collision granularity: " << getSetting<int>("granularity") << std::endl;
+    std::cout << "NearerCollisionEngine granularity: " << getSetting<int>("granularity") << std::endl;
     std::cout << "Clipping (0 -> no clipping, 1 -> high clipping, 2 -> low clipping): " << getSetting<int>("clipping") << std::endl;
     std::cout << "Workers count: " << count_workers << std::endl;
     std::cout << "Execution Time (0 -> no limit): " << getSetting<int>("execution_time") << std::endl;
     std::cout << "Vsync (limit framerate to monitor): " << getSetting<bool>("vsync") << std::endl;
-    std::cout << "Grid mode (not fill polygons): " << getSetting<bool>("grid") << std::endl;
+    std::cout << "PlacesGrid mode (not fill polygons): " << getSetting<bool>("grid") << std::endl;
     std::cout << "Program mode : " << getSetting<int>("factory_type") << std::endl;
     std::cout << "Debug mode (0 -> no debug, 1 -> test debug, 2 -> performance debug, 3 -> collision debug, 4 -> all debug): " << getSetting<int>("debug") << std::endl;
 }

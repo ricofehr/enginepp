@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_POLYGONS_CUBE_H_
 #define NEXTFLOOR_POLYGONS_CUBE_H_
 
-#include "nextfloor/polygons/polygon.h"
+#include "nextfloor/polygons/mesh_polygon.h"
 
 #include <glm/glm.hpp>
 
@@ -19,7 +19,7 @@ namespace polygons {
  *  @class Cube
  *  @brief Define a 3d Cube Object, Inherits from Shape3D
  */
-class Cube : public Polygon {
+class Cube : public MeshPolygon {
 
 public:
 
@@ -33,7 +33,7 @@ public:
 
     virtual ~Cube() override = default;
 
-    void Draw(nextfloor::objects::EngineRenderer* renderer) noexcept override final;
+    void Draw(nextfloor::objects::RendererEngine* renderer) noexcept override final;
 };
 
 } // namespace polygons

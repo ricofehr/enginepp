@@ -7,11 +7,11 @@
 #ifndef NEXTFLOOR_OBJECTS_ROCK_H_
 #define NEXTFLOOR_OBJECTS_ROCK_H_
 
-#include "nextfloor/objects/model.h"
+#include "nextfloor/objects/model_mesh.h"
 
 #include <memory>
 
-#include "nextfloor/objects/engine_renderer.h"
+#include "nextfloor/objects/renderer_engine.h"
 
 namespace nextfloor {
 
@@ -21,7 +21,7 @@ namespace objects {
  *  @class Rock
  *  @brief Rock 3d model
  */
-class Rock : public Model {
+class Rock : public ModelMesh {
 
 public:
 

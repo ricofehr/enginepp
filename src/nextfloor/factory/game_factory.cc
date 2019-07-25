@@ -1,0 +1,251 @@
+/**
+ *  @file game_factory.c
+ *  @brief Factory Class for universe objects
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ */
+
+
+#include "nextfloor/factory/game_factory.h"
+
+#include "nextfloor/factory/gl_renderer_factory.h"
+
+#include "nextfloor/objects/universe.h"
+#include "nextfloor/objects/room.h"
+#include "nextfloor/objects/front_wall.h"
+#include "nextfloor/objects/right_wall.h"
+#include "nextfloor/objects/back_wall.h"
+#include "nextfloor/objects/left_wall.h"
+#include "nextfloor/objects/floor.h"
+#include "nextfloor/objects/roof.h"
+#include "nextfloor/objects/wall_brick.h"
+#include "nextfloor/objects/rock.h"
+#include "nextfloor/objects/head_camera.h"
+
+#include "nextfloor/grid/mesh_places_grid.h"
+#include "nextfloor/grid/room_places_grid.h"
+#include "nextfloor/grid/universe_places_grid.h"
+#include "nextfloor/grid/room_cube_grid_box.h"
+#include "nextfloor/grid/universe_cube_grid_box.h"
+#include "nextfloor/grid/cube_grid_box.h"
+
+#include "nextfloor/polygons/cube.h"
+
+#include "nextfloor/physics/cube_border.h"
+#include "nextfloor/physics/tbb_nearer_collision_engine.h"
+#include "nextfloor/physics/serial_nearer_collision_engine.h"
+#include "nextfloor/physics/cl_nearer_collision_engine.h"
+
+#include "nextfloor/renderer/fragment_shader.h"
+#include "nextfloor/renderer/vertex_shader.h"
+
+#include "nextfloor/gameplay/demo_level.h"
+#include "nextfloor/gameplay/random_level.h"
+
+#include "nextfloor/core/common_services.h"
+
+
+namespace nextfloor {
+
+namespace factory {
+
+namespace {
+
+static bool sInstanciated = false;
+
+}
+
+GameFactory::GameFactory()
+{
+    assert(!sInstanciated);
+    renderer_factory_ = std::make_unique<GlRendererFactory>();
+    sInstanciated = true;
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeUniverse() const noexcept
+{
+    using nextfloor::objects::Universe;
+    return std::make_unique<nextfloor::objects::Universe>();
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeRoom(glm::vec3 location) const noexcept
+{
+    using nextfloor::objects::Room;
+    return std::make_unique<nextfloor::objects::Room>(location);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeFrontWall(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::FrontWall;
+    return std::make_unique<nextfloor::objects::FrontWall>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeRightWall(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::RightWall;
+    return std::make_unique<nextfloor::objects::RightWall>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeBackWall(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::BackWall;
+    return std::make_unique<nextfloor::objects::BackWall>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeLeftWall(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::LeftWall;
+    return std::make_unique<nextfloor::objects::LeftWall>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeFloor(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::Floor;
+    return std::make_unique<nextfloor::objects::Floor>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeRoof(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::objects::Roof;
+    return std::make_unique<nextfloor::objects::Roof>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept
+{
+    using nextfloor::objects::WallBrick;
+    return std::make_unique<nextfloor::objects::WallBrick>(location, scale, texture);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeRock(glm::vec3 location) const noexcept
+{
+    using nextfloor::objects::Rock;
+    return std::make_unique<Rock>(location, 1.0f);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeLittleRock(glm::vec3 location) const noexcept
+{
+    using nextfloor::objects::Rock;
+    return std::make_unique<Rock>(location, 0.5f);
+}
+
+std::unique_ptr<nextfloor::objects::Camera> GameFactory::MakeCamera(glm::vec3 location) const noexcept
+{
+    using nextfloor::objects::HeadCamera;
+    return std::make_unique<HeadCamera>(location, 3.14f, 0.0f);
+}
+
+std::unique_ptr<nextfloor::objects::Polygon> GameFactory::MakeCube(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::polygons::Cube;
+    return std::make_unique<Cube>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Border> GameFactory::MakeBorder(glm::vec3 location, glm::vec3 scale) const noexcept
+{
+    using nextfloor::physics::CubeBorder;
+    return std::make_unique<CubeBorder>(location, scale);
+}
+
+std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeUniverseGrid(nextfloor::objects::Mesh* universe) const noexcept
+{
+    using nextfloor::grid::UniversePlacesGrid;
+    return std::make_unique<UniversePlacesGrid>(universe);
+}
+
+std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeRoomGrid(nextfloor::objects::Mesh* room) const noexcept
+{
+    using nextfloor::grid::RoomPlacesGrid;
+    return std::make_unique<RoomPlacesGrid>(room);
+}
+
+std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension) const noexcept
+{
+    using nextfloor::grid::MeshPlacesGrid;
+    return std::make_unique<MeshPlacesGrid>(owner, boxes_count, box_dimension);
+}
+
+std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeRoomGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* room_grid) const noexcept
+{
+    using nextfloor::grid::RoomCubeGridBox;
+    return std::make_unique<RoomCubeGridBox>(grid_coords, room_grid);
+}
+
+std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeUniverseGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* universe_grid) const noexcept
+{
+    using nextfloor::grid::UniverseCubeGridBox;
+    return std::make_unique<UniverseCubeGridBox>(grid_coords, universe_grid);
+}
+
+std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* grid) const noexcept
+{
+    using nextfloor::grid::CubeGridBox;
+    return std::make_unique<CubeGridBox>(grid_coords, grid);
+}
+
+nextfloor::objects::RendererEngine* GameFactory::MakeCubeRenderer(std::string texture) const noexcept
+{
+    return renderer_factory_->MakeCubeRenderer(texture);
+}
+
+std::unique_ptr<nextfloor::renderer::Shader> GameFactory::MakeVertexShader(std::string shader_path) const noexcept
+{
+    using nextfloor::renderer::VertexShader;
+    return std::make_unique<VertexShader>(shader_path);
+}
+
+std::unique_ptr<nextfloor::renderer::Shader> GameFactory::MakeFragmentShader(std::string shader_path) const noexcept
+{
+    using nextfloor::renderer::FragmentShader;
+    return std::make_unique<FragmentShader>(shader_path);
+}
+
+std::unique_ptr<nextfloor::objects::CollisionEngine> GameFactory::MakeCollisionEngine() const noexcept
+{
+    using nextfloor::objects::CollisionEngine;
+    using nextfloor::core::CommonServices;
+    using nextfloor::physics::NearerCollisionEngine;
+    using nextfloor::physics::TbbNearerCollisionEngine;
+    using nextfloor::physics::SerialNearerCollisionEngine;
+    using nextfloor::physics::ClNearerCollisionEngine;
+
+    std::unique_ptr<CollisionEngine> engine_collision{nullptr};
+
+    /* Get parallell type from config */
+    int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
+
+    switch (type_parallell) {
+        case NearerCollisionEngine::kPARALLELL_TBB:
+            engine_collision = std::make_unique<TbbNearerCollisionEngine>();
+            break;
+        case NearerCollisionEngine::kPARALLELL_CL:
+            engine_collision = std::make_unique<ClNearerCollisionEngine>();
+            break;
+        default:
+            engine_collision = std::make_unique<SerialNearerCollisionEngine>();
+            break;
+    }
+
+    assert(engine_collision != nullptr);
+
+    return engine_collision;
+}
+
+std::unique_ptr<nextfloor::gameplay::Level> GameFactory::MakeDemoLevel() const noexcept
+{
+    using nextfloor::gameplay::DemoLevel;
+    return std::make_unique<DemoLevel>();
+}
+
+std::unique_ptr<nextfloor::gameplay::Level> GameFactory::MakeRandomLevel() const noexcept
+{
+    using nextfloor::gameplay::RandomLevel;
+    return std::make_unique<RandomLevel>();
+}
+
+GameFactory::~GameFactory()
+{
+    sInstanciated = false;
+}
+
+} // namespace factory
+
+} // namespace nextfloor

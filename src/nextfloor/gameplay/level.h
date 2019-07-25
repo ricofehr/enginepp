@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "nextfloor/objects/engine_object.h"
+#include "nextfloor/objects/mesh.h"
 
 namespace nextfloor {
 
@@ -25,7 +25,7 @@ public:
 
     virtual ~Level() = default;
 
-    virtual std::unique_ptr<nextfloor::objects::EngineObject> GenerateUniverse() noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() noexcept = 0;
 
 protected:
 

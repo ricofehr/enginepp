@@ -23,36 +23,36 @@ set(core_SRCS
     src/nextfloor/core/common_services.cc
     src/nextfloor/core/config_file.cc
     src/nextfloor/core/frame_timer.cc
-    src/nextfloor/core/generic_file_io.cc
+        src/nextfloor/core/std_file_io.cc
     src/nextfloor/core/program_exit.cc
-    src/nextfloor/core/standard_random_generator.cc
+        src/nextfloor/core/pseudo_random_generator.cc
     src/nextfloor/core/terminal_log.cc)
 
 set(factory_SRCS
-    src/nextfloor/factory/factory.cc
-    src/nextfloor/factory/renderer_factory.cc)
+        src/nextfloor/factory/game_factory.cc
+        src/nextfloor/factory/gl_renderer_factory.cc)
 
 set(gameplay_SRCS
     src/nextfloor/gameplay/demo_level.cc
     src/nextfloor/gameplay/random_level.cc)
 
 set(grid_SRCS
-    src/nextfloor/grid/grid.cc
-    src/nextfloor/grid/grid_box.cc
-    src/nextfloor/grid/object_grid.cc
-    src/nextfloor/grid/room_grid.cc
-    src/nextfloor/grid/room_grid_box.cc
-    src/nextfloor/grid/universe_grid.cc
-    src/nextfloor/grid/universe_grid_box.cc)
+        src/nextfloor/grid/places_grid.cc
+        src/nextfloor/grid/cube_grid_box.cc
+        src/nextfloor/grid/mesh_places_grid.cc
+        src/nextfloor/grid/room_places_grid.cc
+        src/nextfloor/grid/room_cube_grid_box.cc
+        src/nextfloor/grid/universe_places_grid.cc
+        src/nextfloor/grid/universe_cube_grid_box.cc)
 
 set(objects_SRCS
     src/nextfloor/objects/back_wall.cc
-    src/nextfloor/objects/camera.cc
+        src/nextfloor/objects/head_camera.cc
     src/nextfloor/objects/depth_wall.cc
     src/nextfloor/objects/floor.cc
     src/nextfloor/objects/front_wall.cc
     src/nextfloor/objects/left_wall.cc
-    src/nextfloor/objects/model.cc
+        src/nextfloor/objects/model_mesh.cc
     src/nextfloor/objects/right_wall.cc
     src/nextfloor/objects/rock.cc
     src/nextfloor/objects/roof.cc
@@ -63,20 +63,20 @@ set(objects_SRCS
     src/nextfloor/objects/width_wall.cc)
 
 set(physics_SRCS
-    src/nextfloor/physics/border.cc
-    src/nextfloor/physics/cl_collision.cc
-    src/nextfloor/physics/collision.cc
-    src/nextfloor/physics/serial_collision.cc
-    src/nextfloor/physics/tbb_collision.cc)
+        src/nextfloor/physics/cube_border.cc
+        src/nextfloor/physics/cl_nearer_collision_engine.cc
+        src/nextfloor/physics/nearer_collision_engine.cc
+        src/nextfloor/physics/serial_nearer_collision_engine.cc
+        src/nextfloor/physics/tbb_nearer_collision_engine.cc)
 
 set(polygons_SRCS
-    src/nextfloor/polygons/polygon.cc
+        src/nextfloor/polygons/mesh_polygon.cc
     src/nextfloor/polygons/cube.cc)
 
 set(renderer_SRCS
     src/nextfloor/renderer/fragment_shader.cc
     src/nextfloor/renderer/game_window.cc
-    src/nextfloor/renderer/gl_cube_renderer.cc
+        src/nextfloor/renderer/gl_cube_renderer_engine.cc
     src/nextfloor/renderer/shader.cc
     src/nextfloor/renderer/vertex_shader.cc)
 
@@ -102,19 +102,19 @@ set(core_HDRS
     src/nextfloor/core/config_file.h
     src/nextfloor/core/file_io.h
     src/nextfloor/core/frame_timer.h
-    src/nextfloor/core/generic_file_io.h
+        src/nextfloor/core/std_file_io.h
     src/nextfloor/core/log.h
     src/nextfloor/core/program_exit.h
     src/nextfloor/core/random_generator.h
-    src/nextfloor/core/standard_random_generator.h
+        src/nextfloor/core/pseudo_random_generator.h
     src/nextfloor/core/terminal_log.h
     src/nextfloor/core/timer.h)
 
 set(factory_HDRS
-    src/nextfloor/factory/engine_factory.h
-    src/nextfloor/factory/engine_renderer_factory.h
-    src/nextfloor/factory/factory.h
-    src/nextfloor/factory/renderer_factory.h)
+        src/nextfloor/factory/factory.h
+        src/nextfloor/factory/renderer_factory.h
+        src/nextfloor/factory/game_factory.h
+        src/nextfloor/factory/gl_renderer_factory.h)
 
 set(gameplay_HDRS
     src/nextfloor/gameplay/demo_level.h
@@ -122,29 +122,29 @@ set(gameplay_HDRS
     src/nextfloor/gameplay/random_level.h)
 
 set(grid_HDRS
-    src/nextfloor/grid/grid.h
-    src/nextfloor/grid/grid_box.h
-    src/nextfloor/grid/object_grid.h
-    src/nextfloor/grid/room_grid.h
-    src/nextfloor/grid/room_grid_box.h
-    src/nextfloor/grid/universe_grid.h
-    src/nextfloor/grid/universe_grid_box.h)
+        src/nextfloor/grid/places_grid.h
+        src/nextfloor/grid/cube_grid_box.h
+        src/nextfloor/grid/mesh_places_grid.h
+        src/nextfloor/grid/room_places_grid.h
+        src/nextfloor/grid/room_cube_grid_box.h
+        src/nextfloor/grid/universe_places_grid.h
+        src/nextfloor/grid/universe_cube_grid_box.h)
 
 set(objects_HDRS
     src/nextfloor/objects/back_wall.h
-    src/nextfloor/objects/camera.h
+        src/nextfloor/objects/head_camera.h
     src/nextfloor/objects/depth_wall.h
     src/nextfloor/objects/floor.h
     src/nextfloor/objects/front_wall.h
-    src/nextfloor/objects/engine_border.h
-    src/nextfloor/objects/engine_collision.h
-    src/nextfloor/objects/engine_grid.h
-    src/nextfloor/objects/engine_grid_box.h
-    src/nextfloor/objects/engine_object.h
-    src/nextfloor/objects/engine_polygon.h
-    src/nextfloor/objects/engine_renderer.h
+        src/nextfloor/objects/border.h
+        src/nextfloor/objects/collision_engine.h
+        src/nextfloor/objects/grid.h
+        src/nextfloor/objects/grid_box.h
+        src/nextfloor/objects/mesh.h
+        src/nextfloor/objects/polygon.h
+        src/nextfloor/objects/renderer_engine.h
     src/nextfloor/objects/left_wall.h
-    src/nextfloor/objects/model.h
+        src/nextfloor/objects/model_mesh.h
     src/nextfloor/objects/right_wall.h
     src/nextfloor/objects/rock.h
     src/nextfloor/objects/roof.h
@@ -155,21 +155,21 @@ set(objects_HDRS
     src/nextfloor/objects/width_wall.h)
 
 set(physics_HDRS
-    src/nextfloor/physics/border.h
-    src/nextfloor/physics/cl_collision.h
-    src/nextfloor/physics/collision.h
-    src/nextfloor/physics/serial_collision.h
-    src/nextfloor/physics/tbb_collision.h)
+        src/nextfloor/physics/cube_border.h
+        src/nextfloor/physics/cl_nearer_collision_engine.h
+        src/nextfloor/physics/nearer_collision_engine.h
+        src/nextfloor/physics/serial_nearer_collision_engine.h
+        src/nextfloor/physics/tbb_nearer_collision_engine.h)
 
 set(polygons_HDRS
-    src/nextfloor/polygons/polygon.h
+        src/nextfloor/polygons/mesh_polygon.h
     src/nextfloor/polygons/cube.h)
 
 set(renderer_HDRS
     src/nextfloor/renderer/fragment_shader.h
     src/nextfloor/renderer/game_window.h
-    src/nextfloor/renderer/gl_cube_renderer.h
-    src/nextfloor/renderer/gl_renderer.h
+        src/nextfloor/renderer/gl_cube_renderer_engine.h
+        src/nextfloor/renderer/gl_renderer_engine.h
     src/nextfloor/renderer/shader.h
     src/nextfloor/renderer/vertex_shader.h)
 

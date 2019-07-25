@@ -11,8 +11,8 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 
-#include "nextfloor/objects/engine_object.h"
-#include "nextfloor/objects/engine_camera.h"
+#include "nextfloor/objects/mesh.h"
+#include "nextfloor/objects/camera.h"
 #include "nextfloor/renderer/shader.h"
 
 namespace nextfloor {
@@ -34,7 +34,7 @@ public:
 
     void Initialization();
     void PrepareDisplay();
-    void SetCamera(nextfloor::objects::EngineCamera* camera);
+    void SetCamera(nextfloor::objects::Camera* camera);
     void SwapBuffers();
     void UpdateMoveFactor();
 
@@ -43,7 +43,7 @@ public:
     /**
      *  GameWindow Global Variables Accessors
      */
-    static nextfloor::objects::EngineCamera*  getCamera() { return camera_; }
+    static nextfloor::objects::Camera*  getCamera() { return camera_; }
     static GLuint getMatrixId() { return matrix_id_; }
     static GLuint getProgramId() { return program_id_; }
     static float getWidth() { return window_width_; }
@@ -78,7 +78,7 @@ private:
     std::unique_ptr<Shader> fragment_shader_{nullptr};
     std::unique_ptr<Shader> vertex_shader_{nullptr};
 
-    static nextfloor::objects::EngineCamera* camera_;
+    static nextfloor::objects::Camera* camera_;
     static float window_width_;
     static float window_height_;
     static GLuint matrix_id_;
