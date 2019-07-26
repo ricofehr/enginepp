@@ -1,23 +1,23 @@
 /**
- *  @file cube_grid_box.cc
- *  @brief Cube GridBox class file
+ *  @file wired_grid_box.cc
+ *  @brief Wired GridBox class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/grid/cube_grid_box.h"
+#include "nextfloor/grid/wired_grid_box.h"
 
 namespace nextfloor {
 
 namespace grid {
 
 
-CubeGridBox::CubeGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner)
+WiredGridBox::WiredGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner)
 {
     coords_ = coords;
     owner_ = owner;
 }
 
-void CubeGridBox::add(nextfloor::objects::Mesh* object) noexcept
+void WiredGridBox::add(nextfloor::objects::Mesh* object) noexcept
 {
     if (IsInside(object)) {
         return;
@@ -25,7 +25,7 @@ void CubeGridBox::add(nextfloor::objects::Mesh* object) noexcept
     occupants_.push_back(object);
 }
 
-void CubeGridBox::remove(nextfloor::objects::Mesh* object) noexcept
+void WiredGridBox::remove(nextfloor::objects::Mesh* object) noexcept
 {
     for (auto cnt = 0; cnt < occupants_.size(); cnt++) {
         if (object == occupants_[cnt]) {
@@ -35,12 +35,12 @@ void CubeGridBox::remove(nextfloor::objects::Mesh* object) noexcept
     }
 }
 
-void CubeGridBox::clear() noexcept
+void WiredGridBox::clear() noexcept
 {
     occupants_.clear();
 }
 
-bool CubeGridBox::IsInside(nextfloor::objects::Mesh* object) const noexcept
+bool WiredGridBox::IsInside(nextfloor::objects::Mesh* object) const noexcept
 {
     for (auto& occupant : occupants_) {
         if (object == occupant) {
@@ -50,42 +50,42 @@ bool CubeGridBox::IsInside(nextfloor::objects::Mesh* object) const noexcept
     return false;
 }
 
-bool CubeGridBox::IsEmpty() const noexcept
+bool WiredGridBox::IsEmpty() const noexcept
 {
     return occupants_.size() == 0;
 }
 
-bool CubeGridBox::IsFilled() const noexcept
+bool WiredGridBox::IsFilled() const noexcept
 {
     return occupants_.size() != 0;
 }
 
-bool CubeGridBox::IsFrontPositionFilled() const noexcept
+bool WiredGridBox::IsFrontPositionFilled() const noexcept
 {
     return owner_->IsFrontPositionFilled(coords_);
 }
 
-bool CubeGridBox::IsRightPositionFilled() const noexcept
+bool WiredGridBox::IsRightPositionFilled() const noexcept
 {
     return owner_->IsRightPositionFilled(coords_);
 }
 
-bool CubeGridBox::IsLeftPositionFilled() const noexcept
+bool WiredGridBox::IsLeftPositionFilled() const noexcept
 {
     return owner_->IsLeftPositionFilled(coords_);
 }
 
-bool CubeGridBox::IsBackPositionFilled() const noexcept
+bool WiredGridBox::IsBackPositionFilled() const noexcept
 {
     return owner_->IsBackPositionFilled(coords_);
 }
 
-bool CubeGridBox::IsBottomPositionFilled() const noexcept
+bool WiredGridBox::IsBottomPositionFilled() const noexcept
 {
     return owner_->IsBottomPositionFilled(coords_);
 }
 
-bool CubeGridBox::IsTopPositionFilled() const noexcept
+bool WiredGridBox::IsTopPositionFilled() const noexcept
 {
     return owner_->IsTopPositionFilled(coords_);
 }

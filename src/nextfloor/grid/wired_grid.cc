@@ -1,15 +1,15 @@
 /**
- *  @file places_grid.cc
+ *  @file wired_grid.cc
  *  @brief Grid Implementation class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/grid/places_grid.h"
+#include "nextfloor/grid/wired_grid.h"
 
 #include <tbb/tbb.h>
 #include <iostream>
 
-#include "nextfloor/grid/cube_grid_box.h"
+#include "nextfloor/grid/wired_grid_box.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -63,14 +63,14 @@ glm::vec3 GetMaxPointFromPoints(std::vector<glm::vec3> points)
 }
 
 
-PlacesGrid::PlacesGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
+WiredGrid::WiredGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
 {
     owner_ = owner;
     boxes_count_ = boxes_count;
     box_dimension_ = box_dimension;
 }
 
-void PlacesGrid::InitBoxes() noexcept
+void WiredGrid::InitBoxes() noexcept
 {
     using nextfloor::objects::GridBox;
 
@@ -98,58 +98,58 @@ void PlacesGrid::InitBoxes() noexcept
     }
 }
 
-glm::vec3 PlacesGrid::CalculateFirstPointInGrid() const noexcept
+glm::vec3 WiredGrid::CalculateFirstPointInGrid() const noexcept
 {
     return owner_->location() - glm::vec3(width()/2, height()/2, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept
+glm::vec3 WiredGrid::CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(coords.x * box_dimension_.x, coords.y * box_dimension_.y, coords.z * box_dimension_.z);
 }
 
-bool PlacesGrid::IsPositionEmpty(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsPositionEmpty(glm::ivec3 coords) const noexcept
 {
     return boxes_[coords.x][coords.y][coords.z]->IsEmpty();
 }
 
-bool PlacesGrid::IsFrontPositionFilled(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsFrontPositionFilled(glm::ivec3 coords) const noexcept
 {
     return coords.z != 0 && IsPositionFilled(glm::ivec3(coords.x,coords.y,coords.z-1));
 }
 
-bool PlacesGrid::IsRightPositionFilled(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsRightPositionFilled(glm::ivec3 coords) const noexcept
 {
     return coords.x != (width_boxes_count() - 1) && IsPositionFilled(glm::ivec3(coords.x+1,coords.y,coords.z));
 }
 
-bool PlacesGrid::IsLeftPositionFilled(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsLeftPositionFilled(glm::ivec3 coords) const noexcept
 {
     return coords.x != 0 && IsPositionFilled(glm::ivec3(coords.x-1,coords.y,coords.z));
 }
 
-bool PlacesGrid::IsBackPositionFilled(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsBackPositionFilled(glm::ivec3 coords) const noexcept
 {
     return (coords.z != depth_boxes_count() - 1) && IsPositionFilled(glm::ivec3(coords.x,coords.y,coords.z+1));
 }
 
-bool PlacesGrid::IsBottomPositionFilled(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsBottomPositionFilled(glm::ivec3 coords) const noexcept
 {
     return coords.y != 0 && IsPositionFilled(glm::ivec3(coords.x,coords.y-1,coords.z));
 }
 
-bool PlacesGrid::IsTopPositionFilled(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsTopPositionFilled(glm::ivec3 coords) const noexcept
 {
     return (coords.y != height_boxes_count() - 1) && IsPositionFilled(glm::ivec3(coords.x,coords.y+1,coords.z));
 }
 
-bool PlacesGrid::IsPositionFilled(glm::ivec3 coords) const noexcept
+bool WiredGrid::IsPositionFilled(glm::ivec3 coords) const noexcept
 {
     return boxes_[coords.x][coords.y][coords.z]->IsFilled();
 }
 
-std::vector<nextfloor::objects::GridBox*> PlacesGrid::AddItemToGrid(nextfloor::objects::Mesh* object) noexcept
+std::vector<nextfloor::objects::GridBox*> WiredGrid::AddItemToGrid(nextfloor::objects::Mesh* object) noexcept
 {
     std::vector<glm::vec3> points = object->getCoordsModelMatrixComputed();
 
@@ -160,7 +160,7 @@ std::vector<nextfloor::objects::GridBox*> PlacesGrid::AddItemToGrid(nextfloor::o
     return ParseGridForObjectPlacements(object, point_min, lengths);
 }
 
-glm::ivec3 PlacesGrid::CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, glm::vec3 point_max)
+glm::ivec3 WiredGrid::CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, glm::vec3 point_max)
 {
     int length_x = static_cast<int>(ceil((point_max.x - point_min.x) / box_dimension_.x));
     int length_y = static_cast<int>(ceil((point_max.y - point_min.y) / box_dimension_.y));
@@ -169,7 +169,7 @@ glm::ivec3 PlacesGrid::CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, g
     return glm::ivec3(length_x, length_y, length_z);
 }
 
-std::vector<nextfloor::objects::GridBox*> PlacesGrid::ParseGridForObjectPlacements(nextfloor::objects::Mesh *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept
+std::vector<nextfloor::objects::GridBox*> WiredGrid::ParseGridForObjectPlacements(nextfloor::objects::Mesh *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept
 {
     std::vector<nextfloor::objects::GridBox*> coords_list;
 
@@ -190,7 +190,7 @@ std::vector<nextfloor::objects::GridBox*> PlacesGrid::ParseGridForObjectPlacemen
     return coords_list;
 }
 
-glm::ivec3 PlacesGrid::PointToCoords(glm::vec3 point) noexcept
+glm::ivec3 WiredGrid::PointToCoords(glm::vec3 point) noexcept
 {
     glm::vec3 grid0 = CalculateFirstPointInGrid();
     glm::vec3 coords = (glm::vec3(point.x, point.y, point.z) - grid0) / box_dimension_;
@@ -198,7 +198,7 @@ glm::ivec3 PlacesGrid::PointToCoords(glm::vec3 point) noexcept
     return glm::ivec3(static_cast<int>(floor(coords.x)), static_cast<int>(floor(coords.y)), static_cast<int>(floor(coords.z)));
 }
 
-nextfloor::objects::GridBox* PlacesGrid::AddItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept
+nextfloor::objects::GridBox* WiredGrid::AddItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept
 {
     assert(IsCooordsAreCorrect(coords));
 
@@ -209,7 +209,7 @@ nextfloor::objects::GridBox* PlacesGrid::AddItemToGrid(glm::ivec3 coords, nextfl
     return boxes_[coords.x][coords.y][coords.z].get();
 }
 
-bool PlacesGrid::IsCooordsAreCorrect(glm::ivec3 coords)
+bool WiredGrid::IsCooordsAreCorrect(glm::ivec3 coords)
 {
     if (coords.x < 0 || coords.x >= width_boxes_count()) {
         return false;
@@ -226,7 +226,7 @@ bool PlacesGrid::IsCooordsAreCorrect(glm::ivec3 coords)
     return true;
 }
 
-void PlacesGrid::RemoveItemToGrid(nextfloor::objects::Mesh* object) noexcept
+void WiredGrid::RemoveItemToGrid(nextfloor::objects::Mesh* object) noexcept
 {
     for (auto i = 0; i < width_boxes_count(); i++) {
         for (auto j = 0; j < height_boxes_count(); j++) {
@@ -237,12 +237,12 @@ void PlacesGrid::RemoveItemToGrid(nextfloor::objects::Mesh* object) noexcept
     }
 }
 
-void PlacesGrid::RemoveItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept
+void WiredGrid::RemoveItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept
 {
     boxes_[coords.x][coords.y][coords.z]->remove(object);
 }
 
-void PlacesGrid::DisplayGrid() const noexcept
+void WiredGrid::DisplayGrid() const noexcept
 {
     std::string object_type{"MODEL3D"};
 
@@ -260,78 +260,78 @@ void PlacesGrid::DisplayGrid() const noexcept
     }
 }
 
-void PlacesGrid::ComputePlacementsInGrid() noexcept
+void WiredGrid::ComputePlacementsInGrid() noexcept
 {
     std::cout << "ComputePlacements" << std::endl;
 }
 
-glm::vec3 PlacesGrid::CalculateFrontSideLocation() const noexcept
+glm::vec3 WiredGrid::CalculateFrontSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(width()/2, height()/2, 0.25f);
 }
 
-glm::vec3 PlacesGrid::CalculateRightSideLocation() const noexcept
+glm::vec3 WiredGrid::CalculateRightSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(width() - 0.25f, height()/2, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateBackSideLocation() const noexcept
+glm::vec3 WiredGrid::CalculateBackSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(width()/2, height()/2, depth() - 0.25f);
 }
 
-glm::vec3 PlacesGrid::CalculateLeftSideLocation() const noexcept
+glm::vec3 WiredGrid::CalculateLeftSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(0.25f, height()/2, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateBottomSideLocation() const noexcept
+glm::vec3 WiredGrid::CalculateBottomSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(width()/2, 0.25f, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateTopSideLocation() const noexcept
+glm::vec3 WiredGrid::CalculateTopSideLocation() const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
     return grid0 + glm::vec3(width()/2, height() - 0.25f, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateFrontSideBorderScale() const noexcept
+glm::vec3 WiredGrid::CalculateFrontSideBorderScale() const noexcept
 {
     return glm::vec3(width()/2, height()/2, 0.25f);
 }
 
-glm::vec3 PlacesGrid::CalculateRightSideBorderScale() const noexcept
+glm::vec3 WiredGrid::CalculateRightSideBorderScale() const noexcept
 {
     return glm::vec3(0.25f, height()/2, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateBackSideBorderScale() const noexcept
+glm::vec3 WiredGrid::CalculateBackSideBorderScale() const noexcept
 {
     return glm::vec3(width()/2, height()/2, 0.25f);
 }
 
-glm::vec3 PlacesGrid::CalculateLeftSideBorderScale() const noexcept
+glm::vec3 WiredGrid::CalculateLeftSideBorderScale() const noexcept
 {
     return glm::vec3(0.25f, height()/2, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateBottomSideBorderScale() const noexcept
+glm::vec3 WiredGrid::CalculateBottomSideBorderScale() const noexcept
 {
     return glm::vec3(width()/2, 0.25f, depth()/2);
 }
 
-glm::vec3 PlacesGrid::CalculateTopSideBorderScale() const noexcept
+glm::vec3 WiredGrid::CalculateTopSideBorderScale() const noexcept
 {
     return glm::vec3(width()/2, 0.25f, depth()/2);
 }
 
-bool PlacesGrid::IsInside(glm::vec3 location_object) const noexcept
+bool WiredGrid::IsInside(glm::vec3 location_object) const noexcept
 {
     auto grid0 = CalculateFirstPointInGrid();
 
@@ -347,7 +347,7 @@ bool PlacesGrid::IsInside(glm::vec3 location_object) const noexcept
     return false;
 }
 
-void PlacesGrid::ResetGrid() noexcept
+void WiredGrid::ResetGrid() noexcept
 {
     lock();
     for (auto pi = 0; pi < width_boxes_count(); pi++) {
@@ -360,7 +360,7 @@ void PlacesGrid::ResetGrid() noexcept
     unlock();
 }
 
-void PlacesGrid::DeleteGrid() noexcept
+void WiredGrid::DeleteGrid() noexcept
 {
     if (boxes_ != nullptr) {
         for (auto i = 0; i < width_boxes_count(); i++) {

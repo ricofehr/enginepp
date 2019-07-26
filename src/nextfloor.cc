@@ -14,7 +14,7 @@
 #include "nextfloor/core/common_services.h"
 #include "nextfloor/core/terminal_log.h"
 #include "nextfloor/core/frame_timer.h"
-#include "nextfloor/core/config_file.h"
+#include "nextfloor/core/file_config.h"
 #include "nextfloor/core/program_exit.h"
 #include "nextfloor/core/std_file_io.h"
 #include "nextfloor/core/pseudo_random_generator.h"
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     using nextfloor::core::CommonServices;
     using nextfloor::core::TerminalLog;
     using nextfloor::core::FrameTimer;
-    using nextfloor::core::ConfigFile;
+    using nextfloor::core::FileConfig;
     using nextfloor::core::ProgramExit;
     using nextfloor::core::StdFileIO;
     using nextfloor::core::PseudoRandomGenerator;
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     CommonServices::provideLog(terminal_log.get());
     std::unique_ptr<FrameTimer> frame_timer  = std::make_unique<FrameTimer>();
     CommonServices::provideTimer(frame_timer.get());
-    std::unique_ptr<ConfigFile> file_config = std::make_unique<ConfigFile>();
+    std::unique_ptr<FileConfig> file_config = std::make_unique<FileConfig>();
     CommonServices::provideConfig(file_config.get());
     std::unique_ptr<ProgramExit> program_exit = std::make_unique<ProgramExit>();
     CommonServices::provideExit(program_exit.get());
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
     game_window.Initialization();
 
     /* Launch GL Scene */
-    std::unique_ptr<Mesh> universe = factory->MakeDemoLevel()->GenerateUniverse();
+    std::unique_ptr<Mesh> universe = factory->MakeLevel()->GenerateUniverse();
     game_window.SetCamera(Camera::active());
     game_loop.Loop(universe.get());
 

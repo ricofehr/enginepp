@@ -1,11 +1,11 @@
 /**
- *  @file places_grid.h
- *  @brief PlacesGrid class header
+ *  @file wired_grid.h
+ *  @brief WiredGrid class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_GRID_PLACESGRID_H_
-#define NEXTFLOOR_GRID_PLACESGRID_H_
+#ifndef NEXTFLOOR_GRID_WIREDGRID_H_
+#define NEXTFLOOR_GRID_WIREDGRID_H_
 
 #include <memory>
 #include <tbb/mutex.h>
@@ -17,19 +17,19 @@ namespace nextfloor {
 namespace grid {
 
 /**
- *  @class PlacesGrid
+ *  @class WiredGrid
  *  @brief Abstract class who defines generic grid object
  */
-class PlacesGrid : public nextfloor::objects::Grid {
+class WiredGrid : public nextfloor::objects::Grid {
 
 public:
 
-    PlacesGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension);
-    PlacesGrid(PlacesGrid&&) = default;
-    PlacesGrid& operator=(PlacesGrid&&) = default;
-    PlacesGrid(const PlacesGrid&) = delete;
-    PlacesGrid& operator=(const PlacesGrid&) = delete;
-    virtual ~PlacesGrid() = default;
+    WiredGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension);
+    WiredGrid(WiredGrid&&) = default;
+    WiredGrid& operator=(WiredGrid&&) = default;
+    WiredGrid(const WiredGrid&) = delete;
+    WiredGrid& operator=(const WiredGrid&) = delete;
+    virtual ~WiredGrid() = default;
 
     virtual bool IsPositionEmpty(glm::ivec3 coords) const noexcept override;
     virtual bool IsFrontPositionFilled(glm::ivec3 coords) const noexcept override;
@@ -161,4 +161,4 @@ private:
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_GRID_PLACESGRID_H_
+#endif // NEXTFLOOR_GRID_WIREDGRID_H_

@@ -1,11 +1,11 @@
 /**
- *  @file grid_box.h
- *  @brief GridBox class header
+ *  @file wired_grid_box.h
+ *  @brief WiredGridBox class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_GRID_GRIDBOX_H_
-#define NEXTFLOOR_GRID_GRIDBOX_H_
+#ifndef NEXTFLOOR_GRID_WIREDGRIDBOX_H_
+#define NEXTFLOOR_GRID_WIREDGRIDBOX_H_
 
 #include "nextfloor/objects/grid_box.h"
 
@@ -19,19 +19,19 @@ namespace nextfloor {
 namespace grid {
 
 /**
- *  @class GridBox
+ *  @class WiredGridBox
  *  @brief Abstract class who defines generic grid object
  */
-class CubeGridBox : public nextfloor::objects::GridBox {
+class WiredGridBox : public nextfloor::objects::GridBox {
 
 public:
 
-    CubeGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner);
-    CubeGridBox(CubeGridBox&&) = default;
-    CubeGridBox& operator=(CubeGridBox&&) = default;
-    CubeGridBox(const CubeGridBox&) = default;
-    CubeGridBox& operator=(const CubeGridBox&) = default;
-    virtual ~CubeGridBox() override = default;
+    WiredGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner);
+    WiredGridBox(WiredGridBox&&) = default;
+    WiredGridBox& operator=(WiredGridBox&&) = default;
+    WiredGridBox(const WiredGridBox&) = default;
+    WiredGridBox& operator=(const WiredGridBox&) = default;
+    virtual ~WiredGridBox() override = default;
 
     virtual void add(nextfloor::objects::Mesh* object) noexcept override;
     virtual void remove(nextfloor::objects::Mesh* object) noexcept override;

@@ -1,11 +1,11 @@
 /**
- *  @file file_config.h
- *  @brief ConfigFile Header File
+ *  @file config_file.h
+ *  @brief FileConfig Header File
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_CORE_CONFIGFILE_H_
-#define NEXTFLOOR_CORE_CONFIGFILE_H_
+#ifndef NEXTFLOOR_CORE_FILECONFIG_H_
+#define NEXTFLOOR_CORE_FILECONFIG_H_
 
 #include "nextfloor/core/config.h"
 
@@ -18,31 +18,24 @@ namespace nextfloor {
 namespace core {
 
 /**
- *  @class ConfigFile
- *  @brief ConfigFile load program configuration from a file
+ *  @class FileConfig
+ *  @brief FileConfig load program configuration from a file
  */
-class ConfigFile : public Config {
+class FileConfig : public Config {
 
 public:
 
-    ConfigFile();
+    FileConfig();
 
-    ConfigFile(ConfigFile&&) = default;
+    FileConfig(FileConfig&&) = default;
+    FileConfig& operator=(FileConfig&&) = default;
+    FileConfig(const FileConfig&) = delete;
+    FileConfig& operator=(const FileConfig&) = delete;
 
-    ConfigFile& operator=(ConfigFile&&) = default;
-
-    /* Copy constructor Deleted : Ensure a sole Instance */
-    ConfigFile(const ConfigFile&) = delete;
-
-    /* Copy assignment Deleted : Ensure a sole Instance */
-    ConfigFile& operator=(const ConfigFile&) = delete;
-
-    virtual ~ConfigFile() override final;
+    virtual ~FileConfig() override final;
 
     virtual void Initialize() override final;
-
     virtual void Display() const override final;
-
     virtual void ManageProgramParameters(int argc, char* argv[]) override final;
 
     /*
@@ -192,4 +185,4 @@ private:
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_CONFIGFILE_H_
+#endif // NEXTFLOOR_CORE_FILECONFIG_H_

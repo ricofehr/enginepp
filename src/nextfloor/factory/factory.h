@@ -69,8 +69,7 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const noexcept = 0;
 
-    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeDemoLevel() const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeRandomLevel() const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const noexcept = 0;
 
 protected:
 

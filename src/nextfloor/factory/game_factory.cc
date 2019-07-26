@@ -21,12 +21,12 @@
 #include "nextfloor/objects/rock.h"
 #include "nextfloor/objects/head_camera.h"
 
-#include "nextfloor/grid/mesh_places_grid.h"
-#include "nextfloor/grid/room_places_grid.h"
-#include "nextfloor/grid/universe_places_grid.h"
-#include "nextfloor/grid/room_cube_grid_box.h"
-#include "nextfloor/grid/universe_cube_grid_box.h"
-#include "nextfloor/grid/cube_grid_box.h"
+#include "nextfloor/grid/mesh_grid.h"
+#include "nextfloor/grid/room_grid.h"
+#include "nextfloor/grid/universe_grid.h"
+#include "nextfloor/grid/room_grid_box.h"
+#include "nextfloor/grid/universe_grid_box.h"
+#include "nextfloor/grid/wired_grid_box.h"
 
 #include "nextfloor/polygons/cube.h"
 
@@ -39,7 +39,6 @@
 #include "nextfloor/renderer/vertex_shader.h"
 
 #include "nextfloor/gameplay/demo_level.h"
-#include "nextfloor/gameplay/random_level.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -147,38 +146,38 @@ std::unique_ptr<nextfloor::objects::Border> GameFactory::MakeBorder(glm::vec3 lo
 
 std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeUniverseGrid(nextfloor::objects::Mesh* universe) const noexcept
 {
-    using nextfloor::grid::UniversePlacesGrid;
-    return std::make_unique<UniversePlacesGrid>(universe);
+    using nextfloor::grid::UniverseGrid;
+    return std::make_unique<UniverseGrid>(universe);
 }
 
 std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeRoomGrid(nextfloor::objects::Mesh* room) const noexcept
 {
-    using nextfloor::grid::RoomPlacesGrid;
-    return std::make_unique<RoomPlacesGrid>(room);
+    using nextfloor::grid::RoomGrid;
+    return std::make_unique<RoomGrid>(room);
 }
 
 std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension) const noexcept
 {
-    using nextfloor::grid::MeshPlacesGrid;
-    return std::make_unique<MeshPlacesGrid>(owner, boxes_count, box_dimension);
+    using nextfloor::grid::MeshGrid;
+    return std::make_unique<MeshGrid>(owner, boxes_count, box_dimension);
 }
 
 std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeRoomGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* room_grid) const noexcept
 {
-    using nextfloor::grid::RoomCubeGridBox;
-    return std::make_unique<RoomCubeGridBox>(grid_coords, room_grid);
+    using nextfloor::grid::RoomGridBox;
+    return std::make_unique<RoomGridBox>(grid_coords, room_grid);
 }
 
 std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeUniverseGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* universe_grid) const noexcept
 {
-    using nextfloor::grid::UniverseCubeGridBox;
-    return std::make_unique<UniverseCubeGridBox>(grid_coords, universe_grid);
+    using nextfloor::grid::UniverseGridBox;
+    return std::make_unique<UniverseGridBox>(grid_coords, universe_grid);
 }
 
 std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* grid) const noexcept
 {
-    using nextfloor::grid::CubeGridBox;
-    return std::make_unique<CubeGridBox>(grid_coords, grid);
+    using nextfloor::grid::WiredGridBox;
+    return std::make_unique<WiredGridBox>(grid_coords, grid);
 }
 
 nextfloor::objects::RendererEngine* GameFactory::MakeCubeRenderer(std::string texture) const noexcept
@@ -229,19 +228,13 @@ std::unique_ptr<nextfloor::objects::CollisionEngine> GameFactory::MakeCollisionE
     return engine_collision;
 }
 
-std::unique_ptr<nextfloor::gameplay::Level> GameFactory::MakeDemoLevel() const noexcept
+std::unique_ptr<nextfloor::gameplay::Level> GameFactory::MakeLevel() const noexcept
 {
     using nextfloor::gameplay::DemoLevel;
     return std::make_unique<DemoLevel>();
 }
 
-std::unique_ptr<nextfloor::gameplay::Level> GameFactory::MakeRandomLevel() const noexcept
-{
-    using nextfloor::gameplay::RandomLevel;
-    return std::make_unique<RandomLevel>();
-}
-
-GameFactory::~GameFactory()
+    GameFactory::~GameFactory()
 {
     sInstanciated = false;
 }

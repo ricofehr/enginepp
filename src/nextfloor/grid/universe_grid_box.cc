@@ -4,15 +4,15 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/grid/universe_cube_grid_box.h"
+#include "nextfloor/grid/universe_grid_box.h"
 
 namespace nextfloor {
 
 namespace grid {
 
 
-UniverseCubeGridBox::UniverseCubeGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner)
-    : CubeGridBox(coords, owner) {}
+UniverseGridBox::UniverseGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner)
+    : WiredGridBox(coords, owner) {}
 
 } // namespace grid
 

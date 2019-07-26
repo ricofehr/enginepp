@@ -1,13 +1,13 @@
 /**
- *  @file room_places_grid.h
- *  @brief RoomPlacesGrid class header
+ *  @file room_grid.h
+ *  @brief RoomGrid class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_GRID_ROOMPLACESGRID_H_
-#define NEXTFLOOR_GRID_ROOMPLACESGRID_H_
+#ifndef NEXTFLOOR_GRID_ROOMGRID_H_
+#define NEXTFLOOR_GRID_ROOMGRID_H_
 
-#include "nextfloor/grid/places_grid.h"
+#include "nextfloor/grid/wired_grid.h"
 
 #include "nextfloor/objects/mesh.h"
 
@@ -16,19 +16,19 @@ namespace nextfloor {
 namespace grid {
 
 /**
- *  @class RoomPlacesGrid
+ *  @class RoomGrid
  *  @brief Abstract class who defines grid for Rooms
  */
-class RoomPlacesGrid : public PlacesGrid {
+class RoomGrid : public WiredGrid {
 
 public:
 
-    RoomPlacesGrid(nextfloor::objects::Mesh* owner);
-    RoomPlacesGrid(RoomPlacesGrid&&) = default;
-    RoomPlacesGrid& operator=(RoomPlacesGrid&&) = default;
-    RoomPlacesGrid(const RoomPlacesGrid&) = delete;
-    RoomPlacesGrid& operator=(const RoomPlacesGrid&) = delete;
-    virtual ~RoomPlacesGrid() override;
+    RoomGrid(nextfloor::objects::Mesh* owner);
+    RoomGrid(RoomGrid&&) = default;
+    RoomGrid& operator=(RoomGrid&&) = default;
+    RoomGrid(const RoomGrid&) = delete;
+    RoomGrid& operator=(const RoomGrid&) = delete;
+    virtual ~RoomGrid() override;
 
 protected:
 
@@ -37,7 +37,7 @@ protected:
 private:
 
     /*
-     *  PlacesGrid Constants For Romm Setting
+     *  WiredGrid Constants For Romm Setting
      */
     static constexpr int kWIDTH_BOXES_COUNT = 8;
     static constexpr int kHEIGHT_BOXES_COUNT = 6;
@@ -52,4 +52,4 @@ private:
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_GRID_ROOMPLACESGRID_H_
+#endif // NEXTFLOOR_GRID_ROOMGRID_H_

@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/config_file.h"
+#include "nextfloor/core/file_config.h"
 
 #include <iostream>
 #include <iomanip>
@@ -44,19 +44,19 @@ static void HandleParseConfigFileParsingError(const libconfig::ParseException& p
 
 }
 
-ConfigFile::ConfigFile()
+FileConfig::FileConfig()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-void ConfigFile::Initialize()
+void FileConfig::Initialize()
 {
     ParseConfigFile();
     InitDefaultValues();
 }
 
-void ConfigFile::ParseConfigFile()
+void FileConfig::ParseConfigFile()
 {
     std::string config_file = GetConfigFilePath();
 
@@ -71,7 +71,7 @@ void ConfigFile::ParseConfigFile()
     }
 }
 
-void ConfigFile::InitDefaultValues()
+void FileConfig::InitDefaultValues()
 {
     SetDefaultParallellValueIfEmpty();
     SetDefaultParallellThreadCountValueIfEmpty();
@@ -89,7 +89,7 @@ void ConfigFile::InitDefaultValues()
     SetDefaultUniverseFactoryValueIfEmpty();
 }
 
-void ConfigFile::SetDefaultParallellValueIfEmpty()
+void FileConfig::SetDefaultParallellValueIfEmpty()
 {
     // using nextfloor::physics::CollisionEngine;
 
@@ -98,35 +98,35 @@ void ConfigFile::SetDefaultParallellValueIfEmpty()
     // }
 }
 
-void ConfigFile::SetDefaultParallellThreadCountValueIfEmpty()
+void FileConfig::SetDefaultParallellThreadCountValueIfEmpty()
 {
     if (!IsExist("workers_count")) {
         setSetting("workers_count", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void ConfigFile::SetDefaultWidthValueIfEmpty()
+void FileConfig::SetDefaultWidthValueIfEmpty()
 {
     if (!IsExist("width")) {
         setSetting("width", libconfig::Setting::TypeFloat, 800.0f);
     }
 }
 
-void ConfigFile::SetDefaultHeightValueIfEmpty()
+void FileConfig::SetDefaultHeightValueIfEmpty()
 {
     if (!IsExist("height")) {
         setSetting("height", libconfig::Setting::TypeFloat, 600.0f);
     }
 }
 
-void ConfigFile::SetDefaultObjectCountValueIfEmpty()
+void FileConfig::SetDefaultObjectCountValueIfEmpty()
 {
     if (!IsExist("objects_count")) {
         setSetting("objects_count", libconfig::Setting::TypeInt, 16);
     }
 }
 
-void ConfigFile::SetDefaultLoadObjectsFreqValueIfEmpty()
+void FileConfig::SetDefaultLoadObjectsFreqValueIfEmpty()
 {
     if (!IsExist("load_objects_freq")) {
         // 0 => loads all objects at start
@@ -134,56 +134,56 @@ void ConfigFile::SetDefaultLoadObjectsFreqValueIfEmpty()
     }
 }
 
-void ConfigFile::SetDefaultRoomCountValueIfEmpty()
+void FileConfig::SetDefaultRoomCountValueIfEmpty()
 {
     if (!IsExist("rooms_count")) {
         setSetting("rooms_count", libconfig::Setting::TypeInt, 4);
     }
 }
 
-void ConfigFile::SetDefaultCollisionGranularityValueIfEmpty()
+void FileConfig::SetDefaultCollisionGranularityValueIfEmpty()
 {
     if (!IsExist("granularity")) {
         setSetting("granularity", libconfig::Setting::TypeInt, 16);
     }
 }
 
-void ConfigFile::SetDefaultClippingValueIfEmpty()
+void FileConfig::SetDefaultClippingValueIfEmpty()
 {
     if (!IsExist("clipping")) {
         setSetting("clipping", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void ConfigFile::SetDefaultVsyncValueIfEmpty()
+void FileConfig::SetDefaultVsyncValueIfEmpty()
 {
     if (!IsExist("vsync")) {
         setSetting("vsync", libconfig::Setting::TypeBoolean, true);
     }
 }
 
-void ConfigFile::SetDefaultGridModeValueIfEmpty()
+void FileConfig::SetDefaultGridModeValueIfEmpty()
 {
     if (!IsExist("grid")) {
         setSetting("grid", libconfig::Setting::TypeBoolean, false);
     }
 }
 
-void ConfigFile::SetDefaultDebugVerbosityValueIfEmpty()
+void FileConfig::SetDefaultDebugVerbosityValueIfEmpty()
 {
     if (!IsExist("debug")) {
         setSetting("debug", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void ConfigFile::SetDefaultExecutionTimeValueIfEmpty()
+void FileConfig::SetDefaultExecutionTimeValueIfEmpty()
 {
     if (!IsExist("execution_time")) {
         setSetting("execution_time", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void ConfigFile::SetDefaultUniverseFactoryValueIfEmpty()
+void FileConfig::SetDefaultUniverseFactoryValueIfEmpty()
 {
     // using nextfloor::factory::UniverseFactory;
 
@@ -193,7 +193,7 @@ void ConfigFile::SetDefaultUniverseFactoryValueIfEmpty()
 }
 
 
-void ConfigFile::Display() const
+void FileConfig::Display() const
 {
     auto count_workers = GetWorkersCount();
 
@@ -208,17 +208,17 @@ void ConfigFile::Display() const
     std::cout << "Workers count: " << count_workers << std::endl;
     std::cout << "Execution Time (0 -> no limit): " << getSetting<int>("execution_time") << std::endl;
     std::cout << "Vsync (limit framerate to monitor): " << getSetting<bool>("vsync") << std::endl;
-    std::cout << "PlacesGrid mode (not fill polygons): " << getSetting<bool>("grid") << std::endl;
+    std::cout << "WiredGrid mode (not fill polygons): " << getSetting<bool>("grid") << std::endl;
     std::cout << "Program mode : " << getSetting<int>("factory_type") << std::endl;
     std::cout << "Debug mode (0 -> no debug, 1 -> test debug, 2 -> performance debug, 3 -> collision debug, 4 -> all debug): " << getSetting<int>("debug") << std::endl;
 }
 
-int ConfigFile::GetWorkersCount() const
+int FileConfig::GetWorkersCount() const
 {
     return getSetting<int>("workers_count") ? getSetting<int>("workers_count") : tbb::task_scheduler_init::default_num_threads();
 }
 
-void ConfigFile::ManageProgramParameters(int argc, char* argv[])
+void FileConfig::ManageProgramParameters(int argc, char* argv[])
 {
     const std::string program_name(argv[0]);
     auto is_display_config = false;
@@ -263,7 +263,7 @@ void ConfigFile::ManageProgramParameters(int argc, char* argv[])
     }
 }
 
-bool ConfigFile::IsDisplayConfigParameter(const std::string& parameter_name) const
+bool FileConfig::IsDisplayConfigParameter(const std::string& parameter_name) const
 {
     if (parameter_name == "-l") {
         return true;
@@ -271,7 +271,7 @@ bool ConfigFile::IsDisplayConfigParameter(const std::string& parameter_name) con
     return false;
 }
 
-bool ConfigFile::IsHelpParameter(const std::string& parameter_name) const
+bool FileConfig::IsHelpParameter(const std::string& parameter_name) const
 {
     if (parameter_name == "-h") {
         return true;
@@ -279,7 +279,7 @@ bool ConfigFile::IsHelpParameter(const std::string& parameter_name) const
     return false;
 }
 
-void ConfigFile::DisplayHelp(const std::string& command_name) const
+void FileConfig::DisplayHelp(const std::string& command_name) const
 {
     std::cout << command_name << " can be used with following options who overrides config file" << std::endl;
     std::cout << "-c n   Clipping, 0: no clipping, 1: high clipping, 2: low clipping" << std::endl;
@@ -300,48 +300,48 @@ void ConfigFile::DisplayHelp(const std::string& command_name) const
     std::cout << "-w n   Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores" << std::endl;
 }
 
-void ConfigFile::ManageClippingParameter(const std::string& parameter_name,
-                                           const std::string& parameter_value)
+void FileConfig::ManageClippingParameter(const std::string& parameter_name,
+                                         const std::string& parameter_value)
 {
     if (parameter_name == "-c") {
         setSetting("clipping", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void ConfigFile::ManageDebugParameter(const std::string& parameter_name,
-                                        const std::string& parameter_value)
+void FileConfig::ManageDebugParameter(const std::string& parameter_name,
+                                      const std::string& parameter_value)
 {
     if (parameter_name == "-d") {
         setSetting("debug", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void ConfigFile::ManageExecutionTimeParameter(const std::string& parameter_name,
-                                        const std::string& parameter_value)
+void FileConfig::ManageExecutionTimeParameter(const std::string& parameter_name,
+                                              const std::string& parameter_value)
 {
     if (parameter_name == "-e") {
         setSetting("execution_time", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void ConfigFile::ManageGranularityParameter(const std::string& parameter_name,
-                                              const std::string& parameter_value)
+void FileConfig::ManageGranularityParameter(const std::string& parameter_name,
+                                            const std::string& parameter_value)
 {
     if (parameter_name == "-g") {
         setSetting("granularity", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void ConfigFile::ManageObjectCountParameter(const std::string& parameter_name,
-                                              const std::string& parameter_value)
+void FileConfig::ManageObjectCountParameter(const std::string& parameter_name,
+                                            const std::string& parameter_value)
 {
     if (parameter_name == "-o") {
         setSetting("objects_count", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void ConfigFile::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
-                                                  const std::string& parameter_value)
+void FileConfig::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
+                                                 const std::string& parameter_value)
 {
     // using nextfloor::physics::CollisionEngine;
 
@@ -360,39 +360,39 @@ void ConfigFile::ManagePrallellAlgoTypeParameter(const std::string& parameter_na
     // }
 }
 
-void ConfigFile::ManageRoomCountParameter(const std::string& parameter_name,
-                                            const std::string& parameter_value)
+void FileConfig::ManageRoomCountParameter(const std::string& parameter_name,
+                                          const std::string& parameter_value)
 {
     if (parameter_name == "-r") {
         setSetting("rooms_count", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void ConfigFile::ManageLoadObjectFrequencyParameter(const std::string& parameter_name,
-                                                      const std::string& parameter_value)
+void FileConfig::ManageLoadObjectFrequencyParameter(const std::string& parameter_name,
+                                                    const std::string& parameter_value)
 {
     if (parameter_name == "-s") {
         setSetting("load_objects_freq", libconfig::Setting::TypeFloat, std::stof(parameter_value));
     }
 }
 
-void ConfigFile::ManageVsyncParameter(const std::string& parameter_name,
-                                        const std::string& parameter_value)
+void FileConfig::ManageVsyncParameter(const std::string& parameter_name,
+                                      const std::string& parameter_value)
 {
     if (parameter_name == "-v") {
         setSetting("vsync", libconfig::Setting::TypeBoolean, std::stoi(parameter_value) == 1);
     }
 }
 
-void ConfigFile::ManageWorkerCountParameter(const std::string& parameter_name,
-                                              const std::string& parameter_value)
+void FileConfig::ManageWorkerCountParameter(const std::string& parameter_name,
+                                            const std::string& parameter_value)
 {
     if (parameter_name == "-w") {
         setSetting("workers_count", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void ConfigFile::EnsureCoherentWorkerSetting()
+void FileConfig::EnsureCoherentWorkerSetting()
 {
  //   using nextfloor::physics::CollisionEngine;
 
@@ -402,7 +402,7 @@ void ConfigFile::EnsureCoherentWorkerSetting()
     //}
 }
 
-void ConfigFile::ManageUniverseFactoryTypeParameter(const std::string& parameter_name,
+void FileConfig::ManageUniverseFactoryTypeParameter(const std::string& parameter_name,
                                                     const std::string& parameter_value)
 {
     // using nextfloor::factory::UniverseFactory;
@@ -418,7 +418,7 @@ void ConfigFile::ManageUniverseFactoryTypeParameter(const std::string& parameter
     // }
 }
 
-ConfigFile::~ConfigFile()
+FileConfig::~FileConfig()
 {
     assert(sInstanciated);
     sInstanciated = false;
