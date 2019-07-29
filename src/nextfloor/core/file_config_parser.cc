@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/file_config.h"
+#include "nextfloor/core/file_config_parser.h"
 
 #include <iostream>
 #include <iomanip>
@@ -44,24 +44,24 @@ static void HandleParseConfigFileParsingError(const libconfig::ParseException& p
 
 }
 
-FileConfig::FileConfig()
+FileConfigParser::FileConfigParser()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-void FileConfig::Initialize()
+void FileConfigParser::Initialize()
 {
     ParseConfigFile();
     InitDefaultValues();
 }
 
-void FileConfig::ParseConfigFile()
+void FileConfigParser::ParseConfigFile()
 {
     std::string config_file = GetConfigFilePath();
 
     try {
-        config.readFile(config_file.c_str());
+        config_.readFile(config_file.c_str());
     }
     catch(const libconfig::FileIOException& file_io_exception) {
         HandleParseConfigFileIOError(config_file, file_io_exception);
@@ -71,7 +71,7 @@ void FileConfig::ParseConfigFile()
     }
 }
 
-void FileConfig::InitDefaultValues()
+void FileConfigParser::InitDefaultValues()
 {
     SetDefaultParallellValueIfEmpty();
     SetDefaultParallellThreadCountValueIfEmpty();
@@ -89,7 +89,7 @@ void FileConfig::InitDefaultValues()
     SetDefaultUniverseFactoryValueIfEmpty();
 }
 
-void FileConfig::SetDefaultParallellValueIfEmpty()
+void FileConfigParser::SetDefaultParallellValueIfEmpty()
 {
     // using nextfloor::physics::CollisionEngine;
 
@@ -98,35 +98,35 @@ void FileConfig::SetDefaultParallellValueIfEmpty()
     // }
 }
 
-void FileConfig::SetDefaultParallellThreadCountValueIfEmpty()
+void FileConfigParser::SetDefaultParallellThreadCountValueIfEmpty()
 {
     if (!IsExist("workers_count")) {
         setSetting("workers_count", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void FileConfig::SetDefaultWidthValueIfEmpty()
+void FileConfigParser::SetDefaultWidthValueIfEmpty()
 {
     if (!IsExist("width")) {
         setSetting("width", libconfig::Setting::TypeFloat, 800.0f);
     }
 }
 
-void FileConfig::SetDefaultHeightValueIfEmpty()
+void FileConfigParser::SetDefaultHeightValueIfEmpty()
 {
     if (!IsExist("height")) {
         setSetting("height", libconfig::Setting::TypeFloat, 600.0f);
     }
 }
 
-void FileConfig::SetDefaultObjectCountValueIfEmpty()
+void FileConfigParser::SetDefaultObjectCountValueIfEmpty()
 {
     if (!IsExist("objects_count")) {
         setSetting("objects_count", libconfig::Setting::TypeInt, 16);
     }
 }
 
-void FileConfig::SetDefaultLoadObjectsFreqValueIfEmpty()
+void FileConfigParser::SetDefaultLoadObjectsFreqValueIfEmpty()
 {
     if (!IsExist("load_objects_freq")) {
         // 0 => loads all objects at start
@@ -134,56 +134,56 @@ void FileConfig::SetDefaultLoadObjectsFreqValueIfEmpty()
     }
 }
 
-void FileConfig::SetDefaultRoomCountValueIfEmpty()
+void FileConfigParser::SetDefaultRoomCountValueIfEmpty()
 {
     if (!IsExist("rooms_count")) {
         setSetting("rooms_count", libconfig::Setting::TypeInt, 4);
     }
 }
 
-void FileConfig::SetDefaultCollisionGranularityValueIfEmpty()
+void FileConfigParser::SetDefaultCollisionGranularityValueIfEmpty()
 {
     if (!IsExist("granularity")) {
         setSetting("granularity", libconfig::Setting::TypeInt, 16);
     }
 }
 
-void FileConfig::SetDefaultClippingValueIfEmpty()
+void FileConfigParser::SetDefaultClippingValueIfEmpty()
 {
     if (!IsExist("clipping")) {
         setSetting("clipping", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void FileConfig::SetDefaultVsyncValueIfEmpty()
+void FileConfigParser::SetDefaultVsyncValueIfEmpty()
 {
     if (!IsExist("vsync")) {
         setSetting("vsync", libconfig::Setting::TypeBoolean, true);
     }
 }
 
-void FileConfig::SetDefaultGridModeValueIfEmpty()
+void FileConfigParser::SetDefaultGridModeValueIfEmpty()
 {
     if (!IsExist("grid")) {
         setSetting("grid", libconfig::Setting::TypeBoolean, false);
     }
 }
 
-void FileConfig::SetDefaultDebugVerbosityValueIfEmpty()
+void FileConfigParser::SetDefaultDebugVerbosityValueIfEmpty()
 {
     if (!IsExist("debug")) {
         setSetting("debug", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void FileConfig::SetDefaultExecutionTimeValueIfEmpty()
+void FileConfigParser::SetDefaultExecutionTimeValueIfEmpty()
 {
     if (!IsExist("execution_time")) {
         setSetting("execution_time", libconfig::Setting::TypeInt, 0);
     }
 }
 
-void FileConfig::SetDefaultUniverseFactoryValueIfEmpty()
+void FileConfigParser::SetDefaultUniverseFactoryValueIfEmpty()
 {
     // using nextfloor::factory::UniverseFactory;
 
@@ -193,7 +193,7 @@ void FileConfig::SetDefaultUniverseFactoryValueIfEmpty()
 }
 
 
-void FileConfig::Display() const
+void FileConfigParser::Display() const
 {
     auto count_workers = GetWorkersCount();
 
@@ -213,12 +213,12 @@ void FileConfig::Display() const
     std::cout << "Debug mode (0 -> no debug, 1 -> test debug, 2 -> performance debug, 3 -> collision debug, 4 -> all debug): " << getSetting<int>("debug") << std::endl;
 }
 
-int FileConfig::GetWorkersCount() const
+int FileConfigParser::GetWorkersCount() const
 {
     return getSetting<int>("workers_count") ? getSetting<int>("workers_count") : tbb::task_scheduler_init::default_num_threads();
 }
 
-void FileConfig::ManageProgramParameters(int argc, char* argv[])
+void FileConfigParser::ManageProgramParameters(int argc, char* argv[])
 {
     const std::string program_name(argv[0]);
     auto is_display_config = false;
@@ -263,7 +263,7 @@ void FileConfig::ManageProgramParameters(int argc, char* argv[])
     }
 }
 
-bool FileConfig::IsDisplayConfigParameter(const std::string& parameter_name) const
+bool FileConfigParser::IsDisplayConfigParameter(const std::string& parameter_name) const
 {
     if (parameter_name == "-l") {
         return true;
@@ -271,7 +271,7 @@ bool FileConfig::IsDisplayConfigParameter(const std::string& parameter_name) con
     return false;
 }
 
-bool FileConfig::IsHelpParameter(const std::string& parameter_name) const
+bool FileConfigParser::IsHelpParameter(const std::string& parameter_name) const
 {
     if (parameter_name == "-h") {
         return true;
@@ -279,7 +279,7 @@ bool FileConfig::IsHelpParameter(const std::string& parameter_name) const
     return false;
 }
 
-void FileConfig::DisplayHelp(const std::string& command_name) const
+void FileConfigParser::DisplayHelp(const std::string& command_name) const
 {
     std::cout << command_name << " can be used with following options who overrides config file" << std::endl;
     std::cout << "-c n   Clipping, 0: no clipping, 1: high clipping, 2: low clipping" << std::endl;
@@ -300,7 +300,7 @@ void FileConfig::DisplayHelp(const std::string& command_name) const
     std::cout << "-w n   Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores" << std::endl;
 }
 
-void FileConfig::ManageClippingParameter(const std::string& parameter_name,
+void FileConfigParser::ManageClippingParameter(const std::string& parameter_name,
                                          const std::string& parameter_value)
 {
     if (parameter_name == "-c") {
@@ -308,7 +308,7 @@ void FileConfig::ManageClippingParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::ManageDebugParameter(const std::string& parameter_name,
+void FileConfigParser::ManageDebugParameter(const std::string& parameter_name,
                                       const std::string& parameter_value)
 {
     if (parameter_name == "-d") {
@@ -316,7 +316,7 @@ void FileConfig::ManageDebugParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::ManageExecutionTimeParameter(const std::string& parameter_name,
+void FileConfigParser::ManageExecutionTimeParameter(const std::string& parameter_name,
                                               const std::string& parameter_value)
 {
     if (parameter_name == "-e") {
@@ -324,7 +324,7 @@ void FileConfig::ManageExecutionTimeParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::ManageGranularityParameter(const std::string& parameter_name,
+void FileConfigParser::ManageGranularityParameter(const std::string& parameter_name,
                                             const std::string& parameter_value)
 {
     if (parameter_name == "-g") {
@@ -332,7 +332,7 @@ void FileConfig::ManageGranularityParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::ManageObjectCountParameter(const std::string& parameter_name,
+void FileConfigParser::ManageObjectCountParameter(const std::string& parameter_name,
                                             const std::string& parameter_value)
 {
     if (parameter_name == "-o") {
@@ -340,7 +340,7 @@ void FileConfig::ManageObjectCountParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
+void FileConfigParser::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
                                                  const std::string& parameter_value)
 {
     // using nextfloor::physics::CollisionEngine;
@@ -360,7 +360,7 @@ void FileConfig::ManagePrallellAlgoTypeParameter(const std::string& parameter_na
     // }
 }
 
-void FileConfig::ManageRoomCountParameter(const std::string& parameter_name,
+void FileConfigParser::ManageRoomCountParameter(const std::string& parameter_name,
                                           const std::string& parameter_value)
 {
     if (parameter_name == "-r") {
@@ -368,7 +368,7 @@ void FileConfig::ManageRoomCountParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::ManageLoadObjectFrequencyParameter(const std::string& parameter_name,
+void FileConfigParser::ManageLoadObjectFrequencyParameter(const std::string& parameter_name,
                                                     const std::string& parameter_value)
 {
     if (parameter_name == "-s") {
@@ -376,7 +376,7 @@ void FileConfig::ManageLoadObjectFrequencyParameter(const std::string& parameter
     }
 }
 
-void FileConfig::ManageVsyncParameter(const std::string& parameter_name,
+void FileConfigParser::ManageVsyncParameter(const std::string& parameter_name,
                                       const std::string& parameter_value)
 {
     if (parameter_name == "-v") {
@@ -384,7 +384,7 @@ void FileConfig::ManageVsyncParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::ManageWorkerCountParameter(const std::string& parameter_name,
+void FileConfigParser::ManageWorkerCountParameter(const std::string& parameter_name,
                                             const std::string& parameter_value)
 {
     if (parameter_name == "-w") {
@@ -392,7 +392,7 @@ void FileConfig::ManageWorkerCountParameter(const std::string& parameter_name,
     }
 }
 
-void FileConfig::EnsureCoherentWorkerSetting()
+void FileConfigParser::EnsureCoherentWorkerSetting()
 {
  //   using nextfloor::physics::CollisionEngine;
 
@@ -400,9 +400,15 @@ void FileConfig::EnsureCoherentWorkerSetting()
    // if (getSetting<int>("parallell") == CollisionEngine::kPARALLELL_SERIAL) {
         setSetting("workers_count", libconfig::Setting::TypeInt, 1);
     //}
+
+    /* Manage Threads Parallelism */
+    if (getThreadsCount()) {
+        tbb_threads_config_ = std::make_unique<tbb::task_scheduler_init>(getThreadsCount());
+    }
+
 }
 
-void FileConfig::ManageUniverseFactoryTypeParameter(const std::string& parameter_name,
+void FileConfigParser::ManageUniverseFactoryTypeParameter(const std::string& parameter_name,
                                                     const std::string& parameter_value)
 {
     // using nextfloor::factory::UniverseFactory;
@@ -418,7 +424,7 @@ void FileConfig::ManageUniverseFactoryTypeParameter(const std::string& parameter
     // }
 }
 
-FileConfig::~FileConfig()
+FileConfigParser::~FileConfigParser()
 {
     assert(sInstanciated);
     sInstanciated = false;

@@ -7,6 +7,8 @@
 #ifndef NEXTFLOOR_RENDERER_GAMEWINDOW_H_
 #define NEXTFLOOR_RENDERER_GAMEWINDOW_H_
 
+#include "nextfloor/renderer/scene_window.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
@@ -19,7 +21,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-class GameWindow {
+class GameWindow : public SceneWindow {
 
 public:
 
@@ -34,21 +36,11 @@ public:
 
     void Initialization();
     void PrepareDisplay();
-    void SetCamera(nextfloor::objects::Camera* camera);
+    void SetCamera();
     void SwapBuffers();
     void UpdateMoveFactor();
 
     GLFWwindow* glfw_window() { return glfw_window_; }
-
-    /**
-     *  GameWindow Global Variables Accessors
-     */
-    static nextfloor::objects::Camera*  getCamera() { return camera_; }
-    static GLuint getMatrixId() { return matrix_id_; }
-    static GLuint getProgramId() { return program_id_; }
-    static float getWidth() { return window_width_; }
-    static float getHeight() { return window_height_; }
-    static float getMoveFactor() { return move_factor_; }
 
 private:
 
@@ -77,18 +69,6 @@ private:
 
     std::unique_ptr<Shader> fragment_shader_{nullptr};
     std::unique_ptr<Shader> vertex_shader_{nullptr};
-
-    static nextfloor::objects::Camera* camera_;
-    static float window_width_;
-    static float window_height_;
-    static GLuint matrix_id_;
-    static GLuint program_id_;
-
-    /**
-     *  Represents the speed factor between fps taken in initial move computes
-     *  and fps displayed at screen
-     */
-    static float move_factor_;
 };
 
 } // namespace renderer

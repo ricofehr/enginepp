@@ -1,11 +1,11 @@
 /**
- *  @file config.h
- *  @brief Config Header File
+ *  @file config_parser.h
+ *  @brief ConfigParser Header File
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_CORE_CONFIG_H_
-#define NEXTFLOOR_CORE_CONFIG_H_
+#ifndef NEXTFLOOR_CORE_CONFIGPARSER_H_
+#define NEXTFLOOR_CORE_CONFIGPARSER_H_
 
 #include <iostream>
 
@@ -14,29 +14,22 @@ namespace nextfloor {
 namespace core {
 
 /**
- *  @class Config
+ *  @class ConfigParser
  *  @brief Abstract class for config management
  */
-class Config {
+class ConfigParser {
 
 public:
 
-    Config(Config&&) = default;
+    ConfigParser(ConfigParser&&) = default;
+    ConfigParser& operator=(ConfigParser&&) = default;
+    ConfigParser(const ConfigParser&) = delete;
+    ConfigParser& operator=(const ConfigParser&) = delete;
 
-    Config& operator=(Config&&) = default;
-
-    /* Copy constructor Deleted: Ensure a sole Instance */
-    Config(const Config&) = delete;
-
-    /* Copy assignment Deleted: Ensure a sole Instance */
-    Config& operator=(const Config&) = delete;
-
-    virtual ~Config() = default;
+    virtual ~ConfigParser() = default;
 
     virtual void Initialize() = 0;
-
     virtual void Display() const = 0;
-
     virtual void ManageProgramParameters(int argc, char* argv[]) = 0;
 
     /*
@@ -59,14 +52,12 @@ public:
 
 protected:
 
-    Config() = default;
+    ConfigParser() = default;
 
 private:
 
     virtual bool IsExist(std::string key) = 0;
-
     virtual void InitDefaultValues() = 0;
-
     virtual void DisplayHelp(const std::string& command_name) const = 0;
 };
 
@@ -74,4 +65,4 @@ private:
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_CONFIG_H_
+#endif // NEXTFLOOR_CORE_CONFIGPARSER_H_

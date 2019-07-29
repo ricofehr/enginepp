@@ -1,11 +1,11 @@
 /**
- *  @file factory.h
+ *  @file mesh_factory.h
  *  @brief Abstract Factory Class for universe objects
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_FACTORY_FACTORY_H_
-#define NEXTFLOOR_FACTORY_FACTORY_H_
+#ifndef NEXTFLOOR_FACTORY_MESHFACTORY_H_
+#define NEXTFLOOR_FACTORY_MESHFACTORY_H_
 
 #include <memory>
 #include <string>
@@ -20,6 +20,7 @@
 #include "nextfloor/objects/polygon.h"
 #include "nextfloor/objects/camera.h"
 #include "nextfloor/renderer/shader.h"
+#include "nextfloor/renderer/scene_window.h"
 #include "nextfloor/gameplay/level.h"
 
 namespace nextfloor {
@@ -27,14 +28,14 @@ namespace nextfloor {
 namespace factory {
 
 /**
- *  @class EngineFactory
+ *  @class MeshFactory
  *  @brief Abstract Factory Pattern for Universe Objects
  */
-class Factory {
+class MeshFactory {
 
 public:
 
-    virtual ~Factory() = default;
+    virtual ~MeshFactory() = default;
 
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() const noexcept = 0;
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(glm::vec3 location) const noexcept = 0;
@@ -68,6 +69,7 @@ public:
     virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) const noexcept = 0;
     virtual std::unique_ptr<nextfloor::renderer::Shader> MakeVertexShader(std::string shader_path) const noexcept = 0;
     virtual std::unique_ptr<nextfloor::renderer::Shader> MakeFragmentShader(std::string shader_path) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::renderer::SceneWindow> MakeSceneWindow() const noexcept = 0;
 
     virtual std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const noexcept = 0;
 
@@ -75,12 +77,12 @@ public:
 
 protected:
 
-    Factory() = default;
+    MeshFactory() = default;
 
-    Factory(Factory&&) = default;
-    Factory& operator=(Factory&&) = default;
-    Factory(const Factory&) = default;
-    Factory& operator=(const Factory&) = default;
+    MeshFactory(MeshFactory&&) = default;
+    MeshFactory& operator=(MeshFactory&&) = default;
+    MeshFactory(const MeshFactory&) = default;
+    MeshFactory& operator=(const MeshFactory&) = default;
 };
 
 } // namespace factory

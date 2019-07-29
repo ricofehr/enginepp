@@ -9,14 +9,14 @@
 
 #include <cassert>
 
-#include "nextfloor/core/config.h"
+#include "nextfloor/core/config_parser.h"
 #include "nextfloor/core/file_io.h"
 #include "nextfloor/core/timer.h"
 #include "nextfloor/core/random_generator.h"
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/exit.h"
 
-#include "nextfloor/factory/factory.h"
+#include "nextfloor/factory/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -34,95 +34,114 @@ public:
     /*
      *  Service Accessors
      */
-    static Config* getConfig()
+    static ConfigParser* getConfig()
     {
-        assert(config_ != nullptr);
-        return config_;
+        return Instance()->config();
     }
 
     static const FileIO* getFileIO()
     {
-        assert(file_io_ != nullptr);
-        return file_io_;
+        return Instance()->fileIO();
     }
 
     static Timer* getTimer()
     {
-        assert(timer_ != nullptr);
-        return timer_;
+        return Instance()->timer();
     }
 
     static const Log* getLog()
     {
-        assert(log_ != nullptr);
-        return log_;
+        return Instance()->log();
     }
 
     static const RandomGenerator* getRandomGenerator()
     {
-        assert(random_generator_ != nullptr);
-        return random_generator_;
+        return Instance()->random_generator();
     }
 
     static const Exit* getExit()
     {
-        assert(exit_ != nullptr);
-        return exit_;
+        return Instance()->exit();
     }
 
-    static const nextfloor::factory::Factory* getFactory()
+    static const nextfloor::factory::MeshFactory* getFactory()
     {
-        assert(factory_ != nullptr);
-        return factory_;
+        return Instance()->factory();
     }
 
-    /*
-     *  Service Mutators
-     */
-    static void provideConfig(Config *config)
-    {
-        config_ = config;
-    }
+protected:
 
-    static void provideFileIO(FileIO *file_io)
-    {
-        file_io_ = file_io;
-    }
-
-    static void provideTimer(Timer *timer)
-    {
-        timer_ = timer;
-    }
-
-    static void provideLog(Log *log)
-    {
-        log_ = log;
-    }
-
-    static void provideRandomGenerator(RandomGenerator *generator)
-    {
-        random_generator_ = generator;
-    }
-
-    static void provideExit(Exit *exit)
-    {
-        exit_ = exit;
-    }
-
-    static void provideFactory(nextfloor::factory::Factory *factory)
-    {
-        factory_ = factory;
-    }
+    CommonServices();
+    CommonServices(CommonServices&&) = default;
+    CommonServices& operator=(CommonServices&&) = default;
+    CommonServices(const CommonServices&) = delete;
+    CommonServices& operator=(const CommonServices&) = delete;
+    ~CommonServices() = default;
 
 private:
 
-    static Config* config_;
-    static FileIO* file_io_;
-    static Timer* timer_;
-    static Log* log_;
-    static RandomGenerator* random_generator_;
-    static Exit* exit_;
-    static nextfloor::factory::Factory* factory_;
+    void Init();
+
+    /**
+     *  Return sole Instance
+     *  @return sole CommonServices instance
+     */
+    static CommonServices* Instance()
+    {
+        /* Raw pointer because static var */
+        static auto instance = new CommonServices;
+        return instance;
+    }
+
+    ConfigParser* config()
+    {
+        assert(config_ != nullptr);
+        return config_.get();
+    }
+
+    const FileIO* fileIO()
+    {
+        assert(file_io_ != nullptr);
+        return file_io_.get();
+    }
+
+    Timer* timer()
+    {
+        assert(timer_ != nullptr);
+        return timer_.get();
+    }
+
+    const Log* log()
+    {
+        assert(log_ != nullptr);
+        return log_.get();
+    }
+
+    const RandomGenerator* random_generator()
+    {
+        assert(random_generator_ != nullptr);
+        return random_generator_.get();
+    }
+
+    const Exit* exit()
+    {
+        assert(exit_ != nullptr);
+        return exit_.get();
+    }
+
+    const nextfloor::factory::MeshFactory* factory()
+    {
+        assert(factory_ != nullptr);
+        return factory_.get();
+    }
+
+    std::unique_ptr<ConfigParser> config_{nullptr};
+    std::unique_ptr<FileIO> file_io_{nullptr};
+    std::unique_ptr<Timer> timer_{nullptr};
+    std::unique_ptr<Log> log_{nullptr};
+    std::unique_ptr<RandomGenerator> random_generator_{nullptr};
+    std::unique_ptr<Exit> exit_{nullptr};
+    std::unique_ptr<nextfloor::factory::MeshFactory> factory_{nullptr};
 };
 
 } // namespace core

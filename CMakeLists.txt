@@ -21,7 +21,7 @@ set(controller_SRCS
 
 set(core_SRCS
         src/nextfloor/core/common_services.cc
-        src/nextfloor/core/file_config.cc
+        src/nextfloor/core/file_config_parser.cc
         src/nextfloor/core/frame_timer.cc
         src/nextfloor/core/std_file_io.cc
         src/nextfloor/core/program_exit.cc
@@ -30,7 +30,8 @@ set(core_SRCS
 
 set(factory_SRCS
         src/nextfloor/factory/game_factory.cc
-        src/nextfloor/factory/gl_renderer_factory.cc)
+        src/nextfloor/factory/gl_renderer_factory.cc
+        src/nextfloor/factory/services_factory.cc)
 
 set(gameplay_SRCS
         src/nextfloor/gameplay/demo_level.cc
@@ -98,9 +99,9 @@ set(controller_HDRS
 
 set(core_HDRS
         src/nextfloor/core/common_services.h
-        src/nextfloor/core/config.h
+        src/nextfloor/core/config_parser.h
         src/nextfloor/core/exit.h
-        src/nextfloor/core/file_config.h
+        src/nextfloor/core/file_config_parser.h
         src/nextfloor/core/file_io.h
         src/nextfloor/core/frame_timer.h
         src/nextfloor/core/std_file_io.h
@@ -112,7 +113,8 @@ set(core_HDRS
         src/nextfloor/core/timer.h)
 
 set(factory_HDRS
-        src/nextfloor/factory/factory.h
+        src/nextfloor/factory/core_factory.h
+        src/nextfloor/factory/mesh_factory.h
         src/nextfloor/factory/renderer_factory.h
         src/nextfloor/factory/game_factory.h
         src/nextfloor/factory/gl_renderer_factory.h)
@@ -172,6 +174,7 @@ set(renderer_HDRS
         src/nextfloor/renderer/game_window.h
         src/nextfloor/renderer/gl_cube_renderer_engine.h
         src/nextfloor/renderer/gl_renderer_engine.h
+        src/nextfloor/renderer/scene_window.h
         src/nextfloor/renderer/shader.h
         src/nextfloor/renderer/vertex_shader.h)
 

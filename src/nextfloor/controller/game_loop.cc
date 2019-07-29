@@ -8,7 +8,6 @@
 
 #include <cassert>
 
-#include "nextfloor/objects/universe.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -21,21 +20,24 @@ static bool sInstanciated = false;
 
 } // anonymous namespace
 
-GameLoop::GameLoop(nextfloor::renderer::GameWindow* game_window,
-                   nextfloor::objects::CollisionEngine* engine_collision)
+GameLoop::GameLoop()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 
-    game_window_ = game_window;
-    engine_collision_ = engine_collision;
+    using nextfloor::core::CommonServices;
+    game_window_ = CommonServices::getFactory()->MakeSceneWindow();
+    engine_collision_ = CommonServices::getFactory()->MakeCollisionEngine();
+    universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
+
     assert(game_window_ != nullptr);
+    assert(engine_collision_ != nullptr);
 }
 
 /**
  *   Display global details for each seconds
  */
-void GameLoop::LoopLog(nextfloor::objects::Mesh* universe)
+void GameLoop::LoopLog()
 {
     using nextfloor::core::CommonServices;
 
@@ -69,7 +71,7 @@ void GameLoop::LoopLog(nextfloor::objects::Mesh* universe)
     }
 }
 
-void GameLoop::Loop(nextfloor::objects::Mesh* universe)
+void GameLoop::Loop()
 {
     using nextfloor::core::CommonServices;
 
@@ -79,13 +81,13 @@ void GameLoop::Loop(nextfloor::objects::Mesh* universe)
 
         if (CommonServices::getTimer()->getLoopCountBySecond() != 0) {
             game_window_->UpdateMoveFactor();
-            universe->toready();
+            universe_->toready();
         }
 
         game_window_->PrepareDisplay();
-        universe->Draw();
+        universe_->Draw();
         game_window_->SwapBuffers();
-        LoopLog(universe);
+        LoopLog();
 
         glfwPollEvents();
     }

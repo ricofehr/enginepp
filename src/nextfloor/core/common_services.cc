@@ -6,17 +6,28 @@
 
 #include "nextfloor/core/common_services.h"
 
+#include "nextfloor/factory/services_factory.h"
+
 namespace nextfloor {
 
 namespace core {
 
-Config* CommonServices::config_ = nullptr;
-FileIO* CommonServices::file_io_ = nullptr;
-Timer* CommonServices::timer_ = nullptr;
-Log* CommonServices::log_ = nullptr;
-RandomGenerator* CommonServices::random_generator_ = nullptr;
-Exit* CommonServices::exit_ = nullptr;
-nextfloor::factory::Factory* CommonServices::factory_ = nullptr;
+CommonServices::CommonServices()
+{
+    Init();
+}
+
+void CommonServices::Init()
+{
+    nextfloor::factory::ServicesFactory services_factory;
+
+    config_ = services_factory.MakeConfigParser();
+    file_io_ = services_factory.MakeFileIO();
+    timer_ = services_factory.MakeTimer();
+    log_ = services_factory.MakeLog();
+    exit_ = services_factory.MakeExit();
+    factory_ = services_factory.MakeMeshFactory();
+}
 
 } // namespace core
 

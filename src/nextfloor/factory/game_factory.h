@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_FACTORY_GAMEFACTORY_H_
 #define NEXTFLOOR_FACTORY_GAMEFACTORY_H_
 
-#include "nextfloor/factory/factory.h"
+#include "nextfloor/factory/mesh_factory.h"
 
 #include <memory>
 #include <string>
@@ -23,7 +23,7 @@ namespace factory {
  *  @class GameFactory
  *  @brief GameFactory Pattern for Universe Objects
  */
-class GameFactory : public Factory {
+class GameFactory : public MeshFactory {
 
 public:
 
@@ -68,10 +68,12 @@ public:
     virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) const noexcept override;
     virtual std::unique_ptr<nextfloor::renderer::Shader> MakeVertexShader(std::string shader_path) const noexcept override;
     virtual std::unique_ptr<nextfloor::renderer::Shader> MakeFragmentShader(std::string shader_path) const noexcept override;
+    virtual std::unique_ptr<nextfloor::renderer::SceneWindow> MakeSceneWindow() const noexcept override;
 
     virtual std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const noexcept override;
 
     virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const noexcept override;
+
 
 private:
 

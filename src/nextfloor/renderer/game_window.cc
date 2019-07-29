@@ -53,17 +53,39 @@ static void ClearWindow()
 /**
  *  GameWindow Global Variables Init
  */
-nextfloor::objects::Camera* GameWindow::camera_ = nullptr;
-float GameWindow::window_width_ = 1200.0f;
-float GameWindow::window_height_ = 740.0f;
-GLuint GameWindow::matrix_id_ = -1;
-GLuint GameWindow::program_id_ = -1;
-float GameWindow::move_factor_ = 1.0f;
+nextfloor::objects::Camera* SceneWindow::camera_ = nullptr;
+float SceneWindow::window_width_ = 1200.0f;
+float SceneWindow::window_height_ = 740.0f;
+GLuint SceneWindow::matrix_id_ = -1;
+GLuint SceneWindow::program_id_ = -1;
+float SceneWindow::move_factor_ = 1.0f;
 
 GameWindow::GameWindow()
 {
     assert(!sInstanciated);
     sInstanciated = true;
+    Initialization();
+}
+
+/**
+ *  Subroutines Order is matters
+ */
+void GameWindow::Initialization()
+{
+    InitGLFW();
+    InitWindowSize();
+    ConfigGL();
+    CreateWindow();
+    InitGlew();
+    ClearWindow();
+    InitRefreshRate();
+    InitVAO();
+    InitVSync();
+    InitProgramId();
+    LoadShaders();
+    InitMatrixId();
+    InitPolygonMode();
+    CheckPrerequisites();
 }
 
 void GameWindow::InitWindowSize()
@@ -156,29 +178,10 @@ void GameWindow::CheckPrerequisites()
     assert(program_id_ != -1);
 }
 
-/**
- *  Subroutines Order is matters
- */
-void GameWindow::Initialization()
-{
-    InitGLFW();
-    InitWindowSize();
-    ConfigGL();
-    CreateWindow();
-    InitGlew();
-    ClearWindow();
-    InitRefreshRate();
-    InitVAO();
-    InitVSync();
-    InitProgramId();
-    LoadShaders();
-    InitMatrixId();
-    InitPolygonMode();
-    CheckPrerequisites();
-}
-
 void GameWindow::PrepareDisplay()
 {
+    SetCamera();
+
     glEnable(GL_DEPTH_TEST);
 
     /* Accept fragment if it closer to the camera than the former one */
@@ -209,9 +212,10 @@ void GameWindow::UpdateMoveFactor()
     move_factor_ = kFpsBase / fps_real;
 }
 
-void GameWindow::SetCamera(nextfloor::objects::Camera* camera)
+void GameWindow::SetCamera()
 {
-    camera_ = camera;
+    using nextfloor::objects::Camera;
+    camera_ = Camera::active();
 }
 
 void GameWindow::SwapBuffers()

@@ -7,12 +7,9 @@
 #ifndef NEXTFLOOR_CONTROLLER_GAMELOOP_H_
 #define NEXTFLOOR_CONTROLLER_GAMELOOP_H_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-#include "nextfloor/objects/universe.h"
+#include "nextfloor/objects/mesh.h"
 #include "nextfloor/objects/collision_engine.h"
-#include "nextfloor/renderer/game_window.h"
+#include "nextfloor/renderer/scene_window.h"
 
 namespace nextfloor {
 
@@ -26,30 +23,24 @@ class GameLoop {
 
 public:
 
-    GameLoop(nextfloor::renderer::GameWindow* game_window,
-             nextfloor::objects::CollisionEngine* engine_collision);
+    GameLoop();
 
     GameLoop(GameLoop&&) = default;
-
     GameLoop& operator=(GameLoop&&) = default;
-
-    /* Copy constructor Deleted : Ensure a sole Instance */
     GameLoop(const GameLoop&) = delete;
-
-    /* Copy assignment Deleted : Ensure a sole Instance */
     GameLoop& operator=(const GameLoop&) = delete;
 
     ~GameLoop();
 
-    void Loop(nextfloor::objects::Mesh* universe);
+    void Loop();
 
 private:
 
-    void LoopLog(nextfloor::objects::Mesh* universe);
+    void LoopLog();
 
-    nextfloor::renderer::GameWindow* game_window_{nullptr};
-
-    nextfloor::objects::CollisionEngine* engine_collision_{nullptr};
+    std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
+    std::unique_ptr<nextfloor::renderer::SceneWindow> game_window_{nullptr};
+    std::unique_ptr<nextfloor::objects::CollisionEngine> engine_collision_{nullptr};
 };
 
 } // namespace renderer

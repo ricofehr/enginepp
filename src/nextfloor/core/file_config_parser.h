@@ -1,13 +1,13 @@
 /**
- *  @file config_file.h
- *  @brief FileConfig Header File
+ *  @file config_file_parser.h
+ *  @brief FileConfigParser Header File
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_CORE_FILECONFIG_H_
-#define NEXTFLOOR_CORE_FILECONFIG_H_
+#ifndef NEXTFLOOR_CORE_FILECONFIGPARSER_H_
+#define NEXTFLOOR_CORE_FILECONFIGPARSER_H_
 
-#include "nextfloor/core/config.h"
+#include "nextfloor/core/config_parser.h"
 
 #include <libconfig.h++>
 #include <memory>
@@ -18,21 +18,21 @@ namespace nextfloor {
 namespace core {
 
 /**
- *  @class FileConfig
- *  @brief FileConfig load program configuration from a file
+ *  @class FileConfigParser
+ *  @brief FileConfigParser load program configuration from a file
  */
-class FileConfig : public Config {
+class FileConfigParser : public ConfigParser {
 
 public:
 
-    FileConfig();
+    FileConfigParser();
 
-    FileConfig(FileConfig&&) = default;
-    FileConfig& operator=(FileConfig&&) = default;
-    FileConfig(const FileConfig&) = delete;
-    FileConfig& operator=(const FileConfig&) = delete;
+    FileConfigParser(FileConfigParser&&) = default;
+    FileConfigParser& operator=(FileConfigParser&&) = default;
+    FileConfigParser(const FileConfigParser&) = delete;
+    FileConfigParser& operator=(const FileConfigParser&) = delete;
 
-    virtual ~FileConfig() override final;
+    virtual ~FileConfigParser() override final;
 
     virtual void Initialize() override final;
     virtual void Display() const override final;
@@ -116,7 +116,7 @@ private:
 
     inline virtual bool IsExist(std::string key) override final
     {
-        return config.exists(key);
+        return config_.exists(key);
     }
 
     /* Parameter Accessor */
@@ -124,7 +124,7 @@ private:
     inline T getSetting(std::string key) const
     {
         T value;
-        config.lookupValue(key, value);
+        config_.lookupValue(key, value);
         return value;
     }
 
@@ -132,7 +132,7 @@ private:
     template<typename T>
     inline void setSetting(std::string key, libconfig::Setting::Type setting_type, T value)
     {
-        libconfig::Setting &config_root = config.getRoot();
+        libconfig::Setting &config_root = config_.getRoot();
         if (config_root.exists(key)) {
             config_root.remove(key);
         }
@@ -178,11 +178,12 @@ private:
 
     void EnsureCoherentWorkerSetting();
 
-    libconfig::Config config;
+    libconfig::Config config_;
+    std::unique_ptr<tbb::task_scheduler_init> tbb_threads_config_{nullptr};
 };
 
 } // namespace core
 
 } // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_FILECONFIG_H_
+#endif // NEXTFLOOR_CORE_FILECONFIGPARSER_H_

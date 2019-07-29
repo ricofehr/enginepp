@@ -38,6 +38,7 @@
 
 #include "nextfloor/renderer/fragment_shader.h"
 #include "nextfloor/renderer/vertex_shader.h"
+#include "nextfloor/renderer/game_window.h"
 
 #include "nextfloor/gameplay/demo_level.h"
 
@@ -202,6 +203,12 @@ std::unique_ptr<nextfloor::renderer::Shader> GameFactory::MakeFragmentShader(std
 {
     using nextfloor::renderer::FragmentShader;
     return std::make_unique<FragmentShader>(shader_path);
+}
+
+std::unique_ptr<nextfloor::renderer::SceneWindow> GameFactory::MakeSceneWindow() const noexcept
+{
+    using nextfloor::renderer::GameWindow;
+    return std::make_unique<GameWindow>();
 }
 
 std::unique_ptr<nextfloor::objects::CollisionEngine> GameFactory::MakeCollisionEngine() const noexcept

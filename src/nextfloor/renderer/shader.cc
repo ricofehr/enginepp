@@ -9,7 +9,7 @@
 #include <vector>
 #include <iostream>
 
-#include "nextfloor/renderer/game_window.h"
+#include "nextfloor/renderer/scene_window.h"
 
 namespace nextfloor {
 
@@ -22,13 +22,13 @@ Shader::Shader(std::string shader_filepath)
 
 void Shader::LinkShader()
 {
-    glAttachShader(GameWindow::getProgramId(), shader_id_);
-    glLinkProgram(GameWindow::getProgramId());
+    glAttachShader(SceneWindow::getProgramId(), shader_id_);
+    glLinkProgram(SceneWindow::getProgramId());
 }
 
 void Shader::DetachShader()
 {
-    glDetachShader(GameWindow::getProgramId(), shader_id_);
+    glDetachShader(SceneWindow::getProgramId(), shader_id_);
     glDeleteShader(shader_id_);
 }
 
@@ -53,11 +53,11 @@ void Shader::CheckProgram()
     GLint result = GL_FALSE;
     int info_log_length;
 
-    glGetProgramiv(GameWindow::getProgramId(), GL_LINK_STATUS, &result);
-    glGetProgramiv(GameWindow::getProgramId(), GL_INFO_LOG_LENGTH, &info_log_length);
+    glGetProgramiv(SceneWindow::getProgramId(), GL_LINK_STATUS, &result);
+    glGetProgramiv(SceneWindow::getProgramId(), GL_INFO_LOG_LENGTH, &info_log_length);
     if (info_log_length > 0) {
         std::vector<char> program_error_message(info_log_length + 1);
-        glGetProgramInfoLog(GameWindow::getProgramId(), info_log_length, nullptr, &program_error_message[0]);
+        glGetProgramInfoLog(SceneWindow::getProgramId(), info_log_length, nullptr, &program_error_message[0]);
         std::cerr << &program_error_message[0];
         exit(1);
     }

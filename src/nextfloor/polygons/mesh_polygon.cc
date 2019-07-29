@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "nextfloor/renderer/game_window.h"
+#include "nextfloor/renderer/scene_window.h"
 #include "nextfloor/objects/head_camera.h"
 
 namespace nextfloor {
@@ -17,8 +17,8 @@ namespace nextfloor {
 namespace polygons {
 
 glm::vec3 MeshPolygon::move() const {
-    using nextfloor::renderer::GameWindow;
-    return move_ * GameWindow::getMoveFactor();
+    using nextfloor::renderer::SceneWindow;
+    return move_ * SceneWindow::getMoveFactor();
 }
 
 void MeshPolygon::UpdateModelViewProjectionMatrix()
@@ -33,20 +33,20 @@ void MeshPolygon::UpdateModelViewProjectionMatrix()
 
 glm::mat4 MeshPolygon::GetProjectionMatrix()
 {
-    using nextfloor::renderer::GameWindow;
+    using nextfloor::renderer::SceneWindow;
 
-    auto camera = GameWindow::getCamera();
+    auto camera = SceneWindow::getCamera();
     glm::mat4 projection_matrix = glm::perspective(glm::radians(camera->fov()),
-                                            GameWindow::getWidth() / GameWindow::getHeight(),
-                                            0.1f, 300.0f);
+                                                   SceneWindow::getWidth() / SceneWindow::getHeight(),
+                                                   0.1f, 300.0f);
     return projection_matrix;
 }
 
 glm::mat4 MeshPolygon::GetViewMatrix()
 {
-    using nextfloor::renderer::GameWindow;
+    using nextfloor::renderer::SceneWindow;
 
-    auto camera = GameWindow::getCamera();
+    auto camera = SceneWindow::getCamera();
     glm::mat4 view_matrix = glm::lookAt(
         camera->location(),
         camera->location() + camera->direction(),
