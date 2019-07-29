@@ -35,7 +35,6 @@ public:
 
     bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;
 
-    void AddCamera() noexcept;
     void AddRock(glm::vec3 relative_location) noexcept;
 
 private:

@@ -51,6 +51,22 @@ void ModelMesh::Draw() noexcept
     }
 }
 
+Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
+{
+    for (auto &object : objects_) {
+        if (object->IsInside(mesh.get())) {
+            return add_child(std::move(mesh));
+        }
+    }
+
+    return nullptr;
+}
+
+bool ModelMesh::IsInside(Mesh* mesh) noexcept
+{
+    return grid()->IsInside(mesh->location());
+}
+
 Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
 {
     auto object_raw = object.get();
@@ -138,6 +154,20 @@ void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) 
         }
     }
     unlock();
+}
+
+void ModelMesh::TransferCameraToOtherMesh(Mesh* other)
+{
+    other->set_camera(std::move(camera_));
+    camera_ = nullptr;
+}
+
+Camera* ModelMesh::camera() const noexcept
+{
+    if (camera_ == nullptr) {
+        return nullptr;
+    }
+    return camera_.get();
 }
 
 } // namespace objects

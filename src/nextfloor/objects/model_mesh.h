@@ -40,6 +40,8 @@ public:
 
     virtual void Draw() noexcept override;
 
+    virtual Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept override final;
+    virtual bool IsInside(Mesh* mesh) noexcept override final;
     virtual Mesh* add_child(std::unique_ptr<Mesh> object) noexcept override final;
     virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept override;
 
@@ -77,11 +79,15 @@ public:
         return coords_list_[0]->IsTopPositionFilled();
     }
 
-    virtual bool IsCamera() const override { return type_ == kMODEL_CAMERA; }
+    virtual bool IsCamera() const override { return camera_ != nullptr; }
     virtual void set_parent(Mesh* parent) override { parent_ = parent; }
+    virtual void set_camera(std::unique_ptr<Camera> camera) override { camera_ = std::move(camera); }
+    virtual void TransferCameraToOtherMesh(Mesh* other) override;
     virtual int id() override { return id_; }
     virtual glm::vec3 location() const noexcept override { return border_->location(); }
+    virtual glm::vec3 dimension() const noexcept override { return border_->dimension(); }
     Grid* grid() const noexcept { return grid_.get(); }
+    virtual Camera* camera() const noexcept override;
 
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept override final
     {
@@ -116,11 +122,10 @@ protected:
     std::unique_ptr<Grid> grid_{nullptr};
     std::vector<std::unique_ptr<Mesh>> objects_;
     std::vector<std::unique_ptr<Polygon>> polygons_;
-
     std::unique_ptr<Border> border_{nullptr};
-    RendererEngine* renderer_{nullptr};
+    std::unique_ptr<Camera> camera_{nullptr};
 
-    int type_{10000};
+    RendererEngine* renderer_{nullptr};
 
 private:
 

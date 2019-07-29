@@ -15,12 +15,8 @@ namespace objects {
 Universe::Universe()
 {
     using nextfloor::core::CommonServices;
-
-    auto location = glm::vec3(0.0f);
     grid_ = CommonServices::getFactory()->MakeUniverseGrid(this);
-    border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale());
-
-    add_child(CommonServices::getFactory()->MakeRoom(location));
+    border_ = CommonServices::getFactory()->MakeBorder(glm::vec3(0.0f), grid_->scale());
 }
 
 void Universe::Draw() noexcept

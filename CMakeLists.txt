@@ -53,6 +53,7 @@ set(objects_SRCS
         src/nextfloor/objects/front_wall.cc
         src/nextfloor/objects/left_wall.cc
         src/nextfloor/objects/model_mesh.cc
+        src/nextfloor/objects/player.cc
         src/nextfloor/objects/right_wall.cc
         src/nextfloor/objects/rock.cc
         src/nextfloor/objects/roof.cc
@@ -145,6 +146,7 @@ set(objects_HDRS
         src/nextfloor/objects/renderer_engine.h
         src/nextfloor/objects/left_wall.h
         src/nextfloor/objects/model_mesh.h
+        src/nextfloor/objects/player.h
         src/nextfloor/objects/right_wall.h
         src/nextfloor/objects/rock.h
         src/nextfloor/objects/roof.h

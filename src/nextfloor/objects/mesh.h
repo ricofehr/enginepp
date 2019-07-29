@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 
 #include "nextfloor/objects/border.h"
+#include "nextfloor/objects/camera.h"
 
 namespace nextfloor {
 
@@ -30,6 +31,8 @@ public:
     virtual void Draw() = 0;
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept = 0;
 
+    virtual Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept = 0;
+    virtual bool IsInside(Mesh* mesh) noexcept = 0;
     virtual Mesh* add_child(std::unique_ptr<Mesh> child) noexcept = 0;
     virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept = 0;
 
@@ -47,11 +50,15 @@ public:
 
     virtual int id() = 0;
     virtual glm::vec3 location() const noexcept = 0;
+    virtual glm::vec3 dimension() const noexcept = 0;
     virtual Border* border() const noexcept = 0;
+    virtual Camera* camera() const noexcept = 0;
 
     virtual void lock() = 0;
     virtual void unlock() = 0;
     virtual void set_parent(Mesh* parent) = 0;
+    virtual void set_camera(std::unique_ptr<Camera> camera) = 0;
+    virtual void TransferCameraToOtherMesh(Mesh* other) = 0;
 
     virtual bool ready() const = 0;
     virtual void toready() = 0;

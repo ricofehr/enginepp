@@ -20,8 +20,6 @@ Room::Room(glm::vec3 location)
     border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale());
 
     AddWalls();
-    AddCamera();
-    AddRock(glm::vec3(3.0f));
 }
 
 void Room::AddWalls() noexcept
@@ -32,12 +30,6 @@ void Room::AddWalls() noexcept
     AddLeftWall();
     AddFloor();
     AddRoof();
-}
-
-void Room::AddCamera() noexcept
-{
-    using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeCamera(glm::vec3(location().x, location().y-2.0f, location().z + 7.0f)));
 }
 
 void Room::AddRock(glm::vec3 relative_location) noexcept

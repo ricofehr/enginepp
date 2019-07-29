@@ -72,6 +72,11 @@ public:
                          depth()/2);
     }
 
+    virtual glm::vec3 dimension() const noexcept override final
+    {
+        return glm::vec3(width(), height(), depth());
+    }
+
 protected:
 
     virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(glm::ivec3 coords) = 0;

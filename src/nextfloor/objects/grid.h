@@ -62,6 +62,7 @@ public:
     virtual glm::vec3 CalculateTopSideBorderScale() const noexcept = 0;
 
     virtual glm::vec3 scale() const noexcept = 0;
+    virtual glm::vec3 dimension() const noexcept = 0;
 
 protected:
 

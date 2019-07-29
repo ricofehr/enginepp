@@ -47,10 +47,12 @@ public:
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(glm::vec3 location, glm::vec3 scale) const noexcept override;
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept override;
 
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(glm::vec3 location) const noexcept override;
+
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRock(glm::vec3 location) const noexcept override;
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(glm::vec3 location) const noexcept override;
 
-    virtual std::unique_ptr<nextfloor::objects::Camera> MakeCamera(glm::vec3 location) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const noexcept override;
 
     virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(glm::vec3 location, glm::vec3 scale) const noexcept override;
 

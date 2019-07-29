@@ -7,9 +7,11 @@
 #ifndef NEXTFLOOR_OBJECTS_HEADCAMERA_H_
 #define NEXTFLOOR_OBJECTS_HEADCAMERA_H_
 
+#include "nextfloor/objects/camera.h"
+
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/camera.h"
+#include "nextfloor/objects/mesh.h"
 
 namespace nextfloor {
 
@@ -23,8 +25,7 @@ class HeadCamera : public Camera {
 
 public:
 
-    HeadCamera();
-    HeadCamera(glm::vec3 location, float horizontal_angle, float vertical_angle);
+    HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle);
 
     HeadCamera(HeadCamera&&) = default;
     HeadCamera& operator=(HeadCamera&&) = default;
@@ -36,6 +37,7 @@ public:
     virtual void ComputeOrientation() noexcept override;
     virtual void ComputeFOV(float delta_fov) noexcept override;
 
+    virtual glm::vec3 location() const override { return owner_->location(); }
     virtual glm::vec3 direction() const override { return direction_; }
     virtual glm::vec3 head() const override { return head_; }
     virtual float fov() const override { return fov_; }
@@ -45,6 +47,7 @@ public:
 
 private:
 
+    Mesh* owner_;
     float horizontal_angle_;
     float vertical_angle_;
     float fov_;

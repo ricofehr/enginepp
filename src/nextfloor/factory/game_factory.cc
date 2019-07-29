@@ -18,6 +18,7 @@
 #include "nextfloor/objects/floor.h"
 #include "nextfloor/objects/roof.h"
 #include "nextfloor/objects/wall_brick.h"
+#include "nextfloor/objects/player.h"
 #include "nextfloor/objects/rock.h"
 #include "nextfloor/objects/head_camera.h"
 
@@ -114,6 +115,12 @@ std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeWallBrick(glm::vec3 l
     return std::make_unique<nextfloor::objects::WallBrick>(location, scale, texture);
 }
 
+std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakePlayer(glm::vec3 location) const noexcept
+{
+    using nextfloor::objects::Player;
+    return std::make_unique<nextfloor::objects::Player>(location);
+}
+
 std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeRock(glm::vec3 location) const noexcept
 {
     using nextfloor::objects::Rock;
@@ -126,10 +133,10 @@ std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeLittleRock(glm::vec3 
     return std::make_unique<Rock>(location, 0.5f);
 }
 
-std::unique_ptr<nextfloor::objects::Camera> GameFactory::MakeCamera(glm::vec3 location) const noexcept
+std::unique_ptr<nextfloor::objects::Camera> GameFactory::MakeCamera(nextfloor::objects::Mesh* owner) const noexcept
 {
     using nextfloor::objects::HeadCamera;
-    return std::make_unique<HeadCamera>(location, 3.14f, 0.0f);
+    return std::make_unique<HeadCamera>(owner, 3.14f, 0.0f);
 }
 
 std::unique_ptr<nextfloor::objects::Polygon> GameFactory::MakeCube(glm::vec3 location, glm::vec3 scale) const noexcept

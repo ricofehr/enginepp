@@ -46,8 +46,8 @@ int main(int argc, char* argv[])
     CommonServices::provideConfig(file_config.get());
     std::unique_ptr<ProgramExit> program_exit = std::make_unique<ProgramExit>();
     CommonServices::provideExit(program_exit.get());
-    std::unique_ptr<StdFileIO> generic_file_io = std::make_unique<StdFileIO>();
-    CommonServices::provideFileIO(generic_file_io.get());
+    std::unique_ptr<StdFileIO> file_io = std::make_unique<StdFileIO>();
+    CommonServices::provideFileIO(file_io.get());
     std::unique_ptr<PseudoRandomGenerator> standard_random_generator = std::make_unique<PseudoRandomGenerator>();
     CommonServices::provideRandomGenerator(standard_random_generator.get());
     std::unique_ptr<GameFactory> factory = std::make_unique<GameFactory>();

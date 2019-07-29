@@ -14,15 +14,9 @@ namespace objects {
 
 Camera* Camera::active_ = nullptr;
 
-HeadCamera::HeadCamera()
-       : HeadCamera(glm::vec3(0.0f), 3.14f, 0.0f) {}
-
-HeadCamera::HeadCamera(glm::vec3 location, float horizontal_angle, float vertical_angle)
+HeadCamera::HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle)
 {
-    using nextfloor::core::CommonServices;
-
-    type_ = kMODEL_CAMERA;
-    border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(1.0f));
+    owner_ = owner;
     horizontal_angle_ = horizontal_angle;
     vertical_angle_ = vertical_angle;
     fov_ = 45.0f;

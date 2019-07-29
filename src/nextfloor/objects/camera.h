@@ -7,11 +7,7 @@
 #ifndef NEXTFLOOR_OBJECTS_CAMERA_H_
 #define NEXTFLOOR_OBJECTS_CAMERA_H_
 
-#include "nextfloor/objects/mesh.h"
-#include "nextfloor/objects/model_mesh.h"
-
 #include <glm/glm.hpp>
-#include <vector>
 
 namespace nextfloor {
 
@@ -21,7 +17,7 @@ namespace objects {
  *  @class Camera
  *  @brief Camera Abstract representation.\n
  */
-class Camera : public ModelMesh {
+class Camera {
 
 public:
 
@@ -30,6 +26,7 @@ public:
     virtual void ComputeOrientation() noexcept = 0;
     virtual void ComputeFOV(float delta_fov) noexcept = 0;
 
+    virtual glm::vec3 location() const = 0;
     virtual glm::vec3 direction() const = 0;
     virtual glm::vec3 head() const = 0;
     virtual float fov() const = 0;
