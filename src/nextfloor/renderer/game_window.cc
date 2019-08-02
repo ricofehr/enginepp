@@ -19,7 +19,8 @@ static bool sInstanciated = false;
 static void InitGLFW()
 {
     if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW\n";
+        using nextfloor::core::CommonServices;
+        CommonServices::getLog()->WriteLine("Failed to initialize GLFW");
         exit(-1);
     }
 }
@@ -38,7 +39,8 @@ static void InitGlew()
 {
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW\n";
+        using nextfloor::core::CommonServices;
+        CommonServices::getLog()->WriteLine("Failed to initialize GLEW");
         exit(-1);
     }
 }
@@ -91,7 +93,6 @@ void GameWindow::Initialization()
 void GameWindow::InitWindowSize()
 {
     using nextfloor::core::CommonServices;
-
     window_width_ = CommonServices::getConfig()->getWindowWidth();
     window_height_ = CommonServices::getConfig()->getWindowHeight();
 }
@@ -102,7 +103,8 @@ void GameWindow::CreateWindow()
     glfw_window_ = glfwCreateWindow(window_width_, window_height_,
                                     "=== Engine ===", nullptr, nullptr);
     if(glfw_window_ == nullptr) {
-        std::cerr << "Failed to open GLFW window\n";
+        using nextfloor::core::CommonServices;
+        CommonServices::getLog()->WriteLine("Failed to open GLFW window");
         glfwTerminate();
         exit(-1);
     }

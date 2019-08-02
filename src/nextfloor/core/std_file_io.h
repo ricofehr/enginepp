@@ -27,22 +27,18 @@ public:
     StdFileIO();
 
     StdFileIO(StdFileIO&&) = default;
-
     StdFileIO& operator=(StdFileIO&&) = default;
-
-    /**
-     *  Copy constructor Deleted : Ensure a sole Instance
-     */
     StdFileIO(const StdFileIO&) = delete;
-
-    /**
-     *  Copy assignement Deleted: Ensure a sole Instance
-     */
     StdFileIO& operator=(const StdFileIO&) = delete;
 
     virtual ~StdFileIO() override final;
 
     virtual std::string ReadFile(std::string file_path) const override final;
+
+private:
+
+    void HandleErrorOnReadFile(std::string file_path) const;
+
 };
 
 } // namespace core

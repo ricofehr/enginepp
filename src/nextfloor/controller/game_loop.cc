@@ -7,6 +7,7 @@
 #include "nextfloor/controller/game_loop.h"
 
 #include <cassert>
+#include <sstream>
 
 #include "nextfloor/core/common_services.h"
 
@@ -37,7 +38,7 @@ GameLoop::GameLoop()
 /**
  *   Display global details for each seconds
  */
-void GameLoop::LoopLog()
+void GameLoop::LogLoop()
 {
     using nextfloor::core::CommonServices;
 
@@ -47,28 +48,34 @@ void GameLoop::LoopLog()
         int debug = CommonServices::getConfig()->getDebugLevel();
 
         /* Header for test datas output */
-        if (sFirstLoop &&
-            debug == CommonServices::getLog()->kDEBUG_TEST) {
-            std::cout << "TIME:FPS:NBOBJALL:NBOBJMOVE" << std::endl;
+        if (sFirstLoop && CommonServices::getConfig()->IsTestDebugEnabled()) {
+            CommonServices::getLog()->Write("TIME:FPS:NBOBJALL:NBOBJMOVE");
         }
         /* Print if debug */
-        if (debug == CommonServices::getLog()->kDEBUG_ALL) {
-            std::cout << 1000.0 / static_cast<double>(CommonServices::getTimer()->getLoopCountBySecond()) << " ms/frame - ";
+        if (CommonServices::getConfig()->IsAllDebugEnabled()) {
+            std::ostringstream message_frame;
+            message_frame << 1000.0 / static_cast<double>(CommonServices::getTimer()->getLoopCountBySecond()) << " ms/frame - ";
+            CommonServices::getLog()->Write(std::move(message_frame));
         }
 
-        if (debug == CommonServices::getLog()->kDEBUG_PERF || debug == CommonServices::getLog()->kDEBUG_ALL) {
-            std::cout << CommonServices::getTimer()->getLoopCountBySecond() << " fps (move facor: " << game_window_->getMoveFactor() << ") - ";
-            std::cout << std::endl;
+        if (debug == CommonServices::getConfig()->IsPerfDebugEnabled()) {
+            LogFps();
         }
 
-        /* Test datas output */
-        if (debug == CommonServices::getLog()->kDEBUG_TEST) {
-            std::cout << CommonServices::getTimer()->getLoopCountBySecond() << ":";
-        }
-
+        CommonServices::getLog()->WriteLine("");
         /* First loop is ok */
         sFirstLoop = false;
     }
+}
+
+void GameLoop::LogFps()
+{
+    using nextfloor::core::CommonServices;
+
+    std::ostringstream message_fps;
+    message_fps << CommonServices::getTimer()->getLoopCountBySecond();
+    message_fps << " fps (move facor: " << game_window_->getMoveFactor() << ") - ";
+    CommonServices::getLog()->Write(std::move(message_fps));
 }
 
 void GameLoop::Loop()
@@ -87,7 +94,7 @@ void GameLoop::Loop()
         game_window_->PrepareDisplay();
         universe_->Draw();
         game_window_->SwapBuffers();
-        LoopLog();
+        LogLoop();
 
         glfwPollEvents();
     }

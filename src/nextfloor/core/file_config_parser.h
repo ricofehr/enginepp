@@ -111,6 +111,10 @@ public:
         return getSetting<int>("factory_type");
     }
 
+    virtual bool IsCollisionDebugEnabled() const override final;
+    virtual bool IsTestDebugEnabled() const override final;
+    virtual bool IsAllDebugEnabled() const override final;
+    virtual bool IsPerfDebugEnabled() const override final;
 
 private:
 

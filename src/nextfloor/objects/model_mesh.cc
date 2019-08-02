@@ -8,6 +8,8 @@
 
 #include "nextfloor/objects/model_mesh.h"
 
+#include <sstream>
+
 #include "nextfloor/core/common_services.h"
 
 
@@ -147,13 +149,22 @@ void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) 
         obstacle_ = obstacle;
         border_->set_distance(-obstacle_distance);
 
-        /* Print debug if setting */
         using nextfloor::core::CommonServices;
-        if (CommonServices::getConfig()->getDebugLevel() >= CommonServices::getLog()->kDEBUG_COLLISION) {
-            std::cerr << "Object::" << id() << " - Obstacle::" << obstacle->id() << " - Distance::" << obstacle_distance << std::endl;
+        if (CommonServices::getConfig()->IsCollisionDebugEnabled()) {
+            LogCollision(obstacle, obstacle_distance);
         }
     }
     unlock();
+}
+
+void ModelMesh::LogCollision(Mesh* obstacle, float obstacle_distance)
+{
+    using nextfloor::core::CommonServices;
+
+    std::ostringstream message;
+    message << "Object::" << id() << " - Obstacle::" << obstacle->id();
+    message << " - Distance::" << obstacle_distance;
+    CommonServices::getLog()->WriteLine(std::move(message));
 }
 
 void ModelMesh::TransferCameraToOtherMesh(Mesh* other)

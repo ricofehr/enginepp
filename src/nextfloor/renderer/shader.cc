@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "nextfloor/renderer/scene_window.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -43,8 +44,10 @@ void Shader::CheckShader()
     if (info_log_length > 0) {
         std::vector<char> shader_error_message(info_log_length + 1);
         glGetShaderInfoLog(shader_id_, info_log_length, nullptr, &shader_error_message[0]);
-        std::cerr << &shader_error_message[0];
-        exit(1);
+
+        using nextfloor::core::CommonServices;
+        CommonServices::getLog()->WriteLine(std::string(shader_error_message.begin(), shader_error_message.end()));
+        CommonServices::getExit()->ExitOnError();
     }
 }
 
@@ -58,8 +61,10 @@ void Shader::CheckProgram()
     if (info_log_length > 0) {
         std::vector<char> program_error_message(info_log_length + 1);
         glGetProgramInfoLog(SceneWindow::getProgramId(), info_log_length, nullptr, &program_error_message[0]);
-        std::cerr << &program_error_message[0];
-        exit(1);
+
+        using nextfloor::core::CommonServices;
+        CommonServices::getLog()->WriteLine(std::string(program_error_message.begin(), program_error_message.end()));
+        CommonServices::getExit()->ExitOnError();
     }
 }
 

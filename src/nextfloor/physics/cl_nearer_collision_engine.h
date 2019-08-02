@@ -53,6 +53,10 @@ protected:
 
     virtual void InitCollisionEngine() override final;
 
+private:
+
+    void HandleErrorOnInit(cl::Error error);
+
     /** Opencl Kernel Object */
     cl::Kernel cl_kernel_;
 
@@ -70,6 +74,7 @@ protected:
 
     /** Opencl Workgroup size */
     int wk_size_{32};
+
 };
 
 } // namespace physics

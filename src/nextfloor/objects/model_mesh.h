@@ -133,6 +133,8 @@ private:
     void AddItemToGrid(Mesh* object) noexcept;
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
 
+    void LogCollision(Mesh* obstacle, float obstacle_distance);
+
     int id_{0};
 
     Mesh* obstacle_{nullptr};

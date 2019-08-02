@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <tbb/tbb.h>
 #include <cassert>
+#include <sstream>
 
 #include "nextfloor/core/common_services.h"
 
@@ -30,19 +31,23 @@ static std::string GetConfigFilePath()
 
 static void HandleParseConfigFileIOError(std::string config_file, const libconfig::FileIOException& file_io_exception)
 {
-    std::cerr << "I/O error while reading file, config parser cancelled: " << config_file << std::endl;
-    std::cerr << "Exception: " << file_io_exception.what() << std::endl;
+    std::ostringstream message;
+    message << "I/O error while reading file, config parser cancelled: " << config_file << std::endl;
+    message << "Exception: " << file_io_exception.what() << std::endl;
+    CommonServices::getLog()->Write(std::move(message));
     CommonServices::getExit()->ExitOnError();
 }
 
 static void HandleParseConfigFileParsingError(const libconfig::ParseException& parse_exception)
 {
-    std::cerr << "Parse error at " << parse_exception.getFile() << ":" << parse_exception.getLine()
-        << " - " << parse_exception.getError() << std::endl;
+    std::ostringstream message;
+    message << "Parse error at " << parse_exception.getFile() << ":";
+    message << parse_exception.getLine() << " - " << parse_exception.getError();
+    CommonServices::getLog()->WriteLine(std::move(message));
     CommonServices::getExit()->ExitOnError();
 }
 
-}
+} // anonymous namespace
 
 FileConfigParser::FileConfigParser()
 {
@@ -422,6 +427,26 @@ void FileConfigParser::ManageUniverseFactoryTypeParameter(const std::string& par
     //         setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_RANDOM);
     //     }
     // }
+}
+
+bool FileConfigParser::IsCollisionDebugEnabled() const
+{
+    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_COLLISION;
+}
+
+bool FileConfigParser::IsTestDebugEnabled() const
+{
+    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_TEST;
+}
+
+bool FileConfigParser::IsAllDebugEnabled() const
+{
+    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_ALL;
+}
+
+bool FileConfigParser::IsPerfDebugEnabled() const
+{
+    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_PERF;
 }
 
 FileConfigParser::~FileConfigParser()

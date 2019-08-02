@@ -7,6 +7,7 @@
 #include "nextfloor/physics/cl_nearer_collision_engine.h"
 
 #include <iostream>
+#include <sstream>
 #include <fstream>
 
 #include "nextfloor/objects/mesh.h"
@@ -89,9 +90,18 @@ void ClNearerCollisionEngine::InitCollisionEngine()
             wk_size_ /= 2;
         }
     } catch(cl::Error error) {
-        std::cerr << error.what() << "(" << error.err() << ")" << std::endl;
-        exit(1);
+        HandleErrorOnInit(error);
     }
+}
+
+void ClNearerCollisionEngine::HandleErrorOnInit(cl::Error error)
+{
+    using nextfloor::core::CommonServices;
+
+    std::ostringstream message;
+    message << error.what() << "(" << error.err() << ")";
+    CommonServices::getLog()->WriteLine(std::move(message));
+    CommonServices::getExit()->ExitOnError();
 }
 
 float ClNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target,

@@ -10,6 +10,7 @@
 #include "nextfloor/core/log.h"
 
 #include <iostream>
+#include <sstream>
 
 
 namespace nextfloor {
@@ -27,18 +28,17 @@ public:
     TerminalLog();
 
     TerminalLog(TerminalLog&&) = default;
-
     TerminalLog& operator=(TerminalLog&&) = default;
-
-    /*  Copy constructor Deleted : Ensure a sole Instance */
     TerminalLog(const TerminalLog&) = delete;
-
-    /* Copy assignement Deleted: Ensure a sole Instance */
     TerminalLog& operator=(const TerminalLog&) = delete;
 
     virtual ~TerminalLog() override final;
 
-    virtual void Write(const std::string& log_line) override final;
+    virtual void Write(std::ostringstream&& log_str) const override final;
+    virtual void Write(const std::string& log_str) const override final;
+
+    virtual void WriteLine(std::ostringstream&& log_line) const override final;
+    virtual void WriteLine(const std::string& log_line) const override final;
 };
 
 } // namespace core

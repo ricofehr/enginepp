@@ -7,6 +7,9 @@
 #include "nextfloor/core/std_file_io.h"
 
 #include <cassert>
+#include <sstream>
+
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -35,12 +38,18 @@ std::string StdFileIO::ReadFile(std::string file_path) const
         }
         file_stream.close();
     } else {
-        std::cerr << "Impossible to open " << file_path << std::endl;
-        getchar();
-        return "";
+        HandleErrorOnReadFile(file_path);
     }
 
     return file_str;
+}
+
+void StdFileIO::HandleErrorOnReadFile(std::string file_path) const
+{
+    std::ostringstream message;
+    message << "Unable to open " << file_path;
+    CommonServices::getLog()->WriteLine(std::move(message));
+    CommonServices::getExit()->ExitOnError();
 }
 
 StdFileIO::~StdFileIO()

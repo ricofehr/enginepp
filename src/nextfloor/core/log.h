@@ -42,7 +42,11 @@ public:
 
     virtual ~Log() = default;
 
-    virtual void Write(const std::string& log_line) = 0;
+    virtual void Write(std::ostringstream&& log_line) const = 0;
+    virtual void Write(const std::string& log_line) const = 0;
+
+    virtual void WriteLine(std::ostringstream&& log_line) const = 0;
+    virtual void WriteLine(const std::string& log_line) const = 0;
 
 protected:
 

@@ -49,6 +49,10 @@ public:
     virtual int getThreadsCount() const = 0;
     virtual int getParallellAlgoType() const = 0;
     virtual int getUniverseFactoryType() const = 0;
+    virtual bool IsCollisionDebugEnabled() const = 0;
+    virtual bool IsTestDebugEnabled() const = 0;
+    virtual bool IsAllDebugEnabled() const = 0;
+    virtual bool IsPerfDebugEnabled() const = 0;
 
 protected:
 
