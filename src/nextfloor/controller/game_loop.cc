@@ -45,8 +45,6 @@ void GameLoop::LogLoop()
     static bool sFirstLoop = true;
 
     if (CommonServices::getTimer()->IsNewSecondElapsed()) {
-        int debug = CommonServices::getConfig()->getDebugLevel();
-
         /* Header for test datas output */
         if (sFirstLoop && CommonServices::getConfig()->IsTestDebugEnabled()) {
             CommonServices::getLog()->Write("TIME:FPS:NBOBJALL:NBOBJMOVE");
@@ -58,7 +56,7 @@ void GameLoop::LogLoop()
             CommonServices::getLog()->Write(std::move(message_frame));
         }
 
-        if (debug == CommonServices::getConfig()->IsPerfDebugEnabled()) {
+        if (CommonServices::getConfig()->IsPerfDebugEnabled()) {
             LogFps();
         }
 
@@ -74,7 +72,7 @@ void GameLoop::LogFps()
 
     std::ostringstream message_fps;
     message_fps << CommonServices::getTimer()->getLoopCountBySecond();
-    message_fps << " fps (move facor: " << game_window_->getMoveFactor() << ") - ";
+    message_fps << " fps (move factor: " << game_window_->getMoveFactor() << ") - ";
     CommonServices::getLog()->Write(std::move(message_fps));
 }
 
