@@ -138,12 +138,12 @@ float ClNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target
     w2 = coords2.at(1)[0] - x2;
     d2 = coords2.at(4)[2] - z2;
 
-    move1x = target_border->move()[0];
-    move1y = target_border->move()[1];
-    move1z = target_border->move()[2];
-    move2x = obstacle_border->move()[0];
-    move2y = obstacle_border->move()[1];
-    move2z = obstacle_border->move()[2];
+    move1x = target_border->movement()[0];
+    move1y = target_border->movement()[1];
+    move1z = target_border->movement()[2];
+    move2x = obstacle_border->movement()[0];
+    move2y = obstacle_border->movement()[1];
+    move2z = obstacle_border->movement()[2];
 
     /* Prepare arrays for computecollision */
     float box1[9] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};

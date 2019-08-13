@@ -28,11 +28,11 @@ GameLoop::GameLoop()
 
     using nextfloor::core::CommonServices;
     game_window_ = CommonServices::getFactory()->MakeSceneWindow();
-    engine_collision_ = CommonServices::getFactory()->MakeCollisionEngine();
+    //engine_collision_ = CommonServices::getFactory()->MakeCollisionEngine();
     universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
 
     assert(game_window_ != nullptr);
-    assert(engine_collision_ != nullptr);
+    //assert(engine_collision_ != nullptr);
 }
 
 /**
@@ -72,7 +72,7 @@ void GameLoop::LogFps()
 
     std::ostringstream message_fps;
     message_fps << CommonServices::getTimer()->getLoopCountBySecond();
-    message_fps << " fps (move factor: " << game_window_->getMoveFactor() << ") - ";
+    message_fps << " fps (move factor: " << game_window_->getFpsFixMoveFactor() << ") - ";
     CommonServices::getLog()->Write(std::move(message_fps));
 }
 
@@ -90,6 +90,7 @@ void GameLoop::Loop()
         }
 
         game_window_->PrepareDisplay();
+        //universe_->DetectCollision();
         universe_->Draw();
         game_window_->SwapBuffers();
         LogLoop();

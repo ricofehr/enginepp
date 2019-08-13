@@ -70,14 +70,14 @@ bool WiredGridBox::IsRightPositionFilled() const noexcept
     return owner_->IsRightPositionFilled(coords_);
 }
 
-bool WiredGridBox::IsLeftPositionFilled() const noexcept
-{
-    return owner_->IsLeftPositionFilled(coords_);
-}
-
 bool WiredGridBox::IsBackPositionFilled() const noexcept
 {
     return owner_->IsBackPositionFilled(coords_);
+}
+
+bool WiredGridBox::IsLeftPositionFilled() const noexcept
+{
+    return owner_->IsLeftPositionFilled(coords_);
 }
 
 bool WiredGridBox::IsBottomPositionFilled() const noexcept
@@ -89,6 +89,8 @@ bool WiredGridBox::IsTopPositionFilled() const noexcept
 {
     return owner_->IsTopPositionFilled(coords_);
 }
+
+
 
 } // namespace grid
 

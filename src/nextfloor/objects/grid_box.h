@@ -32,6 +32,9 @@ public:
     virtual bool IsFilled() const noexcept = 0;
 
     virtual int size() const noexcept = 0;
+    virtual glm::vec3 coords() const noexcept = 0;
+    virtual std::vector<nextfloor::objects::Mesh*> other_occupants(nextfloor::objects::Mesh* object) noexcept = 0;
+    virtual std::vector<nextfloor::objects::Mesh*> occupants() noexcept = 0;
 
     virtual bool IsFrontPositionFilled() const noexcept = 0;
     virtual bool IsRightPositionFilled() const noexcept = 0;

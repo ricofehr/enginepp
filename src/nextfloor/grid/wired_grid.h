@@ -40,6 +40,8 @@ public:
     virtual bool IsTopPositionFilled(glm::ivec3 coords) const noexcept override;
     virtual bool IsPositionFilled(glm::ivec3 coords) const noexcept override;
 
+    virtual std::vector<nextfloor::objects::Mesh*> FindCollisionNeighbors(glm::vec3 coord) const noexcept override;
+
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept override final;
     virtual void ComputePlacementsInGrid() noexcept override;
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept override;
@@ -132,13 +134,14 @@ protected:
 
 private:
 
+    std::vector<nextfloor::objects::Mesh*> FindOccupants(glm::ivec3 coords) const noexcept;
     nextfloor::objects::GridBox* AddItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept;
     void RemoveItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept;
     std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept;
 
     glm::ivec3 PointToCoords(glm::vec3 point) noexcept;
     glm::ivec3 CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, glm::vec3 point_max);
-    bool IsCooordsAreCorrect(glm::ivec3 coords);
+    bool IsCooordsAreCorrect(glm::ivec3 coords) const;
 
     float width() const noexcept
     {
@@ -154,6 +157,37 @@ private:
     {
         return depth_boxes_count() * box_depth();
     }
+
+    std::vector<nextfloor::objects::Mesh*> FindFrontPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontRightPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontLeftPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindRightPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindRightCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackRightPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackLeftPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBackTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindLeftPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindLeftCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
 
     nextfloor::objects::Mesh* owner_;
     std::unique_ptr<nextfloor::objects::GridBox> ***boxes_;

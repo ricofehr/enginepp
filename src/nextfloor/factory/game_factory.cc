@@ -211,7 +211,7 @@ std::unique_ptr<nextfloor::renderer::SceneWindow> GameFactory::MakeSceneWindow()
     return std::make_unique<GameWindow>();
 }
 
-std::unique_ptr<nextfloor::objects::CollisionEngine> GameFactory::MakeCollisionEngine() const noexcept
+nextfloor::objects::CollisionEngine* GameFactory::MakeCollisionEngine() const noexcept
 {
     using nextfloor::objects::CollisionEngine;
     using nextfloor::core::CommonServices;
@@ -220,20 +220,20 @@ std::unique_ptr<nextfloor::objects::CollisionEngine> GameFactory::MakeCollisionE
     using nextfloor::physics::SerialNearerCollisionEngine;
     using nextfloor::physics::ClNearerCollisionEngine;
 
-    std::unique_ptr<CollisionEngine> engine_collision{nullptr};
+    CollisionEngine* engine_collision{nullptr};
 
     /* Get parallell type from config */
     int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
 
     switch (type_parallell) {
         case NearerCollisionEngine::kPARALLELL_TBB:
-            engine_collision = std::make_unique<TbbNearerCollisionEngine>();
+            engine_collision = new TbbNearerCollisionEngine();
             break;
         case NearerCollisionEngine::kPARALLELL_CL:
-            engine_collision = std::make_unique<ClNearerCollisionEngine>();
+            engine_collision = new ClNearerCollisionEngine();
             break;
         default:
-            engine_collision = std::make_unique<SerialNearerCollisionEngine>();
+            engine_collision = new SerialNearerCollisionEngine();
             break;
     }
 

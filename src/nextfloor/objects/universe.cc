@@ -6,6 +6,8 @@
 
 #include "nextfloor/objects/universe.h"
 
+#include <tbb/tbb.h>
+
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -24,7 +26,7 @@ void Universe::Draw() noexcept
     assert(grid_ != nullptr);
     assert(border_ != nullptr);
 
-    int active_index = 0;
+    int active_index = 1;
     /* Lock current universe */
     lock();
 
@@ -45,6 +47,9 @@ void Universe::Draw() noexcept
 
     /* Universe is only ready after 10 hops */
     if (ready()) {
+        DetectCollision();
+        Move();
+
         /* Draw Rooms on Gl Scene */
         for (auto &r : display_rooms_) {
             r->Draw();

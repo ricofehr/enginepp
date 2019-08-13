@@ -12,6 +12,8 @@
 #include <math.h>
 #include <glm/glm.hpp>
 
+#include <iostream>
+
 #define GLM_ENABLE_EXPERIMENTAL
 
 namespace nextfloor {
@@ -32,27 +34,27 @@ public:
 
     virtual inline void MoveLocation() noexcept override
     {
-        location_ += move() * distance();
+        location_ += movement() * move_factor();
 
-        if (distance_ <= 0.0f) {
+        if (move_factor_ <= 0.0f) {
             InverseMove();
         }
 
-        distance_ = 1.0f;
+        move_factor_ = 1.0f;
     }
 
     virtual bool IsMoved() const override
     {
-        return move_[0] != 0.0f || move_[1] != 0.0f || move_[2] != 0.0f;
+        return movement_[0] != 0.0f || movement_[1] != 0.0f || movement_[2] != 0.0f;
     }
 
     inline int IsMovedX() const
     {
-        if (move_[0] == 0.0f) {
+        if (movement_[0] == 0.0f) {
             return 0;
         }
 
-        if (move_[0] < 0.0f) {
+        if (movement_[0] < 0.0f) {
             return -1;
         }
 
@@ -60,11 +62,11 @@ public:
     }
 
     inline int IsMovedY() const {
-        if (move_[1] == 0.0f) {
+        if (movement_[1] == 0.0f) {
             return 0;
         }
 
-        if (move_[1] < 0.0f) {
+        if (movement_[1] < 0.0f) {
             return -1;
         }
 
@@ -72,25 +74,26 @@ public:
     }
 
     inline int IsMovedZ() const {
-        if (move_[2] == 0.0f) {
+        if (movement_[2] == 0.0f) {
             return 0;
         }
 
-        if (move_[2] < 0.0f) {
+        if (movement_[2] < 0.0f) {
             return -1;
         }
 
         return 1;
     }
 
-    virtual float distance() const override { return fabs(distance_); }
-    virtual glm::vec3 move() const override;
+    virtual float move_factor() const override { return fabs(move_factor_); }
+    virtual glm::vec3 movement() const override;
     virtual glm::vec3 location() const override { return location_; }
     virtual glm::vec3 scale() const override { return scale_; }
 
-    virtual void set_distance(float distance) override { distance_ = distance; }
-    void set_move(glm::vec3 move) { move_ = move; }
-    virtual void InverseMove() override { move_ = -move_; }
+    virtual void set_move_factor(float move_factor) override { move_factor_ = move_factor; }
+    virtual void set_movement(glm::vec3 movement) override { movement_ = movement; }
+    virtual void InverseMove() override { movement_ = -movement_; }
+
 
 protected:
 
@@ -105,12 +108,12 @@ protected:
     /** MVP (Model View Projection) GL matrix for current 3d shape */
     glm::mat4 mvp_;
 
-    glm::vec3 location_;
-    glm::vec3 scale_;
-    glm::vec3 move_;
+    glm::vec3 location_{0.0f, 0.0f, 0.0f};
+    glm::vec3 scale_{0.0f, 0.0f, 0.0f};
+    glm::vec3 movement_{0.0f, 0.0f, 0.0f};
 
-    /** Distance with collision shape (-1 -> no collision detected) */
-    float distance_{-1.0f};
+    /** MOve factor with collision shape (1 -> no collision detected) */
+    float move_factor_{1.0f};
 
 private:
 

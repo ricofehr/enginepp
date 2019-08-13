@@ -70,7 +70,7 @@ public:
     virtual std::unique_ptr<nextfloor::renderer::Shader> MakeFragmentShader(std::string shader_path) const noexcept override;
     virtual std::unique_ptr<nextfloor::renderer::SceneWindow> MakeSceneWindow() const noexcept override;
 
-    virtual std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const noexcept override;
+    virtual nextfloor::objects::CollisionEngine* MakeCollisionEngine() const noexcept override;
 
     virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const noexcept override;
 

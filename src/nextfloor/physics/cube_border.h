@@ -49,11 +49,13 @@ public:
     virtual glm::vec3 location() const override final { return cube_->location(); }
     /* Coords are a 2.0f width cube, so dimension is 2 * scale */
     virtual glm::vec3 dimension() const override final { return 2.0f * cube_->scale(); }
-    virtual glm::vec3 move() const override final { return cube_->move(); }
-    virtual float distance() const override final { return cube_->distance(); }
+    virtual glm::vec3 movement() const override final { return cube_->movement(); }
+    virtual float move_factor() const override final { return cube_->move_factor(); }
+    virtual bool IsMoved() const noexcept override final { return cube_->IsMoved(); }
+    virtual float diagonal() const noexcept override final { return glm::length(dimension()); }
 
-    virtual void set_distance(float distance) override final { cube_->set_distance(distance); }
-    virtual void InverseMove() override final { cube_->InverseMove(); }
+    virtual void set_movement(glm::vec3 movement) const override final { return cube_->set_movement(movement); }
+    virtual void set_move_factor(float move_factor) const override final { return cube_->set_move_factor(move_factor); }
 
 private:
 
@@ -62,7 +64,6 @@ private:
     virtual float CalculateDepth() override;
     virtual glm::vec3 RetrieveFirstPointAfterPartedMove(float move_part) override;
 
-    bool IsMoved() const { return cube_->IsMoved(); }
     glm::vec3 scale() const { return cube_->scale(); }
 
     glm::mat4 CalculateModelMatrix() const;

@@ -16,9 +16,9 @@ namespace nextfloor {
 
 namespace polygons {
 
-glm::vec3 MeshPolygon::move() const {
+glm::vec3 MeshPolygon::movement() const {
     using nextfloor::renderer::SceneWindow;
-    return move_ * SceneWindow::getMoveFactor();
+    return movement_ * SceneWindow::getFpsFixMoveFactor();
 }
 
 void MeshPolygon::UpdateModelViewProjectionMatrix()

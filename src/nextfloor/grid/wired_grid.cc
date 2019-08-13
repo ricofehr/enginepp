@@ -149,6 +149,369 @@ bool WiredGrid::IsPositionFilled(glm::ivec3 coords) const noexcept
     return boxes_[coords.x][coords.y][coords.z]->IsFilled();
 }
 
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors = FindOccupants(coords);
+
+    auto front_neighbors = FindFrontPositionCollisionNeighbors(coords);
+    auto right_neighbors = FindRightPositionCollisionNeighbors(coords);
+    auto back_neighbors = FindBackPositionCollisionNeighbors(coords);
+    auto left_neighbors = FindLeftPositionCollisionNeighbors(coords);
+    auto bottom_neighbors = FindBottomPositionCollisionNeighbors(coords);
+    auto top_neighbors = FindTopPositionCollisionNeighbors(coords);
+
+    neighbors.insert(neighbors.end(), front_neighbors.begin(), front_neighbors.end());
+    neighbors.insert(neighbors.end(), right_neighbors.begin(), right_neighbors.end());
+    neighbors.insert(neighbors.end(), back_neighbors.begin(), back_neighbors.end());
+    neighbors.insert(neighbors.end(), left_neighbors.begin(), left_neighbors.end());
+    neighbors.insert(neighbors.end(), bottom_neighbors.begin(), bottom_neighbors.end());
+    neighbors.insert(neighbors.end(), top_neighbors.begin(), top_neighbors.end());
+
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+
+    auto center_neighbors = FindFrontCenterPositionCollisionNeighbors(coords);
+    auto right_neighbors = FindFrontRightPositionCollisionNeighbors(coords);
+    auto right_bottom_neighbors = FindFrontRightBottomPositionCollisionNeighbors(coords);
+    auto right_top_neighbors = FindFrontRightTopPositionCollisionNeighbors(coords);
+    auto left_neighbors = FindFrontLeftPositionCollisionNeighbors(coords);
+    auto left_bottom_neighbors = FindFrontLeftBottomPositionCollisionNeighbors(coords);
+    auto left_top_neighbors = FindFrontLeftTopPositionCollisionNeighbors(coords);
+
+    neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
+    neighbors.insert(neighbors.end(), right_neighbors.begin(), right_neighbors.end());
+    neighbors.insert(neighbors.end(), right_bottom_neighbors.begin(), right_bottom_neighbors.end());
+    neighbors.insert(neighbors.end(), right_top_neighbors.begin(), right_top_neighbors.end());
+    neighbors.insert(neighbors.end(), left_neighbors.begin(), left_neighbors.end());
+    neighbors.insert(neighbors.end(), left_bottom_neighbors.begin(), left_bottom_neighbors.end());
+    neighbors.insert(neighbors.end(), left_top_neighbors.begin(), left_top_neighbors.end());
+
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontRightPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y-1,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y+1,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontLeftPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y-1,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y+1,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y-1,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y+1,coords.z-1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+
+    auto center_neighbors = FindRightCenterPositionCollisionNeighbors(coords);
+    auto bottom_neighbors = FindRightBottomPositionCollisionNeighbors(coords);
+    auto top_neighbors = FindRightTopPositionCollisionNeighbors(coords);
+
+    neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
+    neighbors.insert(neighbors.end(), bottom_neighbors.begin(), bottom_neighbors.end());
+    neighbors.insert(neighbors.end(), top_neighbors.begin(), top_neighbors.end());
+
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y-1,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y+1,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+
+    auto center_neighbors = FindBackCenterPositionCollisionNeighbors(coords);
+    auto right_neighbors = FindBackRightPositionCollisionNeighbors(coords);
+    auto right_bottom_neighbors = FindBackRightBottomPositionCollisionNeighbors(coords);
+    auto right_top_neighbors = FindBackRightTopPositionCollisionNeighbors(coords);
+    auto left_neighbors = FindBackLeftPositionCollisionNeighbors(coords);
+    auto left_bottom_neighbors = FindBackLeftBottomPositionCollisionNeighbors(coords);
+    auto left_top_neighbors = FindBackLeftTopPositionCollisionNeighbors(coords);
+
+    neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
+    neighbors.insert(neighbors.end(), right_neighbors.begin(), right_neighbors.end());
+    neighbors.insert(neighbors.end(), right_bottom_neighbors.begin(), right_bottom_neighbors.end());
+    neighbors.insert(neighbors.end(), right_top_neighbors.begin(), right_top_neighbors.end());
+    neighbors.insert(neighbors.end(), left_neighbors.begin(), left_neighbors.end());
+    neighbors.insert(neighbors.end(), left_bottom_neighbors.begin(), left_bottom_neighbors.end());
+    neighbors.insert(neighbors.end(), left_top_neighbors.begin(), left_top_neighbors.end());
+
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackRightPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y-1,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x-1,coords.y+1,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackLeftPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y-1,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y+1,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y-1,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y+1,coords.z+1);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindLeftPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+
+    auto center_neighbors = FindLeftCenterPositionCollisionNeighbors(coords);
+    auto bottom_neighbors = FindLeftBottomPositionCollisionNeighbors(coords);
+    auto top_neighbors = FindLeftTopPositionCollisionNeighbors(coords);
+
+    neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
+    neighbors.insert(neighbors.end(), bottom_neighbors.begin(), bottom_neighbors.end());
+    neighbors.insert(neighbors.end(), top_neighbors.begin(), top_neighbors.end());
+
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindLeftCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y-1,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x+1,coords.y+1,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y-1,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> neighbors(0);
+    auto neighbors_coord = glm::ivec3(coords.x,coords.y+1,coords.z);
+    if (IsCooordsAreCorrect(neighbors_coord) && IsPositionFilled(neighbors_coord)) {
+        neighbors = FindOccupants(neighbors_coord);
+    }
+    return neighbors;
+}
+
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindOccupants(glm::ivec3 coords) const noexcept
+{
+    return boxes_[coords.x][coords.y][coords.z]->occupants();
+}
+
 std::vector<nextfloor::objects::GridBox*> WiredGrid::AddItemToGrid(nextfloor::objects::Mesh* object) noexcept
 {
     std::vector<glm::vec3> points = object->getCoordsModelMatrixComputed();
@@ -209,7 +572,7 @@ nextfloor::objects::GridBox* WiredGrid::AddItemToGrid(glm::ivec3 coords, nextflo
     return boxes_[coords.x][coords.y][coords.z].get();
 }
 
-bool WiredGrid::IsCooordsAreCorrect(glm::ivec3 coords)
+bool WiredGrid::IsCooordsAreCorrect(glm::ivec3 coords) const
 {
     if (coords.x < 0 || coords.x >= width_boxes_count()) {
         return false;

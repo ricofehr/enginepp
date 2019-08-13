@@ -29,13 +29,15 @@ public:
     virtual void ComputeNewLocation() = 0;
     virtual bool IsObstacleInCollisionAfterPartedMove(Border* obstacle, float move_part) = 0;
 
-    virtual void set_distance(float distance) = 0;
-    virtual void InverseMove() = 0;
-
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 dimension() const = 0;
-    virtual glm::vec3 move() const = 0;
-    virtual float distance() const = 0;
+    virtual glm::vec3 movement() const = 0;
+    virtual float move_factor() const = 0;
+    virtual bool IsMoved() const noexcept = 0;
+    virtual float diagonal() const noexcept = 0;
+
+    virtual void set_movement(glm::vec3 movement) const = 0;
+    virtual void set_move_factor(float move_factor) const = 0;
 
     virtual float CalculateWidth() = 0;
     virtual float CalculateHeight() = 0;

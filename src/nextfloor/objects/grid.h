@@ -36,6 +36,7 @@ public:
     virtual bool IsTopPositionFilled(glm::ivec3 coords) const noexcept = 0;
     virtual bool IsPositionFilled(glm::ivec3 coords) const noexcept = 0;
 
+    virtual std::vector<nextfloor::objects::Mesh*> FindCollisionNeighbors(glm::vec3 coord) const noexcept = 0;
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept = 0;
     virtual void ComputePlacementsInGrid() noexcept = 0;
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const = 0;

@@ -169,7 +169,7 @@ bool CubeBorder::IsObstacleInSameDepthAfterPartedMove(nextfloor::objects::Border
 
 glm::vec3 CubeBorder::RetrieveFirstPointAfterPartedMove(float move_part)
 {
-    return getFirstPoint() + move_part * glm::vec3(move().x, move().y, move().z);
+    return getFirstPoint() + move_part * glm::vec3(movement().x, movement().y, movement().z);
 }
 
 glm::mat4 CubeBorder::CalculateModelMatrix() const
@@ -180,7 +180,7 @@ glm::mat4 CubeBorder::CalculateModelMatrix() const
 void CubeBorder::ComputeNewLocation()
 {
     if (!IsMoved()) {
-        set_distance(1.0f);
+        set_move_factor(1.0f);
         return;
     }
 

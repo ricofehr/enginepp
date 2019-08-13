@@ -71,7 +71,7 @@ public:
     virtual std::unique_ptr<nextfloor::renderer::Shader> MakeFragmentShader(std::string shader_path) const noexcept = 0;
     virtual std::unique_ptr<nextfloor::renderer::SceneWindow> MakeSceneWindow() const noexcept = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const noexcept = 0;
+    virtual nextfloor::objects::CollisionEngine* MakeCollisionEngine() const noexcept = 0;
 
     virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const noexcept = 0;
 

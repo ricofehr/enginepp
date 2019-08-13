@@ -41,7 +41,7 @@ private:
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
     std::unique_ptr<nextfloor::renderer::SceneWindow> game_window_{nullptr};
-    std::unique_ptr<nextfloor::objects::CollisionEngine> engine_collision_{nullptr};
+    //std::unique_ptr<nextfloor::objects::CollisionEngine> engine_collision_{nullptr};
 };
 
 } // namespace renderer
