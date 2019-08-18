@@ -31,13 +31,8 @@ public:
     static constexpr int kDEBUG_ALL = 4;
 
     Log(Log&&) = default;
-
     Log& operator=(Log&&) = default;
-
-    /* Copy constructor Deleted : Ensure a sole Instance */
     Log(const Log&) = delete;
-
-    /* Copy assignement Deleted: Ensure a sole Instance */
     Log& operator=(const Log&) = delete;
 
     virtual ~Log() = default;
@@ -51,7 +46,6 @@ public:
 protected:
 
     Log() = default;
-
 };
 
 } // namespace core

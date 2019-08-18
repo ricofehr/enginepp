@@ -12,6 +12,7 @@
 //#define GLM_SWIZZLE
 #include <glm/glm.hpp>
 #include <vector>
+#include <memory>
 
 #include "nextfloor/polygons/cube.h"
 
@@ -57,6 +58,9 @@ public:
     virtual void set_movement(glm::vec3 movement) const override final { return cube_->set_movement(movement); }
     virtual void set_move_factor(float move_factor) const override final { return cube_->set_move_factor(move_factor); }
 
+    virtual glm::vec3 getFirstPoint() override;
+    virtual glm::vec3 getLastPoint() override;
+
 private:
 
     virtual float CalculateWidth() override;
@@ -70,7 +74,6 @@ private:
     void MoveLocation() { cube_->MoveLocation(); }
     void ComputesModelMatrixCoords();
 
-    glm::vec3 getFirstPoint();
     bool IsObstacleInSameWidthAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part);
     bool IsObstacleInSameHeightAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part);
     bool IsObstacleInSameDepthAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part);

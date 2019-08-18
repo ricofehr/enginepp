@@ -23,12 +23,7 @@ Universe::Universe()
 
 void Universe::Draw() noexcept
 {
-    assert(grid_ != nullptr);
-    assert(border_ != nullptr);
-
-    int active_index = 1;
-    /* Lock current universe */
-    lock();
+    int active_index = 0;
 
     /* Select displayed rooms: 2 clipping levels or all rooms (clipping is 0) */
     display_rooms_.clear();
@@ -41,9 +36,6 @@ void Universe::Draw() noexcept
 
     /* Ensure active room is in first position */
     display_rooms_.insert(display_rooms_.begin(), objects_[active_index].get());
-
-    /* Unlock mutex */
-    unlock();
 
     /* Universe is only ready after 10 hops */
     if (ready()) {

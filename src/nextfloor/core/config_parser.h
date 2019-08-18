@@ -43,12 +43,8 @@ public:
     virtual int getDebugLevel() const = 0;
     virtual int getCollisionGranularity() const = 0;
     virtual int getClippingLevel() const = 0;
-    virtual float getObjectsLoadFrequency() const = 0;
-    virtual int getRoomsCount() const = 0;
-    virtual int getObjectsCount() const = 0;
     virtual int getThreadsCount() const = 0;
     virtual int getParallellAlgoType() const = 0;
-    virtual int getUniverseFactoryType() const = 0;
     virtual bool IsCollisionDebugEnabled() const = 0;
     virtual bool IsTestDebugEnabled() const = 0;
     virtual bool IsAllDebugEnabled() const = 0;

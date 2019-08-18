@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "nextfloor/core/common_services.h"
+#include "nextfloor/physics/nearer_collision_engine.h"
 
 namespace nextfloor {
 
@@ -82,31 +83,27 @@ void FileConfigParser::InitDefaultValues()
     SetDefaultParallellThreadCountValueIfEmpty();
     SetDefaultWidthValueIfEmpty();
     SetDefaultHeightValueIfEmpty();
-    SetDefaultObjectCountValueIfEmpty();
-    SetDefaultLoadObjectsFreqValueIfEmpty();
-    SetDefaultRoomCountValueIfEmpty();
     SetDefaultCollisionGranularityValueIfEmpty();
     SetDefaultClippingValueIfEmpty();
     SetDefaultVsyncValueIfEmpty();
     SetDefaultGridModeValueIfEmpty();
     SetDefaultDebugVerbosityValueIfEmpty();
     SetDefaultExecutionTimeValueIfEmpty();
-    SetDefaultUniverseFactoryValueIfEmpty();
 }
 
 void FileConfigParser::SetDefaultParallellValueIfEmpty()
 {
-    // using nextfloor::physics::CollisionEngine;
+    using nextfloor::physics::NearerCollisionEngine;
 
-    // if (!IsExist("parallell")) {
-    //     setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_SERIAL);
-    // }
+    if (!IsExist("parallell")) {
+        setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_SERIAL);
+    }
 }
 
 void FileConfigParser::SetDefaultParallellThreadCountValueIfEmpty()
 {
     if (!IsExist("workers_count")) {
-        setSetting("workers_count", libconfig::Setting::TypeInt, 0);
+        setSetting("workers_count", libconfig::Setting::TypeInt, tbb::task_scheduler_init::default_num_threads());
     }
 }
 
@@ -121,28 +118,6 @@ void FileConfigParser::SetDefaultHeightValueIfEmpty()
 {
     if (!IsExist("height")) {
         setSetting("height", libconfig::Setting::TypeFloat, 600.0f);
-    }
-}
-
-void FileConfigParser::SetDefaultObjectCountValueIfEmpty()
-{
-    if (!IsExist("objects_count")) {
-        setSetting("objects_count", libconfig::Setting::TypeInt, 16);
-    }
-}
-
-void FileConfigParser::SetDefaultLoadObjectsFreqValueIfEmpty()
-{
-    if (!IsExist("load_objects_freq")) {
-        // 0 => loads all objects at start
-        setSetting("load_objects_freq", libconfig::Setting::TypeFloat, 0.0f);
-    }
-}
-
-void FileConfigParser::SetDefaultRoomCountValueIfEmpty()
-{
-    if (!IsExist("rooms_count")) {
-        setSetting("rooms_count", libconfig::Setting::TypeInt, 4);
     }
 }
 
@@ -188,39 +163,20 @@ void FileConfigParser::SetDefaultExecutionTimeValueIfEmpty()
     }
 }
 
-void FileConfigParser::SetDefaultUniverseFactoryValueIfEmpty()
-{
-    // using nextfloor::factory::UniverseFactory;
-
-    // if (!IsExist("factory_type")) {
-    //     setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_DEMO);
-    // }
-}
-
-
 void FileConfigParser::Display() const
 {
-    auto count_workers = GetWorkersCount();
+    auto count_workers = getThreadsCount();
 
     std::cout << "Parallell mode (1 -> serial, 2 -> tbb, 3 -> opencl): " << getSetting<int>("parallell") << std::endl;
     std::cout << "Window width: " << getSetting<float>("width") << std::endl;
     std::cout << "Window height: " << getSetting<float>("height") << std::endl;
-    std::cout << "Objects count: " << getSetting<int>("objects_count") << std::endl;
-    std::cout << "Load objects frequency in time: " << getSetting<float>("load_objects_freq") << std::endl;
-    std::cout << "Rooms count: " << getSetting<int>("rooms_count") << std::endl;
     std::cout << "NearerCollisionEngine granularity: " << getSetting<int>("granularity") << std::endl;
     std::cout << "Clipping (0 -> no clipping, 1 -> high clipping, 2 -> low clipping): " << getSetting<int>("clipping") << std::endl;
     std::cout << "Workers count: " << count_workers << std::endl;
     std::cout << "Execution Time (0 -> no limit): " << getSetting<int>("execution_time") << std::endl;
     std::cout << "Vsync (limit framerate to monitor): " << getSetting<bool>("vsync") << std::endl;
     std::cout << "WiredGrid mode (not fill polygons): " << getSetting<bool>("grid") << std::endl;
-    std::cout << "Program mode : " << getSetting<int>("factory_type") << std::endl;
     std::cout << "Debug mode (0 -> no debug, 1 -> test debug, 2 -> performance debug, 3 -> collision debug, 4 -> all debug): " << getSetting<int>("debug") << std::endl;
-}
-
-int FileConfigParser::GetWorkersCount() const
-{
-    return getSetting<int>("workers_count") ? getSetting<int>("workers_count") : tbb::task_scheduler_init::default_num_threads();
 }
 
 void FileConfigParser::ManageProgramParameters(int argc, char* argv[])
@@ -251,13 +207,9 @@ void FileConfigParser::ManageProgramParameters(int argc, char* argv[])
         ManageDebugParameter(parameter_name, parameter_value);
         ManageExecutionTimeParameter(parameter_name, parameter_value);
         ManageGranularityParameter(parameter_name, parameter_value);
-        ManageObjectCountParameter(parameter_name, parameter_value);
         ManagePrallellAlgoTypeParameter(parameter_name, parameter_value);
-        ManageRoomCountParameter(parameter_name, parameter_value);
-        ManageLoadObjectFrequencyParameter(parameter_name, parameter_value);
         ManageVsyncParameter(parameter_name, parameter_value);
         ManageWorkerCountParameter(parameter_name, parameter_value);
-        ManageUniverseFactoryTypeParameter(parameter_name, parameter_value);
     }
 
     EnsureCoherentWorkerSetting();
@@ -289,18 +241,14 @@ void FileConfigParser::DisplayHelp(const std::string& command_name) const
     std::cout << command_name << " can be used with following options who overrides config file" << std::endl;
     std::cout << "-c n   Clipping, 0: no clipping, 1: high clipping, 2: low clipping" << std::endl;
     std::cout << "-d n   Debug mode, 0: no debug, 1: test debug, 2: performance debug, 3: collision debug, 4: all debug" << std::endl;
-    std::cout << "-f demo|random program mode" << std::endl;
     std::cout << "-e n   Execution Time, 0: no limit" << std::endl;
     std::cout << "-g n   Granularity on collision computes" << std::endl;
     std::cout << "-h     Display help" << std::endl;
     std::cout << "-l 1|0 Enable/Disable display config" << std::endl;
-    std::cout << "-o n   Count of objects in rooms" << std::endl;
     std::cout << "-p serial|tbb|opencl" << std::endl
     << "       serial: no parallellism" << std::endl
     << "       tbb: uses intel tbb library" << std::endl
     << "       opencl: uses opencl for collision computes" << std::endl;
-    std::cout << "-r n   Count of rooms" << std::endl;
-    std::cout << "-s n.m Load objects frequency, 0: generates all objects at start" << std::endl;
     std::cout << "-v 1|0 Enable/Disable vsync" << std::endl;
     std::cout << "-w n   Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores" << std::endl;
 }
@@ -337,47 +285,23 @@ void FileConfigParser::ManageGranularityParameter(const std::string& parameter_n
     }
 }
 
-void FileConfigParser::ManageObjectCountParameter(const std::string& parameter_name,
-                                            const std::string& parameter_value)
-{
-    if (parameter_name == "-o") {
-        setSetting("objects_count", libconfig::Setting::TypeInt, std::stoi(parameter_value));
-    }
-}
-
 void FileConfigParser::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
                                                  const std::string& parameter_value)
 {
-    // using nextfloor::physics::CollisionEngine;
+    using nextfloor::physics::NearerCollisionEngine;
 
-    // if (parameter_name == "-p") {
-    //     if (parameter_value == "serial") {
-    //         setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_SERIAL);
-    //     }
+    if (parameter_name == "-p") {
+        if (parameter_value == "serial") {
+            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_SERIAL);
+        }
 
-    //     if (parameter_value == "tbb") {
-    //         setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_TBB);
-    //     }
+        if (parameter_value == "tbb") {
+            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_TBB);
+        }
 
-    //     if (parameter_value == "opencl") {
-    //         setSetting("parallell", libconfig::Setting::TypeInt, CollisionEngine::kPARALLELL_CL);
-    //     }
-    // }
-}
-
-void FileConfigParser::ManageRoomCountParameter(const std::string& parameter_name,
-                                          const std::string& parameter_value)
-{
-    if (parameter_name == "-r") {
-        setSetting("rooms_count", libconfig::Setting::TypeInt, std::stoi(parameter_value));
-    }
-}
-
-void FileConfigParser::ManageLoadObjectFrequencyParameter(const std::string& parameter_name,
-                                                    const std::string& parameter_value)
-{
-    if (parameter_name == "-s") {
-        setSetting("load_objects_freq", libconfig::Setting::TypeFloat, std::stof(parameter_value));
+        if (parameter_value == "opencl") {
+            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_CL);
+        }
     }
 }
 
@@ -399,34 +323,18 @@ void FileConfigParser::ManageWorkerCountParameter(const std::string& parameter_n
 
 void FileConfigParser::EnsureCoherentWorkerSetting()
 {
- //   using nextfloor::physics::CollisionEngine;
+   using nextfloor::physics::NearerCollisionEngine;
 
     /* Disable tbb usage when serial parallel algorithm is setted */
-   // if (getSetting<int>("parallell") == CollisionEngine::kPARALLELL_SERIAL) {
+    if (getSetting<int>("parallell") == NearerCollisionEngine::kPARALLELL_SERIAL) {
         setSetting("workers_count", libconfig::Setting::TypeInt, 1);
-    //}
+    }
 
     /* Manage Threads Parallelism */
     if (getThreadsCount()) {
         tbb_threads_config_ = std::make_unique<tbb::task_scheduler_init>(getThreadsCount());
     }
 
-}
-
-void FileConfigParser::ManageUniverseFactoryTypeParameter(const std::string& parameter_name,
-                                                    const std::string& parameter_value)
-{
-    // using nextfloor::factory::UniverseFactory;
-
-    // if (parameter_name == "-f") {
-    //     if (parameter_value == "demo") {
-    //         setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_DEMO);
-    //     }
-
-    //     if (parameter_value == "random") {
-    //         setSetting("factory_type", libconfig::Setting::TypeInt, UniverseFactory::kUNIVERSEFACTORY_RANDOM);
-    //     }
-    // }
 }
 
 bool FileConfigParser::IsCollisionDebugEnabled() const

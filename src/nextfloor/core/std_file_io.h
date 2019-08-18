@@ -38,7 +38,6 @@ public:
 private:
 
     void HandleErrorOnReadFile(std::string file_path) const;
-
 };
 
 } // namespace core

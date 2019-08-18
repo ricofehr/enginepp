@@ -135,33 +135,37 @@ void GlCubeRendererEngine::Draw(const glm::mat4& mvp) noexcept
         return;
     }
 
-    glEnable(GL_CULL_FACE);
-    glUniformMatrix4fv(SceneWindow::getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
+    {
+        tbb::mutex::scoped_lock lock(mutex_);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
+        glEnable(GL_CULL_FACE);
+        glUniformMatrix4fv(SceneWindow::getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
 
-    /* 1st attribute buffer : vertices position */
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-                          8 * sizeof(GLfloat), (void*)0);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
-    /* 2nd attribute buffer : colors */
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-                          8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+        /* 1st attribute buffer : vertices position */
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(GLfloat), (void*)0);
 
-    /* 3th attribute buffer : texture position */
-    glEnableVertexAttribArray(2);
-    glActiveTexture(GL_TEXTURE0 + texturebuffer_);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
-                          8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+        /* 2nd attribute buffer : colors */
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
-    glUniform1i(glGetUniformLocation(SceneWindow::getProgramId(), "tex"), texturebuffer_);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
+        /* 3th attribute buffer : texture position */
+        glEnableVertexAttribArray(2);
+        glActiveTexture(GL_TEXTURE0 + texturebuffer_);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+
+        glUniform1i(glGetUniformLocation(SceneWindow::getProgramId(), "tex"), texturebuffer_);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+    }
 }
 
 

@@ -24,13 +24,8 @@ public:
     PseudoRandomGenerator();
 
     PseudoRandomGenerator(PseudoRandomGenerator&&) = default;
-
     PseudoRandomGenerator& operator=(PseudoRandomGenerator&&) = default;
-
-    /* Copy constructor Deleted : Ensure a sole Instance */
     PseudoRandomGenerator(const PseudoRandomGenerator&) = delete;
-
-    /* Copy assignement Deleted: Ensure a sole Instance */
     PseudoRandomGenerator& operator=(const PseudoRandomGenerator&) = delete;
 
     virtual ~PseudoRandomGenerator() override final;

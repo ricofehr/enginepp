@@ -27,13 +27,8 @@ public:
     FrameTimer();
 
     FrameTimer(FrameTimer&&) = default;
-
     FrameTimer& operator=(FrameTimer&&) = default;
-
-    /* Copy constructor Deleted: Ensure a sole Instance */
     FrameTimer(const FrameTimer&) = delete;
-
-    /* Copy assignment Deleted: Ensure a sole Instance */
     FrameTimer& operator=(const FrameTimer&) = delete;
 
     virtual ~FrameTimer() override final;
@@ -61,15 +56,11 @@ public:
 private:
 
     virtual void ComputeTimers() noexcept override final;
-
     void ComputeFps() noexcept;
-
     void CheckEndProgram() noexcept;
 
     static double deltatime_since_lastloop_;
-
     static double totaltime_since_beginning_;
-
     static int current_fps_;
 
     /** True if current Loop is into a new elapsed second */

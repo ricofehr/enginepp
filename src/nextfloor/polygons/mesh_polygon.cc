@@ -8,11 +8,18 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
+#include <tbb/mutex.h>
 
 #include "nextfloor/renderer/scene_window.h"
 #include "nextfloor/objects/head_camera.h"
 
 namespace nextfloor {
+
+namespace objects {
+
+bool Polygon::is_viewprojection_setted_ = false;
+
+}
 
 namespace polygons {
 
@@ -23,12 +30,17 @@ glm::vec3 MeshPolygon::movement() const {
 
 void MeshPolygon::UpdateModelViewProjectionMatrix()
 {
-    glm::mat4 projection_matrix = GetProjectionMatrix();
-    glm::mat4 view_matrix = GetViewMatrix();
-    glm::mat4 model_matrix = GetModelMatrix();
+    static glm::mat4 view_projection_matrix;
+    static tbb::mutex mutex;
 
-    /* Our ModelViewProjection : multiplication of our 3 matrices */
-    mvp_ = projection_matrix * view_matrix * model_matrix * glm::scale(scale_);
+    mutex.lock();
+    if (!is_viewprojection_setted_) {
+        view_projection_matrix = GetProjectionMatrix() * GetViewMatrix();
+        is_viewprojection_setted_ = true;
+    }
+    mutex.unlock();
+
+    mvp_ =  view_projection_matrix * GetModelMatrix() * glm::scale(scale_);
 }
 
 glm::mat4 MeshPolygon::GetProjectionMatrix()

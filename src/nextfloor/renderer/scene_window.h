@@ -41,7 +41,7 @@ public:
     static GLuint getProgramId() { return program_id_; }
     static float getWidth() { return window_width_; }
     static float getHeight() { return window_height_; }
-    static float getFpsFixMoveFactor() { return move_factor_; }
+    static float getFpsFixMoveFactor() { return 1.0f; } //move_factor_; }
 
 protected:
 

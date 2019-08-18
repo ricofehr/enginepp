@@ -9,6 +9,8 @@
 
 #include "nextfloor/renderer/gl_renderer_engine.h"
 
+#include <tbb/mutex.h>
+
 namespace nextfloor {
 
 namespace renderer {
@@ -29,6 +31,8 @@ public:
     virtual void Draw(const glm::mat4& mvp) noexcept override final;
 
 private:
+
+    tbb::mutex mutex_;
 
     void CreateVertexBuffer() noexcept;
     void CreateElementBuffer() noexcept;

@@ -39,11 +39,13 @@ public:
     virtual bool IsInside(Mesh* mesh) noexcept = 0;
     virtual Mesh* add_child(std::unique_ptr<Mesh> child) noexcept = 0;
     virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept = 0;
+    virtual Mesh* TransfertChildToNeighbor(Mesh* child) noexcept = 0;
     virtual void UpdateItemToGrid(Mesh* object) noexcept = 0;
     virtual void AddItemToGrid(Mesh* object) noexcept = 0;
     virtual void RemoveItemToGrid(Mesh* object) noexcept = 0;
     virtual std::vector<Mesh*> childs() noexcept = 0;
     virtual bool hasNoChilds() const = 0;
+    virtual std::vector<Mesh*> AllStubMeshs() noexcept = 0;
     virtual std::vector<Mesh*> descendants() const noexcept = 0;
     virtual std::vector<glm::ivec3> coords() = 0;
 

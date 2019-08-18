@@ -16,53 +16,6 @@ namespace nextfloor {
 
 namespace grid {
 
-namespace {
-
-glm::vec3 GetMinPointFromPoints(std::vector<glm::vec3> points)
-{
-    glm::vec3 point_min{100000.0f, 100000.0f, 100000.0f};
-
-    for (auto &point : points) {
-        if (point.x < point_min.x) {
-            point_min.x = point.x;
-        }
-
-        if (point.y < point_min.y) {
-            point_min.y = point.y;
-        }
-
-        if (point.z < point_min.z) {
-            point_min.z = point.z;
-        }
-    }
-
-    return point_min;
-}
-
-glm::vec3 GetMaxPointFromPoints(std::vector<glm::vec3> points)
-{
-    glm::vec3 point_max{-100000.0f, -100000.0f, -100000.0f};
-
-    for (auto &point : points) {
-        if (point.x > point_max.x) {
-            point_max.x = point.x;
-        }
-
-        if (point.y > point_max.y) {
-            point_max.y = point.y;
-        }
-
-        if (point.z > point_max.z) {
-            point_max.z = point.z;
-        }
-    }
-
-    return point_max;
-}
-
-}
-
-
 WiredGrid::WiredGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
 {
     owner_ = owner;
@@ -514,43 +467,47 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindOccupants(glm::ivec3 coord
 
 std::vector<nextfloor::objects::GridBox*> WiredGrid::AddItemToGrid(nextfloor::objects::Mesh* object) noexcept
 {
-    std::vector<glm::vec3> points = object->getCoordsModelMatrixComputed();
-
-    auto point_min = GetMinPointFromPoints(points);
-    auto point_max = GetMaxPointFromPoints(points);
-    auto lengths = CalculateCoordsLengthBetweenPoints(point_min, point_max);
-
-    return ParseGridForObjectPlacements(object, point_min, lengths);
+    return ParseGridForObjectPlacements(object);
 }
 
-glm::ivec3 WiredGrid::CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, glm::vec3 point_max)
-{
-    int length_x = static_cast<int>(ceil((point_max.x - point_min.x) / box_dimension_.x));
-    int length_y = static_cast<int>(ceil((point_max.y - point_min.y) / box_dimension_.y));
-    int length_z = static_cast<int>(ceil((point_max.z - point_min.z) / box_dimension_.z));
-
-    return glm::ivec3(length_x, length_y, length_z);
-}
-
-std::vector<nextfloor::objects::GridBox*> WiredGrid::ParseGridForObjectPlacements(nextfloor::objects::Mesh *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept
+std::vector<nextfloor::objects::GridBox*> WiredGrid::ParseGridForObjectPlacements(nextfloor::objects::Mesh *object) noexcept
 {
     std::vector<nextfloor::objects::GridBox*> coords_list;
 
-    tbb::parallel_for (0, lengths.x, 1, [&](int cnt_x) {
-        tbb::parallel_for (0, lengths.y, 1, [&](int cnt_y) {
-            tbb::parallel_for (0, lengths.z, 1, [&](int cnt_z) {
-                auto cnt = glm::vec3(cnt_x, cnt_y, cnt_z);
-                auto intermediary_point = point_min + cnt * box_dimension_;
-                auto coords = PointToCoords(intermediary_point);
+    auto border = object->border();
 
-                if (IsCooordsAreCorrect(coords)) {
-                    coords_list.push_back(AddItemToGrid(coords, object));
-                }
-            });
-        });
-    });
+    auto point_min = border->getFirstPoint();
+    auto point_max = border->getLastPoint();
+    float factor = min_box_side_dimension() / border->diagonal();
+    auto old_coords = glm::ivec3(-1,-1,-1);
+    auto intermediary_point = point_min;
+
+    while (glm::distance(point_min, intermediary_point) < border->diagonal()) {
+        auto coords = PointToCoords(intermediary_point);
+        if (coords != old_coords && IsCooordsAreCorrect(coords)) {
+            coords_list.push_back(AddItemToGrid(coords, object));
+        }
+
+        intermediary_point += factor * (point_max - point_min);
+        old_coords = coords;
+    }
 
     return coords_list;
+}
+
+float WiredGrid::min_box_side_dimension() const noexcept
+{
+    float min_dimension = box_width();
+
+    if (box_height() < min_dimension) {
+        min_dimension = box_height();
+    }
+
+    if (box_depth() < min_dimension) {
+        min_dimension = box_depth();
+    }
+
+    return min_dimension;
 }
 
 glm::ivec3 WiredGrid::PointToCoords(glm::vec3 point) noexcept
@@ -621,11 +578,6 @@ void WiredGrid::DisplayGrid() const noexcept
         }
         std::cout << std::endl << std::endl;
     }
-}
-
-void WiredGrid::ComputePlacementsInGrid() noexcept
-{
-    std::cout << "ComputePlacements" << std::endl;
 }
 
 glm::vec3 WiredGrid::CalculateFrontSideLocation() const noexcept

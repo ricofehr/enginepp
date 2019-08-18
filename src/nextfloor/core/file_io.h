@@ -9,16 +9,8 @@
 
 #include <iostream>
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace nextfloor::core
- *  @brief Core system
- */
 namespace core {
 
 /**
@@ -30,13 +22,8 @@ class FileIO {
 public:
 
     FileIO(FileIO&&) = default;
-
     FileIO& operator=(FileIO&&) = default;
-
-    /*  Copy constructor Deleted : Ensure a sole Instance */
     FileIO(const FileIO&) = delete;
-
-    /*  Copy assignement Deleted: Ensure a sole Instance */
     FileIO& operator=(const FileIO&) = delete;
 
     virtual ~FileIO() = default;

@@ -44,6 +44,9 @@ public:
     virtual float CalculateDepth() = 0;
     virtual glm::vec3 RetrieveFirstPointAfterPartedMove(float move_part) = 0;
 
+    virtual glm::vec3 getFirstPoint() = 0;
+    virtual glm::vec3 getLastPoint() = 0;
+
 protected:
 
     Border() = default;

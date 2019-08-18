@@ -43,7 +43,13 @@ public:
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 scale() const = 0;
 
+    static void NewFrame() {
+        is_viewprojection_setted_ = false;
+    }
+
 protected:
+
+    static bool is_viewprojection_setted_;
 
     Polygon() = default;
 

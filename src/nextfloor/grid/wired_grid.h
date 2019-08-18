@@ -43,7 +43,6 @@ public:
     virtual std::vector<nextfloor::objects::Mesh*> FindCollisionNeighbors(glm::vec3 coord) const noexcept override;
 
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept override final;
-    virtual void ComputePlacementsInGrid() noexcept override;
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept override;
 
     virtual std::vector<nextfloor::objects::GridBox*> AddItemToGrid(nextfloor::objects::Mesh* object) noexcept override;
@@ -137,7 +136,7 @@ private:
     std::vector<nextfloor::objects::Mesh*> FindOccupants(glm::ivec3 coords) const noexcept;
     nextfloor::objects::GridBox* AddItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept;
     void RemoveItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept;
-    std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh *object, glm::vec3 point_min, glm::ivec3 lengths) noexcept;
+    std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh *object) noexcept;
 
     glm::ivec3 PointToCoords(glm::vec3 point) noexcept;
     glm::ivec3 CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, glm::vec3 point_max);
@@ -157,6 +156,8 @@ private:
     {
         return depth_boxes_count() * box_depth();
     }
+
+    float min_box_side_dimension() const noexcept;
 
     std::vector<nextfloor::objects::Mesh*> FindFrontPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
     std::vector<nextfloor::objects::Mesh*> FindFrontCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept;

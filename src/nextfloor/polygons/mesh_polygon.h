@@ -48,43 +48,6 @@ public:
         return movement_[0] != 0.0f || movement_[1] != 0.0f || movement_[2] != 0.0f;
     }
 
-    inline int IsMovedX() const
-    {
-        if (movement_[0] == 0.0f) {
-            return 0;
-        }
-
-        if (movement_[0] < 0.0f) {
-            return -1;
-        }
-
-        return 1;
-    }
-
-    inline int IsMovedY() const {
-        if (movement_[1] == 0.0f) {
-            return 0;
-        }
-
-        if (movement_[1] < 0.0f) {
-            return -1;
-        }
-
-        return 1;
-    }
-
-    inline int IsMovedZ() const {
-        if (movement_[2] == 0.0f) {
-            return 0;
-        }
-
-        if (movement_[2] < 0.0f) {
-            return -1;
-        }
-
-        return 1;
-    }
-
     virtual float move_factor() const override { return fabs(move_factor_); }
     virtual glm::vec3 movement() const override;
     virtual glm::vec3 location() const override { return location_; }
@@ -93,7 +56,6 @@ public:
     virtual void set_move_factor(float move_factor) override { move_factor_ = move_factor; }
     virtual void set_movement(glm::vec3 movement) override { movement_ = movement; }
     virtual void InverseMove() override { movement_ = -movement_; }
-
 
 protected:
 

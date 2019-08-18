@@ -44,17 +44,14 @@ void ModelMesh::Draw() noexcept
     PrepareDraw();
 
     /* Draw meshes of current object */
-    for (auto &mesh : polygons_) {
-        mesh->UpdateModelViewProjectionMatrix();
-        mesh->Draw(renderer_);
+    for (auto &polygon : polygons_) {
+        polygon->Draw(renderer_);
     }
 
-    /* Draw childs objects */
     for (auto &object : objects_) {
         object->Draw();
     }
 }
-
 
 void ModelMesh::DetectCollision() noexcept
 {
@@ -80,10 +77,6 @@ void ModelMesh::PivotCollision() noexcept
         assert (*this != *(dynamic_cast<ModelMesh*>(test_objects[i])));
         collision_engine->DetectCollision(this, test_objects[i]);
     });
-
-    // if (IsCamera() && obstacle() != nullptr) {
-    //     obstacle()->flag_collision_with_camera();
-    // }
 }
 
 std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexcept
@@ -103,13 +96,28 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexc
         auto vector_neighbor = neighbor->location() - location();
         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
             glm::dot(target->movement(), vector_neighbor) > 0) {
-            collision_neighbors.push_back(neighbor);
+            auto neighbor_meshes = neighbor->AllStubMeshs();
+            collision_neighbors.insert(collision_neighbors.end(), neighbor_meshes.begin(), neighbor_meshes.end());
         }
     }
 
-    //std::cerr << descendants().size() << "::" << all_neighbors.size() << "::" << collision_neighbors.size() << std::endl;
-
     return collision_neighbors;
+}
+
+std::vector<Mesh*> ModelMesh::AllStubMeshs() noexcept
+{
+    std::vector<Mesh*> meshes(0);
+
+    if (objects_.size() == 0) {
+        meshes.push_back(this);
+    } else {
+        for (auto &object : objects_) {
+            auto object_meshs = object->AllStubMeshs();
+            meshes.insert(meshes.end(), object_meshs.begin(), object_meshs.end());
+        }
+    }
+
+    return meshes;
 }
 
 std::vector<glm::ivec3> ModelMesh::coords() {
@@ -123,25 +131,71 @@ std::vector<glm::ivec3> ModelMesh::coords() {
 
 void ModelMesh::Move() noexcept
 {
-    border_->ComputeNewLocation();
+    if (IsMoved()) {
+        border_->ComputeNewLocation();
 
-    tbb::parallel_for (0, static_cast<int>(polygons_.size()), 1, [&](int cnt) {
-        polygons_[cnt]->MoveLocation();
-        polygons_[cnt]->UpdateModelViewProjectionMatrix();
+        tbb::parallel_for (0, static_cast<int>(polygons_.size()), 1, [&](int cnt) {
+            polygons_[cnt]->MoveLocation();
+        });
+    }
+
+    tbb::parallel_for (0, static_cast<int>(polygons_.size()), 1, [&](int i) {
+        polygons_[i]->UpdateModelViewProjectionMatrix();
     });
+
 
     /*
      *  Compute GL coords for childs
-     *  ComputePlacements (called by Move) can move child to another parent
-     *  So, must have a sequential loop
+     *  TransfertChild (called by Move) can move child to another parent
+     *  So, need to have a sequential loop
      */
-    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
+    for (auto cnt = 0; cnt < objects_.size();) {
+        auto nb_objs = objects_.size();
+
         objects_[cnt]->Move();
+
+        if (nb_objs == objects_.size()) {
+            cnt++;
+        }
     }
 
     if (IsMoved()) {
-        parent_->UpdateItemToGrid(this);
+        if (parent_->IsInside(this)) {
+            parent_->UpdateItemToGrid(this);
+        } else {
+            parent_ = parent_->TransfertChildToNeighbor(this);
+        }
     }
+}
+
+Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child) noexcept
+{
+    assert(parent_ != nullptr);
+    assert(child != nullptr);
+
+    return parent_->AddIntoChild(TransfertChild(child));
+}
+
+std::unique_ptr<Mesh> ModelMesh::TransfertChild(Mesh* child) noexcept
+{
+    std::unique_ptr<Mesh> ret{nullptr};
+
+    RemoveItemToGrid(child);
+    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
+        if (objects_[cnt].get() == child) {
+            lock();
+            auto initial_count_childs = objects_.size();
+            ret = std::move(objects_[cnt]);
+            objects_.erase(objects_.begin() + cnt);
+            /* Ensure child is erased from current objects_ array */
+            assert(initial_count_childs == objects_.size() + 1);
+            unlock();
+
+            return ret;
+        }
+    }
+
+    return ret;
 }
 
 void ModelMesh::UpdateItemToGrid(Mesh* item) noexcept
@@ -152,9 +206,11 @@ void ModelMesh::UpdateItemToGrid(Mesh* item) noexcept
 
 Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
 {
+    assert(mesh != nullptr);
+
     for (auto &object : objects_) {
         if (object->IsInside(mesh.get())) {
-            return add_child(std::move(mesh));
+            return object->add_child(std::move(mesh));
         }
     }
 
@@ -163,6 +219,7 @@ Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
 
 bool ModelMesh::IsInside(Mesh* mesh) noexcept
 {
+    assert(grid() != nullptr);
     return grid()->IsInside(mesh->location());
 }
 

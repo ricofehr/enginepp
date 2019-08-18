@@ -23,7 +23,7 @@ std::unique_ptr<nextfloor::objects::Mesh> DemoLevel::GenerateUniverse() noexcept
     first_room->add_child(CommonServices::getFactory()->MakeRock(first_room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
     universe->add_child(std::move(first_room));
 
-    /* create 8 more rooms around the first one */
+    /* create 26 more rooms around the first one */
     for (auto factor_x = -1.0f; factor_x <= 1.0f; factor_x++) {
         for (auto factor_y = -1.0f; factor_y <= 1.0f; factor_y++) {
             for (auto factor_z = -1.0f; factor_z <= 1.0f; factor_z++) {

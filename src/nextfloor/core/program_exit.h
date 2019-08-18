@@ -24,19 +24,13 @@ public:
     ProgramExit();
 
     ProgramExit(ProgramExit&&) = default;
-
     ProgramExit& operator=(ProgramExit&&) = default;
-
-    /* Copy constructor Deleted : Ensure a sole Instance */
     ProgramExit(const ProgramExit&) = delete;
-
-    /* Copy assignement Deleted: Ensure a sole Instance */
     ProgramExit& operator=(const ProgramExit&) = delete;
 
     virtual ~ProgramExit() override final;
 
     virtual void ExitOnError() const noexcept override final;
-
     virtual void ExitOnSuccess() const noexcept override final;
 };
 

@@ -111,6 +111,11 @@ glm::vec3 CubeBorder::getFirstPoint()
     return coords_model_matrix_computed_.at(0);
 }
 
+glm::vec3 CubeBorder::getLastPoint()
+{
+    return coords_model_matrix_computed_.at(6);
+}
+
 bool CubeBorder::IsObstacleInCollisionAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part)
 {
     if (!IsObstacleInSameWidthAfterPartedMove(obstacle, move_part)) {

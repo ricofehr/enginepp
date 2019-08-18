@@ -20,19 +20,13 @@ class Exit {
 public:
 
     Exit(Exit&&) = default;
-
     Exit& operator=(Exit&&) = default;
-
-    /* Copy constructor Deleted : Ensure a sole Instance */
     Exit(const Exit&) = delete;
-
-    /* Copy assignement Deleted: Ensure a sole Instance */
     Exit& operator=(const Exit&) = delete;
 
     virtual ~Exit() = default;
 
     virtual void ExitOnError() const noexcept = 0;
-
     virtual void ExitOnSuccess() const noexcept = 0;
 
 protected:

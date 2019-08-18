@@ -20,13 +20,8 @@ class RandomGenerator {
 public:
 
     RandomGenerator(RandomGenerator&&) = default;
-
     RandomGenerator& operator=(RandomGenerator&&) = default;
-
-    /* Copy constructor Deleted : Ensure a sole Instance */
     RandomGenerator(const RandomGenerator&) = delete;
-
-    /* Copy assignement Deleted: Ensure a sole Instance */
     RandomGenerator& operator=(const RandomGenerator&) = delete;
 
     virtual ~RandomGenerator() = default;
@@ -36,7 +31,6 @@ public:
 protected:
 
     RandomGenerator() = default;
-
 };
 
 } // namespace core

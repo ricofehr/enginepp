@@ -38,7 +38,6 @@ public:
 
     virtual std::vector<nextfloor::objects::Mesh*> FindCollisionNeighbors(glm::vec3 coord) const noexcept = 0;
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept = 0;
-    virtual void ComputePlacementsInGrid() noexcept = 0;
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const = 0;
 
     virtual std::vector<GridBox*> AddItemToGrid(Mesh* object) noexcept = 0;

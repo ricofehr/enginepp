@@ -20,13 +20,8 @@ class Timer {
 public:
 
     Timer(Timer&&) = default;
-
     Timer& operator=(Timer&&) = default;
-
-    /* Copy constructor Deleted: Ensure a sole Instance */
     Timer(const Timer&) = delete;
-
-    /* Copy assignment Deleted: Ensure a sole Instance */
     Timer& operator=(const Timer&) = delete;
 
     virtual ~Timer() = default;

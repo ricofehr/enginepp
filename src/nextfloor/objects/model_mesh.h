@@ -47,6 +47,7 @@ public:
     virtual bool IsInside(Mesh* mesh) noexcept override final;
     virtual Mesh* add_child(std::unique_ptr<Mesh> object) noexcept override final;
     virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept override;
+    virtual Mesh* TransfertChildToNeighbor(Mesh* child) noexcept override;
 
     virtual void UpdateItemToGrid(Mesh* object) noexcept override final;
     virtual void AddItemToGrid(Mesh* object) noexcept override final;
@@ -54,7 +55,7 @@ public:
 
     virtual bool IsLastObstacle(Mesh* obstacle) const noexcept override final;
     virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) noexcept override final;
-    virtual void PrepareDraw() override {}
+    virtual void PrepareDraw() override { Polygon::NewFrame(); }
 
     virtual bool IsFrontPositionFilled() const noexcept override;
     virtual bool IsRightPositionFilled() const noexcept override;
@@ -116,6 +117,8 @@ public:
 
     virtual bool hasNoChilds() const override { return objects_.size() == 0; }
 
+    virtual std::vector<Mesh*> AllStubMeshs() noexcept override;
+
     virtual std::vector<Mesh*> childs() noexcept override
     {
         std::vector<Mesh*> ret_childs(0);
@@ -163,11 +166,12 @@ protected:
 
 private:
 
+    std::unique_ptr<Mesh> TransfertChild(Mesh* child) noexcept;
+
     void InitCollisionEngine();
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
 
     void PivotCollision() noexcept;
-    //std::vector<Mesh*> FindCollisionNeighbors() const noexcept;
     void LogCollision(Mesh* obstacle, float obstacle_distance);
 
     bool IsMoved() const { return border_->IsMoved(); }
