@@ -19,7 +19,7 @@ namespace {
 
 static bool sInstanciated = false;
 
-}
+}  // anonymous namespace
 
 GlRendererFactory::GlRendererFactory()
 {
@@ -43,6 +43,6 @@ GlRendererFactory::~GlRendererFactory()
     sInstanciated = false;
 }
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor

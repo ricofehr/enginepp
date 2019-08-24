@@ -24,8 +24,7 @@ Floor::Floor(glm::vec3 location, glm::vec3 scale)
 
 void Floor::AddDoor() noexcept
 {
-    for (auto cnt = 0; cnt < objects_.size(); cnt++)
-    {
+    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
         if (obj_location.x >= location().x - 3.0f && obj_location.x <= location().x + 3.0f) {
             if (obj_location.z >= location().z - 3.0f && obj_location.z <= location().z + 3.0f) {
@@ -45,6 +44,6 @@ void Floor::PrepareDraw() noexcept
     }
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

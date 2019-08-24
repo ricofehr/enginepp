@@ -23,7 +23,6 @@ namespace core {
 class FrameTimer : public Timer {
 
 public:
-
     FrameTimer();
 
     FrameTimer(FrameTimer&&) = default;
@@ -43,18 +42,11 @@ public:
         return static_cast<float>(deltatime_since_lastloop_);
     }
 
-    virtual int getLoopCountBySecond() const override final
-    {
-        return current_fps_;
-    }
+    virtual int getLoopCountBySecond() const override final { return current_fps_; }
 
-    bool IsNewSecondElapsed() const override final
-    {
-        return is_newsecond_elapsed_;
-    }
+    bool IsNewSecondElapsed() const override final { return is_newsecond_elapsed_; }
 
 private:
-
     virtual void ComputeTimers() noexcept override final;
     void ComputeFps() noexcept;
     void CheckEndProgram() noexcept;
@@ -68,8 +60,8 @@ private:
 };
 
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_FRAMETIMER_H_
+#endif  // NEXTFLOOR_CORE_FRAMETIMER_H_

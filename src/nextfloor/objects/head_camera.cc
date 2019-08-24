@@ -36,11 +36,7 @@ void HeadCamera::ComputeOrientation() noexcept
     direction_[2] = cos(vertical_angle_) * cos(horizontal_angle_);
 
     /* Right vector */
-    glm::vec3 right = glm::vec3(
-        sin(horizontal_angle_ - 3.14f/2.0f),
-        0,
-        cos(horizontal_angle_ - 3.14f/2.0f)
-    );
+    glm::vec3 right = glm::vec3(sin(horizontal_angle_ - 3.14f / 2.0f), 0, cos(horizontal_angle_ - 3.14f / 2.0f));
 
     /* head_ vector : perpendicular to both direction and right */
     head_ = glm::cross(right, direction_);
@@ -54,6 +50,6 @@ void HeadCamera::ComputeFOV(float delta_fov) noexcept
     fov_ = fov_ > 130.0f ? 130.0f : fov_;
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

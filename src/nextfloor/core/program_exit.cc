@@ -17,7 +17,7 @@ namespace {
 
 static bool sInstanciated = false;
 
-}
+}  // anonymous namespace
 
 ProgramExit::ProgramExit()
 {
@@ -41,6 +41,6 @@ ProgramExit::~ProgramExit()
     sInstanciated = false;
 }
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor

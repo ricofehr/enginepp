@@ -25,7 +25,6 @@ namespace objects {
 class Polygon {
 
 public:
-
     virtual ~Polygon() = default;
 
     virtual void UpdateModelViewProjectionMatrix() = 0;
@@ -43,12 +42,9 @@ public:
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 scale() const = 0;
 
-    static void NewFrame() {
-        is_viewprojection_setted_ = false;
-    }
+    static void NewFrame() { is_viewprojection_setted_ = false; }
 
 protected:
-
     static bool is_viewprojection_setted_;
 
     Polygon() = default;
@@ -57,11 +53,10 @@ protected:
     Polygon& operator=(Polygon&&) = default;
     Polygon(const Polygon&) = default;
     Polygon& operator=(const Polygon&) = default;
-
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_POLYGON_H_
+#endif  // NEXTFLOOR_OBJECTS_POLYGON_H_

@@ -23,7 +23,6 @@ namespace objects {
 class Room : public ModelMesh {
 
 public:
-
     Room(glm::vec3 location);
 
     Room(Room&&) = default;
@@ -38,7 +37,6 @@ public:
     void AddRock(glm::vec3 relative_location) noexcept;
 
 private:
-
     void AddWalls() noexcept;
     void AddFrontWall() noexcept;
     void AddRightWall() noexcept;
@@ -48,8 +46,8 @@ private:
     void AddRoof() noexcept;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif //NEXTFLOOR_OBJECTS_ROOM_H_
+#endif  // NEXTFLOOR_OBJECTS_ROOM_H_

@@ -25,7 +25,6 @@ namespace gameplay {
 class DemoLevel : public Level {
 
 public:
-
     DemoLevel() = default;
 
     DemoLevel(DemoLevel&&) = default;
@@ -36,11 +35,10 @@ public:
     virtual ~DemoLevel() = default;
 
     virtual std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() noexcept override;
-
 };
 
-} // namespace gameplay
+}  // namespace gameplay
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_GAMEPLAY_DEMOLEVEL_H_
+#endif  // NEXTFLOOR_GAMEPLAY_DEMOLEVEL_H_

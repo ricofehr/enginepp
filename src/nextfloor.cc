@@ -12,8 +12,8 @@
 
 int main(int argc, char* argv[])
 {
-    using nextfloor::core::CommonServices;
     using nextfloor::controller::GameLoop;
+    using nextfloor::core::CommonServices;
 
     /* Init Config */
     CommonServices::getConfig()->Initialize();

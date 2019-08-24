@@ -19,7 +19,7 @@ namespace {
 
 static bool sInstanciated = false;
 
-}
+}  // anonymous namespace
 
 StdFileIO::StdFileIO()
 {
@@ -33,11 +33,12 @@ std::string StdFileIO::ReadFile(std::string file_path) const
     std::ifstream file_stream(file_path, std::ios::in);
     if (file_stream.is_open()) {
         std::string line = "";
-        while(getline(file_stream, line)) {
+        while (getline(file_stream, line)) {
             file_str += "\n" + line;
         }
         file_stream.close();
-    } else {
+    }
+    else {
         HandleErrorOnReadFile(file_path);
     }
 
@@ -58,6 +59,6 @@ StdFileIO::~StdFileIO()
     sInstanciated = false;
 }
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor

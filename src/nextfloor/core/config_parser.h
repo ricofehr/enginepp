@@ -20,7 +20,6 @@ namespace core {
 class ConfigParser {
 
 public:
-
     ConfigParser(ConfigParser&&) = default;
     ConfigParser& operator=(ConfigParser&&) = default;
     ConfigParser(const ConfigParser&) = delete;
@@ -51,18 +50,16 @@ public:
     virtual bool IsPerfDebugEnabled() const = 0;
 
 protected:
-
     ConfigParser() = default;
 
 private:
-
     virtual bool IsExist(std::string key) = 0;
     virtual void InitDefaultValues() = 0;
     virtual void DisplayHelp(const std::string& command_name) const = 0;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_CONFIGPARSER_H_
+#endif  // NEXTFLOOR_CORE_CONFIGPARSER_H_

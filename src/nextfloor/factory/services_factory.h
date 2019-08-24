@@ -30,7 +30,6 @@ namespace factory {
 class ServicesFactory : CoreFactory {
 
 public:
-
     ServicesFactory() = default;
 
     ServicesFactory(ServicesFactory&&) = default;
@@ -47,11 +46,10 @@ public:
     virtual std::unique_ptr<nextfloor::core::Log> MakeLog() const noexcept override;
     virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const noexcept override;
     virtual std::unique_ptr<MeshFactory> MakeMeshFactory() const noexcept override;
-
 };
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_FACTORY_SERVICESFACTORY_H_
+#endif  // NEXTFLOOR_FACTORY_SERVICESFACTORY_H_

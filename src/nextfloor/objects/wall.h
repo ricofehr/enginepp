@@ -24,14 +24,12 @@ namespace objects {
 class Wall : public ModelMesh {
 
 public:
-
     virtual ~Wall() = default;
 
     virtual void AddDoor() noexcept = 0;
     virtual void AddWindow() noexcept = 0;
 
 protected:
-
     Wall() = default;
 
     Wall(Wall&&) = default;
@@ -44,11 +42,11 @@ protected:
     virtual std::string texture_file() const noexcept = 0;
 
     glm::vec3 brick_dimension_{0.0f};
-    glm::ivec3 bricks_count_{0,0,0};
+    glm::ivec3 bricks_count_{0, 0, 0};
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_OBJECTS_WALL_H_
+#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_WALL_H_

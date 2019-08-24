@@ -24,7 +24,6 @@ namespace objects {
 class Grid {
 
 public:
-
     virtual ~Grid() = default;
 
     virtual bool IsPositionEmpty(glm::ivec3 coords) const noexcept = 0;
@@ -65,18 +64,16 @@ public:
     virtual glm::vec3 dimension() const noexcept = 0;
 
 protected:
-
     Grid() = default;
 
     Grid(Grid&&) = default;
     Grid& operator=(Grid&&) = default;
     Grid(const Grid&) = delete;
     Grid& operator=(const Grid&) = delete;
-
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_GRID_H_
+#endif  // NEXTFLOOR_OBJECTS_GRID_H_

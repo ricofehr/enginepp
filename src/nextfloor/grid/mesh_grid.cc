@@ -14,7 +14,7 @@ namespace grid {
 
 
 MeshGrid::MeshGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
-: WiredGrid(owner, boxes_count, box_dimension)
+      : WiredGrid(owner, boxes_count, box_dimension)
 {
     InitBoxes();
 }
@@ -30,6 +30,6 @@ MeshGrid::~MeshGrid()
     DeleteGrid();
 }
 
-} // namespace grid
+}  // namespace grid
 
-} // namespace nextfloor
+}  // namespace nextfloor

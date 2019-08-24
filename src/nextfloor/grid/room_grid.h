@@ -22,20 +22,19 @@ namespace grid {
 class RoomGrid : public WiredGrid {
 
 public:
-
     RoomGrid(nextfloor::objects::Mesh* owner);
+
     RoomGrid(RoomGrid&&) = default;
     RoomGrid& operator=(RoomGrid&&) = default;
     RoomGrid(const RoomGrid&) = delete;
     RoomGrid& operator=(const RoomGrid&) = delete;
+
     virtual ~RoomGrid() override;
 
 protected:
-
     virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
 
 private:
-
     /*
      *  WiredGrid Constants For Romm Setting
      */
@@ -45,11 +44,10 @@ private:
     static constexpr float kBOX_WIDTH = 2.0f;
     static constexpr float kBOX_HEIGHT = 2.0f;
     static constexpr float kBOX_DEPTH = 2.0f;
-
 };
 
-} // namespace physics
+}  // namespace grid
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_GRID_ROOMGRID_H_
+#endif  // NEXTFLOOR_GRID_ROOMGRID_H_

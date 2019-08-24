@@ -28,7 +28,6 @@ namespace factory {
 class CoreFactory {
 
 public:
-
     virtual ~CoreFactory() = default;
 
     virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const noexcept = 0;
@@ -41,7 +40,6 @@ public:
 
 
 protected:
-
     CoreFactory() = default;
 
     CoreFactory(CoreFactory&&) = default;
@@ -50,8 +48,8 @@ protected:
     CoreFactory& operator=(const CoreFactory&) = default;
 };
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_FACTORY_COREFACTORY_H_
+#endif  // NEXTFLOOR_FACTORY_COREFACTORY_H_

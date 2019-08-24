@@ -22,7 +22,6 @@ namespace objects {
 class LeftWall : public DepthWall {
 
 public:
-
     LeftWall(glm::vec3 location, glm::vec3 scale);
 
     LeftWall(LeftWall&&) = default;
@@ -35,8 +34,8 @@ public:
     virtual void PrepareDraw() noexcept override;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_OBJECTS_LEFTWALL_H_
+#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_LEFTWALL_H_

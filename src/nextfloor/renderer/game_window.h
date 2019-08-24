@@ -24,7 +24,6 @@ namespace renderer {
 class GameWindow : public SceneWindow {
 
 public:
-
     GameWindow();
 
     GameWindow(GameWindow&&) = default;
@@ -43,7 +42,6 @@ public:
     GLFWwindow* glfw_window() { return glfw_window_; }
 
 private:
-
     /** Fps target for speed movement compute on Engine */
     static constexpr float kFpsBase = 60.0f;
 
@@ -71,8 +69,8 @@ private:
     std::unique_ptr<Shader> vertex_shader_{nullptr};
 };
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_GAMEWINDOW_H_
+#endif  // NEXTFLOOR_RENDERER_GAMEWINDOW_H_

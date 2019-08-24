@@ -22,7 +22,6 @@ namespace renderer {
 class SceneWindow {
 
 public:
-
     virtual ~SceneWindow() = default;
 
     virtual void Initialization() = 0;
@@ -41,10 +40,9 @@ public:
     static GLuint getProgramId() { return program_id_; }
     static float getWidth() { return window_width_; }
     static float getHeight() { return window_height_; }
-    static float getFpsFixMoveFactor() { return 1.0f; } //move_factor_; }
+    static float getFpsFixMoveFactor() { return 1.0f; }  // move_factor_; }
 
 protected:
-
     SceneWindow() = default;
 
     SceneWindow(SceneWindow&&) = default;
@@ -65,8 +63,8 @@ protected:
     static float move_factor_;
 };
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_SCENEWINDOW_H_
+#endif  // NEXTFLOOR_RENDERER_SCENEWINDOW_H_

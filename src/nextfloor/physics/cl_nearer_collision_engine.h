@@ -9,7 +9,7 @@
 
 /* OpenCL 1.2 */
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
-#define CL_HPP_TARGET_OPENCL_VERSION 120
+#define CL_HPP_TARGET_OPENCL_VERSION  120
 
 #define CL_HPP_ENABLE_EXCEPTIONS
 
@@ -18,9 +18,9 @@
 
 #include <GL/glew.h>
 #ifdef __APPLE__
-    #include <OpenCL/cl2.hpp>
+#include <OpenCL/cl2.hpp>
 #else
-    #include <CL/cl2.hpp>
+#include <CL/cl2.hpp>
 #endif
 
 #include "nextfloor/physics/nearer_collision_engine.h"
@@ -36,7 +36,6 @@ namespace physics {
 class ClNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
-
     ClNearerCollisionEngine();
 
     ClNearerCollisionEngine(ClNearerCollisionEngine&&) = default;
@@ -46,15 +45,12 @@ public:
 
     virtual ~ClNearerCollisionEngine() override = default;
 
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target,
-                                   nextfloor::objects::Mesh* obstacle) override final;
+    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) override final;
 
 protected:
-
     virtual void InitCollisionEngine() override final;
 
 private:
-
     void HandleErrorOnInit(cl::Error error);
 
     /** Opencl Kernel Object */
@@ -74,11 +70,10 @@ private:
 
     /** Opencl Workgroup size */
     int wk_size_{32};
-
 };
 
-} // namespace physics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_PHYSICS_CLNEARERCOLLISIONENGINE_H_
+#endif  // NEXTFLOOR_PHYSICS_CLNEARERCOLLISIONENGINE_H_

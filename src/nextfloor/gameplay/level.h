@@ -22,24 +22,21 @@ namespace gameplay {
 class Level {
 
 public:
-
     virtual ~Level() = default;
 
     virtual std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() noexcept = 0;
 
 protected:
-
     Level() = default;
 
     Level(Level&&) = default;
     Level& operator=(Level&&) = default;
     Level(const Level&) = delete;
     Level& operator=(const Level&) = delete;
-
 };
 
-} // namespace gameplay
+}  // namespace gameplay
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_GAMEPLAY_LEVEL_H_
+#endif  // NEXTFLOOR_GAMEPLAY_LEVEL_H_

@@ -30,7 +30,6 @@ namespace objects {
 class ModelMesh : public Mesh {
 
 public:
-
     static constexpr int kMODEL_CAMERA = 2;
 
     virtual ~ModelMesh() override = default;
@@ -77,11 +76,11 @@ public:
     virtual void set_movement(glm::vec3 movement) override
     {
         border_->set_movement(movement);
-        for (auto &object : objects_) {
+        for (auto& object : objects_) {
             object->set_movement(movement);
         }
 
-        for (auto &polygon : polygons_) {
+        for (auto& polygon : polygons_) {
             polygon->set_movement(movement);
         }
     }
@@ -89,11 +88,11 @@ public:
     virtual void set_move_factor(float move_factor) noexcept override
     {
         border_->set_move_factor(move_factor);
-        for (auto &object : objects_) {
+        for (auto& object : objects_) {
             object->set_move_factor(move_factor);
         }
 
-        for (auto &polygon : polygons_) {
+        for (auto& polygon : polygons_) {
             polygon->set_move_factor(move_factor);
         }
     }
@@ -106,10 +105,7 @@ public:
         return border_->getCoordsModelMatrixComputed();
     }
 
-    virtual Border* border() const noexcept override final
-    {
-        return border_.get();
-    }
+    virtual Border* border() const noexcept override final { return border_.get(); }
 
     virtual std::vector<glm::ivec3> coords() override;
     virtual bool ready() const override { return ready_; }
@@ -122,7 +118,7 @@ public:
     virtual std::vector<Mesh*> childs() noexcept override
     {
         std::vector<Mesh*> ret_childs(0);
-        for (auto &object : objects_) {
+        for (auto& object : objects_) {
             ret_childs.push_back(object.get());
         }
         return ret_childs;
@@ -131,10 +127,11 @@ public:
     virtual std::vector<Mesh*> descendants() const noexcept override
     {
         std::vector<Mesh*> ret_childs(0);
-        for (auto &object : objects_) {
+        for (auto& object : objects_) {
             if (object->hasNoChilds()) {
                 ret_childs.push_back(object.get());
-            } else {
+            }
+            else {
                 auto grant_childs = object->descendants();
                 ret_childs.insert(ret_childs.end(), grant_childs.begin(), grant_childs.end());
             }
@@ -143,7 +140,6 @@ public:
     }
 
 protected:
-
     ModelMesh();
 
     ModelMesh(ModelMesh&&) = default;
@@ -165,7 +161,6 @@ protected:
     RendererEngine* renderer_{nullptr};
 
 private:
-
     std::unique_ptr<Mesh> TransfertChild(Mesh* child) noexcept;
 
     void InitCollisionEngine();
@@ -186,8 +181,8 @@ private:
     tbb::mutex mutex_;
 };
 
-} // namespace graphics
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_MODELMESH_H_
+#endif  // NEXTFLOOR_OBJECTS_MODELMESH_H_

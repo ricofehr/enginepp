@@ -11,17 +11,19 @@ namespace nextfloor {
 namespace objects {
 
 LeftWall::LeftWall(glm::vec3 location, glm::vec3 scale)
-    :DepthWall(location, scale) {}
+      : DepthWall(location, scale)
+{}
 
 void LeftWall::PrepareDraw() noexcept
 {
     if (parent_->IsLeftPositionFilled()) {
         AddDoor();
-    } else {
+    }
+    else {
         AddWindow();
     }
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

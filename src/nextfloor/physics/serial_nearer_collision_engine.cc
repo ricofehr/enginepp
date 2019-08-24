@@ -19,13 +19,13 @@ SerialNearerCollisionEngine::SerialNearerCollisionEngine()
     InitCollisionEngine();
 }
 
-void SerialNearerCollisionEngine::InitCollisionEngine() {
+void SerialNearerCollisionEngine::InitCollisionEngine()
+{
     using nextfloor::core::CommonServices;
     granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 }
 
-float SerialNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target,
-                                                    nextfloor::objects::Mesh* obstacle)
+float SerialNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
 {
     auto target_border = target->border();
     auto obstacle_border = obstacle->border();
@@ -40,6 +40,6 @@ float SerialNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* ta
     return 1.0f;
 }
 
-} // namespace physics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor

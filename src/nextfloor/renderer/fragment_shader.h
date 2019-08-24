@@ -21,8 +21,8 @@ namespace renderer {
 class FragmentShader : public Shader {
 
 public:
-
-    FragmentShader(std::string shader_path) : Shader(shader_path) {};
+    FragmentShader(std::string shader_path)
+          : Shader(shader_path){};
 
     FragmentShader(FragmentShader&&) = default;
     FragmentShader& operator=(FragmentShader&&) = default;
@@ -34,8 +34,8 @@ public:
     virtual void LoadShader() override final;
 };
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_FRAGMENTSHADER_H_
+#endif  // NEXTFLOOR_RENDERER_FRAGMENTSHADER_H_

@@ -18,6 +18,6 @@ std::unique_ptr<nextfloor::gameplay::Level> RandomedGameFactory::MakeLevel() con
     return std::make_unique<RandomLevel>();
 }
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor

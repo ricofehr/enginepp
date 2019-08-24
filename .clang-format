@@ -1,0 +1,62 @@
+---
+Language:        Cpp
+BasedOnStyle:  Google
+IndentWidth: 4
+ColumnLimit: 120
+Standard: Cpp11
+AccessModifierOffset: -4
+AlignConsecutiveMacros: true
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Inline
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+  AfterExternBlock: true
+BreakBeforeBinaryOperators: All
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+CompactNamespaces: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerIndentWidth: 6
+ContinuationIndentWidth: 2
+DerivePointerAlignment: false
+ExperimentalAutoDetectBinPacking: false
+IncludeBlocks: Preserve
+IndentCaseLabels: false
+IndentWrappedFunctionNames: true
+KeepEmptyLinesAtTheStartOfBlocks: true
+Language: Cpp
+MaxEmptyLinesToKeep: 2
+NamespaceIndentation: None
+PenaltyBreakAssignment: 10
+PenaltyBreakBeforeFirstCallParameter: 30
+PenaltyBreakComment: 10
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 10
+PenaltyBreakTemplateDeclaration: 5
+PenaltyExcessCharacter: 10
+PenaltyReturnTypeOnItsOwnLine: 0
+SortIncludes: false
+SpaceAfterTemplateKeyword: false
+SpacesInContainerLiterals: false
+TabWidth: 4

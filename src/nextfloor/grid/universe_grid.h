@@ -22,20 +22,19 @@ namespace grid {
 class UniverseGrid : public WiredGrid {
 
 public:
-
     UniverseGrid(nextfloor::objects::Mesh* owner);
+
     UniverseGrid(UniverseGrid&&) = default;
     UniverseGrid& operator=(UniverseGrid&&) = default;
     UniverseGrid(const UniverseGrid&) = delete;
     UniverseGrid& operator=(const UniverseGrid&) = delete;
+
     virtual ~UniverseGrid() override;
 
 protected:
-
     virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
 
 private:
-
     /*
      *  WiredGrid Constants For Romm Setting
      */
@@ -47,8 +46,8 @@ private:
     static constexpr float kBOX_DEPTH = 16.0f;
 };
 
-} // namespace grid
+}  // namespace grid
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_GRID_UNIVERSEGRID_H_
+#endif  // NEXTFLOOR_GRID_UNIVERSEGRID_H_

@@ -19,9 +19,9 @@ namespace nextfloor {
 namespace objects {
 
 namespace {
-    /* Unique id for object */
-    static int sObjectId = 1;
-} // anonymous namespace
+/* Unique id for object */
+static int sObjectId = 1;
+}  // anonymous namespace
 
 ModelMesh::ModelMesh()
 {
@@ -44,11 +44,11 @@ void ModelMesh::Draw() noexcept
     PrepareDraw();
 
     /* Draw meshes of current object */
-    for (auto &polygon : polygons_) {
+    for (auto& polygon : polygons_) {
         polygon->Draw(renderer_);
     }
 
-    for (auto &object : objects_) {
+    for (auto& object : objects_) {
         object->Draw();
     }
 }
@@ -59,9 +59,7 @@ void ModelMesh::DetectCollision() noexcept
         PivotCollision();
     }
 
-    tbb::parallel_for (0, (int)objects_.size(), 1, [&](int i) {
-        objects_[i]->DetectCollision();
-    });
+    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->DetectCollision(); });
 }
 
 void ModelMesh::PivotCollision() noexcept
@@ -73,8 +71,8 @@ void ModelMesh::PivotCollision() noexcept
     std::vector<Mesh*> test_objects = parent_->FindCollisionNeighborsOf(this);
 
     /* Parallell collision loop for objects with tbb */
-    tbb::parallel_for (0, (int)test_objects.size(), 1, [&](int i) {
-        assert (*this != *(dynamic_cast<ModelMesh*>(test_objects[i])));
+    tbb::parallel_for(0, (int)test_objects.size(), 1, [&](int i) {
+        assert(*this != *(dynamic_cast<ModelMesh*>(test_objects[i])));
         collision_engine->DetectCollision(this, test_objects[i]);
     });
 }
@@ -82,7 +80,7 @@ void ModelMesh::PivotCollision() noexcept
 std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexcept
 {
     std::vector<Mesh*> all_neighbors(0);
-    for (auto &coord : target->coords()) {
+    for (auto& coord : target->coords()) {
         auto neighbors = grid()->FindCollisionNeighbors(coord);
         all_neighbors.insert(all_neighbors.end(), neighbors.begin(), neighbors.end());
     }
@@ -92,10 +90,11 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexc
     all_neighbors.erase(std::remove(all_neighbors.begin(), all_neighbors.end(), target));
 
     std::vector<Mesh*> collision_neighbors(0);
-    for (auto &neighbor : all_neighbors) {
+    for (auto& neighbor : all_neighbors) {
         auto vector_neighbor = neighbor->location() - location();
-        if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
-            glm::dot(target->movement(), vector_neighbor) > 0) {
+        if (glm::length(target->movement()) + glm::length(neighbor->movement())
+              > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f
+            && glm::dot(target->movement(), vector_neighbor) > 0) {
             auto neighbor_meshes = neighbor->AllStubMeshs();
             collision_neighbors.insert(collision_neighbors.end(), neighbor_meshes.begin(), neighbor_meshes.end());
         }
@@ -110,8 +109,9 @@ std::vector<Mesh*> ModelMesh::AllStubMeshs() noexcept
 
     if (objects_.size() == 0) {
         meshes.push_back(this);
-    } else {
-        for (auto &object : objects_) {
+    }
+    else {
+        for (auto& object : objects_) {
             auto object_meshs = object->AllStubMeshs();
             meshes.insert(meshes.end(), object_meshs.begin(), object_meshs.end());
         }
@@ -120,9 +120,10 @@ std::vector<Mesh*> ModelMesh::AllStubMeshs() noexcept
     return meshes;
 }
 
-std::vector<glm::ivec3> ModelMesh::coords() {
+std::vector<glm::ivec3> ModelMesh::coords()
+{
     std::vector<glm::ivec3> grid_coords(0);
-    for (auto &box : coords_list_) {
+    for (auto& box : coords_list_) {
         grid_coords.push_back(box->coords());
     }
 
@@ -134,13 +135,13 @@ void ModelMesh::Move() noexcept
     if (IsMoved()) {
         border_->ComputeNewLocation();
 
-        tbb::parallel_for (0, static_cast<int>(polygons_.size()), 1, [&](int cnt) {
-            polygons_[cnt]->MoveLocation();
+        tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
+            polygons_[counter]->MoveLocation();
         });
     }
 
-    tbb::parallel_for (0, static_cast<int>(polygons_.size()), 1, [&](int i) {
-        polygons_[i]->UpdateModelViewProjectionMatrix();
+    tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
+        polygons_[counter]->UpdateModelViewProjectionMatrix();
     });
 
 
@@ -149,20 +150,21 @@ void ModelMesh::Move() noexcept
      *  TransfertChild (called by Move) can move child to another parent
      *  So, need to have a sequential loop
      */
-    for (auto cnt = 0; cnt < objects_.size();) {
+    for (auto counter = 0; counter < objects_.size();) {
         auto nb_objs = objects_.size();
 
-        objects_[cnt]->Move();
+        objects_[counter]->Move();
 
         if (nb_objs == objects_.size()) {
-            cnt++;
+            counter++;
         }
     }
 
     if (IsMoved()) {
         if (parent_->IsInside(this)) {
             parent_->UpdateItemToGrid(this);
-        } else {
+        }
+        else {
             parent_ = parent_->TransfertChildToNeighbor(this);
         }
     }
@@ -208,7 +210,7 @@ Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
 {
     assert(mesh != nullptr);
 
-    for (auto &object : objects_) {
+    for (auto& object : objects_) {
         if (object->IsInside(mesh.get())) {
             return object->add_child(std::move(mesh));
         }
@@ -233,7 +235,8 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
     /* Insert Camera as first element. Push on the stack for others */
     if (object_raw->IsCamera()) {
         objects_.insert(objects_.begin(), std::move(object));
-    } else {
+    }
+    else {
         objects_.push_back(std::move(object));
     }
 
@@ -251,7 +254,8 @@ void ModelMesh::AddItemToGrid(Mesh* object) noexcept
         if (parent_ != nullptr) {
             parent_->AddItemToGrid(object);
         }
-    } else {
+    }
+    else {
         auto coords_list = grid_->AddItemToGrid(object);
         dynamic_cast<ModelMesh*>(object)->set_gridcoords(coords_list);
     }
@@ -285,7 +289,8 @@ void ModelMesh::RemoveItemToGrid(Mesh* object) noexcept
         if (parent_ != nullptr) {
             parent_->RemoveItemToGrid(object);
         }
-    } else {
+    }
+    else {
         grid_->RemoveItemToGrid(object);
     }
 }
@@ -302,7 +307,7 @@ void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) 
     if (obstacle_distance < border_->move_factor()) {
         obstacle_ = obstacle;
         border_->set_move_factor(-obstacle_distance);
-        for (auto &polygon : polygons_) {
+        for (auto& polygon : polygons_) {
             polygon->set_move_factor(-obstacle_distance);
         }
 
@@ -340,7 +345,7 @@ Camera* ModelMesh::camera() const noexcept
 
 bool ModelMesh::IsFrontPositionFilled() const noexcept
 {
-    for (auto &coord : coords_list_) {
+    for (auto& coord : coords_list_) {
         if (coord->IsFrontPositionFilled()) {
             return true;
         }
@@ -351,7 +356,7 @@ bool ModelMesh::IsFrontPositionFilled() const noexcept
 
 bool ModelMesh::IsRightPositionFilled() const noexcept
 {
-    for (auto &coord : coords_list_) {
+    for (auto& coord : coords_list_) {
         if (coord->IsRightPositionFilled()) {
             return true;
         }
@@ -362,7 +367,7 @@ bool ModelMesh::IsRightPositionFilled() const noexcept
 
 bool ModelMesh::IsBackPositionFilled() const noexcept
 {
-    for (auto &coord : coords_list_) {
+    for (auto& coord : coords_list_) {
         if (coord->IsBackPositionFilled()) {
             return true;
         }
@@ -373,7 +378,7 @@ bool ModelMesh::IsBackPositionFilled() const noexcept
 
 bool ModelMesh::IsLeftPositionFilled() const noexcept
 {
-    for (auto &coord : coords_list_) {
+    for (auto& coord : coords_list_) {
         if (coord->IsLeftPositionFilled()) {
             return true;
         }
@@ -384,7 +389,7 @@ bool ModelMesh::IsLeftPositionFilled() const noexcept
 
 bool ModelMesh::IsBottomPositionFilled() const noexcept
 {
-    for (auto &coord : coords_list_) {
+    for (auto& coord : coords_list_) {
         if (coord->IsBottomPositionFilled()) {
             return true;
         }
@@ -395,7 +400,7 @@ bool ModelMesh::IsBottomPositionFilled() const noexcept
 
 bool ModelMesh::IsTopPositionFilled() const noexcept
 {
-    for (auto &coord : coords_list_) {
+    for (auto& coord : coords_list_) {
         if (coord->IsTopPositionFilled()) {
             return true;
         }
@@ -404,6 +409,6 @@ bool ModelMesh::IsTopPositionFilled() const noexcept
     return false;
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

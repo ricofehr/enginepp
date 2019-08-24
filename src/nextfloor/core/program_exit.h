@@ -20,7 +20,6 @@ namespace core {
 class ProgramExit : public Exit {
 
 public:
-
     ProgramExit();
 
     ProgramExit(ProgramExit&&) = default;
@@ -34,8 +33,8 @@ public:
     virtual void ExitOnSuccess() const noexcept override final;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_PROGRAMEXIT_H_
+#endif  // NEXTFLOOR_CORE_PROGRAMEXIT_H_

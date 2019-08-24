@@ -24,62 +24,41 @@ namespace core {
 
 /**
  *  @class CommonServices
- *  @brief CommonServices is an unique entry point who provides global services to other program modules\n
+ *  @brief CommonServices is an unique entry point who provides global services\n
+ *  to other program modules\n
  *  Implement ServiceLocator Pattern
  */
 class CommonServices {
 
 public:
-
     /*
      *  Service Accessors
      */
-    static ConfigParser* getConfig()
-    {
-        return Instance()->config();
-    }
+    static ConfigParser* getConfig() { return Instance()->config(); }
 
-    static const FileIO* getFileIO()
-    {
-        return Instance()->fileIO();
-    }
+    static const FileIO* getFileIO() { return Instance()->fileIO(); }
 
-    static Timer* getTimer()
-    {
-        return Instance()->timer();
-    }
+    static Timer* getTimer() { return Instance()->timer(); }
 
-    static const Log* getLog()
-    {
-        return Instance()->log();
-    }
+    static const Log* getLog() { return Instance()->log(); }
 
-    static const RandomGenerator* getRandomGenerator()
-    {
-        return Instance()->random_generator();
-    }
+    static const RandomGenerator* getRandomGenerator() { return Instance()->random_generator(); }
 
-    static const Exit* getExit()
-    {
-        return Instance()->exit();
-    }
+    static const Exit* getExit() { return Instance()->exit(); }
 
-    static const nextfloor::factory::MeshFactory* getFactory()
-    {
-        return Instance()->factory();
-    }
+    static const nextfloor::factory::MeshFactory* getFactory() { return Instance()->factory(); }
 
 protected:
-
     CommonServices();
+
     CommonServices(CommonServices&&) = default;
     CommonServices& operator=(CommonServices&&) = default;
     CommonServices(const CommonServices&) = delete;
     CommonServices& operator=(const CommonServices&) = delete;
+
     ~CommonServices() = default;
 
 private:
-
     void Init();
 
     /**
@@ -144,8 +123,8 @@ private:
     std::unique_ptr<nextfloor::factory::MeshFactory> factory_{nullptr};
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_COMMONSERVICES_H_
+#endif  // NEXTFLOOR_CORE_COMMONSERVICES_H_

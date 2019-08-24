@@ -6,10 +6,10 @@
 
 #include "nextfloor/core/pseudo_random_generator.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <cassert>
-#include <time.h>
+#include <ctime>
 
 namespace nextfloor {
 
@@ -19,7 +19,7 @@ namespace {
 
 static bool sInstanciated = false;
 
-}
+}  // anonymous namespace
 
 PseudoRandomGenerator::PseudoRandomGenerator()
 {
@@ -41,6 +41,6 @@ PseudoRandomGenerator::~PseudoRandomGenerator()
     sInstanciated = false;
 }
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor

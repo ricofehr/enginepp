@@ -22,7 +22,6 @@ namespace polygons {
 class Cube : public MeshPolygon {
 
 public:
-
     Cube(glm::vec3 location, glm::vec3 scale);
     Cube(glm::vec3 location, float scale);
 
@@ -36,8 +35,8 @@ public:
     void Draw(nextfloor::objects::RendererEngine* renderer) noexcept override final;
 };
 
-} // namespace polygons
+}  // namespace polygons
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_POLYGONS_CUBE_H_
+#endif  // NEXTFLOOR_POLYGONS_CUBE_H_

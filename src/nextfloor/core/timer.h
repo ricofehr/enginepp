@@ -18,7 +18,6 @@ namespace core {
 class Timer {
 
 public:
-
     Timer(Timer&&) = default;
     Timer& operator=(Timer&&) = default;
     Timer(const Timer&) = delete;
@@ -36,17 +35,15 @@ public:
     virtual int getLoopCountBySecond() const = 0;
 
 protected:
-
     Timer() = default;
 
 private:
-
     virtual void ComputeTimers() noexcept = 0;
 };
 
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_GLOBALTIMER_H_
+#endif  // NEXTFLOOR_CORE_GLOBALTIMER_H_

@@ -30,7 +30,8 @@ std::unique_ptr<nextfloor::objects::Mesh> DemoLevel::GenerateUniverse() noexcept
                 auto room_location = first_room_location + glm::vec3(factor_x, factor_y, factor_z) * room_dimension;
                 if (room_location != first_room_location) {
                     auto room = CommonServices::getFactory()->MakeRoom(room_location);
-                    room->add_child(CommonServices::getFactory()->MakeRock(room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
+                    room->add_child(
+                      CommonServices::getFactory()->MakeRock(room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
                     room->add_child(CommonServices::getFactory()->MakeRock(room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
                     universe->add_child(std::move(room));
                 }
@@ -43,6 +44,6 @@ std::unique_ptr<nextfloor::objects::Mesh> DemoLevel::GenerateUniverse() noexcept
     return universe;
 }
 
-} // namespace gameplay
+}  // namespace gameplay
 
-} // namespace nextfloor
+}  // namespace nextfloor

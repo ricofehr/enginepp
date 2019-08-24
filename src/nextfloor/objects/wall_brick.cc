@@ -21,6 +21,6 @@ WallBrick::WallBrick(glm::vec3 location, glm::vec3 scale, std::string texture)
     renderer_ = CommonServices::getFactory()->MakeCubeRenderer(texture);
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

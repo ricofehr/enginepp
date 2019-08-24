@@ -18,7 +18,6 @@ namespace renderer {
 class GlCubeRendererEngine : public GlRendererEngine {
 
 public:
-
     GlCubeRendererEngine(std::string texture);
 
     GlCubeRendererEngine(GlCubeRendererEngine&&) = default;
@@ -31,7 +30,6 @@ public:
     virtual void Draw(const glm::mat4& mvp) noexcept override final;
 
 private:
-
     tbb::mutex mutex_;
 
     void CreateVertexBuffer() noexcept;
@@ -39,8 +37,8 @@ private:
     void CreateTextureBuffer() noexcept;
 };
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_GLCUBERENDERER_H_
+#endif  // NEXTFLOOR_RENDERER_GLCUBERENDERER_H_

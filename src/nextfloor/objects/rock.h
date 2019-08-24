@@ -24,7 +24,6 @@ namespace objects {
 class Rock : public ModelMesh {
 
 public:
-
     Rock(glm::vec3 location, float scale);
 
     Rock(Rock&&) = default;
@@ -35,12 +34,11 @@ public:
     virtual ~Rock() override = default;
 
 private:
-
     static constexpr char kTEXTURE[] = "assets/rock.jpg";
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_ROCK_H_
+#endif  // NEXTFLOOR_OBJECTS_ROCK_H_

@@ -31,6 +31,6 @@ void VertexShader::LoadShader()
     CheckShader();
 }
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor

@@ -68,6 +68,6 @@ void Shader::CheckProgram()
     }
 }
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor

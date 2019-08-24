@@ -20,7 +20,6 @@ namespace factory {
 class RandomedGameFactory : public GameFactory {
 
 public:
-
     RandomedGameFactory() = default;
 
     RandomedGameFactory(RandomedGameFactory&&) = default;
@@ -33,8 +32,8 @@ public:
     virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const noexcept override final;
 };
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif //NEXTFLOOR_RANDOMED_GAME_FACTORY_H_
+#endif  // NEXTFLOOR_RANDOMED_GAME_FACTORY_H_

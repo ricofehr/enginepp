@@ -20,7 +20,6 @@ namespace objects {
 class GridBox {
 
 public:
-
     virtual ~GridBox() = default;
 
     virtual void add(Mesh* object) noexcept = 0;
@@ -44,18 +43,16 @@ public:
     virtual bool IsTopPositionFilled() const noexcept = 0;
 
 protected:
-
     GridBox() = default;
 
     GridBox(GridBox&&) = default;
     GridBox& operator=(GridBox&&) = default;
     GridBox(const GridBox&) = delete;
     GridBox& operator=(const GridBox&) = delete;
-
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_ENGINEGRIDBOX_H_
+#endif  // NEXTFLOOR_OBJECTS_ENGINEGRIDBOX_H_

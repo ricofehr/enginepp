@@ -27,7 +27,6 @@ namespace physics {
 class NearerCollisionEngine : public nextfloor::objects::CollisionEngine {
 
 public:
-
     static constexpr int kPARALLELL_SERIAL = 1;
     static constexpr int kPARALLELL_TBB = 2;
     static constexpr int kPARALLELL_CL = 3;
@@ -35,18 +34,15 @@ public:
     virtual ~NearerCollisionEngine() = default;
 
     /* Template Method : Detect if a collision exists between target and obstacle. */
-    virtual void DetectCollision(nextfloor::objects::Mesh* target,
-                                 nextfloor::objects::Mesh* obstacle);
+    virtual void DetectCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle);
 
     /**
      *  Primitive Operation subclassed: compute collision distance between borders of 2 objects
      *  @return parted (as fraction of setted move) distance between the 2 borders
      */
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target,
-                                   nextfloor::objects::Mesh* obstacle) = 0;
+    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) = 0;
 
 protected:
-
     NearerCollisionEngine() = default;
 
     NearerCollisionEngine(NearerCollisionEngine&&) = default;
@@ -60,8 +56,8 @@ protected:
     int granularity_{16};
 };
 
-} // namespace physics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_PHYSICS_NEARERCOLLISIONENGINE_H_
+#endif  // NEXTFLOOR_PHYSICS_NEARERCOLLISIONENGINE_H_

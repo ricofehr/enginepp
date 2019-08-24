@@ -23,10 +23,9 @@ namespace factory {
  *  @class GameFactory
  *  @brief GameFactory Pattern for Universe Objects
  */
-class GameFactory : public MeshFactory {
+class GameFactory : public MeshFactory {  // clang-format off
 
 public:
-
     GameFactory();
 
     GameFactory(GameFactory&&) = default;
@@ -39,13 +38,21 @@ public:
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() const noexcept override;
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(glm::vec3 location) const noexcept override;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(glm::vec3 location, glm::vec3 scale) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(glm::vec3 location, glm::vec3 scale) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(glm::vec3 location, glm::vec3 scale) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(glm::vec3 location, glm::vec3 scale) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(glm::vec3 location, glm::vec3 scale) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(glm::vec3 location, glm::vec3 scale) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(glm::vec3 location,
+                                                                    glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(glm::vec3 location,
+                                                                    glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(glm::vec3 location,
+                                                                   glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(glm::vec3 location,
+                                                                   glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(glm::vec3 location,
+                                                                glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(glm::vec3 location,
+                                                               glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(glm::vec3 location,
+                                                                    glm::vec3 scale,
+                                                                    std::string texture) const noexcept override;
 
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(glm::vec3 location) const noexcept override;
 
@@ -54,15 +61,21 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const noexcept override;
 
-    virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(glm::vec3 location, glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(glm::vec3 location,
+                                                                  glm::vec3 scale) const noexcept override;
 
-    virtual std::unique_ptr<nextfloor::objects::Border> MakeBorder(glm::vec3 location, glm::vec3 scale) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Border> MakeBorder(glm::vec3 location,
+                                                                   glm::vec3 scale) const noexcept override;
 
     virtual std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) const noexcept override;
     virtual std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::Grid> MakeGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* room_grid) const noexcept override;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* universe_grid) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::Grid> MakeGrid(nextfloor::objects::Mesh* owner,
+                                                               glm::ivec3 boxes_count,
+                                                               glm::vec3 box_dimension) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(glm::vec3 grid_coords,
+                                                                         nextfloor::objects::Grid* room_grid) const noexcept override;
+    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(glm::vec3 grid_coords,
+                                                                             nextfloor::objects::Grid* universe_grid) const noexcept override;
     virtual std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* grid) const noexcept override;
 
     virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) const noexcept override;
@@ -76,12 +89,11 @@ public:
 
 
 private:
-
     std::unique_ptr<RendererFactory> renderer_factory_;
-};
+};  // clang-format on
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_FACTORY_GAMEFACTORY_H_
+#endif  // NEXTFLOOR_FACTORY_GAMEFACTORY_H_

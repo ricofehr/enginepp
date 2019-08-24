@@ -20,7 +20,6 @@ namespace core {
 class FileIO {
 
 public:
-
     FileIO(FileIO&&) = default;
     FileIO& operator=(FileIO&&) = default;
     FileIO(const FileIO&) = delete;
@@ -31,12 +30,11 @@ public:
     virtual std::string ReadFile(std::string file_path) const = 0;
 
 protected:
-
     FileIO() = default;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_FILEIO_H_
+#endif  // NEXTFLOOR_CORE_FILEIO_H_

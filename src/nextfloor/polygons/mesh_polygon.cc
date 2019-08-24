@@ -23,7 +23,8 @@ bool Polygon::is_viewprojection_setted_ = false;
 
 namespace polygons {
 
-glm::vec3 MeshPolygon::movement() const {
+glm::vec3 MeshPolygon::movement() const
+{
     using nextfloor::renderer::SceneWindow;
     return movement_ * SceneWindow::getFpsFixMoveFactor();
 }
@@ -40,7 +41,7 @@ void MeshPolygon::UpdateModelViewProjectionMatrix()
     }
     mutex.unlock();
 
-    mvp_ =  view_projection_matrix * GetModelMatrix() * glm::scale(scale_);
+    mvp_ = view_projection_matrix * GetModelMatrix() * glm::scale(scale_);
 }
 
 glm::mat4 MeshPolygon::GetProjectionMatrix()
@@ -48,9 +49,8 @@ glm::mat4 MeshPolygon::GetProjectionMatrix()
     using nextfloor::renderer::SceneWindow;
 
     auto camera = SceneWindow::getCamera();
-    glm::mat4 projection_matrix = glm::perspective(glm::radians(camera->fov()),
-                                                   SceneWindow::getWidth() / SceneWindow::getHeight(),
-                                                   0.1f, 300.0f);
+    glm::mat4 projection_matrix
+      = glm::perspective(glm::radians(camera->fov()), SceneWindow::getWidth() / SceneWindow::getHeight(), 0.1f, 300.0f);
     return projection_matrix;
 }
 
@@ -59,11 +59,7 @@ glm::mat4 MeshPolygon::GetViewMatrix()
     using nextfloor::renderer::SceneWindow;
 
     auto camera = SceneWindow::getCamera();
-    glm::mat4 view_matrix = glm::lookAt(
-        camera->location(),
-        camera->location() + camera->direction(),
-        camera->head()
-    );
+    glm::mat4 view_matrix = glm::lookAt(camera->location(), camera->location() + camera->direction(), camera->head());
 
     return view_matrix;
 }
@@ -73,6 +69,6 @@ glm::mat4 MeshPolygon::GetModelMatrix()
     return glm::translate(glm::mat4(1.0f), location_);
 }
 
-} // namespace graphics
+}  // namespace polygons
 
-} // namespace nextfloor
+}  // namespace nextfloor

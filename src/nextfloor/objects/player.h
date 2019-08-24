@@ -23,7 +23,6 @@ namespace objects {
 class Player : public ModelMesh {
 
 public:
-
     Player(glm::vec3 location);
 
     Player(Player&&) = default;
@@ -34,8 +33,8 @@ public:
     virtual ~Player() override = default;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_OBJECTS_PLAYER_H_
+#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_PLAYER_H_

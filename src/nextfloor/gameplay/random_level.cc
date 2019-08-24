@@ -18,6 +18,6 @@ std::unique_ptr<nextfloor::objects::Mesh> RandomLevel::GenerateUniverse() noexce
     return CommonServices::getFactory()->MakeUniverse();
 }
 
-} // namespace gameplay
+}  // namespace gameplay
 
-} // namespace nextfloor
+}  // namespace nextfloor

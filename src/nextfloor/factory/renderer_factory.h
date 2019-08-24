@@ -23,13 +23,9 @@ namespace factory {
 class RendererFactory {
 
 public:
-
     RendererFactory(RendererFactory&&) = default;
-
     RendererFactory& operator=(RendererFactory&&) = default;
-
     RendererFactory(const RendererFactory&) = default;
-
     RendererFactory& operator=(const RendererFactory&) = default;
 
     virtual ~RendererFactory() = default;
@@ -38,12 +34,11 @@ public:
 
 
 protected:
-
     RendererFactory() = default;
 };
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_FACTORY_RENDERERFACTORY_H_
+#endif  // NEXTFLOOR_FACTORY_RENDERERFACTORY_H_

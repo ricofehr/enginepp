@@ -19,7 +19,7 @@ namespace {
 
 static bool sInstanciated = false;
 
-} // anonymous namespace
+}  // anonymous namespace
 
 GameLoop::GameLoop()
 {
@@ -28,11 +28,9 @@ GameLoop::GameLoop()
 
     using nextfloor::core::CommonServices;
     game_window_ = CommonServices::getFactory()->MakeSceneWindow();
-    //engine_collision_ = CommonServices::getFactory()->MakeCollisionEngine();
     universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
 
     assert(game_window_ != nullptr);
-    //assert(engine_collision_ != nullptr);
 }
 
 /**
@@ -40,9 +38,9 @@ GameLoop::GameLoop()
  */
 void GameLoop::LogLoop()
 {
-    using nextfloor::core::CommonServices;
-
     static bool sFirstLoop = true;
+
+    using nextfloor::core::CommonServices;
 
     if (CommonServices::getTimer()->IsNewSecondElapsed()) {
         /* Header for test datas output */
@@ -52,7 +50,8 @@ void GameLoop::LogLoop()
         /* Print if debug */
         if (CommonServices::getConfig()->IsAllDebugEnabled()) {
             std::ostringstream message_frame;
-            message_frame << 1000.0 / static_cast<double>(CommonServices::getTimer()->getLoopCountBySecond()) << " ms/frame - ";
+            message_frame << 1000.0 / static_cast<double>(CommonServices::getTimer()->getLoopCountBySecond())
+                          << " ms/frame - ";
             CommonServices::getLog()->Write(std::move(message_frame));
         }
 
@@ -90,15 +89,15 @@ void GameLoop::Loop()
         }
 
         game_window_->PrepareDisplay();
-        //universe_->DetectCollision();
+        universe_->DetectCollision();
+        universe_->Move();
         universe_->Draw();
         game_window_->SwapBuffers();
         LogLoop();
 
         glfwPollEvents();
-    }
-    while (glfwGetKey(game_window_->glfw_window(), GLFW_KEY_ESCAPE) != GLFW_PRESS
-           && glfwWindowShouldClose(game_window_->glfw_window()) == 0);
+    } while (glfwGetKey(game_window_->glfw_window(), GLFW_KEY_ESCAPE) != GLFW_PRESS
+             && glfwWindowShouldClose(game_window_->glfw_window()) == 0);
 }
 
 GameLoop::~GameLoop()
@@ -107,6 +106,6 @@ GameLoop::~GameLoop()
     sInstanciated = false;
 }
 
-} // namespace renderer
+}  // namespace controller
 
-} // namespace nextfloor
+}  // namespace nextfloor

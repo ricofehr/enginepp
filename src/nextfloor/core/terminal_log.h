@@ -24,7 +24,6 @@ namespace core {
 class TerminalLog : public Log {
 
 public:
-
     TerminalLog();
 
     TerminalLog(TerminalLog&&) = default;
@@ -41,8 +40,8 @@ public:
     virtual void WriteLine(const std::string& log_line) const override final;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_TERMINALLOG_H_
+#endif  // NEXTFLOOR_CORE_TERMINALLOG_H_

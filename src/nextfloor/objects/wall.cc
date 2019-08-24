@@ -13,7 +13,7 @@ void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint) noexcept
 {
     using nextfloor::core::CommonServices;
 
-    auto padding = brick_dimension_/2.0f;
+    auto padding = brick_dimension_ / 2.0f;
     firstpoint += padding;
     lastpoint -= padding;
 
@@ -21,13 +21,14 @@ void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint) noexcept
         ++bricks_count_.x;
         for (float y = firstpoint.y; y <= lastpoint.y; y += brick_dimension_.y) {
             for (float z = firstpoint.z; z <= lastpoint.z; z += brick_dimension_.z) {
-                auto brick_location = glm::vec3(x,y,z);
-                add_child(CommonServices::getFactory()->MakeWallBrick(brick_location, brick_dimension_/2.0f, texture_file()));
+                auto brick_location = glm::vec3(x, y, z);
+                add_child(
+                  CommonServices::getFactory()->MakeWallBrick(brick_location, brick_dimension_ / 2.0f, texture_file()));
             }
         }
     }
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

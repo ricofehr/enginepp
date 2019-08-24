@@ -21,8 +21,8 @@ namespace renderer {
 class VertexShader : public Shader {
 
 public:
-
-    VertexShader(std::string shader_path) : Shader(shader_path) {};
+    VertexShader(std::string shader_path)
+          : Shader(shader_path){};
 
     VertexShader(VertexShader&&) = default;
     VertexShader& operator=(VertexShader&&) = default;
@@ -34,8 +34,8 @@ public:
     virtual void LoadShader() override final;
 };
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_VERTEXSHADER_H_
+#endif  // NEXTFLOOR_RENDERER_VERTEXSHADER_H_

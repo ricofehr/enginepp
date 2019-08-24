@@ -43,12 +43,12 @@ void Universe::Draw() noexcept
         Move();
 
         /* Draw Rooms on Gl Scene */
-        for (auto &r : display_rooms_) {
+        for (auto& r : display_rooms_) {
             r->Draw();
         }
     }
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

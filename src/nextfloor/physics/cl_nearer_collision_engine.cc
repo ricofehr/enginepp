@@ -34,14 +34,14 @@ void ClNearerCollisionEngine::InitCollisionEngine()
 
     try {
         /* Query for platforms */
-        std::vector <cl::Platform> platforms;
+        std::vector<cl::Platform> platforms;
         cl::Platform::get(&platforms);
 
         /* Select best devices in the workstation */
         std::vector<cl::Device> devices;
-        for (auto &pf: platforms) {
+        for (auto& pf : platforms) {
             pf.getDevices(CL_DEVICE_TYPE_ALL, &devices);
-            for (auto &dev : devices) {
+            for (auto& dev : devices) {
                 size_t num;
                 dev.getInfo(CL_DEVICE_MAX_COMPUTE_UNITS, &num);
                 if (num > max_cores) {
@@ -89,7 +89,8 @@ void ClNearerCollisionEngine::InitCollisionEngine()
         while (num < wk_size_) {
             wk_size_ /= 2;
         }
-    } catch(cl::Error error) {
+    }
+    catch (cl::Error error) {
         HandleErrorOnInit(error);
     }
 }
@@ -104,8 +105,7 @@ void ClNearerCollisionEngine::HandleErrorOnInit(cl::Error error)
     CommonServices::getExit()->ExitOnError();
 }
 
-float ClNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target,
-                                                nextfloor::objects::Mesh* obstacle)
+float ClNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
 {
     auto target_border = target->border();
     auto obstacle_border = obstacle->border();
@@ -181,6 +181,6 @@ float ClNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target
     return ret;
 }
 
-} // namespace physics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor

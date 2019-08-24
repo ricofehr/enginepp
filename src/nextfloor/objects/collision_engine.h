@@ -20,33 +20,28 @@ namespace objects {
 class CollisionEngine {
 
 public:
-
     virtual ~CollisionEngine() = default;
 
     /* Template Method : Detect if a collision exists between target and obstacle. */
-    virtual void DetectCollision(Mesh* target,
-                                 Mesh* obstacle) = 0;
+    virtual void DetectCollision(Mesh* target, Mesh* obstacle) = 0;
 
     /**
      *  Primitive Operation subclassed: compute collision distance between borders of 2 objects
      *  @return parted (as fraction of setted move) distance between the 2 borders
      */
-    virtual float ComputeCollision(Mesh* target,
-                                   Mesh* obstacle) = 0;
+    virtual float ComputeCollision(Mesh* target, Mesh* obstacle) = 0;
 
 protected:
-
     CollisionEngine() = default;
 
     CollisionEngine(CollisionEngine&&) = default;
     CollisionEngine& operator=(CollisionEngine&&) = default;
     CollisionEngine(const CollisionEngine&) = delete;
     CollisionEngine& operator=(const CollisionEngine&) = delete;
-
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_COLLISIONENGINE_H_
+#endif  // NEXTFLOOR_OBJECTS_COLLISIONENGINE_H_

@@ -21,7 +21,6 @@ namespace nextfloor {
 
 namespace factory {
 
-
 std::unique_ptr<nextfloor::core::ConfigParser> ServicesFactory::MakeConfigParser() const noexcept
 {
     using nextfloor::core::FileConfigParser;
@@ -63,6 +62,6 @@ std::unique_ptr<MeshFactory> ServicesFactory::MakeMeshFactory() const noexcept
     return std::make_unique<GameFactory>();
 }
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor

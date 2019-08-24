@@ -110,7 +110,8 @@ std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeRoof(glm::vec3 locati
     return std::make_unique<nextfloor::objects::Roof>(location, scale);
 }
 
-std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept
+std::unique_ptr<nextfloor::objects::Mesh>
+  GameFactory::MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture) const noexcept
 {
     using nextfloor::objects::WallBrick;
     return std::make_unique<nextfloor::objects::WallBrick>(location, scale, texture);
@@ -164,25 +165,29 @@ std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeRoomGrid(nextfloor::o
     return std::make_unique<RoomGrid>(room);
 }
 
-std::unique_ptr<nextfloor::objects::Grid> GameFactory::MakeGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension) const noexcept
+std::unique_ptr<nextfloor::objects::Grid>
+  GameFactory::MakeGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension) const noexcept
 {
     using nextfloor::grid::MeshGrid;
     return std::make_unique<MeshGrid>(owner, boxes_count, box_dimension);
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeRoomGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* room_grid) const noexcept
+std::unique_ptr<nextfloor::objects::GridBox>
+  GameFactory::MakeRoomGridBox(glm::vec3 coords, nextfloor::objects::Grid* room_grid) const noexcept
 {
     using nextfloor::grid::RoomGridBox;
-    return std::make_unique<RoomGridBox>(grid_coords, room_grid);
+    return std::make_unique<RoomGridBox>(coords, room_grid);
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeUniverseGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* universe_grid) const noexcept
+std::unique_ptr<nextfloor::objects::GridBox>
+  GameFactory::MakeUniverseGridBox(glm::vec3 coords, nextfloor::objects::Grid* universe_grid) const noexcept
 {
     using nextfloor::grid::UniverseGridBox;
-    return std::make_unique<UniverseGridBox>(grid_coords, universe_grid);
+    return std::make_unique<UniverseGridBox>(coords, universe_grid);
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> GameFactory::MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* grid) const noexcept
+std::unique_ptr<nextfloor::objects::GridBox>
+  GameFactory::MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* grid) const noexcept
 {
     using nextfloor::grid::WiredGridBox;
     return std::make_unique<WiredGridBox>(grid_coords, grid);
@@ -213,12 +218,12 @@ std::unique_ptr<nextfloor::renderer::SceneWindow> GameFactory::MakeSceneWindow()
 
 nextfloor::objects::CollisionEngine* GameFactory::MakeCollisionEngine() const noexcept
 {
-    using nextfloor::objects::CollisionEngine;
     using nextfloor::core::CommonServices;
-    using nextfloor::physics::NearerCollisionEngine;
-    using nextfloor::physics::TbbNearerCollisionEngine;
-    using nextfloor::physics::SerialNearerCollisionEngine;
+    using nextfloor::objects::CollisionEngine;
     using nextfloor::physics::ClNearerCollisionEngine;
+    using nextfloor::physics::NearerCollisionEngine;
+    using nextfloor::physics::SerialNearerCollisionEngine;
+    using nextfloor::physics::TbbNearerCollisionEngine;
 
     CollisionEngine* engine_collision{nullptr};
 
@@ -226,15 +231,9 @@ nextfloor::objects::CollisionEngine* GameFactory::MakeCollisionEngine() const no
     int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
 
     switch (type_parallell) {
-        case NearerCollisionEngine::kPARALLELL_TBB:
-            engine_collision = new TbbNearerCollisionEngine();
-            break;
-        case NearerCollisionEngine::kPARALLELL_CL:
-            engine_collision = new ClNearerCollisionEngine();
-            break;
-        default:
-            engine_collision = new SerialNearerCollisionEngine();
-            break;
+    case NearerCollisionEngine::kPARALLELL_TBB: engine_collision = new TbbNearerCollisionEngine(); break;
+    case NearerCollisionEngine::kPARALLELL_CL: engine_collision = new ClNearerCollisionEngine(); break;
+    default: engine_collision = new SerialNearerCollisionEngine(); break;
     }
 
     assert(engine_collision != nullptr);
@@ -248,11 +247,11 @@ std::unique_ptr<nextfloor::gameplay::Level> GameFactory::MakeLevel() const noexc
     return std::make_unique<DemoLevel>();
 }
 
-    GameFactory::~GameFactory()
+GameFactory::~GameFactory()
 {
     sInstanciated = false;
 }
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor

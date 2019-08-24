@@ -24,7 +24,6 @@ namespace core {
 class FileConfigParser : public ConfigParser {
 
 public:
-
     FileConfigParser();
 
     FileConfigParser(FileConfigParser&&) = default;
@@ -41,55 +40,29 @@ public:
     /*
      * Config Accessors
      */
-    virtual float getWindowWidth() const override final
-    {
-        return getSetting<float>("width");
-    }
+    virtual float getWindowWidth() const override final { return getSetting<float>("width"); }
 
-    virtual float getWindowHeight() const override final
-    {
-        return getSetting<float>("height");
-    }
+    virtual float getWindowHeight() const override final { return getSetting<float>("height"); }
 
-    virtual bool isVsync() const override final
-    {
-        return getSetting<bool>("vsync");
-    }
+    virtual bool isVsync() const override final { return getSetting<bool>("vsync"); }
 
-    virtual bool isGridMode() const override final
-    {
-        return getSetting<bool>("grid");
-    }
+    virtual bool isGridMode() const override final { return getSetting<bool>("grid"); }
 
-    virtual int getExecutionDuration() const override final
-    {
-        return getSetting<int>("execution_time");
-    }
+    virtual int getExecutionDuration() const override final { return getSetting<int>("execution_time"); }
 
-    virtual int getDebugLevel() const override final
-    {
-        return getSetting<int>("debug");
-    }
+    virtual int getDebugLevel() const override final { return getSetting<int>("debug"); }
 
-    virtual int getCollisionGranularity() const override final
-    {
-        return getSetting<int>("granularity");
-    }
+    virtual int getCollisionGranularity() const override final { return getSetting<int>("granularity"); }
 
-    virtual int getClippingLevel() const override final
-    {
-        return getSetting<int>("clipping");
-    }
+    virtual int getClippingLevel() const override final { return getSetting<int>("clipping"); }
 
     virtual int getThreadsCount() const override final
     {
-        return getSetting<int>("workers_count") > 0 ? getSetting<int>("workers_count") : tbb::task_scheduler_init::default_num_threads();
+        return getSetting<int>("workers_count") > 0 ? getSetting<int>("workers_count")
+                                                    : tbb::task_scheduler_init::default_num_threads();
     }
 
-    virtual int getParallellAlgoType() const override final
-    {
-        return getSetting<int>("parallell");
-    }
+    virtual int getParallellAlgoType() const override final { return getSetting<int>("parallell"); }
 
     virtual bool IsCollisionDebugEnabled() const override final;
     virtual bool IsTestDebugEnabled() const override final;
@@ -97,11 +70,7 @@ public:
     virtual bool IsPerfDebugEnabled() const override final;
 
 private:
-
-    inline virtual bool IsExist(std::string key) override final
-    {
-        return config_.exists(key);
-    }
+    inline virtual bool IsExist(std::string key) override final { return config_.exists(key); }
 
     /* Parameter Accessor */
     template<typename T>
@@ -116,12 +85,11 @@ private:
     template<typename T>
     inline void setSetting(std::string key, libconfig::Setting::Type setting_type, T value)
     {
-        libconfig::Setting &config_root = config_.getRoot();
+        libconfig::Setting& config_root = config_.getRoot();
         if (config_root.exists(key)) {
             config_root.remove(key);
         }
         config_root.add(key, setting_type) = value;
-
     }
 
     void ParseConfigFile();
@@ -156,8 +124,8 @@ private:
     std::unique_ptr<tbb::task_scheduler_init> tbb_threads_config_{nullptr};
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_FILECONFIGPARSER_H_
+#endif  // NEXTFLOOR_CORE_FILECONFIGPARSER_H_

@@ -30,7 +30,6 @@ namespace physics {
 class CubeBorder : public nextfloor::objects::Border {
 
 public:
-
     CubeBorder(glm::vec3 location, glm::vec3 scale);
     CubeBorder(glm::vec3 location, float scale);
     CubeBorder(glm::vec3 location, float scale, std::vector<glm::vec3> coords);
@@ -62,7 +61,6 @@ public:
     virtual glm::vec3 getLastPoint() override;
 
 private:
-
     virtual float CalculateWidth() override;
     virtual float CalculateHeight() override;
     virtual float CalculateDepth() override;
@@ -84,9 +82,8 @@ private:
     std::vector<glm::vec3> coords_model_matrix_computed_;
 };
 
-} // namespace objects
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_PHYSICS_BORDER_H_
-
+#endif  // NEXTFLOOR_PHYSICS_BORDER_H_

@@ -22,7 +22,6 @@ namespace physics {
 class SerialNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
-
     SerialNearerCollisionEngine();
 
     SerialNearerCollisionEngine(SerialNearerCollisionEngine&&) = default;
@@ -32,16 +31,14 @@ public:
 
     virtual ~SerialNearerCollisionEngine() override = default;
 
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target,
-                                   nextfloor::objects::Mesh* obstacle) override final;
+    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) override final;
 
 private:
-
     void InitCollisionEngine() override final;
 };
 
-} // namespace physics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_PHYSICS_SERIALNEARERCOLLISIONENGINE_H_
+#endif  // NEXTFLOOR_PHYSICS_SERIALNEARERCOLLISIONENGINE_H_

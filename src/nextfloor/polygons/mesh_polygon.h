@@ -27,7 +27,6 @@ namespace polygons {
 class MeshPolygon : public nextfloor::objects::Polygon {
 
 public:
-
     virtual ~MeshPolygon() = default;
 
     virtual void UpdateModelViewProjectionMatrix() override;
@@ -58,7 +57,6 @@ public:
     virtual void InverseMove() override { movement_ = -movement_; }
 
 protected:
-
     MeshPolygon() = default;
 
     MeshPolygon(MeshPolygon&&) = default;
@@ -78,14 +76,13 @@ protected:
     float move_factor_{1.0f};
 
 private:
-
     glm::mat4 GetProjectionMatrix();
     glm::mat4 GetViewMatrix();
     glm::mat4 GetModelMatrix();
 };
 
-} // namespace polygons
+}  // namespace polygons
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_GRAPHICS_SHAPE3D_H_
+#endif  // NEXTFLOOR_GRAPHICS_SHAPE3D_H_

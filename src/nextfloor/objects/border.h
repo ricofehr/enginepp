@@ -22,7 +22,6 @@ namespace objects {
 class Border {
 
 public:
-
     virtual ~Border() = default;
 
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const = 0;
@@ -48,7 +47,6 @@ public:
     virtual glm::vec3 getLastPoint() = 0;
 
 protected:
-
     Border() = default;
 
     Border(Border&&) = default;
@@ -57,9 +55,8 @@ protected:
     Border& operator=(const Border&) = delete;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_BORDER_H_
-
+#endif  // NEXTFLOOR_OBJECTS_BORDER_H_

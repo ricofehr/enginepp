@@ -24,14 +24,12 @@ namespace objects {
 class WidthWall : public Wall {
 
 public:
-
     virtual ~WidthWall() override = default;
 
     virtual void AddDoor() noexcept override;
     virtual void AddWindow() noexcept override;
 
 protected:
-
     WidthWall(glm::vec3 location, glm::vec3 scale);
 
     WidthWall(WidthWall&&) = default;
@@ -40,7 +38,6 @@ protected:
     WidthWall& operator=(const WidthWall&) = delete;
 
 private:
-
     static constexpr char kTEXTURE[] = "assets/wall.png";
 
     static constexpr float kBRICK_WIDTH = 2.0f;
@@ -50,8 +47,8 @@ private:
     virtual std::string texture_file() const noexcept override { return kTEXTURE; }
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_OBJECTS_WALL_H_
+#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_WALL_H_

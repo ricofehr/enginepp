@@ -24,15 +24,11 @@ namespace factory {
 class GlRendererFactory : public RendererFactory {
 
 public:
-
     GlRendererFactory();
 
     GlRendererFactory(GlRendererFactory&&) = default;
-
     GlRendererFactory& operator=(GlRendererFactory&&) = default;
-
     GlRendererFactory(const GlRendererFactory&) = default;
-
     GlRendererFactory& operator=(const GlRendererFactory&) = default;
 
     virtual ~GlRendererFactory() override;
@@ -41,12 +37,11 @@ public:
 
 
 private:
-
     std::map<std::string, std::unique_ptr<nextfloor::objects::RendererEngine>> renderers_;
 };
 
-} // namespace factory
+}  // namespace factory
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_FACTORY_GLRENDERERFACTORY_H_
+#endif  // NEXTFLOOR_FACTORY_GLRENDERERFACTORY_H_

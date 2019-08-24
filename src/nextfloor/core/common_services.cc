@@ -29,6 +29,6 @@ void CommonServices::Init()
     factory_ = services_factory.MakeMeshFactory();
 }
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor

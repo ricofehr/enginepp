@@ -12,8 +12,7 @@ namespace nextfloor {
 
 namespace physics {
 
-void NearerCollisionEngine::DetectCollision(nextfloor::objects::Mesh* target,
-                                            nextfloor::objects::Mesh* obstacle)
+void NearerCollisionEngine::DetectCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
 {
     if (target->IsLastObstacle(obstacle)) {
         return;
@@ -24,6 +23,6 @@ void NearerCollisionEngine::DetectCollision(nextfloor::objects::Mesh* target,
 }
 
 
-} // namespace physics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor

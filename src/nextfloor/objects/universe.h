@@ -22,7 +22,6 @@ namespace objects {
 class Universe : public ModelMesh {
 
 public:
-
     Universe();
 
     Universe(Universe&&) = default;
@@ -35,14 +34,12 @@ public:
     void Draw() noexcept override final;
 
 private:
-
     /** filtering only rooms with display state */
     std::vector<Mesh*> display_rooms_;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_UNIVERSE_H_
-
+#endif  // NEXTFLOOR_OBJECTS_UNIVERSE_H_

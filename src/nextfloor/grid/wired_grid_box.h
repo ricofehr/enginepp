@@ -25,12 +25,13 @@ namespace grid {
 class WiredGridBox : public nextfloor::objects::GridBox {
 
 public:
-
     WiredGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner);
+
     WiredGridBox(WiredGridBox&&) = default;
     WiredGridBox& operator=(WiredGridBox&&) = default;
     WiredGridBox(const WiredGridBox&) = default;
     WiredGridBox& operator=(const WiredGridBox&) = default;
+
     virtual ~WiredGridBox() override = default;
 
     virtual void add(nextfloor::objects::Mesh* object) noexcept override;
@@ -39,9 +40,8 @@ public:
     virtual std::vector<nextfloor::objects::Mesh*> other_occupants(nextfloor::objects::Mesh* object) noexcept override
     {
         std::vector<nextfloor::objects::Mesh*> others(0);
-        for (auto &occupant : occupants_) {
-            if (occupant->id() != object->id())
-            {
+        for (auto& occupant : occupants_) {
+            if (occupant->id() != object->id()) {
                 others.push_back(occupant);
             }
         }
@@ -60,15 +60,13 @@ public:
     virtual bool IsBottomPositionFilled() const noexcept override;
     virtual bool IsTopPositionFilled() const noexcept override;
 
-    virtual int size() const noexcept override
-    {
-        return occupants_.size();
-    }
+    virtual int size() const noexcept override { return occupants_.size(); }
     virtual glm::vec3 coords() const noexcept override { return coords_; }
     virtual std::vector<nextfloor::objects::Mesh*> occupants() noexcept override { return occupants_; }
 
 
-    // virtual std::vector<nextfloor::objects::Mesh*> FindCollisionNeighbors(nextfloor::objects::Mesh* target) noexcept override
+    // virtual std::vector<nextfloor::objects::Mesh*> FindCollisionNeighbors(nextfloor::objects::Mesh* target)
+    // noexcept override
     // {
     //     auto neighbors = owner_->FindCollisionNeighbors();
     //     sort(neighbors.begin(), neighbors.end());
@@ -123,11 +121,9 @@ public:
     // }
 
 protected:
-
     nextfloor::objects::Mesh* getFirstOccupant()
     {
-        if (occupants_.size() == 0)
-        {
+        if (occupants_.size() == 0) {
             return nullptr;
         }
 
@@ -135,8 +131,8 @@ protected:
     }
 
 private:
-
-    // std::vector<nextfloor::objects::Mesh*> FindFrontPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindFrontPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontPositionCollisionNeighbors(coords_);
@@ -146,7 +142,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -155,7 +152,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontRightPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindFrontRightPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontRightPositionCollisionNeighbors(coords_);
@@ -165,7 +163,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -174,7 +173,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontRightBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindFrontRightBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontRightBottomPositionCollisionNeighbors(coords_);
@@ -184,7 +184,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -193,7 +194,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontRightTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindFrontRightTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontRightTopPositionCollisionNeighbors(coords_);
@@ -203,7 +205,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -212,7 +215,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontLeftPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindFrontLeftPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontLeftPositionCollisionNeighbors(coords_);
@@ -222,7 +226,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -231,7 +236,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontLeftBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindFrontLeftBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontLeftBottomPositionCollisionNeighbors(coords_);
@@ -241,7 +247,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -250,7 +257,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontLeftTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindFrontLeftTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontLeftTopPositionCollisionNeighbors(coords_);
@@ -260,7 +268,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -269,7 +278,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindFrontBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontBottomPositionCollisionNeighbors(coords_);
@@ -279,7 +289,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -288,7 +299,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindFrontTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindFrontTopPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindFrontTopPositionCollisionNeighbors(coords_);
@@ -298,7 +310,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -307,7 +320,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindRightPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindRightPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindRightPositionCollisionNeighbors(coords_);
@@ -317,7 +331,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -326,7 +341,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindRightBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindRightBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindRightBottomPositionCollisionNeighbors(coords_);
@@ -336,7 +352,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -345,7 +362,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindRightTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindRightTopPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindRightTopPositionCollisionNeighbors(coords_);
@@ -355,7 +373,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -364,7 +383,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindBackPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackPositionCollisionNeighbors(coords_);
@@ -374,7 +394,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -383,7 +404,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackRightPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindBackRightPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackRightPositionCollisionNeighbors(coords_);
@@ -393,7 +415,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -402,7 +425,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackRightBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindBackRightBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackRightBottomPositionCollisionNeighbors(coords_);
@@ -412,7 +436,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -421,7 +446,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackRightTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindBackRightTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackRightTopPositionCollisionNeighbors(coords_);
@@ -431,7 +457,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -440,7 +467,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackLeftPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindBackLeftPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackLeftPositionCollisionNeighbors(coords_);
@@ -450,7 +478,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -459,7 +488,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackLeftBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindBackLeftBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackLeftBottomPositionCollisionNeighbors(coords_);
@@ -469,7 +499,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -478,7 +509,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackLeftTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindBackLeftTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackLeftTopPositionCollisionNeighbors(coords_);
@@ -488,7 +520,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -497,7 +530,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindBackBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackBottomPositionCollisionNeighbors(coords_);
@@ -507,7 +541,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -516,7 +551,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBackTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindBackTopPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBackTopPositionCollisionNeighbors(coords_);
@@ -526,7 +562,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -535,7 +572,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindLeftPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindLeftPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindLeftPositionCollisionNeighbors(coords_);
@@ -545,7 +583,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -554,7 +593,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindLeftBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*>
+    // FindLeftBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindLeftBottomPositionCollisionNeighbors(coords_);
@@ -564,7 +604,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -573,7 +614,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindLeftTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindLeftTopPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindLeftTopPositionCollisionNeighbors(coords_);
@@ -583,7 +625,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -592,7 +635,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindBottomPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindBottomPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindBottomPositionCollisionNeighbors(coords_);
@@ -602,7 +646,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -611,7 +656,8 @@ private:
     //     return neighbors;
     // }
 
-    // std::vector<nextfloor::objects::Mesh*> FindTopPositionCollisionNeighbors(nextfloor::objects::Mesh* target) const
+    // std::vector<nextfloor::objects::Mesh*> FindTopPositionCollisionNeighbors(nextfloor::objects::Mesh*
+    // target) const
     // {
     //     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     //     auto front_neighbors = owner_->FindTopPositionCollisionNeighbors(coords_);
@@ -621,7 +667,8 @@ private:
     //             continue;
     //         }
     //         auto vector_neighbor = neighbor->location() - target->location();
-    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
+    //         if (glm::length(target->movement()) + glm::length(neighbor->movement()) >
+    //         glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f &&
     //             glm::dot(target->movement(), vector_neighbor) > 0) {
     //             neighbors.push_back(neighbor);
     //         }
@@ -635,8 +682,8 @@ private:
     glm::vec3 coords_;
 };
 
-} // namespace objects
+}  // namespace grid
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_GRIDBOX_H_
+#endif  // NEXTFLOOR_OBJECTS_GRIDBOX_H_

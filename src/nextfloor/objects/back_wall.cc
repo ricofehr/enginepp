@@ -11,17 +11,19 @@ namespace nextfloor {
 namespace objects {
 
 BackWall::BackWall(glm::vec3 location, glm::vec3 scale)
-    :WidthWall(location, scale) {}
+      : WidthWall(location, scale)
+{}
 
 void BackWall::PrepareDraw() noexcept
 {
     if (parent_->IsBackPositionFilled()) {
         AddDoor();
-    } else {
+    }
+    else {
         AddWindow();
     }
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

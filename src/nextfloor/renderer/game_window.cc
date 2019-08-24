@@ -50,7 +50,7 @@ static void ClearWindow()
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
 /**
  *  GameWindow Global Variables Init
@@ -100,9 +100,8 @@ void GameWindow::InitWindowSize()
 void GameWindow::CreateWindow()
 {
     /* Open a window and create its OpenGL context (use glfwGetPrimaryMonitor() on third parameter for FS) */
-    glfw_window_ = glfwCreateWindow(window_width_, window_height_,
-                                    "=== Engine ===", nullptr, nullptr);
-    if(glfw_window_ == nullptr) {
+    glfw_window_ = glfwCreateWindow(window_width_, window_height_, "=== Engine ===", nullptr, nullptr);
+    if (glfw_window_ == nullptr) {
         using nextfloor::core::CommonServices;
         CommonServices::getLog()->WriteLine("Failed to open GLFW window");
         glfwTerminate();
@@ -168,7 +167,8 @@ void GameWindow::InitPolygonMode()
 
     if (CommonServices::getConfig()->isGridMode()) {
         polygon_mode_ = GL_LINE;
-    } else {
+    }
+    else {
         polygon_mode_ = GL_FILL;
     }
 }
@@ -232,6 +232,6 @@ GameWindow::~GameWindow()
     sInstanciated = false;
 }
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor

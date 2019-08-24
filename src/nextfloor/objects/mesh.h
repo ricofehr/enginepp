@@ -25,7 +25,6 @@ namespace objects {
 class Mesh {
 
 public:
-
     virtual ~Mesh() = default;
 
     virtual void Draw() = 0;
@@ -83,18 +82,16 @@ public:
     virtual void toready() = 0;
 
 protected:
-
     Mesh() = default;
 
     Mesh(Mesh&&) = default;
     Mesh& operator=(Mesh&&) = default;
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
-
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_MESH_H_
+#endif  // NEXTFLOOR_OBJECTS_MESH_H_

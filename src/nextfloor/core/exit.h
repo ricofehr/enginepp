@@ -18,7 +18,6 @@ namespace core {
 class Exit {
 
 public:
-
     Exit(Exit&&) = default;
     Exit& operator=(Exit&&) = default;
     Exit(const Exit&) = delete;
@@ -30,12 +29,11 @@ public:
     virtual void ExitOnSuccess() const noexcept = 0;
 
 protected:
-
     Exit() = default;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_EXITPROGRAM_H_
+#endif  // NEXTFLOOR_CORE_EXITPROGRAM_H_

@@ -19,6 +19,6 @@ Player::Player(glm::vec3 location)
     camera_ = CommonServices::getFactory()->MakeCamera(this);
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

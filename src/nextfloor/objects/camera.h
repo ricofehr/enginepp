@@ -20,7 +20,6 @@ namespace objects {
 class Camera {
 
 public:
-
     virtual ~Camera() = default;
 
     virtual void ComputeOrientation() noexcept = 0;
@@ -30,14 +29,11 @@ public:
     virtual glm::vec3 direction() const = 0;
     virtual glm::vec3 head() const = 0;
     virtual float fov() const = 0;
-    //virtual Camera* active() = 0;
-
     virtual void set_active() = 0;
 
     static Camera* active() { return active_; }
 
 protected:
-
     Camera() = default;
 
     Camera(Camera&&) = default;
@@ -49,9 +45,8 @@ protected:
     static Camera* active_;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_CAMERA_H_
-
+#endif  // NEXTFLOOR_OBJECTS_CAMERA_H_

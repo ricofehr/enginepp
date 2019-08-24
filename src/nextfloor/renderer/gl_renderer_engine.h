@@ -24,11 +24,7 @@ namespace renderer {
 class GlRendererEngine : public nextfloor::objects::RendererEngine {
 
 public:
-
-    GlRendererEngine(std::string texture)
-    {
-        texture_ = texture;
-    }
+    GlRendererEngine(std::string texture) { texture_ = texture; }
 
     GlRendererEngine(GlRendererEngine&&) = default;
     GlRendererEngine& operator=(GlRendererEngine&&) = default;
@@ -38,15 +34,14 @@ public:
     virtual ~GlRendererEngine() override = default;
 
 protected:
-
     GLuint elementbuffer_;
     GLuint vertexbuffer_;
     GLuint texturebuffer_;
     std::string texture_;
 };
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_GLRENDERER_H_
+#endif  // NEXTFLOOR_RENDERER_GLRENDERER_H_

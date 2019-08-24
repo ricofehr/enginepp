@@ -20,7 +20,6 @@ namespace core {
 class PseudoRandomGenerator : public RandomGenerator {
 
 public:
-
     PseudoRandomGenerator();
 
     PseudoRandomGenerator(PseudoRandomGenerator&&) = default;
@@ -33,8 +32,8 @@ public:
     virtual int GenerateNumber() const override final;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_PSEUDORANDOMGENERATOR_H_
+#endif  // NEXTFLOOR_CORE_PSEUDORANDOMGENERATOR_H_

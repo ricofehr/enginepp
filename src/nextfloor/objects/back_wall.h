@@ -24,7 +24,6 @@ namespace objects {
 class BackWall : public WidthWall {
 
 public:
-
     BackWall(glm::vec3 location, glm::vec3 scale);
 
     BackWall(BackWall&&) = default;
@@ -37,8 +36,8 @@ public:
     virtual void PrepareDraw() noexcept override;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_OBJECTS_BACKWALL_H_
+#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_BACKWALL_H_

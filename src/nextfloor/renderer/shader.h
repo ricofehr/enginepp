@@ -21,7 +21,6 @@ namespace renderer {
 class Shader {
 
 public:
-
     virtual ~Shader() = default;
 
     virtual void LoadShader() = 0;
@@ -34,7 +33,6 @@ public:
     GLuint shader_id() { return shader_id_; }
 
 protected:
-
     Shader(std::string shader_filepath);
 
     Shader(Shader&&) = default;
@@ -47,8 +45,8 @@ protected:
     GLuint shader_id_;
 };
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_SHADER_H_
+#endif  // NEXTFLOOR_RENDERER_SHADER_H_

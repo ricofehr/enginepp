@@ -20,17 +20,18 @@ namespace grid {
 class RoomGridBox : public WiredGridBox {
 
 public:
-
     RoomGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner);
+
     RoomGridBox(RoomGridBox&&) = default;
     RoomGridBox& operator=(RoomGridBox&&) = default;
     RoomGridBox(const RoomGridBox&) = default;
     RoomGridBox& operator=(const RoomGridBox&) = default;
+
     virtual ~RoomGridBox() = default;
 };
 
-} // namespace grid
+}  // namespace grid
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_GRID_ROOMGRIDBOX_H_
+#endif  // NEXTFLOOR_GRID_ROOMGRIDBOX_H_

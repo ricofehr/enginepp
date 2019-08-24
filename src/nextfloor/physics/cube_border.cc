@@ -20,50 +20,49 @@ namespace {
 
 /* Default base coords for the box */
 static const std::vector<glm::vec3> sDefaultCoords = {
-    /* Front */
-    {-1.0f,  1.0f,  1.0f},
-    { 1.0f,  1.0f,  1.0f},
-    { 1.0f, -1.0f,  1.0f},
-    {-1.0f, -1.0f,  1.0f},
-    /* Back */
-    {-1.0f,  1.0f, -1.0f},
-    { 1.0f,  1.0f, -1.0f},
-    { 1.0f, -1.0f, -1.0f},
-    {-1.0f, -1.0f, -1.0f},
-    /* Left */
-    {-1.0f,  1.0f,  1.0f},
-    {-1.0f,  1.0f, -1.0f},
-    {-1.0f, -1.0f, -1.0f},
-    {-1.0f, -1.0f,  1.0f},
-    /* Right */
-    { 1.0f,  1.0f,  1.0f},
-    { 1.0f,  1.0f, -1.0f},
-    { 1.0f, -1.0f, -1.0f},
-    { 1.0f, -1.0f,  1.0f},
-    /* Top */
-    {-1.0f,  1.0f,  1.0f},
-    {-1.0f,  1.0f, -1.0f},
-    { 1.0f,  1.0f, -1.0f},
-    { 1.0f,  1.0f,  1.0f},
-    /* Bottom */
-    {-1.0f, -1.0f,  1.0f},
-    {-1.0f, -1.0f, -1.0f},
-    { 1.0f, -1.0f, -1.0f},
-    { 1.0f, -1.0f,  1.0f},
+  /* Front */
+  {-1.0f, 1.0f, 1.0f},
+  {1.0f, 1.0f, 1.0f},
+  {1.0f, -1.0f, 1.0f},
+  {-1.0f, -1.0f, 1.0f},
+  /* Back */
+  {-1.0f, 1.0f, -1.0f},
+  {1.0f, 1.0f, -1.0f},
+  {1.0f, -1.0f, -1.0f},
+  {-1.0f, -1.0f, -1.0f},
+  /* Left */
+  {-1.0f, 1.0f, 1.0f},
+  {-1.0f, 1.0f, -1.0f},
+  {-1.0f, -1.0f, -1.0f},
+  {-1.0f, -1.0f, 1.0f},
+  /* Right */
+  {1.0f, 1.0f, 1.0f},
+  {1.0f, 1.0f, -1.0f},
+  {1.0f, -1.0f, -1.0f},
+  {1.0f, -1.0f, 1.0f},
+  /* Top */
+  {-1.0f, 1.0f, 1.0f},
+  {-1.0f, 1.0f, -1.0f},
+  {1.0f, 1.0f, -1.0f},
+  {1.0f, 1.0f, 1.0f},
+  /* Bottom */
+  {-1.0f, -1.0f, 1.0f},
+  {-1.0f, -1.0f, -1.0f},
+  {1.0f, -1.0f, -1.0f},
+  {1.0f, -1.0f, 1.0f},
 
 };
 
-} // anonymous namespace
+}  // anonymous namespace
 
 
-CubeBorder::CubeBorder(glm::vec3 location, glm::vec3 scale)
-    : CubeBorder(location, scale, sDefaultCoords) {}
+CubeBorder::CubeBorder(glm::vec3 location, glm::vec3 scale) : CubeBorder(location, scale, sDefaultCoords) {}
 
-CubeBorder::CubeBorder(glm::vec3 location, float scale)
-    : CubeBorder(location, glm::vec3(scale), sDefaultCoords) {}
+CubeBorder::CubeBorder(glm::vec3 location, float scale) : CubeBorder(location, glm::vec3(scale), sDefaultCoords) {}
 
 CubeBorder::CubeBorder(glm::vec3 location, float scale, std::vector<glm::vec3> coords)
-        : CubeBorder(location, glm::vec3(scale), coords) {}
+      : CubeBorder(location, glm::vec3(scale), coords)
+{}
 
 CubeBorder::CubeBorder(glm::vec3 location, glm::vec3 scale, std::vector<glm::vec3> coords)
 {
@@ -85,7 +84,7 @@ void CubeBorder::ComputesModelMatrixCoords()
     coords_model_matrix_computed_.resize(coords_.size());
 
     /* Parallell coords compute with tbb */
-    tbb::parallel_for (0, static_cast<int>(coords_.size()), 1, [&](int i) {
+    tbb::parallel_for(0, static_cast<int>(coords_.size()), 1, [&](int i) {
         unsigned long index = static_cast<unsigned long>(i);
         coords_model_matrix_computed_[index] = glm::vec3(model_matrix * glm::vec4(coords_[index], 1.0f));
     });
@@ -138,8 +137,8 @@ bool CubeBorder::IsObstacleInSameWidthAfterPartedMove(nextfloor::objects::Border
     auto current_x_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).x;
     auto obstacle_x_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).x;
 
-    if (current_x_afer_parted_move <= obstacle_x_afer_parted_move + obstacle->CalculateWidth() &&
-        obstacle_x_afer_parted_move <= current_x_afer_parted_move + CalculateWidth()) {
+    if (current_x_afer_parted_move <= obstacle_x_afer_parted_move + obstacle->CalculateWidth()
+        && obstacle_x_afer_parted_move <= current_x_afer_parted_move + CalculateWidth()) {
         return true;
     }
 
@@ -151,8 +150,8 @@ bool CubeBorder::IsObstacleInSameHeightAfterPartedMove(nextfloor::objects::Borde
     auto current_y_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).y;
     auto obstacle_y_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).y;
 
-    if (current_y_afer_parted_move >= obstacle_y_afer_parted_move + obstacle->CalculateHeight() &&
-        obstacle_y_afer_parted_move >= current_y_afer_parted_move + CalculateHeight()) {
+    if (current_y_afer_parted_move >= obstacle_y_afer_parted_move + obstacle->CalculateHeight()
+        && obstacle_y_afer_parted_move >= current_y_afer_parted_move + CalculateHeight()) {
         return true;
     }
 
@@ -164,8 +163,8 @@ bool CubeBorder::IsObstacleInSameDepthAfterPartedMove(nextfloor::objects::Border
     auto current_z_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).z;
     auto obstacle_z_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).z;
 
-    if (current_z_afer_parted_move >= obstacle_z_afer_parted_move + obstacle->CalculateDepth() &&
-        obstacle_z_afer_parted_move >= current_z_afer_parted_move + CalculateDepth()) {
+    if (current_z_afer_parted_move >= obstacle_z_afer_parted_move + obstacle->CalculateDepth()
+        && obstacle_z_afer_parted_move >= current_z_afer_parted_move + CalculateDepth()) {
         return true;
     }
 
@@ -194,6 +193,6 @@ void CubeBorder::ComputeNewLocation()
     ComputesModelMatrixCoords();
 }
 
-} // namespace graphics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor

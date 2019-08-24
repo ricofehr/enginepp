@@ -91,7 +91,6 @@ bool WiredGridBox::IsTopPositionFilled() const noexcept
 }
 
 
+}  // namespace grid
 
-} // namespace grid
-
-} // namespace nextfloor
+}  // namespace nextfloor

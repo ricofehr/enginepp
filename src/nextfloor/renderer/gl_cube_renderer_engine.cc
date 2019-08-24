@@ -17,6 +17,7 @@ namespace renderer {
 
 namespace {
 
+// clang-format off
 /* Brick vertex (3) / color (3) / texture (2) coordinates */
 const GLfloat sBufferData[192] = {
     /* Front */
@@ -50,21 +51,23 @@ const GLfloat sBufferData[192] = {
      1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  1.0f,
     -1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  1.0f,
 };
+// clang-format on
 
-} // namespace
+}  // namespace
 
 GlCubeRendererEngine::GlCubeRendererEngine(std::string texture)
-: GlRendererEngine(texture)
+      : GlRendererEngine(texture)
 {
-   CreateVertexBuffer();
-   CreateElementBuffer();
-   CreateTextureBuffer();
+    CreateVertexBuffer();
+    CreateElementBuffer();
+    CreateTextureBuffer();
 }
 
 /*
  *  Fill vertex buffer
  */
-void GlCubeRendererEngine::CreateVertexBuffer() noexcept {
+void GlCubeRendererEngine::CreateVertexBuffer() noexcept
+{
     glGenBuffers(1, &vertexbuffer_);
     assert(vertexbuffer_ != 0);
 
@@ -73,7 +76,9 @@ void GlCubeRendererEngine::CreateVertexBuffer() noexcept {
 }
 
 /* Load element coordinates into buffer */
-void GlCubeRendererEngine::CreateElementBuffer() noexcept {
+void GlCubeRendererEngine::CreateElementBuffer() noexcept
+{
+    // clang-format off
     GLuint elements[] = {
         /* front */
         0, 1, 2,
@@ -94,6 +99,7 @@ void GlCubeRendererEngine::CreateElementBuffer() noexcept {
         20, 21, 22,
         22, 23, 20,
     };
+    // clang-format on
 
     glGenBuffers(1, &elementbuffer_);
     assert(elementbuffer_ != 0);
@@ -105,7 +111,8 @@ void GlCubeRendererEngine::CreateElementBuffer() noexcept {
 /*
  *  Fill texture buffer
  */
-void GlCubeRendererEngine::CreateTextureBuffer() noexcept {
+void GlCubeRendererEngine::CreateTextureBuffer() noexcept
+{
     int width, height;
     unsigned char* image;
 
@@ -145,19 +152,16 @@ void GlCubeRendererEngine::Draw(const glm::mat4& mvp) noexcept
 
         /* 1st attribute buffer : vertices position */
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-                              8 * sizeof(GLfloat), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)0);
 
         /* 2nd attribute buffer : colors */
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-                              8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
         /* 3th attribute buffer : texture position */
         glEnableVertexAttribArray(2);
         glActiveTexture(GL_TEXTURE0 + texturebuffer_);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
-                              8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
         glUniform1i(glGetUniformLocation(SceneWindow::getProgramId(), "tex"), texturebuffer_);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
@@ -169,6 +173,6 @@ void GlCubeRendererEngine::Draw(const glm::mat4& mvp) noexcept
 }
 
 
-} // renderer
+}  // namespace renderer
 
-} // nextfloor
+}  // namespace nextfloor

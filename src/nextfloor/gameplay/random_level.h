@@ -25,7 +25,6 @@ namespace gameplay {
 class RandomLevel : public Level {
 
 public:
-
     RandomLevel() = default;
 
     RandomLevel(RandomLevel&&) = default;
@@ -36,11 +35,10 @@ public:
     virtual ~RandomLevel() = default;
 
     virtual std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() noexcept override;
-
 };
 
-} // namespace gameplay
+}  // namespace gameplay
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_GAMEPLAY_RANDOMLEVEL_H_
+#endif  // NEXTFLOOR_GAMEPLAY_RANDOMLEVEL_H_

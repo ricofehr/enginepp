@@ -26,6 +26,6 @@ void FragmentShader::LoadShader()
     CheckShader();
 }
 
-} // namespace renderer
+}  // namespace renderer
 
-} // namespace nextfloor
+}  // namespace nextfloor

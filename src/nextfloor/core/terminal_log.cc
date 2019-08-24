@@ -16,7 +16,7 @@ namespace {
 
 static bool sInstanciated = false;
 
-}
+}  // anonymous namespace
 
 TerminalLog::TerminalLog()
 {
@@ -50,6 +50,6 @@ TerminalLog::~TerminalLog()
     sInstanciated = false;
 }
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor

@@ -24,13 +24,13 @@ namespace {
 
 static bool sInstanciated = false;
 
-static std::string GetConfigFilePath()
+std::string GetConfigFilePath()
 {
     struct stat buffer;
     return stat("config/nextfloor.ini", &buffer) == 0 ? "config/nextfloor.ini" : "config/nextfloor.ini.default";
 }
 
-static void HandleParseConfigFileIOError(std::string config_file, const libconfig::FileIOException& file_io_exception)
+void HandleParseConfigFileIOError(std::string config_file, const libconfig::FileIOException& file_io_exception)
 {
     std::ostringstream message;
     message << "I/O error while reading file, config parser cancelled: " << config_file << std::endl;
@@ -39,7 +39,7 @@ static void HandleParseConfigFileIOError(std::string config_file, const libconfi
     CommonServices::getExit()->ExitOnError();
 }
 
-static void HandleParseConfigFileParsingError(const libconfig::ParseException& parse_exception)
+void HandleParseConfigFileParsingError(const libconfig::ParseException& parse_exception)
 {
     std::ostringstream message;
     message << "Parse error at " << parse_exception.getFile() << ":";
@@ -48,7 +48,7 @@ static void HandleParseConfigFileParsingError(const libconfig::ParseException& p
     CommonServices::getExit()->ExitOnError();
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
 FileConfigParser::FileConfigParser()
 {
@@ -69,10 +69,10 @@ void FileConfigParser::ParseConfigFile()
     try {
         config_.readFile(config_file.c_str());
     }
-    catch(const libconfig::FileIOException& file_io_exception) {
+    catch (const libconfig::FileIOException& file_io_exception) {
         HandleParseConfigFileIOError(config_file, file_io_exception);
     }
-    catch(const libconfig::ParseException& parse_exception) {
+    catch (const libconfig::ParseException& parse_exception) {
         HandleParseConfigFileParsingError(parse_exception);
     }
 }
@@ -171,12 +171,15 @@ void FileConfigParser::Display() const
     std::cout << "Window width: " << getSetting<float>("width") << std::endl;
     std::cout << "Window height: " << getSetting<float>("height") << std::endl;
     std::cout << "NearerCollisionEngine granularity: " << getSetting<int>("granularity") << std::endl;
-    std::cout << "Clipping (0 -> no clipping, 1 -> high clipping, 2 -> low clipping): " << getSetting<int>("clipping") << std::endl;
+    std::cout << "Clipping (0 -> no clipping, 1 -> high clipping, 2 -> low clipping): " << getSetting<int>("clipping")
+              << std::endl;
     std::cout << "Workers count: " << count_workers << std::endl;
     std::cout << "Execution Time (0 -> no limit): " << getSetting<int>("execution_time") << std::endl;
     std::cout << "Vsync (limit framerate to monitor): " << getSetting<bool>("vsync") << std::endl;
     std::cout << "WiredGrid mode (not fill polygons): " << getSetting<bool>("grid") << std::endl;
-    std::cout << "Debug mode (0 -> no debug, 1 -> test debug, 2 -> performance debug, 3 -> collision debug, 4 -> all debug): " << getSetting<int>("debug") << std::endl;
+    std::cout << "Debug mode (0 -> no debug, 1 -> test debug, 2 -> performance debug, 3 -> "
+                 "collision debug, 4 -> all debug): "
+              << getSetting<int>("debug") << std::endl;
 }
 
 void FileConfigParser::ManageProgramParameters(int argc, char* argv[])
@@ -240,45 +243,44 @@ void FileConfigParser::DisplayHelp(const std::string& command_name) const
 {
     std::cout << command_name << " can be used with following options who overrides config file" << std::endl;
     std::cout << "-c n   Clipping, 0: no clipping, 1: high clipping, 2: low clipping" << std::endl;
-    std::cout << "-d n   Debug mode, 0: no debug, 1: test debug, 2: performance debug, 3: collision debug, 4: all debug" << std::endl;
+    std::cout << "-d n   Debug mode, 0: no debug, 1: test debug, 2: performance debug, 3: "
+                 "collision debug, 4: all debug"
+              << std::endl;
     std::cout << "-e n   Execution Time, 0: no limit" << std::endl;
     std::cout << "-g n   Granularity on collision computes" << std::endl;
     std::cout << "-h     Display help" << std::endl;
     std::cout << "-l 1|0 Enable/Disable display config" << std::endl;
     std::cout << "-p serial|tbb|opencl" << std::endl
-    << "       serial: no parallellism" << std::endl
-    << "       tbb: uses intel tbb library" << std::endl
-    << "       opencl: uses opencl for collision computes" << std::endl;
+              << "       serial: no parallellism" << std::endl
+              << "       tbb: uses intel tbb library" << std::endl
+              << "       opencl: uses opencl for collision computes" << std::endl;
     std::cout << "-v 1|0 Enable/Disable vsync" << std::endl;
-    std::cout << "-w n   Workers (cpu core) count (disabled if -p serial), 0: no limit, all cpu cores" << std::endl;
+    std::cout << "-w n   Workers (cpu core) count (disabled if -p serial), "
+              << "0: no limit, all cpu cores" << std::endl;
 }
 
-void FileConfigParser::ManageClippingParameter(const std::string& parameter_name,
-                                         const std::string& parameter_value)
+void FileConfigParser::ManageClippingParameter(const std::string& parameter_name, const std::string& parameter_value)
 {
     if (parameter_name == "-c") {
         setSetting("clipping", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void FileConfigParser::ManageDebugParameter(const std::string& parameter_name,
-                                      const std::string& parameter_value)
+void FileConfigParser::ManageDebugParameter(const std::string& parameter_name, const std::string& parameter_value)
 {
     if (parameter_name == "-d") {
         setSetting("debug", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void FileConfigParser::ManageExecutionTimeParameter(const std::string& parameter_name,
-                                              const std::string& parameter_value)
+void FileConfigParser::ManageExecutionTimeParameter(const std::string& parameter_name, const std::string& parameter_value)
 {
     if (parameter_name == "-e") {
         setSetting("execution_time", libconfig::Setting::TypeInt, std::stoi(parameter_value));
     }
 }
 
-void FileConfigParser::ManageGranularityParameter(const std::string& parameter_name,
-                                            const std::string& parameter_value)
+void FileConfigParser::ManageGranularityParameter(const std::string& parameter_name, const std::string& parameter_value)
 {
     if (parameter_name == "-g") {
         setSetting("granularity", libconfig::Setting::TypeInt, std::stoi(parameter_value));
@@ -286,7 +288,7 @@ void FileConfigParser::ManageGranularityParameter(const std::string& parameter_n
 }
 
 void FileConfigParser::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
-                                                 const std::string& parameter_value)
+                                                       const std::string& parameter_value)
 {
     using nextfloor::physics::NearerCollisionEngine;
 
@@ -305,16 +307,14 @@ void FileConfigParser::ManagePrallellAlgoTypeParameter(const std::string& parame
     }
 }
 
-void FileConfigParser::ManageVsyncParameter(const std::string& parameter_name,
-                                      const std::string& parameter_value)
+void FileConfigParser::ManageVsyncParameter(const std::string& parameter_name, const std::string& parameter_value)
 {
     if (parameter_name == "-v") {
         setSetting("vsync", libconfig::Setting::TypeBoolean, std::stoi(parameter_value) == 1);
     }
 }
 
-void FileConfigParser::ManageWorkerCountParameter(const std::string& parameter_name,
-                                            const std::string& parameter_value)
+void FileConfigParser::ManageWorkerCountParameter(const std::string& parameter_name, const std::string& parameter_value)
 {
     if (parameter_name == "-w") {
         setSetting("workers_count", libconfig::Setting::TypeInt, std::stoi(parameter_value));
@@ -323,7 +323,7 @@ void FileConfigParser::ManageWorkerCountParameter(const std::string& parameter_n
 
 void FileConfigParser::EnsureCoherentWorkerSetting()
 {
-   using nextfloor::physics::NearerCollisionEngine;
+    using nextfloor::physics::NearerCollisionEngine;
 
     /* Disable tbb usage when serial parallel algorithm is setted */
     if (getSetting<int>("parallell") == NearerCollisionEngine::kPARALLELL_SERIAL) {
@@ -334,7 +334,6 @@ void FileConfigParser::EnsureCoherentWorkerSetting()
     if (getThreadsCount()) {
         tbb_threads_config_ = std::make_unique<tbb::task_scheduler_init>(getThreadsCount());
     }
-
 }
 
 bool FileConfigParser::IsCollisionDebugEnabled() const
@@ -363,6 +362,6 @@ FileConfigParser::~FileConfigParser()
     sInstanciated = false;
 }
 
-} //namespace core
+}  // namespace core
 
-} //namespace nextfloor
+}  // namespace nextfloor

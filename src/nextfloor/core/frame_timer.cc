@@ -24,7 +24,7 @@ static double GetNow()
     return duration_cast<duration<double>>(high_resolution_clock::now().time_since_epoch()).count();
 }
 
-}
+}  // anonymous namespace
 
 double FrameTimer::deltatime_since_lastloop_ = 0.0f;
 double FrameTimer::totaltime_since_beginning_ = 0.0f;
@@ -85,6 +85,6 @@ FrameTimer::~FrameTimer()
     sInstanciated = false;
 }
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor

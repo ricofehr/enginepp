@@ -14,7 +14,9 @@ namespace grid {
 
 
 RoomGrid::RoomGrid(nextfloor::objects::Mesh* owner)
-    : WiredGrid(owner, glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT), glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
+      : WiredGrid(owner,
+                  glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT),
+                  glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
 {
     InitBoxes();
 }
@@ -30,6 +32,6 @@ RoomGrid::~RoomGrid()
     DeleteGrid();
 }
 
-} // namespace grid
+}  // namespace grid
 
-} // namespace nextfloor
+}  // namespace nextfloor

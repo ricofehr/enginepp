@@ -23,7 +23,6 @@ namespace objects {
 class WallBrick : public ModelMesh {
 
 public:
-
     WallBrick(glm::vec3 location, glm::vec3 scale, std::string texture);
 
     WallBrick(WallBrick&&) = default;
@@ -34,8 +33,8 @@ public:
     virtual ~WallBrick() override = default;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_OBJECTS_WALLBRICK_H_
+#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_WALLBRICK_H_

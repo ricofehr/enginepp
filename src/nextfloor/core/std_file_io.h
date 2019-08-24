@@ -23,7 +23,6 @@ namespace core {
 class StdFileIO : public FileIO {
 
 public:
-
     StdFileIO();
 
     StdFileIO(StdFileIO&&) = default;
@@ -36,12 +35,11 @@ public:
     virtual std::string ReadFile(std::string file_path) const override final;
 
 private:
-
     void HandleErrorOnReadFile(std::string file_path) const;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_STDFILEIO_H_
+#endif  // NEXTFLOOR_CORE_STDFILEIO_H_

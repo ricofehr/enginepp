@@ -24,8 +24,7 @@ DepthWall::DepthWall(glm::vec3 location, glm::vec3 scale)
 
 void DepthWall::AddDoor() noexcept
 {
-    for (auto cnt = 0; cnt < objects_.size(); cnt++)
-    {
+    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
         if (obj_location.z <= location().z - 6.0f && obj_location.y <= location().y + 2.0f) {
             remove_child(objects_[cnt].get());
@@ -36,8 +35,7 @@ void DepthWall::AddDoor() noexcept
 
 void DepthWall::AddWindow() noexcept
 {
-    for (auto cnt = 0; cnt < objects_.size(); cnt++)
-    {
+    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
         if (obj_location.y >= location().y - 3.0f && obj_location.y <= location().y) {
             if (obj_location.z >= location().z - 3.0f && obj_location.z <= location().z + 3.0f) {
@@ -48,6 +46,6 @@ void DepthWall::AddWindow() noexcept
     }
 }
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor

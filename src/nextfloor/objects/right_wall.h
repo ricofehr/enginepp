@@ -22,7 +22,6 @@ namespace objects {
 class RightWall : public DepthWall {
 
 public:
-
     RightWall(glm::vec3 location, glm::vec3 scale);
 
     RightWall(RightWall&&) = default;
@@ -35,8 +34,8 @@ public:
     virtual void PrepareDraw() noexcept override;
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_UNIVERSE_OBJECTS_RIGHTWALL_H_
+#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_RIGHTWALL_H_

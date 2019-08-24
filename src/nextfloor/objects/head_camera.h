@@ -24,7 +24,6 @@ namespace objects {
 class HeadCamera : public Camera {
 
 public:
-
     HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle);
 
     HeadCamera(HeadCamera&&) = default;
@@ -41,12 +40,11 @@ public:
     virtual glm::vec3 direction() const override { return direction_; }
     virtual glm::vec3 head() const override { return head_; }
     virtual float fov() const override { return fov_; }
-    //virtual Camera* active() override { return active_; }
+    // virtual Camera* active() override { return active_; }
 
     virtual void set_active() override { active_ = this; }
 
 private:
-
     Mesh* owner_;
     float horizontal_angle_;
     float vertical_angle_;
@@ -54,12 +52,10 @@ private:
 
     glm::vec3 direction_;
     glm::vec3 head_;
-
 };
 
-} // namespace objects
+}  // namespace objects
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_OBJECTS_HEADCAMERA_H_
-
+#endif  // NEXTFLOOR_OBJECTS_HEADCAMERA_H_

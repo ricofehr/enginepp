@@ -22,7 +22,6 @@ namespace controller {
 class GameLoop {
 
 public:
-
     GameLoop();
 
     GameLoop(GameLoop&&) = default;
@@ -35,17 +34,15 @@ public:
     void Loop();
 
 private:
-
     void LogLoop();
     void LogFps();
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
     std::unique_ptr<nextfloor::renderer::SceneWindow> game_window_{nullptr};
-    //std::unique_ptr<nextfloor::objects::CollisionEngine> engine_collision_{nullptr};
 };
 
-} // namespace renderer
+}  // namespace controller
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_RENDERER_GAMELOOP_H_
+#endif  // NEXTFLOOR_RENDERER_GAMELOOP_H_

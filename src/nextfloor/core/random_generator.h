@@ -18,7 +18,6 @@ namespace core {
 class RandomGenerator {
 
 public:
-
     RandomGenerator(RandomGenerator&&) = default;
     RandomGenerator& operator=(RandomGenerator&&) = default;
     RandomGenerator(const RandomGenerator&) = delete;
@@ -29,12 +28,11 @@ public:
     virtual int GenerateNumber() const = 0;
 
 protected:
-
     RandomGenerator() = default;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_RANDOMGENERATOR_H_
+#endif  // NEXTFLOOR_CORE_RANDOMGENERATOR_H_

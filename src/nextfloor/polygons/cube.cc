@@ -11,7 +11,8 @@ namespace nextfloor {
 namespace polygons {
 
 Cube::Cube(glm::vec3 location, float scale)
-    :Cube(location, glm::vec3(scale)) {}
+      : Cube(location, glm::vec3(scale))
+{}
 
 Cube::Cube(glm::vec3 location, glm::vec3 scale)
 {
@@ -24,6 +25,6 @@ void Cube::Draw(nextfloor::objects::RendererEngine* renderer) noexcept
     renderer->Draw(mvp_);
 }
 
-} // namespace graphics
+}  // namespace polygons
 
-} // namespace nextfloor
+}  // namespace nextfloor

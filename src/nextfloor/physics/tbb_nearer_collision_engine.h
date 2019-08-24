@@ -22,7 +22,6 @@ namespace physics {
 class TbbNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
-
     TbbNearerCollisionEngine();
 
     TbbNearerCollisionEngine(TbbNearerCollisionEngine&&) = default;
@@ -32,16 +31,14 @@ public:
 
     virtual ~TbbNearerCollisionEngine() override = default;
 
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target,
-                                   nextfloor::objects::Mesh* obstacle) override final;
+    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) override final;
 
 private:
-
     virtual void InitCollisionEngine() override final;
 };
 
-} // namespace physics
+}  // namespace physics
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_PHYSICS_TBBNEARERCOLLISIONENGINE_H_
+#endif  // NEXTFLOOR_PHYSICS_TBBNEARERCOLLISIONENGINE_H_

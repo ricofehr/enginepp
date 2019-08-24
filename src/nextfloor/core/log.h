@@ -20,7 +20,6 @@ namespace core {
 class Log {
 
 public:
-
     /*
      *  Debug Log Level
      */
@@ -44,12 +43,11 @@ public:
     virtual void WriteLine(const std::string& log_line) const = 0;
 
 protected:
-
     Log() = default;
 };
 
-} // namespace core
+}  // namespace core
 
-} // namespace nextfloor
+}  // namespace nextfloor
 
-#endif // NEXTFLOOR_CORE_LOG_H_
+#endif  // NEXTFLOOR_CORE_LOG_H_
