@@ -40,6 +40,18 @@ void WiredGridBox::clear() noexcept
     occupants_.clear();
 }
 
+std::vector<nextfloor::objects::Mesh*> WiredGridBox::other_occupants(nextfloor::objects::Mesh* object) noexcept
+{
+    std::vector<nextfloor::objects::Mesh*> others(0);
+    for (auto& occupant : occupants_) {
+        if (occupant->id() != object->id()) {
+            others.push_back(occupant);
+        }
+    }
+
+    return others;
+}
+
 bool WiredGridBox::IsInside(nextfloor::objects::Mesh* object) const noexcept
 {
     for (auto& occupant : occupants_) {
