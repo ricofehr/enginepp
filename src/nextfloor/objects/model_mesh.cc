@@ -65,7 +65,7 @@ void ModelMesh::DetectCollision() noexcept
 void ModelMesh::PivotCollision() noexcept
 {
     using nextfloor::core::CommonServices;
-    static CollisionEngine* collision_engine = CommonServices::getFactory()->MakeCollisionEngine();
+    static CollisionEngine* collision_engine = CommonServices::getMeshFactory()->MakeCollisionEngine();
 
     /* Prepare vector for collision compute */
     std::vector<Mesh*> test_objects = parent_->FindCollisionNeighborsOf(this);

@@ -31,6 +31,10 @@ public:
     Player& operator=(const Player&) = delete;
 
     virtual ~Player() override = default;
+
+
+    virtual void Move() noexcept override;
+    virtual bool IsPlayer() const override { return true; }
 };
 
 }  // namespace objects

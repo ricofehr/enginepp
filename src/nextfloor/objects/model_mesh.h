@@ -70,6 +70,7 @@ public:
     Grid* grid() const noexcept { return grid_.get(); }
     virtual Camera* camera() const noexcept override;
     virtual bool IsCamera() const override { return camera_ != nullptr; }
+    virtual bool IsPlayer() const override { return false; }
     virtual glm::vec3 movement() const noexcept override { return border_->movement(); }
 
     virtual void set_parent(Mesh* parent) override { parent_ = parent; }
@@ -150,6 +151,8 @@ protected:
     virtual void lock() override final { mutex_.lock(); }
     virtual void unlock() override final { mutex_.unlock(); }
 
+    bool IsMoved() const { return border_->IsMoved(); }
+
     Mesh* parent_{nullptr};
     std::vector<GridBox*> coords_list_;
     std::unique_ptr<Grid> grid_{nullptr};
@@ -168,8 +171,6 @@ private:
 
     void PivotCollision() noexcept;
     void LogCollision(Mesh* obstacle, float obstacle_distance);
-
-    bool IsMoved() const { return border_->IsMoved(); }
 
     int id_{0};
 

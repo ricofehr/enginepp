@@ -16,6 +16,15 @@ IF(APPLE)
     LINK_DIRECTORIES(/usr/local/lib)
 ENDIF()
 
+set(actions_SRCS
+        src/nextfloor/actions/fire_action.cc
+        src/nextfloor/actions/jump_action.cc
+        src/nextfloor/actions/movedown_action.cc
+        src/nextfloor/actions/moveleft_action.cc
+        src/nextfloor/actions/moveright_action.cc
+        src/nextfloor/actions/moveup_action.cc
+        src/nextfloor/actions/run_action.cc)
+
 set(controller_SRCS
         src/nextfloor/controller/game_loop.cc)
 
@@ -29,8 +38,10 @@ set(core_SRCS
         src/nextfloor/core/terminal_log.cc)
 
 set(factory_SRCS
+        src/nextfloor/factory/action_factory.cc
         src/nextfloor/factory/game_factory.cc
         src/nextfloor/factory/gl_renderer_factory.cc
+        src/nextfloor/factory/mouse_hid_factory.cc
         src/nextfloor/factory/services_factory.cc)
 
 set(gameplay_SRCS
@@ -45,6 +56,10 @@ set(grid_SRCS
         src/nextfloor/grid/room_grid_box.cc
         src/nextfloor/grid/universe_grid.cc
         src/nextfloor/grid/universe_grid_box.cc)
+
+set(hid_SRCS
+        src/nextfloor/hid/game_input_handler.cc
+        src/nextfloor/hid/mouse_keyboard.cc)
 
 set(objects_SRCS
         src/nextfloor/objects/back_wall.cc
@@ -83,16 +98,28 @@ set(renderer_SRCS
         src/nextfloor/renderer/vertex_shader.cc)
 
 set(nextfloor_SRCS
+        ${actions_SRCS}
         ${controller_SRCS}
         ${core_SRCS}
         ${factory_SRCS}
         ${gameplay_SRCS}
         ${grid_SRCS}
+        ${hid_SRCS}
         ${objects_SRCS}
         ${physics_SRCS}
         ${polygons_SRCS}
         ${renderer_SRCS}
         src/nextfloor.cc)
+
+set(actions_HDRS
+        src/nextfloor/actions/action.h
+        src/nextfloor/actions/fire_action.h
+        src/nextfloor/actions/jump_action.h
+        src/nextfloor/actions/movedown_action.h
+        src/nextfloor/actions/moveleft_action.h
+        src/nextfloor/actions/moveright_action.h
+        src/nextfloor/actions/moveup_action.h
+        src/nextfloor/actions/run_action.h)
 
 set(controller_HDRS
         src/nextfloor/controller/game_loop.h)
@@ -113,8 +140,12 @@ set(core_HDRS
         src/nextfloor/core/timer.h)
 
 set(factory_HDRS
+        src/nextfloor/factory/action_factory.h
+        src/nextfloor/factory/command_factory.h
         src/nextfloor/factory/core_factory.h
+        src/nextfloor/factory/hid_factory.h
         src/nextfloor/factory/mesh_factory.h
+        src/nextfloor/factory/mouse_hid_factory.h
         src/nextfloor/factory/renderer_factory.h
         src/nextfloor/factory/game_factory.h
         src/nextfloor/factory/gl_renderer_factory.h)
@@ -132,6 +163,12 @@ set(grid_HDRS
         src/nextfloor/grid/room_grid_box.h
         src/nextfloor/grid/universe_grid.h
         src/nextfloor/grid/universe_grid_box.h)
+
+set(hid_HDRS
+        src/nextfloor/hid/hid.h
+        src/nextfloor/hid/input_handler.h
+        src/nextfloor/hid/game_input_handler.h
+        src/nextfloor/hid/mouse_keyboard.h)
 
 set(objects_HDRS
         src/nextfloor/objects/back_wall.h
@@ -198,7 +235,7 @@ find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenCL REQUIRED)
 find_library(SOIL REQUIRED)
-add_definitions("-std=gnu++17 -Wall")
+add_definitions("-std=gnu++17 -Wall -fno-exceptions")
 include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${Config++_INCLUDE_DIRS})
 target_link_libraries(nextfloor ${OPENGL_gl_LIBRARY} ${GLEW_LIBRARY} SOIL glfw ${OpenCL_LIBRARY} config++ tbb)
 target_compile_features(nextfloor PUBLIC cxx_nullptr)

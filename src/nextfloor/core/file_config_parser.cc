@@ -66,16 +66,15 @@ void FileConfigParser::ParseConfigFile()
 {
     std::string config_file = GetConfigFilePath();
 
-    try {
-        config_.readFile(config_file.c_str());
-    }
-    catch (const libconfig::FileIOException& file_io_exception) {
-        HandleParseConfigFileIOError(config_file, file_io_exception);
-    }
-    catch (const libconfig::ParseException& parse_exception) {
-        HandleParseConfigFileParsingError(parse_exception);
-    }
-}
+    // try {
+    config_.readFile(config_file.c_str());
+    // } catch (const libconfig::FileIOException& file_io_exception) {
+    //     HandleParseConfigFileIOError(config_file, file_io_exception);
+    // }
+    // catch (const libconfig::ParseException& parse_exception) {
+    //     HandleParseConfigFileParsingError(parse_exception);
+    // }
+}  // namespace core
 
 void FileConfigParser::InitDefaultValues()
 {

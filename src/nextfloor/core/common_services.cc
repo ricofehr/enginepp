@@ -26,7 +26,9 @@ void CommonServices::Init()
     timer_ = services_factory.MakeTimer();
     log_ = services_factory.MakeLog();
     exit_ = services_factory.MakeExit();
-    factory_ = services_factory.MakeMeshFactory();
+    mesh_factory_ = services_factory.MakeMeshFactory();
+    hid_factory_ = services_factory.MakeHidFactory();
+    command_factory_ = services_factory.MakeCommandFactory();
 }
 
 }  // namespace core

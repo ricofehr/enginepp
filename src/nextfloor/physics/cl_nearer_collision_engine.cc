@@ -32,67 +32,67 @@ void ClNearerCollisionEngine::InitCollisionEngine()
     using nextfloor::core::CommonServices;
     granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 
-    try {
-        /* Query for platforms */
-        std::vector<cl::Platform> platforms;
-        cl::Platform::get(&platforms);
+    // try {
+    /* Query for platforms */
+    std::vector<cl::Platform> platforms;
+    cl::Platform::get(&platforms);
 
-        /* Select best devices in the workstation */
-        std::vector<cl::Device> devices;
-        for (auto& pf : platforms) {
-            pf.getDevices(CL_DEVICE_TYPE_ALL, &devices);
-            for (auto& dev : devices) {
-                size_t num;
-                dev.getInfo(CL_DEVICE_MAX_COMPUTE_UNITS, &num);
-                if (num > max_cores) {
-                    platform_target = pf;
-                    device_target = dev;
-                    max_cores = num;
-                }
+    /* Select best devices in the workstation */
+    std::vector<cl::Device> devices;
+    for (auto& pf : platforms) {
+        pf.getDevices(CL_DEVICE_TYPE_ALL, &devices);
+        for (auto& dev : devices) {
+            size_t num;
+            dev.getInfo(CL_DEVICE_MAX_COMPUTE_UNITS, &num);
+            if (num > max_cores) {
+                platform_target = pf;
+                device_target = dev;
+                max_cores = num;
             }
         }
-
-        /* Ensure items size  are valid */
-        size_t nums[3]{0};
-        device_target.getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &nums);
-        while (nums[0] < granularity_) {
-            granularity_ /= 2;
-        }
-
-        /* Create a context for the devices */
-        cl::Context context(device_target);
-
-        /* Create a command-queue for the first device */
-        cl_queue_ = cl::CommandQueue(context, device_target);
-
-        /* Create the memory buffers */
-        bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float)));
-        bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float)));
-        bufferout_.push_back(cl::Buffer(context, CL_MEM_WRITE_ONLY, granularity_ * sizeof(float)));
-
-        /* Read the program Source */
-        std::ifstream source_file("cl/collision_kernel.cl");
-        std::string source_code(std::istreambuf_iterator<char>(source_file), (std::istreambuf_iterator<char>()));
-        cl::Program::Sources source(1, source_code);
-
-        /* Create the program from the source code */
-        cl::Program program = cl::Program(context, source);
-
-        /* Compile the program for the devices */
-        program.build(std::vector<cl::Device>(1, device_target));
-
-        /* Create the kernel */
-        cl_kernel_ = cl::Kernel(program, "collision");
-
-        /* Ensure items size and wkgroup size are valid */
-        cl_kernel_.getWorkGroupInfo(device_target, CL_KERNEL_WORK_GROUP_SIZE, &num);
-        while (num < wk_size_) {
-            wk_size_ /= 2;
-        }
     }
-    catch (cl::Error error) {
-        HandleErrorOnInit(error);
+
+    /* Ensure items size  are valid */
+    size_t nums[3]{0};
+    device_target.getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &nums);
+    while (nums[0] < granularity_) {
+        granularity_ /= 2;
     }
+
+    /* Create a context for the devices */
+    cl::Context context(device_target);
+
+    /* Create a command-queue for the first device */
+    cl_queue_ = cl::CommandQueue(context, device_target);
+
+    /* Create the memory buffers */
+    bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float)));
+    bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float)));
+    bufferout_.push_back(cl::Buffer(context, CL_MEM_WRITE_ONLY, granularity_ * sizeof(float)));
+
+    /* Read the program Source */
+    std::ifstream source_file("cl/collision_kernel.cl");
+    std::string source_code(std::istreambuf_iterator<char>(source_file), (std::istreambuf_iterator<char>()));
+    cl::Program::Sources source(1, source_code);
+
+    /* Create the program from the source code */
+    cl::Program program = cl::Program(context, source);
+
+    /* Compile the program for the devices */
+    program.build(std::vector<cl::Device>(1, device_target));
+
+    /* Create the kernel */
+    cl_kernel_ = cl::Kernel(program, "collision");
+
+    /* Ensure items size and wkgroup size are valid */
+    cl_kernel_.getWorkGroupInfo(device_target, CL_KERNEL_WORK_GROUP_SIZE, &num);
+    while (num < wk_size_) {
+        wk_size_ /= 2;
+    }
+
+    // } catch (cl::Error error) {
+    //     HandleErrorOnInit(error);
+    // }
 }
 
 void ClNearerCollisionEngine::HandleErrorOnInit(cl::Error error)

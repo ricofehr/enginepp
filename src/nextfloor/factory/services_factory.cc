@@ -15,6 +15,8 @@
 #include "nextfloor/core/terminal_log.h"
 
 #include "nextfloor/factory/game_factory.h"
+#include "nextfloor/factory/mouse_hid_factory.h"
+#include "nextfloor/factory/action_factory.h"
 
 
 namespace nextfloor {
@@ -60,6 +62,16 @@ std::unique_ptr<nextfloor::core::RandomGenerator> ServicesFactory::MakeRandomGen
 std::unique_ptr<MeshFactory> ServicesFactory::MakeMeshFactory() const noexcept
 {
     return std::make_unique<GameFactory>();
+}
+
+std::unique_ptr<HidFactory> ServicesFactory::MakeHidFactory() const noexcept
+{
+    return std::make_unique<MouseHidFactory>();
+}
+
+std::unique_ptr<CommandFactory> ServicesFactory::MakeCommandFactory() const noexcept
+{
+    return std::make_unique<ActionFactory>();
 }
 
 }  // namespace factory

@@ -17,6 +17,8 @@
 #include "nextfloor/core/exit.h"
 
 #include "nextfloor/factory/mesh_factory.h"
+#include "nextfloor/factory/hid_factory.h"
+#include "nextfloor/factory/command_factory.h"
 
 namespace nextfloor {
 
@@ -46,7 +48,11 @@ public:
 
     static const Exit* getExit() { return Instance()->exit(); }
 
-    static const nextfloor::factory::MeshFactory* getFactory() { return Instance()->factory(); }
+    static nextfloor::factory::MeshFactory* getMeshFactory() { return Instance()->mesh_factory(); }
+
+    static const nextfloor::factory::HidFactory* getHidFactory() { return Instance()->hid_factory(); }
+
+    static const nextfloor::factory::CommandFactory* getCommandFactory() { return Instance()->command_factory(); }
 
 protected:
     CommonServices();
@@ -108,10 +114,22 @@ private:
         return exit_.get();
     }
 
-    const nextfloor::factory::MeshFactory* factory()
+    nextfloor::factory::MeshFactory* mesh_factory()
     {
-        assert(factory_ != nullptr);
-        return factory_.get();
+        assert(mesh_factory_ != nullptr);
+        return mesh_factory_.get();
+    }
+
+    const nextfloor::factory::HidFactory* hid_factory()
+    {
+        assert(hid_factory_ != nullptr);
+        return hid_factory_.get();
+    }
+
+    const nextfloor::factory::CommandFactory* command_factory()
+    {
+        assert(command_factory_ != nullptr);
+        return command_factory_.get();
     }
 
     std::unique_ptr<ConfigParser> config_{nullptr};
@@ -120,7 +138,9 @@ private:
     std::unique_ptr<Log> log_{nullptr};
     std::unique_ptr<RandomGenerator> random_generator_{nullptr};
     std::unique_ptr<Exit> exit_{nullptr};
-    std::unique_ptr<nextfloor::factory::MeshFactory> factory_{nullptr};
+    std::unique_ptr<nextfloor::factory::MeshFactory> mesh_factory_{nullptr};
+    std::unique_ptr<nextfloor::factory::HidFactory> hid_factory_{nullptr};
+    std::unique_ptr<nextfloor::factory::CommandFactory> command_factory_{nullptr};
 };
 
 }  // namespace core

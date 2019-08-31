@@ -9,16 +9,6 @@
 
 #include "nextfloor/factory/core_factory.h"
 
-#include <memory>
-
-#include "nextfloor/core/config_parser.h"
-#include "nextfloor/core/exit.h"
-#include "nextfloor/core/file_io.h"
-#include "nextfloor/core/timer.h"
-#include "nextfloor/core/log.h"
-#include "nextfloor/core/random_generator.h"
-#include "nextfloor/factory/mesh_factory.h"
-
 namespace nextfloor {
 
 namespace factory {
@@ -46,6 +36,8 @@ public:
     virtual std::unique_ptr<nextfloor::core::Log> MakeLog() const noexcept override;
     virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const noexcept override;
     virtual std::unique_ptr<MeshFactory> MakeMeshFactory() const noexcept override;
+    virtual std::unique_ptr<HidFactory> MakeHidFactory() const noexcept override;
+    virtual std::unique_ptr<CommandFactory> MakeCommandFactory() const noexcept override;
 };
 
 }  // namespace factory

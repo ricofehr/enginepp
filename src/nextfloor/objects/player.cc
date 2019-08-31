@@ -15,8 +15,17 @@ namespace objects {
 Player::Player(glm::vec3 location)
 {
     using nextfloor::core::CommonServices;
-    border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(1.0f));
-    camera_ = CommonServices::getFactory()->MakeCamera(this);
+    border_ = CommonServices::getMeshFactory()->MakeBorder(location, glm::vec3(1.0f));
+    camera_ = CommonServices::getMeshFactory()->MakeCamera(this);
+}
+
+void Player::Move() noexcept
+{
+    if (IsMoved()) {
+        border_->ComputeNewLocation();
+    }
+
+    set_movement(glm::vec3(0.0f));
 }
 
 }  // namespace objects

@@ -25,7 +25,7 @@ UniverseGrid::UniverseGrid(nextfloor::objects::Mesh* owner)
 std::unique_ptr<nextfloor::objects::GridBox> UniverseGrid::AllocateGridBox(glm::ivec3 grid_coords)
 {
     using nextfloor::core::CommonServices;
-    return CommonServices::getFactory()->MakeUniverseGridBox(grid_coords, this);
+    return CommonServices::getMeshFactory()->MakeUniverseGridBox(grid_coords, this);
 }
 
 UniverseGrid::~UniverseGrid()

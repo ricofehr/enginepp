@@ -68,6 +68,7 @@ public:
     virtual Border* border() const noexcept = 0;
     virtual Camera* camera() const noexcept = 0;
     virtual bool IsCamera() const = 0;
+    virtual bool IsPlayer() const = 0;
 
     virtual void set_parent(Mesh* parent) = 0;
     virtual void set_movement(glm::vec3 movement) = 0;
