@@ -67,7 +67,7 @@ CubeBorder::CubeBorder(glm::vec3 location, float scale, std::vector<glm::vec3> c
 CubeBorder::CubeBorder(glm::vec3 location, glm::vec3 scale, std::vector<glm::vec3> coords)
 {
     using nextfloor::core::CommonServices;
-    cube_ = CommonServices::getMeshFactory()->MakeCube(location, glm::vec3(scale));
+    cube_ = CommonServices::getFactory()->MakeCube(location, glm::vec3(scale));
     coords_ = coords;
     ComputesModelMatrixCoords();
 }

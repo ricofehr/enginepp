@@ -23,7 +23,7 @@ void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint) noexcept
             for (float z = firstpoint.z; z <= lastpoint.z; z += brick_dimension_.z) {
                 auto brick_location = glm::vec3(x, y, z);
                 add_child(
-                  CommonServices::getMeshFactory()->MakeWallBrick(brick_location, brick_dimension_ / 2.0f, texture_file()));
+                  CommonServices::getFactory()->MakeWallBrick(brick_location, brick_dimension_ / 2.0f, texture_file()));
             }
         }
     }

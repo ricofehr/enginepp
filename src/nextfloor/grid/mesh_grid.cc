@@ -22,7 +22,7 @@ MeshGrid::MeshGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm:
 std::unique_ptr<nextfloor::objects::GridBox> MeshGrid::AllocateGridBox(glm::ivec3 grid_coords)
 {
     using nextfloor::core::CommonServices;
-    return CommonServices::getMeshFactory()->MakeGridBox(grid_coords, this);
+    return CommonServices::getFactory()->MakeGridBox(grid_coords, this);
 }
 
 MeshGrid::~MeshGrid()

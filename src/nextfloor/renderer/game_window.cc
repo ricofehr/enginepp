@@ -144,8 +144,8 @@ void GameWindow::InitProgramId()
 void GameWindow::LoadShaders()
 {
     using nextfloor::core::CommonServices;
-    vertex_shader_ = CommonServices::getMeshFactory()->MakeVertexShader(kVERTEXFILEPATH);
-    fragment_shader_ = CommonServices::getMeshFactory()->MakeFragmentShader(kFRAGMENTFILEPATH);
+    vertex_shader_ = CommonServices::getFactory()->MakeVertexShader(kVERTEXFILEPATH);
+    fragment_shader_ = CommonServices::getFactory()->MakeFragmentShader(kFRAGMENTFILEPATH);
 
     vertex_shader_->LoadShader();
     fragment_shader_->LoadShader();

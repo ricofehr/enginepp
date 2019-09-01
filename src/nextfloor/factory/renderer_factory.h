@@ -11,6 +11,8 @@
 #include <glm/glm.hpp>
 
 #include "nextfloor/objects/renderer_engine.h"
+#include "nextfloor/renderer/shader.h"
+#include "nextfloor/renderer/scene_window.h"
 
 namespace nextfloor {
 
@@ -30,8 +32,10 @@ public:
 
     virtual ~RendererFactory() = default;
 
-    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) noexcept = 0;
-
+    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) = 0;
+    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path) = 0;
+    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path) = 0;
+    virtual nextfloor::renderer::SceneWindow* MakeSceneWindow() = 0;
 
 protected:
     RendererFactory() = default;

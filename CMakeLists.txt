@@ -39,6 +39,7 @@ set(core_SRCS
 
 set(factory_SRCS
         src/nextfloor/factory/action_factory.cc
+        src/nextfloor/factory/facade_factory.cc
         src/nextfloor/factory/game_factory.cc
         src/nextfloor/factory/gl_renderer_factory.cc
         src/nextfloor/factory/mouse_hid_factory.cc
@@ -143,12 +144,14 @@ set(factory_HDRS
         src/nextfloor/factory/action_factory.h
         src/nextfloor/factory/command_factory.h
         src/nextfloor/factory/core_factory.h
+        src/nextfloor/factory/facade_factory.h
         src/nextfloor/factory/hid_factory.h
         src/nextfloor/factory/mesh_factory.h
         src/nextfloor/factory/mouse_hid_factory.h
         src/nextfloor/factory/renderer_factory.h
         src/nextfloor/factory/game_factory.h
-        src/nextfloor/factory/gl_renderer_factory.h)
+        src/nextfloor/factory/gl_renderer_factory.h
+        src/nextfloor/factory/services_factory.h)
 
 set(gameplay_HDRS
         src/nextfloor/gameplay/demo_level.h

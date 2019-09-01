@@ -21,15 +21,14 @@ namespace renderer {
 class VertexShader : public Shader {
 
 public:
-    VertexShader(std::string shader_path)
-          : Shader(shader_path){};
+    VertexShader(std::string shader_path) : Shader(shader_path){};
 
     VertexShader(VertexShader&&) = default;
     VertexShader& operator=(VertexShader&&) = default;
     VertexShader(const VertexShader&) = default;
     VertexShader& operator=(const VertexShader&) = default;
 
-    virtual ~VertexShader() = default;
+    virtual ~VertexShader() override = default;
 
     virtual void LoadShader() override final;
 };

@@ -12,7 +12,7 @@ namespace nextfloor {
 
 namespace factory {
 
-std::unique_ptr<nextfloor::gameplay::Level> RandomedGameFactory::MakeLevel() const noexcept
+std::unique_ptr<nextfloor::gameplay::Level> RandomedGameFactory::MakeLevel()
 {
     using nextfloor::gameplay::RandomLevel;
     return std::make_unique<RandomLevel>();

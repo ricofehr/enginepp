@@ -9,6 +9,7 @@
 
 #include "nextfloor/factory/core_factory.h"
 
+
 namespace nextfloor {
 
 namespace factory {
@@ -17,27 +18,24 @@ namespace factory {
  *  @class ServicesFactory
  *  @brief Abstract Factory for common services
  */
-class ServicesFactory : CoreFactory {
+class ServicesFactory : public CoreFactory {
 
 public:
     ServicesFactory() = default;
 
     ServicesFactory(ServicesFactory&&) = default;
     ServicesFactory& operator=(ServicesFactory&&) = default;
-    ServicesFactory(const ServicesFactory&) = default;
-    ServicesFactory& operator=(const ServicesFactory&) = default;
+    ServicesFactory(const ServicesFactory&) = delete;
+    ServicesFactory& operator=(const ServicesFactory&) = delete;
 
     virtual ~ServicesFactory() override = default;
 
-    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const noexcept override;
-    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() const noexcept override;
-    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const noexcept override;
-    virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() const noexcept override;
-    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() const noexcept override;
-    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const noexcept override;
-    virtual std::unique_ptr<MeshFactory> MakeMeshFactory() const noexcept override;
-    virtual std::unique_ptr<HidFactory> MakeHidFactory() const noexcept override;
-    virtual std::unique_ptr<CommandFactory> MakeCommandFactory() const noexcept override;
+    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() override;
+    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() override;
+    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() override;
+    virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() override;
+    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() override;
+    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() override;
 };
 
 }  // namespace factory

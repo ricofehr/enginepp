@@ -16,10 +16,6 @@
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/random_generator.h"
 
-#include "nextfloor/factory/mesh_factory.h"
-#include "nextfloor/factory/hid_factory.h"
-#include "nextfloor/factory/command_factory.h"
-
 namespace nextfloor {
 
 namespace factory {
@@ -33,23 +29,20 @@ class CoreFactory {
 public:
     virtual ~CoreFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const noexcept = 0;
-    virtual std::unique_ptr<MeshFactory> MakeMeshFactory() const noexcept = 0;
-    virtual std::unique_ptr<HidFactory> MakeHidFactory() const noexcept = 0;
-    virtual std::unique_ptr<CommandFactory> MakeCommandFactory() const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() = 0;
+    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() = 0;
+    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() = 0;
+    virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() = 0;
+    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() = 0;
+    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() = 0;
 
 protected:
     CoreFactory() = default;
 
     CoreFactory(CoreFactory&&) = default;
     CoreFactory& operator=(CoreFactory&&) = default;
-    CoreFactory(const CoreFactory&) = default;
-    CoreFactory& operator=(const CoreFactory&) = default;
+    CoreFactory(const CoreFactory&) = delete;
+    CoreFactory& operator=(const CoreFactory&) = delete;
 };
 
 }  // namespace factory

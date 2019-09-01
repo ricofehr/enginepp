@@ -16,8 +16,8 @@ Room::Room(glm::vec3 location)
 {
     using nextfloor::core::CommonServices;
 
-    grid_ = CommonServices::getMeshFactory()->MakeRoomGrid(this);
-    border_ = CommonServices::getMeshFactory()->MakeBorder(location, grid_->scale());
+    grid_ = CommonServices::getFactory()->MakeRoomGrid(this);
+    border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale());
 
     AddWalls();
 }
@@ -35,48 +35,48 @@ void Room::AddWalls() noexcept
 void Room::AddRock(glm::vec3 relative_location) noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getMeshFactory()->MakeRock(grid()->CalculateFirstPointInGrid() + relative_location));
+    add_child(CommonServices::getFactory()->MakeRock(grid()->CalculateFirstPointInGrid() + relative_location));
 }
 
 void Room::AddFrontWall() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getMeshFactory()->MakeFrontWall(grid()->CalculateFrontSideLocation(),
+    add_child(CommonServices::getFactory()->MakeFrontWall(grid()->CalculateFrontSideLocation(),
                                                           grid()->CalculateFrontSideBorderScale()));
 }
 
 void Room::AddRightWall() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getMeshFactory()->MakeRightWall(grid()->CalculateRightSideLocation(),
+    add_child(CommonServices::getFactory()->MakeRightWall(grid()->CalculateRightSideLocation(),
                                                           grid()->CalculateRightSideBorderScale()));
 }
 
 void Room::AddBackWall() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getMeshFactory()->MakeBackWall(grid()->CalculateBackSideLocation(),
+    add_child(CommonServices::getFactory()->MakeBackWall(grid()->CalculateBackSideLocation(),
                                                          grid()->CalculateBackSideBorderScale()));
 }
 
 void Room::AddLeftWall() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getMeshFactory()->MakeLeftWall(grid()->CalculateLeftSideLocation(),
+    add_child(CommonServices::getFactory()->MakeLeftWall(grid()->CalculateLeftSideLocation(),
                                                          grid()->CalculateLeftSideBorderScale()));
 }
 
 void Room::AddFloor() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getMeshFactory()->MakeFloor(grid()->CalculateBottomSideLocation(),
+    add_child(CommonServices::getFactory()->MakeFloor(grid()->CalculateBottomSideLocation(),
                                                       grid()->CalculateBottomSideBorderScale()));
 }
 
 void Room::AddRoof() noexcept
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getMeshFactory()->MakeRoof(grid()->CalculateTopSideLocation(),
+    add_child(CommonServices::getFactory()->MakeRoof(grid()->CalculateTopSideLocation(),
                                                      grid()->CalculateTopSideBorderScale()));
 }
 

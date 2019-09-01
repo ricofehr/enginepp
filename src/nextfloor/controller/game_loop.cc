@@ -27,9 +27,8 @@ GameLoop::GameLoop()
     sInstanciated = true;
 
     using nextfloor::core::CommonServices;
-    game_window_ = CommonServices::getMeshFactory()->MakeSceneWindow();
-    universe_ = CommonServices::getMeshFactory()->MakeLevel()->GenerateUniverse();
-
+    game_window_ = CommonServices::getFactory()->MakeSceneWindow();
+    universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
     assert(game_window_ != nullptr);
 }
 

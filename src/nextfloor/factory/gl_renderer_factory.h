@@ -11,8 +11,6 @@
 
 #include <map>
 
-#include "nextfloor/objects/renderer_engine.h"
-
 namespace nextfloor {
 
 namespace factory {
@@ -33,11 +31,15 @@ public:
 
     virtual ~GlRendererFactory() override;
 
-    nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) noexcept override;
-
+    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) override;
+    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path) override;
+    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path) override;
+    virtual nextfloor::renderer::SceneWindow* MakeSceneWindow() override;
 
 private:
     std::map<std::string, std::unique_ptr<nextfloor::objects::RendererEngine>> renderers_;
+    std::map<std::string, std::unique_ptr<nextfloor::renderer::Shader>> shaders_;
+    std::unique_ptr<nextfloor::renderer::SceneWindow> scene_window_;
 };
 
 }  // namespace factory

@@ -21,15 +21,14 @@ namespace renderer {
 class FragmentShader : public Shader {
 
 public:
-    FragmentShader(std::string shader_path)
-          : Shader(shader_path){};
+    FragmentShader(std::string shader_path) : Shader(shader_path){};
 
     FragmentShader(FragmentShader&&) = default;
     FragmentShader& operator=(FragmentShader&&) = default;
     FragmentShader(const FragmentShader&) = default;
     FragmentShader& operator=(const FragmentShader&) = default;
 
-    virtual ~FragmentShader() = default;
+    virtual ~FragmentShader() override = default;
 
     virtual void LoadShader() override final;
 };

@@ -19,16 +19,12 @@ CommonServices::CommonServices()
 
 void CommonServices::Init()
 {
-    nextfloor::factory::ServicesFactory services_factory;
-
-    config_ = services_factory.MakeConfigParser();
-    file_io_ = services_factory.MakeFileIO();
-    timer_ = services_factory.MakeTimer();
-    log_ = services_factory.MakeLog();
-    exit_ = services_factory.MakeExit();
-    mesh_factory_ = services_factory.MakeMeshFactory();
-    hid_factory_ = services_factory.MakeHidFactory();
-    command_factory_ = services_factory.MakeCommandFactory();
+    factory_ = std::make_unique<nextfloor::factory::FacadeFactory>();
+    config_ = factory_->MakeConfigParser();
+    file_io_ = factory_->MakeFileIO();
+    timer_ = factory_->MakeTimer();
+    log_ = factory_->MakeLog();
+    exit_ = factory_->MakeExit();
 }
 
 }  // namespace core

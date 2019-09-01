@@ -38,7 +38,7 @@ private:
     void LogFps();
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
-    std::unique_ptr<nextfloor::renderer::SceneWindow> game_window_{nullptr};
+    nextfloor::renderer::SceneWindow* game_window_{nullptr};
 };
 
 }  // namespace controller

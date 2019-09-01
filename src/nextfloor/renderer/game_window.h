@@ -65,8 +65,8 @@ private:
     GLuint polygon_mode_{GL_LINE};
     int monitor_refresh_rate_{0};
 
-    std::unique_ptr<Shader> fragment_shader_{nullptr};
-    std::unique_ptr<Shader> vertex_shader_{nullptr};
+    Shader* fragment_shader_{nullptr};
+    Shader* vertex_shader_{nullptr};
 };
 
 }  // namespace renderer

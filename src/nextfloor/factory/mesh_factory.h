@@ -36,58 +36,45 @@ class MeshFactory {  // clang-format off
 public:
     virtual ~MeshFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(glm::vec3 location) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(glm::vec3 location) = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(glm::vec3 location,
-                                                                    glm::vec3 scale) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(glm::vec3 location,
-                                                                    glm::vec3 scale) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(glm::vec3 location,
-                                                                   glm::vec3 scale) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(glm::vec3 location,
-                                                                   glm::vec3 scale) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(glm::vec3 location,
-                                                                glm::vec3 scale) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(glm::vec3 location,
-                                                               glm::vec3 scale) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(glm::vec3 location, glm::vec3 scale) = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(glm::vec3 location, glm::vec3 scale) = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(glm::vec3 location, glm::vec3 scale) = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(glm::vec3 location, glm::vec3 scale) = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(glm::vec3 location, glm::vec3 scale) = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(glm::vec3 location, glm::vec3 scale) = 0;
     virtual std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(glm::vec3 location,
                                                                     glm::vec3 scale,
-                                                                    std::string texture) const noexcept = 0;
+                                                                    std::string texture) = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(glm::vec3 location) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(glm::vec3 location) = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRock(glm::vec3 location) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(glm::vec3 location) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRock(glm::vec3 location) = 0;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(glm::vec3 location) = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(glm::vec3 location,
-                                                                  glm::vec3 scale) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(glm::vec3 location, glm::vec3 scale) = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::Border> MakeBorder(glm::vec3 location,
-                                                                   glm::vec3 scale) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Border> MakeBorder(glm::vec3 location, glm::vec3 scale) = 0;
 
-    virtual std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room) const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) = 0;
+    virtual std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room) = 0;
     virtual std::unique_ptr<nextfloor::objects::Grid> MakeGrid(nextfloor::objects::Mesh* owner,
                                                                glm::ivec3 boxes_count,
-                                                               glm::vec3 box_dimension) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(glm::vec3 grid_coords,
-                                                                         nextfloor::objects::Grid* room_grid) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(glm::vec3 grid_coords,
-                                                                             nextfloor::objects::Grid* universe_grid) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(glm::vec3 grid_coords,
-                                                                     nextfloor::objects::Grid* grid) const noexcept = 0;
+                                                               glm::vec3 box_dimension) = 0;
+    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(glm::vec3 coords,
+                                                                         nextfloor::objects::Grid* grid) = 0;
+    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(glm::vec3 coords,
+                                                                             nextfloor::objects::Grid* grid) = 0;
+    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(glm::vec3 coords,
+                                                                     nextfloor::objects::Grid* grid) = 0;
 
-    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::renderer::Shader> MakeVertexShader(std::string shader_path) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::renderer::Shader> MakeFragmentShader(std::string shader_path) const noexcept = 0;
-    virtual std::unique_ptr<nextfloor::renderer::SceneWindow> MakeSceneWindow() const noexcept = 0;
+    virtual nextfloor::objects::CollisionEngine* MakeCollisionEngine() = 0;
 
-    virtual nextfloor::objects::CollisionEngine* MakeCollisionEngine() const noexcept = 0;
-
-    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const noexcept = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() = 0;
 
 protected:
     MeshFactory() = default;
@@ -102,4 +89,4 @@ protected:
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_FACTORY_FACTORY_H_
+#endif  // NEXTFLOOR_FACTORY_MESHFACTORY_H_

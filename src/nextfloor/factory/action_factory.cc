@@ -3,8 +3,6 @@
  *  @brief Factory Class for actor actions
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-
-
 #include "nextfloor/factory/action_factory.h"
 
 #include "nextfloor/actions/fire_action.h"

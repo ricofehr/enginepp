@@ -29,7 +29,7 @@ public:
 
     virtual ~RandomedGameFactory() override;
 
-    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const noexcept override final;
+    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() override final;
 };
 
 }  // namespace factory
