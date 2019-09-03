@@ -31,6 +31,8 @@ public:
     virtual float fov() const = 0;
     virtual void set_active() = 0;
 
+    virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
+
     static Camera* active() { return active_; }
 
 protected:

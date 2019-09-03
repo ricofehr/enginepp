@@ -10,6 +10,7 @@
 #include "nextfloor/objects/mesh.h"
 #include "nextfloor/objects/collision_engine.h"
 #include "nextfloor/renderer/scene_window.h"
+#include "nextfloor/hid/input_handler.h"
 
 namespace nextfloor {
 
@@ -38,7 +39,9 @@ private:
     void LogFps();
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
+    std::unique_ptr<nextfloor::hid::InputHandler> input_handler_{nullptr};
     nextfloor::renderer::SceneWindow* game_window_{nullptr};
+    nextfloor::objects::Mesh* player_{nullptr};
 };
 
 }  // namespace controller

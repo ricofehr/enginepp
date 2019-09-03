@@ -23,6 +23,12 @@ void Player::Move() noexcept
 {
     if (IsMoved()) {
         border_->ComputeNewLocation();
+        if (parent_->IsInside(this)) {
+            parent_->UpdateItemToGrid(this);
+        }
+        else {
+            parent_ = parent_->TransfertChildToNeighbor(this);
+        }
     }
 
     set_movement(glm::vec3(0.0f));

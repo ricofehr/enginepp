@@ -33,11 +33,7 @@ public:
     /**
      *  Default constructor
      */
-    MouseKeyboard()
-    {
-        /* Ensure we can capture keys being pressed below */
-        glfwSetInputMode(window_->glfw_window(), GLFW_STICKY_KEYS, GL_TRUE);
-    }
+    MouseKeyboard();
 
     MouseKeyboard(MouseKeyboard&&) = default;
     MouseKeyboard& operator=(MouseKeyboard&&) = default;

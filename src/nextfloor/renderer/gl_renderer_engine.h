@@ -15,6 +15,7 @@
 
 #include <string>
 
+#include "nextfloor/renderer/scene_window.h"
 #include "nextfloor/objects/model_mesh.h"
 
 namespace nextfloor {
@@ -24,7 +25,7 @@ namespace renderer {
 class GlRendererEngine : public nextfloor::objects::RendererEngine {
 
 public:
-    GlRendererEngine(std::string texture) { texture_ = texture; }
+    GlRendererEngine(std::string texture);
 
     GlRendererEngine(GlRendererEngine&&) = default;
     GlRendererEngine& operator=(GlRendererEngine&&) = default;
@@ -34,6 +35,7 @@ public:
     virtual ~GlRendererEngine() override = default;
 
 protected:
+    SceneWindow* game_window_;
     GLuint elementbuffer_;
     GLuint vertexbuffer_;
     GLuint texturebuffer_;

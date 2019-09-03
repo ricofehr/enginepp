@@ -93,14 +93,14 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexc
     for (auto& neighbor : all_neighbors) {
         auto vector_neighbor = neighbor->location() - location();
         if (glm::length(target->movement()) + glm::length(neighbor->movement())
-              > glm::length(vector_neighbor) - neighbor->diagonal() / 2.0f
+              > glm::length(vector_neighbor) - neighbor->diagonal()  // / 2.0f
             && glm::dot(target->movement(), vector_neighbor) > 0) {
             auto neighbor_meshes = neighbor->AllStubMeshs();
             collision_neighbors.insert(collision_neighbors.end(), neighbor_meshes.begin(), neighbor_meshes.end());
         }
     }
 
-    return collision_neighbors;
+    return all_neighbors;
 }
 
 std::vector<Mesh*> ModelMesh::AllStubMeshs() noexcept

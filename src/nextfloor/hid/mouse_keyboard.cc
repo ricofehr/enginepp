@@ -58,6 +58,14 @@ static void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
 
 }  // namespace
 
+MouseKeyboard::MouseKeyboard()
+{
+    using nextfloor::core::CommonServices;
+    window_ = CommonServices::getFactory()->MakeSceneWindow();
+    /* Ensure we can capture keys being pressed below */
+    glfwSetInputMode(window_->glfw_window(), GLFW_STICKY_KEYS, GL_TRUE);
+}
+
 /**
  *  Check if a button is pressed
  *  @param  window        GL Main Window

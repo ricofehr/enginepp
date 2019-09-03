@@ -16,6 +16,64 @@ namespace nextfloor {
 
 namespace grid {
 
+namespace {
+
+glm::ivec3 NextIntermediaryCoordsByX(glm::ivec3 min_coords, glm::ivec3 max_coords, glm::ivec3 intermediary_coords)
+{
+    if (min_coords.x <= max_coords.x) {
+        ++intermediary_coords.x;
+    }
+    else {
+        --intermediary_coords.x;
+    }
+
+    return intermediary_coords;
+}
+
+glm::ivec3 NextIntermediaryCoordsByY(glm::ivec3 min_coords, glm::ivec3 max_coords, glm::ivec3 intermediary_coords)
+{
+    if (min_coords.y <= max_coords.y) {
+        ++intermediary_coords.y;
+    }
+    else {
+        --intermediary_coords.y;
+    }
+
+    return intermediary_coords;
+}
+
+glm::ivec3 NextIntermediaryCoordsByZ(glm::ivec3 min_coords, glm::ivec3 max_coords, glm::ivec3 intermediary_coords)
+{
+    if (min_coords.z <= max_coords.z) {
+        ++intermediary_coords.z;
+    }
+    else {
+        --intermediary_coords.z;
+    }
+
+    return intermediary_coords;
+}
+
+bool IsNextCoordByX(glm::ivec3 min_coords, glm::ivec3 max_coords, glm::ivec3 intermediary_coords)
+{
+    return (min_coords.x <= max_coords.x && intermediary_coords.x <= max_coords.x)
+           || (min_coords.x > max_coords.x && intermediary_coords.x >= max_coords.x);
+}
+
+bool IsNextCoordByY(glm::ivec3 min_coords, glm::ivec3 max_coords, glm::ivec3 intermediary_coords)
+{
+    return (min_coords.y <= max_coords.y && intermediary_coords.y <= max_coords.y)
+           || (min_coords.y > max_coords.y && intermediary_coords.y >= max_coords.y);
+}
+
+bool IsNextCoordByZ(glm::ivec3 min_coords, glm::ivec3 max_coords, glm::ivec3 intermediary_coords)
+{
+    return (min_coords.z <= max_coords.z && intermediary_coords.z <= max_coords.z)
+           || (min_coords.z > max_coords.z && intermediary_coords.z >= max_coords.z);
+}
+
+}  // namespace
+
 WiredGrid::WiredGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
 {
     owner_ = owner;
@@ -147,8 +205,8 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontPositionCollisionNeig
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindFrontCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontCenterPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x, coords.y, coords.z - 1);
@@ -168,8 +226,8 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontRightPositionCollisio
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindFrontRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontRightBottomPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x - 1, coords.y - 1, coords.z - 1);
@@ -179,8 +237,8 @@ std::vector<nextfloor::objects::Mesh*>
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindFrontRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontRightTopPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x - 1, coords.y + 1, coords.z - 1);
@@ -200,8 +258,8 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontLeftPositionCollision
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindFrontLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x + 1, coords.y - 1, coords.z - 1);
@@ -211,8 +269,8 @@ std::vector<nextfloor::objects::Mesh*>
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindFrontLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontLeftTopPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x + 1, coords.y + 1, coords.z - 1);
@@ -222,8 +280,8 @@ std::vector<nextfloor::objects::Mesh*>
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindFrontBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontBottomPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x, coords.y - 1, coords.z - 1);
@@ -258,8 +316,8 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightPositionCollisionNeig
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindRightCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightCenterPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x - 1, coords.y, coords.z);
@@ -269,8 +327,8 @@ std::vector<nextfloor::objects::Mesh*>
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightBottomPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x - 1, coords.y - 1, coords.z);
@@ -333,8 +391,8 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackRightPositionCollision
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindBackRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackRightBottomPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x - 1, coords.y - 1, coords.z + 1);
@@ -344,8 +402,8 @@ std::vector<nextfloor::objects::Mesh*>
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindBackRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackRightTopPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x - 1, coords.y + 1, coords.z + 1);
@@ -365,8 +423,8 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackLeftPositionCollisionN
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindBackLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x + 1, coords.y - 1, coords.z + 1);
@@ -376,8 +434,8 @@ std::vector<nextfloor::objects::Mesh*>
     return neighbors;
 }
 
-std::vector<nextfloor::objects::Mesh*>
-  WiredGrid::FindBackLeftTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackLeftTopPositionCollisionNeighbors(glm::vec3 coords) const
+  noexcept
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
     auto neighbors_coord = glm::ivec3(coords.x + 1, coords.y + 1, coords.z + 1);
@@ -482,27 +540,32 @@ std::vector<nextfloor::objects::GridBox*> WiredGrid::AddItemToGrid(nextfloor::ob
     return ParseGridForObjectPlacements(object);
 }
 
-std::vector<nextfloor::objects::GridBox*>
-  WiredGrid::ParseGridForObjectPlacements(nextfloor::objects::Mesh* object) noexcept
+std::vector<nextfloor::objects::GridBox*> WiredGrid::ParseGridForObjectPlacements(nextfloor::objects::Mesh* object) noexcept
 {
     std::vector<nextfloor::objects::GridBox*> coords_list;
 
     auto border = object->border();
 
-    auto point_min = border->getFirstPoint();
-    auto point_max = border->getLastPoint();
-    float factor = min_box_side_dimension() / border->diagonal();
-    auto old_coords = glm::ivec3(-1, -1, -1);
-    auto intermediary_point = point_min;
+    auto min_coords = PointToCoords(border->getFirstPoint());
+    auto max_coords = PointToCoords(border->getLastPoint());
+    auto intermediary_coords = min_coords;
 
-    while (glm::distance(point_min, intermediary_point) < border->diagonal()) {
-        auto coords = PointToCoords(intermediary_point);
-        if (coords != old_coords && IsCooordsAreCorrect(coords)) {
-            coords_list.push_back(AddItemToGrid(coords, object));
+    while (IsNextCoordByX(min_coords, max_coords, intermediary_coords)) {
+        intermediary_coords.y = min_coords.y;
+        intermediary_coords.z = min_coords.z;
+
+        while (IsNextCoordByY(min_coords, max_coords, intermediary_coords)) {
+            intermediary_coords.z = min_coords.z;
+
+            while (IsNextCoordByZ(min_coords, max_coords, intermediary_coords)) {
+                if (IsCooordsAreCorrect(intermediary_coords)) {
+                    coords_list.push_back(AddItemToGrid(intermediary_coords, object));
+                }
+                intermediary_coords = NextIntermediaryCoordsByZ(min_coords, max_coords, intermediary_coords);
+            }
+            intermediary_coords = NextIntermediaryCoordsByY(min_coords, max_coords, intermediary_coords);
         }
-
-        intermediary_point += factor * (point_max - point_min);
-        old_coords = coords;
+        intermediary_coords = NextIntermediaryCoordsByX(min_coords, max_coords, intermediary_coords);
     }
 
     return coords_list;
@@ -529,7 +592,7 @@ glm::ivec3 WiredGrid::PointToCoords(glm::vec3 point) noexcept
     glm::vec3 coords = (glm::vec3(point.x, point.y, point.z) - grid0) / box_dimension_;
 
     return glm::ivec3(
-      static_cast<int>(floor(coords.x)), static_cast<int>(floor(coords.y)), static_cast<int>(floor(coords.z)));
+      static_cast<int>(trunc(coords.x)), static_cast<int>(trunc(coords.y)), static_cast<int>(trunc(coords.z)));
 }
 
 nextfloor::objects::GridBox* WiredGrid::AddItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept

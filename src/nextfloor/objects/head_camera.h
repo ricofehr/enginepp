@@ -40,6 +40,11 @@ public:
     virtual glm::vec3 direction() const override { return direction_; }
     virtual glm::vec3 head() const override { return head_; }
     virtual float fov() const override { return fov_; }
+    virtual void increment_angles(float horizontal_angle, float vertical_angle) override
+    {
+        horizontal_angle_ += horizontal_angle;
+        vertical_angle_ += vertical_angle;
+    }
     // virtual Camera* active() override { return active_; }
 
     virtual void set_active() override { active_ = this; }

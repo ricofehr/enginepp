@@ -30,24 +30,6 @@ std::string GetConfigFilePath()
     return stat("config/nextfloor.ini", &buffer) == 0 ? "config/nextfloor.ini" : "config/nextfloor.ini.default";
 }
 
-void HandleParseConfigFileIOError(std::string config_file, const libconfig::FileIOException& file_io_exception)
-{
-    std::ostringstream message;
-    message << "I/O error while reading file, config parser cancelled: " << config_file << std::endl;
-    message << "Exception: " << file_io_exception.what() << std::endl;
-    CommonServices::getLog()->Write(std::move(message));
-    CommonServices::getExit()->ExitOnError();
-}
-
-void HandleParseConfigFileParsingError(const libconfig::ParseException& parse_exception)
-{
-    std::ostringstream message;
-    message << "Parse error at " << parse_exception.getFile() << ":";
-    message << parse_exception.getLine() << " - " << parse_exception.getError();
-    CommonServices::getLog()->WriteLine(std::move(message));
-    CommonServices::getExit()->ExitOnError();
-}
-
 }  // anonymous namespace
 
 FileConfigParser::FileConfigParser()
@@ -65,16 +47,8 @@ void FileConfigParser::Initialize()
 void FileConfigParser::ParseConfigFile()
 {
     std::string config_file = GetConfigFilePath();
-
-    // try {
     config_.readFile(config_file.c_str());
-    // } catch (const libconfig::FileIOException& file_io_exception) {
-    //     HandleParseConfigFileIOError(config_file, file_io_exception);
-    // }
-    // catch (const libconfig::ParseException& parse_exception) {
-    //     HandleParseConfigFileParsingError(parse_exception);
-    // }
-}  // namespace core
+}
 
 void FileConfigParser::InitDefaultValues()
 {

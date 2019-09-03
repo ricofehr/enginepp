@@ -55,8 +55,7 @@ const GLfloat sBufferData[192] = {
 
 }  // namespace
 
-GlCubeRendererEngine::GlCubeRendererEngine(std::string texture)
-      : GlRendererEngine(texture)
+GlCubeRendererEngine::GlCubeRendererEngine(std::string texture) : GlRendererEngine(texture)
 {
     CreateVertexBuffer();
     CreateElementBuffer();
@@ -146,7 +145,7 @@ void GlCubeRendererEngine::Draw(const glm::mat4& mvp) noexcept
         tbb::mutex::scoped_lock lock(mutex_);
 
         glEnable(GL_CULL_FACE);
-        glUniformMatrix4fv(SceneWindow::getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(game_window_->getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
@@ -163,7 +162,7 @@ void GlCubeRendererEngine::Draw(const glm::mat4& mvp) noexcept
         glActiveTexture(GL_TEXTURE0 + texturebuffer_);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-        glUniform1i(glGetUniformLocation(SceneWindow::getProgramId(), "tex"), texturebuffer_);
+        glUniform1i(glGetUniformLocation(game_window_->getProgramId(), "tex"), texturebuffer_);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glDisableVertexAttribArray(0);

@@ -20,7 +20,8 @@ std::unique_ptr<nextfloor::objects::Mesh> DemoLevel::GenerateUniverse() noexcept
     auto first_room = CommonServices::getFactory()->MakeRoom(first_room_location);
     auto room_dimension = first_room->dimension();
     first_room->add_child(CommonServices::getFactory()->MakeRock(first_room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
-    first_room->add_child(CommonServices::getFactory()->MakeRock(first_room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
+    first_room->add_child(
+      CommonServices::getFactory()->MakeLittleRock(first_room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
     universe->add_child(std::move(first_room));
 
     /* create 26 more rooms around the first one */
@@ -32,14 +33,13 @@ std::unique_ptr<nextfloor::objects::Mesh> DemoLevel::GenerateUniverse() noexcept
                     auto room = CommonServices::getFactory()->MakeRoom(room_location);
                     room->add_child(
                       CommonServices::getFactory()->MakeRock(room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
-                    room->add_child(CommonServices::getFactory()->MakeRock(room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
+                    room->add_child(
+                      CommonServices::getFactory()->MakeLittleRock(room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
                     universe->add_child(std::move(room));
                 }
             }
         }
     }
-
-    universe->AddIntoChild(CommonServices::getFactory()->MakePlayer(glm::vec3(0.0f, -2.0f, 7.0f)));
 
     return universe;
 }

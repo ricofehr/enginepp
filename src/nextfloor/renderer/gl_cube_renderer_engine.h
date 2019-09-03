@@ -30,11 +30,11 @@ public:
     virtual void Draw(const glm::mat4& mvp) noexcept override final;
 
 private:
-    tbb::mutex mutex_;
-
     void CreateVertexBuffer() noexcept;
     void CreateElementBuffer() noexcept;
     void CreateTextureBuffer() noexcept;
+
+    tbb::mutex mutex_;
 };
 
 }  // namespace renderer

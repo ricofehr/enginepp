@@ -10,6 +10,7 @@
 #include "nextfloor/factory/renderer_factory.h"
 
 #include <map>
+#include <tbb/mutex.h>
 
 namespace nextfloor {
 

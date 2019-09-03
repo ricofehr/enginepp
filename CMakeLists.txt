@@ -95,6 +95,7 @@ set(renderer_SRCS
         src/nextfloor/renderer/fragment_shader.cc
         src/nextfloor/renderer/game_window.cc
         src/nextfloor/renderer/gl_cube_renderer_engine.cc
+        src/nextfloor/renderer/gl_renderer_engine.cc
         src/nextfloor/renderer/shader.cc
         src/nextfloor/renderer/vertex_shader.cc)
 

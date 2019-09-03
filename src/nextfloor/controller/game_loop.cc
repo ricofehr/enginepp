@@ -9,7 +9,11 @@
 #include <cassert>
 #include <sstream>
 
+#include "nextfloor/actions/action.h"
 #include "nextfloor/core/common_services.h"
+
+
+#include "nextfloor/objects/model_mesh.h"
 
 namespace nextfloor {
 
@@ -27,8 +31,10 @@ GameLoop::GameLoop()
     sInstanciated = true;
 
     using nextfloor::core::CommonServices;
-    game_window_ = CommonServices::getFactory()->MakeSceneWindow();
     universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
+    player_ = universe_->AddIntoChild(CommonServices::getFactory()->MakePlayer(glm::vec3(0.0f, -2.0f, 7.0f)));
+    game_window_ = CommonServices::getFactory()->MakeSceneWindow();
+    input_handler_ = CommonServices::getFactory()->MakeInputHandler();
     assert(game_window_ != nullptr);
 }
 
@@ -42,6 +48,14 @@ void GameLoop::LogLoop()
     using nextfloor::core::CommonServices;
 
     if (CommonServices::getTimer()->IsNewSecondElapsed()) {
+
+        auto rooms = universe_->childs();
+        for (auto& r : rooms) {
+            if (r->IsInside(player_)) {
+                dynamic_cast<nextfloor::objects::ModelMesh*>(r)->grid()->DisplayGrid();
+            }
+        }
+
         /* Header for test datas output */
         if (sFirstLoop && CommonServices::getConfig()->IsTestDebugEnabled()) {
             CommonServices::getLog()->Write("TIME:FPS:NBOBJALL:NBOBJMOVE");
@@ -87,10 +101,28 @@ void GameLoop::Loop()
             universe_->toready();
         }
 
+        auto camera = player_->camera();
+        camera->ComputeFOV(input_handler_->RecordFOV());
+        auto angles = input_handler_->RecordHIDPointer();
+        camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
+        camera->ComputeOrientation();
+        auto command = input_handler_->HandlerInput();
+        if (command) {
+            command->execute(player_);
+        }
+
         game_window_->PrepareDisplay();
-        universe_->DetectCollision();
-        universe_->Move();
-        universe_->Draw();
+        auto rooms = universe_->childs();
+        for (auto& r : rooms) {
+            if (r->IsInside(player_)) {
+                r->DetectCollision();
+                r->Move();
+                r->Draw();
+            }
+        }
+        // universe_->DetectCollision();
+        // universe_->Move();
+        // universe_->Draw();
         game_window_->SwapBuffers();
         LogLoop();
 
