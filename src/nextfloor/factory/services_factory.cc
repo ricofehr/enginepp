@@ -11,6 +11,7 @@
 #include "nextfloor/core/pseudo_random_generator.h"
 #include "nextfloor/core/std_file_io.h"
 #include "nextfloor/core/terminal_log.h"
+#include "nextfloor/core/game_window_settings.h"
 
 namespace nextfloor {
 
@@ -50,6 +51,12 @@ std::unique_ptr<nextfloor::core::RandomGenerator> ServicesFactory::MakeRandomGen
 {
     using nextfloor::core::PseudoRandomGenerator;
     return std::make_unique<PseudoRandomGenerator>();
+}
+
+std::unique_ptr<nextfloor::core::WindowSettings> ServicesFactory::MakeWindowSettings(nextfloor::renderer::SceneWindow* sw)
+{
+    using nextfloor::core::GameWindowSettings;
+    return std::make_unique<GameWindowSettings>(sw);
 }
 
 }  // namespace factory

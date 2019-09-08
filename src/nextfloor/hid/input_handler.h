@@ -46,6 +46,9 @@ public:
      */
     virtual float RecordFOV() = 0;
 
+    virtual void PollEvents() = 0;
+    virtual bool IsCloseWindowEventOccurs() = 0;
+
 protected:
     InputHandler() = default;
 };

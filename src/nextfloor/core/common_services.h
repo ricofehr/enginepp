@@ -15,6 +15,9 @@
 #include "nextfloor/core/random_generator.h"
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/exit.h"
+#include "nextfloor/core/window_settings.h"
+
+#include "nextfloor/objects/camera.h"
 
 #include "nextfloor/factory/facade_factory.h"
 
@@ -36,6 +39,8 @@ public:
      */
     static ConfigParser* getConfig() { return Instance()->config(); }
 
+    static WindowSettings* getWindowSettings() { return Instance()->window_settings(); }
+
     static const FileIO* getFileIO() { return Instance()->fileIO(); }
 
     static Timer* getTimer() { return Instance()->timer(); }
@@ -47,6 +52,17 @@ public:
     static const Exit* getExit() { return Instance()->exit(); }
 
     static nextfloor::factory::FacadeFactory* getFactory() { return Instance()->factory(); }
+
+    static void initWindowSettings(nextfloor::renderer::SceneWindow* window) { Instance()->makeWindowSettings(window); }
+
+    static nextfloor::objects::Camera* getActiveCamera() { return Instance()->camera_active(); }
+
+    static bool IsActiveCamera() { return Instance()->camera_active_ != nullptr; }
+
+    static void setActiveCamera(nextfloor::objects::Camera* camera_active)
+    {
+        Instance()->camera_active_ = camera_active;
+    }
 
 protected:
     CommonServices();
@@ -76,6 +92,12 @@ private:
     {
         assert(config_ != nullptr);
         return config_.get();
+    }
+
+    WindowSettings* window_settings()
+    {
+        assert(window_settings_ != nullptr);
+        return window_settings_.get();
     }
 
     const FileIO* fileIO()
@@ -114,13 +136,26 @@ private:
         return factory_.get();
     }
 
+    nextfloor::objects::Camera* camera_active() const
+    {
+        assert(camera_active_ != nullptr);
+        return camera_active_;
+    }
+
+    void makeWindowSettings(nextfloor::renderer::SceneWindow* window)
+    {
+        window_settings_ = factory_->MakeWindowSettings(window);
+    }
+
     std::unique_ptr<ConfigParser> config_{nullptr};
+    std::unique_ptr<WindowSettings> window_settings_{nullptr};
     std::unique_ptr<FileIO> file_io_{nullptr};
     std::unique_ptr<Timer> timer_{nullptr};
     std::unique_ptr<Log> log_{nullptr};
     std::unique_ptr<RandomGenerator> random_generator_{nullptr};
     std::unique_ptr<Exit> exit_{nullptr};
     std::unique_ptr<nextfloor::factory::FacadeFactory> factory_{nullptr};
+    nextfloor::objects::Camera* camera_active_{nullptr};
 };
 
 }  // namespace core

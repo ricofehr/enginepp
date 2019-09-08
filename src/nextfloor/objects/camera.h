@@ -33,8 +33,6 @@ public:
 
     virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
 
-    static Camera* active() { return active_; }
-
 protected:
     Camera() = default;
 
@@ -42,9 +40,6 @@ protected:
     Camera& operator=(Camera&&) = default;
     Camera(const Camera&) = delete;
     Camera& operator=(const Camera&) = delete;
-
-    /* At least one and only one current active Camera */
-    static Camera* active_;
 };
 
 }  // namespace objects

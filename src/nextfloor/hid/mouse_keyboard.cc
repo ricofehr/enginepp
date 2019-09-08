@@ -6,6 +6,8 @@
 
 #include "nextfloor/hid/mouse_keyboard.h"
 
+#include <functional>
+
 #include "nextfloor/core/common_services.h"
 
 /**
@@ -28,30 +30,11 @@ static int sSkipTime = 0;
 /* Record mouse wheel scroll */
 static float sScrollY = 0.0f;
 
-/**
- * Map Buttun with GL Constants
- * @param  ACTION_BUTTON Button Identifiant
- * @return               GL Constant value
- */
-int getKeyValueForAction(int ACTION_BUTTON)
-{
-    switch (ACTION_BUTTON) {
-    case HID::kHID_UP: return GLFW_KEY_UP;
-    case HID::kHID_DOWN: return GLFW_KEY_DOWN;
-    case HID::kHID_LEFT: return GLFW_KEY_LEFT;
-    case HID::kHID_RIGHT: return GLFW_KEY_RIGHT;
-    case HID::kHID_JUMP: return GLFW_KEY_SPACE;
-    case HID::kHID_FIRE: return GLFW_KEY_LEFT_CONTROL;
-    case HID::kHID_RUN: return GLFW_KEY_LEFT_SHIFT;
-    }
-
-    return 0;
-}
 
 /*
  *  OnScroll - callback function who record wheel change
  */
-static void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
+static void OnScroll(void* window, double delta_x, double delta_y)
 {
     sScrollY += delta_y;
 }
@@ -61,9 +44,8 @@ static void OnScroll(GLFWwindow* window, double delta_x, double delta_y)
 MouseKeyboard::MouseKeyboard()
 {
     using nextfloor::core::CommonServices;
-    window_ = CommonServices::getFactory()->MakeSceneWindow();
+    scene_input_ = CommonServices::getFactory()->MakeSceneInput();
     /* Ensure we can capture keys being pressed below */
-    glfwSetInputMode(window_->glfw_window(), GLFW_STICKY_KEYS, GL_TRUE);
 }
 
 /**
@@ -74,7 +56,7 @@ MouseKeyboard::MouseKeyboard()
  */
 bool MouseKeyboard::isPressed(int ACTION_BUTTON)
 {
-    return glfwGetKey(window_->glfw_window(), getKeyValueForAction(ACTION_BUTTON)) == GLFW_PRESS;
+    return scene_input_->IsPressed(ACTION_BUTTON);
 }
 
 
@@ -92,25 +74,26 @@ HIDPointer MouseKeyboard::RecordHIDPointer()
     const float hid_speed = 0.1f;
 
     /* Get mouse position */
-    double xpos = 0, ypos = 0;
+    glm::vec2 mouse_position;
 
     /* Ensure cursor is well centered before record move */
     if (sSkipTime++ < 10) {
-        glfwSetCursorPos(window_->glfw_window(), window_width / 2, window_height / 2);
-        xpos = window_width / 2;
-        ypos = window_height / 2;
+        scene_input_->SetCursorPos(window_width / 2, window_height / 2);
+        mouse_position.x = window_width / 2;
+        mouse_position.y = window_height / 2;
     }
     else {
-        glfwGetCursorPos(window_->glfw_window(), &xpos, &ypos);
+        mouse_position = scene_input_->GetCursorPos();
     }
 
 
-    HIDPointer pointer = {
-      hid_speed * CommonServices::getTimer()->getDeltaTimeSinceLastLoop() * static_cast<float>(window_width / 2 - xpos),
-      hid_speed * CommonServices::getTimer()->getDeltaTimeSinceLastLoop() * static_cast<float>(window_height / 2 - ypos)};
+    HIDPointer pointer = {hid_speed * CommonServices::getTimer()->getDeltaTimeSinceLastLoop()
+                            * static_cast<float>(window_width / 2 - mouse_position.x),
+                          hid_speed * CommonServices::getTimer()->getDeltaTimeSinceLastLoop()
+                            * static_cast<float>(window_height / 2 - mouse_position.y)};
 
     /* Reset Cursor position at center of screen */
-    glfwSetCursorPos(window_->glfw_window(), window_width / 2, window_height / 2);
+    scene_input_->SetCursorPos(window_width / 2, window_height / 2);
 
     return pointer;
 }
@@ -126,11 +109,21 @@ float MouseKeyboard::RecordFOV()
     float delta_fov = 0.0f;
 
     /* Manage Field of View with mouse wheel */
-    glfwSetScrollCallback(window_->glfw_window(), OnScroll);
+    // scene_input_->SetScrollCallBack(std::function<void(void*, double, double)>(OnScroll));
     delta_fov = zoom_sensitivity * sScrollY;
     sScrollY = 0.0f;
 
     return delta_fov;
+}
+
+void MouseKeyboard::PollEvents()
+{
+    scene_input_->PollEvents();
+}
+
+bool MouseKeyboard::IsCloseWindowEventOccurs()
+{
+    return scene_input_->IsCloseWindowEventOccurs();
 }
 
 }  // namespace hid

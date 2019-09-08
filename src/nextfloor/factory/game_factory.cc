@@ -36,10 +36,6 @@
 #include "nextfloor/physics/serial_nearer_collision_engine.h"
 #include "nextfloor/physics/cl_nearer_collision_engine.h"
 
-#include "nextfloor/renderer/fragment_shader.h"
-#include "nextfloor/renderer/vertex_shader.h"
-#include "nextfloor/renderer/game_window.h"
-
 #include "nextfloor/gameplay/demo_level.h"
 
 #include "nextfloor/core/common_services.h"

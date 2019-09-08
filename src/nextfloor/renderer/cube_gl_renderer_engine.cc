@@ -4,12 +4,11 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/renderer/gl_cube_renderer_engine.h"
+#include "nextfloor/renderer/cube_gl_renderer_engine.h"
 
 #include <vector>
 
 #include "nextfloor/core/common_services.h"
-#include "nextfloor/renderer/game_window.h"
 
 namespace nextfloor {
 
@@ -55,17 +54,20 @@ const GLfloat sBufferData[192] = {
 
 }  // namespace
 
-GlCubeRendererEngine::GlCubeRendererEngine(std::string texture) : GlRendererEngine(texture)
+CubeGlRendererEngine::CubeGlRendererEngine(std::string texture) : GlRendererEngine(texture) {}
+
+void CubeGlRendererEngine::Init()
 {
     CreateVertexBuffer();
     CreateElementBuffer();
     CreateTextureBuffer();
+    is_initialized_ = true;
 }
 
 /*
  *  Fill vertex buffer
  */
-void GlCubeRendererEngine::CreateVertexBuffer() noexcept
+void CubeGlRendererEngine::CreateVertexBuffer() noexcept
 {
     glGenBuffers(1, &vertexbuffer_);
     assert(vertexbuffer_ != 0);
@@ -75,7 +77,7 @@ void GlCubeRendererEngine::CreateVertexBuffer() noexcept
 }
 
 /* Load element coordinates into buffer */
-void GlCubeRendererEngine::CreateElementBuffer() noexcept
+void CubeGlRendererEngine::CreateElementBuffer() noexcept
 {
     // clang-format off
     GLuint elements[] = {
@@ -110,7 +112,7 @@ void GlCubeRendererEngine::CreateElementBuffer() noexcept
 /*
  *  Fill texture buffer
  */
-void GlCubeRendererEngine::CreateTextureBuffer() noexcept
+void CubeGlRendererEngine::CreateTextureBuffer() noexcept
 {
     int width, height;
     unsigned char* image;
@@ -135,17 +137,19 @@ void GlCubeRendererEngine::CreateTextureBuffer() noexcept
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void GlCubeRendererEngine::Draw(const glm::mat4& mvp) noexcept
+void CubeGlRendererEngine::Draw(const glm::mat4& mvp) noexcept
 {
-    if (vertexbuffer_ == 0) {
-        return;
-    }
+    using nextfloor::core::CommonServices;
 
     {
         tbb::mutex::scoped_lock lock(mutex_);
 
+        if (!is_initialized_) {
+            Init();
+        }
+
         glEnable(GL_CULL_FACE);
-        glUniformMatrix4fv(game_window_->getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(CommonServices::getWindowSettings()->getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
@@ -162,7 +166,7 @@ void GlCubeRendererEngine::Draw(const glm::mat4& mvp) noexcept
         glActiveTexture(GL_TEXTURE0 + texturebuffer_);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-        glUniform1i(glGetUniformLocation(game_window_->getProgramId(), "tex"), texturebuffer_);
+        glUniform1i(glGetUniformLocation(CommonServices::getWindowSettings()->getProgramId(), "tex"), texturebuffer_);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glDisableVertexAttribArray(0);

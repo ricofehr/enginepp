@@ -10,8 +10,8 @@
 #include <glm/gtx/transform.hpp>
 #include <tbb/mutex.h>
 
-#include "nextfloor/renderer/scene_window.h"
-#include "nextfloor/objects/head_camera.h"
+#include "nextfloor/objects/camera.h"
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -25,8 +25,8 @@ namespace polygons {
 
 glm::vec3 MeshPolygon::movement() const
 {
-    using nextfloor::renderer::SceneWindow;
-    return movement_ * SceneWindow::getFpsFixMoveFactor();
+    using nextfloor::core::CommonServices;
+    return movement_ * CommonServices::getWindowSettings()->getFpsFixMoveFactor();
 }
 
 void MeshPolygon::UpdateModelViewProjectionMatrix()
@@ -46,19 +46,22 @@ void MeshPolygon::UpdateModelViewProjectionMatrix()
 
 glm::mat4 MeshPolygon::GetProjectionMatrix()
 {
-    using nextfloor::renderer::SceneWindow;
+    using nextfloor::core::CommonServices;
 
-    auto camera = SceneWindow::getCamera();
-    glm::mat4 projection_matrix
-      = glm::perspective(glm::radians(camera->fov()), SceneWindow::getWidth() / SceneWindow::getHeight(), 0.1f, 300.0f);
+    auto camera = CommonServices::getActiveCamera();
+    glm::mat4 projection_matrix = glm::perspective(glm::radians(camera->fov()),
+                                                   CommonServices::getWindowSettings()->getWidth()
+                                                     / CommonServices::getWindowSettings()->getHeight(),
+                                                   0.1f,
+                                                   300.0f);
     return projection_matrix;
 }
 
 glm::mat4 MeshPolygon::GetViewMatrix()
 {
-    using nextfloor::renderer::SceneWindow;
+    using nextfloor::core::CommonServices;
 
-    auto camera = SceneWindow::getCamera();
+    auto camera = CommonServices::getActiveCamera();
     glm::mat4 view_matrix = glm::lookAt(camera->location(), camera->location() + camera->direction(), camera->head());
 
     return view_matrix;

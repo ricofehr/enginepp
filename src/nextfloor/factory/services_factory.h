@@ -9,7 +9,6 @@
 
 #include "nextfloor/factory/core_factory.h"
 
-
 namespace nextfloor {
 
 namespace factory {
@@ -36,6 +35,7 @@ public:
     virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() override;
     virtual std::unique_ptr<nextfloor::core::Log> MakeLog() override;
     virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() override;
+    virtual std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) override;
 };
 
 }  // namespace factory

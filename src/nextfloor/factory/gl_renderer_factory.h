@@ -33,9 +33,10 @@ public:
     virtual ~GlRendererFactory() override;
 
     virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) override;
-    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path) override;
-    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path) override;
+    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path, unsigned int program_id) override;
+    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path, unsigned int program_id) override;
     virtual nextfloor::renderer::SceneWindow* MakeSceneWindow() override;
+    virtual std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() override;
 
 private:
     std::map<std::string, std::unique_ptr<nextfloor::objects::RendererEngine>> renderers_;

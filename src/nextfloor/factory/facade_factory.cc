@@ -152,19 +152,24 @@ nextfloor::objects::RendererEngine* FacadeFactory::MakeCubeRenderer(std::string 
     return renderer_factory_->MakeCubeRenderer(texture);
 }
 
-nextfloor::renderer::Shader* FacadeFactory::MakeVertexShader(std::string shader_path)
+nextfloor::renderer::Shader* FacadeFactory::MakeVertexShader(std::string shader_path, unsigned int program_id)
 {
-    return renderer_factory_->MakeVertexShader(shader_path);
+    return renderer_factory_->MakeVertexShader(shader_path, program_id);
 }
 
-nextfloor::renderer::Shader* FacadeFactory::MakeFragmentShader(std::string shader_path)
+nextfloor::renderer::Shader* FacadeFactory::MakeFragmentShader(std::string shader_path, unsigned int program_id)
 {
-    return renderer_factory_->MakeFragmentShader(shader_path);
+    return renderer_factory_->MakeFragmentShader(shader_path, program_id);
 }
 
 nextfloor::renderer::SceneWindow* FacadeFactory::MakeSceneWindow()
 {
     return renderer_factory_->MakeSceneWindow();
+}
+
+std::unique_ptr<nextfloor::renderer::SceneInput> FacadeFactory::MakeSceneInput()
+{
+    return renderer_factory_->MakeSceneInput();
 }
 
 nextfloor::objects::CollisionEngine* FacadeFactory::MakeCollisionEngine()
@@ -215,6 +220,11 @@ std::unique_ptr<nextfloor::core::Log> FacadeFactory::MakeLog()
 std::unique_ptr<nextfloor::core::RandomGenerator> FacadeFactory::MakeRandomGenerator()
 {
     return core_factory_->MakeRandomGenerator();
+}
+
+std::unique_ptr<nextfloor::core::WindowSettings> FacadeFactory::MakeWindowSettings(nextfloor::renderer::SceneWindow* window)
+{
+    return core_factory_->MakeWindowSettings(window);
 }
 
 std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeFireAction()

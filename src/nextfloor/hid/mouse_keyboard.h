@@ -9,7 +9,9 @@
 
 #include "nextfloor/hid/hid.h"
 
-#include "nextfloor/renderer/scene_window.h"
+#include <memory>
+
+#include "nextfloor/renderer/scene_input.h"
 
 /**
  *  @namespace nextfloor
@@ -64,8 +66,12 @@ public:
      */
     float RecordFOV() override final;
 
+    virtual void PollEvents() override final;
+
+    virtual bool IsCloseWindowEventOccurs() override final;
+
 private:
-    nextfloor::renderer::SceneWindow* window_;
+    std::unique_ptr<nextfloor::renderer::SceneInput> scene_input_;
 };
 
 }  // namespace hid

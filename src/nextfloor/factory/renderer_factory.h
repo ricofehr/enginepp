@@ -13,6 +13,7 @@
 #include "nextfloor/objects/renderer_engine.h"
 #include "nextfloor/renderer/shader.h"
 #include "nextfloor/renderer/scene_window.h"
+#include "nextfloor/renderer/scene_input.h"
 
 namespace nextfloor {
 
@@ -33,9 +34,10 @@ public:
     virtual ~RendererFactory() = default;
 
     virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) = 0;
-    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path) = 0;
-    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path) = 0;
+    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path, unsigned int program_id) = 0;
+    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path, unsigned int program_id) = 0;
     virtual nextfloor::renderer::SceneWindow* MakeSceneWindow() = 0;
+    virtual std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() = 0;
 
 protected:
     RendererFactory() = default;

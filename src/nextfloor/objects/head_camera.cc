@@ -12,8 +12,6 @@ namespace nextfloor {
 
 namespace objects {
 
-Camera* Camera::active_ = nullptr;
-
 HeadCamera::HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle)
 {
     owner_ = owner;
@@ -22,10 +20,7 @@ HeadCamera::HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle
     fov_ = 45.0f;
 
     ComputeOrientation();
-
-    if (active_ == nullptr) {
-        set_active();
-    }
+    init_active();
 }
 
 void HeadCamera::ComputeOrientation() noexcept
@@ -48,6 +43,21 @@ void HeadCamera::ComputeFOV(float delta_fov) noexcept
     /* fov cant be less than 5° and more than 130° */
     fov_ = fov_ < 5.0f ? 5.0f : fov_;
     fov_ = fov_ > 130.0f ? 130.0f : fov_;
+}
+
+void HeadCamera::init_active()
+{
+    using nextfloor::core::CommonServices;
+
+    if (!CommonServices::IsActiveCamera()) {
+        set_active();
+    }
+}
+
+void HeadCamera::set_active()
+{
+    using nextfloor::core::CommonServices;
+    CommonServices::setActiveCamera(this);
 }
 
 }  // namespace objects

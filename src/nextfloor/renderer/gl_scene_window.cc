@@ -1,10 +1,10 @@
 /**
- *  @file game_window.cc
- *  @brief GameWindow class
+ *  @file gl_scene_window.cc
+ *  @brief GlSceneWindow class
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/renderer/game_window.h"
+#include "nextfloor/renderer/gl_scene_window.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -52,17 +52,7 @@ static void ClearWindow()
 
 }  // anonymous namespace
 
-/**
- *  GameWindow Global Variables Init
- */
-nextfloor::objects::Camera* SceneWindow::camera_ = nullptr;
-float SceneWindow::window_width_ = 1200.0f;
-float SceneWindow::window_height_ = 740.0f;
-GLuint SceneWindow::matrix_id_ = -1;
-GLuint SceneWindow::program_id_ = -1;
-float SceneWindow::move_factor_ = 1.0f;
-
-GameWindow::GameWindow()
+GlSceneWindow::GlSceneWindow()
 {
     assert(!sInstanciated);
     sInstanciated = true;
@@ -72,7 +62,7 @@ GameWindow::GameWindow()
 /**
  *  Subroutines Order is matters
  */
-void GameWindow::Initialization()
+void GlSceneWindow::Initialization()
 {
     InitGLFW();
     InitWindowSize();
@@ -90,14 +80,14 @@ void GameWindow::Initialization()
     CheckPrerequisites();
 }
 
-void GameWindow::InitWindowSize()
+void GlSceneWindow::InitWindowSize()
 {
     using nextfloor::core::CommonServices;
     window_width_ = CommonServices::getConfig()->getWindowWidth();
     window_height_ = CommonServices::getConfig()->getWindowHeight();
 }
 
-void GameWindow::CreateWindow()
+void GlSceneWindow::CreateWindow()
 {
     /* Open a window and create its OpenGL context (use glfwGetPrimaryMonitor() on third parameter for FS) */
     glfw_window_ = glfwCreateWindow(window_width_, window_height_, "=== Engine ===", nullptr, nullptr);
@@ -111,7 +101,7 @@ void GameWindow::CreateWindow()
     glfwMakeContextCurrent(glfw_window_);
 }
 
-void GameWindow::InitRefreshRate()
+void GlSceneWindow::InitRefreshRate()
 {
     auto gl_monitor = glfwGetPrimaryMonitor();
     assert(gl_monitor != NULL);
@@ -120,13 +110,13 @@ void GameWindow::InitRefreshRate()
     monitor_refresh_rate_ = gl_mode->refreshRate;
 }
 
-void GameWindow::InitVAO()
+void GlSceneWindow::InitVAO()
 {
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
 }
 
-void GameWindow::InitVSync()
+void GlSceneWindow::InitVSync()
 {
     using nextfloor::core::CommonServices;
 
@@ -136,32 +126,33 @@ void GameWindow::InitVSync()
     }
 }
 
-void GameWindow::InitProgramId()
+void GlSceneWindow::InitProgramId()
 {
     program_id_ = glCreateProgram();
 }
 
-void GameWindow::LoadShaders()
+void GlSceneWindow::LoadShaders()
 {
     using nextfloor::core::CommonServices;
-    vertex_shader_ = CommonServices::getFactory()->MakeVertexShader(kVERTEXFILEPATH);
-    fragment_shader_ = CommonServices::getFactory()->MakeFragmentShader(kFRAGMENTFILEPATH);
+    vertex_shader_ = CommonServices::getFactory()->MakeVertexShader(kVERTEXFILEPATH, program_id_);
+    fragment_shader_ = CommonServices::getFactory()->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
 
     vertex_shader_->LoadShader();
     fragment_shader_->LoadShader();
     vertex_shader_->LinkShader();
     fragment_shader_->LinkShader();
-    Shader::CheckProgram();
+    vertex_shader_->CheckProgram();
+    fragment_shader_->CheckProgram();
     vertex_shader_->DetachShader();
     fragment_shader_->DetachShader();
 }
 
-void GameWindow::InitMatrixId()
+void GlSceneWindow::InitMatrixId()
 {
     matrix_id_ = glGetUniformLocation(program_id_, "MVP");
 }
 
-void GameWindow::InitPolygonMode()
+void GlSceneWindow::InitPolygonMode()
 {
     using nextfloor::core::CommonServices;
 
@@ -173,17 +164,15 @@ void GameWindow::InitPolygonMode()
     }
 }
 
-void GameWindow::CheckPrerequisites()
+void GlSceneWindow::CheckPrerequisites()
 {
     assert(glfw_window_ != nullptr);
-    assert(matrix_id_ != -1);
-    assert(program_id_ != -1);
+    assert(matrix_id_ != 0);
+    assert(program_id_ != 0);
 }
 
-void GameWindow::PrepareDisplay()
+void GlSceneWindow::PrepareDisplay()
 {
-    SetCamera();
-
     glEnable(GL_DEPTH_TEST);
 
     /* Accept fragment if it closer to the camera than the former one */
@@ -196,12 +185,9 @@ void GameWindow::PrepareDisplay()
     glUseProgram(program_id_);
 
     glPolygonMode(GL_FRONT_AND_BACK, polygon_mode_);
-
-    /** The scene drawn needs a camera */
-    assert(camera_ != nullptr);
 }
 
-void GameWindow::UpdateMoveFactor()
+void GlSceneWindow::UpdateMoveFactor()
 {
     using nextfloor::core::CommonServices;
 
@@ -214,19 +200,13 @@ void GameWindow::UpdateMoveFactor()
     move_factor_ = kFpsBase / fps_real;
 }
 
-void GameWindow::SetCamera()
-{
-    using nextfloor::objects::Camera;
-    camera_ = Camera::active();
-}
-
-void GameWindow::SwapBuffers()
+void GlSceneWindow::SwapBuffers()
 {
     /* Swap buffers and poll */
     glfwSwapBuffers(glfw_window_);
 }
 
-GameWindow::~GameWindow()
+GlSceneWindow::~GlSceneWindow()
 {
     assert(sInstanciated);
     sInstanciated = false;

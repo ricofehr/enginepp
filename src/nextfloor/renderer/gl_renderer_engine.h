@@ -35,7 +35,6 @@ public:
     virtual ~GlRendererEngine() override = default;
 
 protected:
-    SceneWindow* game_window_;
     GLuint elementbuffer_;
     GLuint vertexbuffer_;
     GLuint texturebuffer_;

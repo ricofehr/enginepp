@@ -55,19 +55,9 @@ public:
      */
     virtual float RecordFOV() = 0;
 
+    virtual void PollEvents() = 0;
 
-    /**
-     *  Action Button
-     */
-    static constexpr int kHID_UP = 0;
-    static constexpr int kHID_DOWN = 1;
-    static constexpr int kHID_LEFT = 2;
-    static constexpr int kHID_RIGHT = 3;
-    static constexpr int kHID_JUMP = 4;
-    static constexpr int kHID_RUN = 5;
-    static constexpr int kHID_FIRE = 6;
-
-    static constexpr int kACTIONS = 7;
+    virtual bool IsCloseWindowEventOccurs() = 0;
 
 protected:
     /**

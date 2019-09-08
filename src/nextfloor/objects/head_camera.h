@@ -45,11 +45,12 @@ public:
         horizontal_angle_ += horizontal_angle;
         vertical_angle_ += vertical_angle;
     }
-    // virtual Camera* active() override { return active_; }
 
-    virtual void set_active() override { active_ = this; }
+    virtual void set_active() override;
 
 private:
+    void init_active();
+
     Mesh* owner_;
     float horizontal_angle_;
     float vertical_angle_;

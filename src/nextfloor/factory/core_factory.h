@@ -15,6 +15,9 @@
 #include "nextfloor/core/timer.h"
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/random_generator.h"
+#include "nextfloor/core/window_settings.h"
+
+#include "nextfloor/renderer/scene_window.h"
 
 namespace nextfloor {
 
@@ -35,6 +38,7 @@ public:
     virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() = 0;
     virtual std::unique_ptr<nextfloor::core::Log> MakeLog() = 0;
     virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() = 0;
+    virtual std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) = 0;
 
 protected:
     CoreFactory() = default;

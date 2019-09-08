@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "nextfloor/hid/mouse_keyboard.h"
+#include "nextfloor/renderer/scene_input.h"
 
 #include "nextfloor/actions/moveup_action.h"
 #include "nextfloor/actions/movedown_action.h"
@@ -17,6 +18,8 @@
 #include "nextfloor/actions/jump_action.h"
 #include "nextfloor/actions/run_action.h"
 #include "nextfloor/actions/fire_action.h"
+
+#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -32,42 +35,45 @@ GameInputHandler::GameInputHandler()
     hid_ = std::make_unique<MouseKeyboard>();
 
     /* Init Command Pointers */
-    move_up_command_ = std::make_unique<nextfloor::actions::MoveUpAction>();
-    move_down_command_ = std::make_unique<nextfloor::actions::MoveDownAction>();
-    move_left_command_ = std::make_unique<nextfloor::actions::MoveLeftAction>();
-    move_right_command_ = std::make_unique<nextfloor::actions::MoveRightAction>();
-    jump_command_ = std::make_unique<nextfloor::actions::JumpAction>();
-    run_command_ = std::make_unique<nextfloor::actions::RunAction>();
-    fire_command_ = std::make_unique<nextfloor::actions::FireAction>();
+    using nextfloor::core::CommonServices;
+    move_up_command_ = CommonServices::getFactory()->MakeMoveUpAction();
+    move_down_command_ = CommonServices::getFactory()->MakeMoveDownAction();
+    move_left_command_ = CommonServices::getFactory()->MakeMoveLeftAction();
+    move_right_command_ = CommonServices::getFactory()->MakeMoveRightAction();
+    jump_command_ = CommonServices::getFactory()->MakeJumpAction();
+    run_command_ = CommonServices::getFactory()->MakeRunAction();
+    fire_command_ = CommonServices::getFactory()->MakeFireAction();
 }
 
 nextfloor::actions::Action* GameInputHandler::HandlerInput()
 {
-    if (hid_->isPressed(HID::kHID_UP)) {
+    using nextfloor::renderer::SceneInput;
+
+    if (hid_->isPressed(SceneInput::kINPUT_UP)) {
         return move_up_command_.get();
     }
 
-    if (hid_->isPressed(HID::kHID_DOWN)) {
+    if (hid_->isPressed(SceneInput::kINPUT_DOWN)) {
         return move_down_command_.get();
     }
 
-    if (hid_->isPressed(HID::kHID_LEFT)) {
+    if (hid_->isPressed(SceneInput::kINPUT_LEFT)) {
         return move_left_command_.get();
     }
 
-    if (hid_->isPressed(HID::kHID_RIGHT)) {
+    if (hid_->isPressed(SceneInput::kINPUT_RIGHT)) {
         return move_right_command_.get();
     }
 
-    if (hid_->isPressed(HID::kHID_JUMP)) {
+    if (hid_->isPressed(SceneInput::kINPUT_JUMP)) {
         return jump_command_.get();
     }
 
-    if (hid_->isPressed(HID::kHID_FIRE)) {
+    if (hid_->isPressed(SceneInput::kINPUT_FIRE)) {
         return fire_command_.get();
     }
 
-    if (hid_->isPressed(HID::kHID_RUN)) {
+    if (hid_->isPressed(SceneInput::kINPUT_RUN)) {
         return run_command_.get();
     }
 
@@ -82,6 +88,16 @@ HIDPointer GameInputHandler::RecordHIDPointer()
 float GameInputHandler::RecordFOV()
 {
     return hid_->RecordFOV();
+}
+
+void GameInputHandler::PollEvents()
+{
+    hid_->PollEvents();
+}
+
+bool GameInputHandler::IsCloseWindowEventOccurs()
+{
+    return hid_->IsCloseWindowEventOccurs();
 }
 
 }  // namespace hid

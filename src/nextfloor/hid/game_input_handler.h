@@ -47,6 +47,9 @@ public:
      */
     virtual float RecordFOV() override final;
 
+    virtual void PollEvents() override final;
+    virtual bool IsCloseWindowEventOccurs() override final;
+
 private:
     /** The main hid */
     std::unique_ptr<HID> hid_{nullptr};

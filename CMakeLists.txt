@@ -32,6 +32,7 @@ set(core_SRCS
         src/nextfloor/core/common_services.cc
         src/nextfloor/core/file_config_parser.cc
         src/nextfloor/core/frame_timer.cc
+        src/nextfloor/core/game_window_settings.cc
         src/nextfloor/core/std_file_io.cc
         src/nextfloor/core/program_exit.cc
         src/nextfloor/core/pseudo_random_generator.cc
@@ -92,12 +93,13 @@ set(polygons_SRCS
         src/nextfloor/polygons/cube.cc)
 
 set(renderer_SRCS
-        src/nextfloor/renderer/fragment_shader.cc
-        src/nextfloor/renderer/game_window.cc
-        src/nextfloor/renderer/gl_cube_renderer_engine.cc
+        src/nextfloor/renderer/cube_gl_renderer_engine.cc
+        src/nextfloor/renderer/fragment_gl_shader.cc
         src/nextfloor/renderer/gl_renderer_engine.cc
-        src/nextfloor/renderer/shader.cc
-        src/nextfloor/renderer/vertex_shader.cc)
+        src/nextfloor/renderer/gl_scene_input.cc
+        src/nextfloor/renderer/gl_scene_window.cc
+        src/nextfloor/renderer/gl_shader.cc
+        src/nextfloor/renderer/vertex_gl_shader.cc)
 
 set(nextfloor_SRCS
         ${actions_SRCS}
@@ -133,13 +135,15 @@ set(core_HDRS
         src/nextfloor/core/file_config_parser.h
         src/nextfloor/core/file_io.h
         src/nextfloor/core/frame_timer.h
+        src/nextfloor/core/game_window_settings.h
         src/nextfloor/core/std_file_io.h
         src/nextfloor/core/log.h
         src/nextfloor/core/program_exit.h
         src/nextfloor/core/random_generator.h
         src/nextfloor/core/pseudo_random_generator.h
         src/nextfloor/core/terminal_log.h
-        src/nextfloor/core/timer.h)
+        src/nextfloor/core/timer.h
+        src/nextfloor/core/window_settings.h)
 
 set(factory_HDRS
         src/nextfloor/factory/action_factory.h
@@ -211,13 +215,16 @@ set(polygons_HDRS
         src/nextfloor/polygons/cube.h)
 
 set(renderer_HDRS
-        src/nextfloor/renderer/fragment_shader.h
-        src/nextfloor/renderer/game_window.h
-        src/nextfloor/renderer/gl_cube_renderer_engine.h
+        src/nextfloor/renderer/cube_gl_renderer_engine.h
+        src/nextfloor/renderer/fragment_gl_shader.h
         src/nextfloor/renderer/gl_renderer_engine.h
+        src/nextfloor/renderer/gl_scene_input.h
+        src/nextfloor/renderer/gl_scene_window.h
+        src/nextfloor/renderer/gl_shader.h
+        src/nextfloor/renderer/scene_input.h
         src/nextfloor/renderer/scene_window.h
         src/nextfloor/renderer/shader.h
-        src/nextfloor/renderer/vertex_shader.h)
+        src/nextfloor/renderer/vertex_gl_shader.h)
 
 set(nextfloor_HDRS
         ${controller_HDRS}

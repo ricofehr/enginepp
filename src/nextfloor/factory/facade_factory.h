@@ -26,6 +26,7 @@
 #include "nextfloor/objects/renderer_engine.h"
 #include "nextfloor/renderer/shader.h"
 #include "nextfloor/renderer/scene_window.h"
+#include "nextfloor/renderer/scene_input.h"
 
 #include "nextfloor/hid/hid.h"
 #include "nextfloor/hid/input_handler.h"
@@ -101,9 +102,10 @@ public:
 
     /* RendererFactory Part */
     nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture);
-    nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path);
-    nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path);
+    nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path, unsigned int program_id);
+    nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path, unsigned int program_id);
     nextfloor::renderer::SceneWindow* MakeSceneWindow();
+    std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput();
 
     /* PhysicsFactory Part */
     nextfloor::objects::CollisionEngine* MakeCollisionEngine();
@@ -124,7 +126,7 @@ public:
     std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator();
     std::unique_ptr<MeshFactory> MakeMeshFactory();
     std::unique_ptr<HidFactory> MakeHidFactory();
-    std::unique_ptr<CommandFactory> MakeCommandFactory();
+    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* window);
 
     /* CommandFactory Part */
     std::unique_ptr<nextfloor::actions::Action> MakeFireAction();

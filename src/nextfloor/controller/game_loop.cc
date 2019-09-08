@@ -126,9 +126,8 @@ void GameLoop::Loop()
         game_window_->SwapBuffers();
         LogLoop();
 
-        glfwPollEvents();
-    } while (glfwGetKey(game_window_->glfw_window(), GLFW_KEY_ESCAPE) != GLFW_PRESS
-             && glfwWindowShouldClose(game_window_->glfw_window()) == 0);
+        input_handler_->PollEvents();
+    } while (!input_handler_->IsCloseWindowEventOccurs());
 }
 
 GameLoop::~GameLoop()
