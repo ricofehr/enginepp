@@ -14,7 +14,7 @@ namespace physics {
 
 void NearerCollisionEngine::DetectCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
 {
-    if (target->IsLastObstacle(obstacle)) {
+    if (!target->IsCamera() && target->IsLastObstacle(obstacle)) {
         return;
     }
 

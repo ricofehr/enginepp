@@ -32,6 +32,7 @@ public:
     virtual void Draw() = 0;
     virtual void DetectCollision() = 0;
     virtual std::vector<Mesh*> FindCollisionNeighborsOf(Mesh* target) const noexcept = 0;
+    virtual bool IsNeighborEligibleForCollision(Mesh* neighbor) const = 0;
     virtual void Move() = 0;
 
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept = 0;
@@ -62,7 +63,7 @@ public:
     virtual bool IsBottomPositionFilled() const noexcept = 0;
     virtual bool IsTopPositionFilled() const noexcept = 0;
 
-    virtual int id() = 0;
+    virtual int id() const = 0;
     virtual glm::vec3 location() const noexcept = 0;
     virtual glm::vec3 dimension() const noexcept = 0;
     virtual glm::vec3 movement() const noexcept = 0;

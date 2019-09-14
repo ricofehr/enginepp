@@ -52,7 +52,20 @@ public:
 
     virtual int size() const noexcept override { return occupants_.size(); }
     virtual glm::vec3 coords() const noexcept override { return coords_; }
-    virtual std::vector<nextfloor::objects::Mesh*> occupants() noexcept override { return occupants_; }
+
+    virtual std::vector<nextfloor::objects::Mesh*> occupants() noexcept override
+    {
+        std::vector<nextfloor::objects::Mesh*> occupants;
+        for (auto& occupant : occupants_) {
+            auto meshes = occupant->AllStubMeshs();
+            occupants.insert(occupants.end(), meshes.begin(), meshes.end());
+        }
+
+        // sort(occupants.begin(), occupants.end());
+        // occupants.erase(unique(occupants.begin(), occupants.end()), occupants.end());
+
+        return occupants;
+    }
 
 protected:
     nextfloor::objects::Mesh* getFirstOccupant()

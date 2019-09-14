@@ -31,7 +31,7 @@ GameLoop::GameLoop()
     sInstanciated = true;
 
     using nextfloor::core::CommonServices;
-    auto player = CommonServices::getFactory()->MakePlayer(glm::vec3(0.0f, -2.0f, 7.0f));
+    auto player = CommonServices::getFactory()->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
     player_ = player.get();
     universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
     universe_->AddIntoChild(std::move(player));
@@ -49,13 +49,6 @@ void GameLoop::LogLoop()
     using nextfloor::core::CommonServices;
 
     if (CommonServices::getTimer()->IsNewSecondElapsed()) {
-
-        auto rooms = universe_->childs();
-        for (auto& r : rooms) {
-            if (r->IsInside(player_)) {
-                dynamic_cast<nextfloor::objects::ModelMesh*>(r)->grid()->DisplayGrid();
-            }
-        }
 
         /* Header for test datas output */
         if (sFirstLoop && CommonServices::getConfig()->IsTestDebugEnabled()) {

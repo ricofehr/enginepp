@@ -368,6 +368,9 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackPositionCollisionNeigh
     neighbors.insert(neighbors.end(), left_bottom_neighbors.begin(), left_bottom_neighbors.end());
     neighbors.insert(neighbors.end(), left_top_neighbors.begin(), left_top_neighbors.end());
 
+    // sort(neighbors.begin(), neighbors.end());
+    // neighbors.erase(unique(neighbors.begin(), neighbors.end()), neighbors.end());
+
     return neighbors;
 }
 
@@ -529,6 +532,25 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindTopPositionCollisionNeighb
     }
     return neighbors;
 }
+
+// std::vector<nextfloor::objects::Mesh*> WiredGrid::FindAllOccupants() const noexcept
+// {
+//     std::vector<nextfloor::objects::Mesh*> all_occupants;
+
+//     for (auto i = 0; i < width_boxes_count(); i++) {
+//         for (auto j = 0; j < height_boxes_count(); j++) {
+//             for (auto k = 0; k < depth_boxes_count(); k++) {
+//                 auto occupants = boxes_[i][j][k]->occupants();
+//                 all_occupants.insert(all_occupants.end(), occupants.begin(), occupants.end());
+//             }
+//         }
+//     }
+
+//     sort(all_occupants.begin(), all_occupants.end());
+//     all_occupants.erase(unique(all_occupants.begin(), all_occupants.end()), all_occupants.end());
+
+//     return all_occupants;
+// }
 
 std::vector<nextfloor::objects::Mesh*> WiredGrid::FindOccupants(glm::ivec3 coords) const noexcept
 {

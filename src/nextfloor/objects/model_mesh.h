@@ -40,6 +40,7 @@ public:
     virtual void Draw() noexcept override;
     virtual void DetectCollision() noexcept override;
     virtual std::vector<Mesh*> FindCollisionNeighborsOf(Mesh* target) const noexcept override;
+    virtual bool IsNeighborEligibleForCollision(Mesh* neighbor) const override;
     virtual void Move() noexcept override;
 
     virtual Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept override final;
@@ -63,7 +64,7 @@ public:
     virtual bool IsBottomPositionFilled() const noexcept override;
     virtual bool IsTopPositionFilled() const noexcept override;
 
-    virtual int id() override { return id_; }
+    virtual int id() const override { return id_; }
     virtual glm::vec3 location() const noexcept override { return border_->location(); }
     virtual glm::vec3 dimension() const noexcept override { return border_->dimension(); }
     virtual float diagonal() const noexcept override final { return border_->diagonal(); }
@@ -154,6 +155,7 @@ protected:
     virtual void unlock() override final { mutex_.unlock(); }
 
     bool IsMoved() const { return border_->IsMoved(); }
+    void ResetObstacle();
 
     Mesh* parent_{nullptr};
     std::vector<GridBox*> coords_list_;
@@ -168,8 +170,11 @@ protected:
 private:
     void InitCollisionEngine();
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
-
     void PivotCollision() noexcept;
+
+    bool IsNeighborReachable(Mesh* neighbor) const;
+    bool IsInSameDirection(glm::vec3 target_vector) const;
+
     void LogCollision(Mesh* obstacle, float obstacle_distance);
 
     int id_{0};

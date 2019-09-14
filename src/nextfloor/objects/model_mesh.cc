@@ -91,16 +91,35 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexc
 
     std::vector<Mesh*> collision_neighbors(0);
     for (auto& neighbor : all_neighbors) {
-        auto vector_neighbor = neighbor->location() - location();
-        if (glm::length(target->movement()) + glm::length(neighbor->movement())
-              > glm::length(vector_neighbor) - neighbor->diagonal()  // / 2.0f
-            && glm::dot(target->movement(), vector_neighbor) > 0) {
-            auto neighbor_meshes = neighbor->AllStubMeshs();
-            collision_neighbors.insert(collision_neighbors.end(), neighbor_meshes.begin(), neighbor_meshes.end());
+        if (target->IsNeighborEligibleForCollision(neighbor)) {
+            collision_neighbors.push_back(neighbor);
+            // auto neighbor_meshes = neighbor->AllStubMeshs();
+            // collision_neighbors.insert(collision_neighbors.end(), neighbor_meshes.begin(), neighbor_meshes.end());
         }
     }
 
-    return all_neighbors;
+    // std::cout << all_neighbors.size() << "::" << collision_neighbors.size() << std::endl;
+
+    return collision_neighbors;
+}
+
+bool ModelMesh::IsNeighborEligibleForCollision(Mesh* neighbor) const
+{
+    auto vector_neighbor = neighbor->location() - location();
+    return IsNeighborReachable(neighbor) && IsInSameDirection(vector_neighbor);
+}
+
+bool ModelMesh::IsNeighborReachable(Mesh* neighbor) const
+{
+    auto vector_neighbor = neighbor->location() - location();
+    return glm::length(movement()) + glm::length(neighbor->movement())
+           >= glm::length(vector_neighbor) - (diagonal() + neighbor->diagonal());
+    // // / 2.0f;
+}
+
+bool ModelMesh::IsInSameDirection(glm::vec3 target_vector) const
+{
+    return glm::dot(movement(), target_vector) > 0;
 }
 
 std::vector<Mesh*> ModelMesh::AllStubMeshs() noexcept
@@ -143,7 +162,6 @@ void ModelMesh::Move() noexcept
     tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
         polygons_[counter]->UpdateModelViewProjectionMatrix();
     });
-
 
     /*
      *  Compute GL coords for childs

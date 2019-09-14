@@ -15,7 +15,7 @@ namespace objects {
 Player::Player(glm::vec3 location)
 {
     using nextfloor::core::CommonServices;
-    border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(1.0f));
+    border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(0.2f));
     camera_ = CommonServices::getFactory()->MakeCamera(this);
 }
 
@@ -23,6 +23,9 @@ void Player::Move() noexcept
 {
     if (IsMoved()) {
         border_->ComputeNewLocation();
+    }
+
+    if (IsMoved()) {
         if (parent_->IsInside(this)) {
             parent_->UpdateChildPlacement(this);
         }
