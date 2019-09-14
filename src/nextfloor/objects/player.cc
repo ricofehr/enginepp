@@ -24,7 +24,7 @@ void Player::Move() noexcept
     if (IsMoved()) {
         border_->ComputeNewLocation();
         if (parent_->IsInside(this)) {
-            parent_->UpdateItemToGrid(this);
+            parent_->UpdateChildPlacement(this);
         }
         else {
             parent_ = parent_->TransfertChildToNeighbor(this);

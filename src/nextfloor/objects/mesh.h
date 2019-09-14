@@ -18,6 +18,8 @@ namespace nextfloor {
 
 namespace objects {
 
+class GridBox;
+
 /**
  *  @class Mesh
  *  @brief Interface who defines generic 3d object operations and shall be inherited by all other 3d models
@@ -39,9 +41,9 @@ public:
     virtual Mesh* add_child(std::unique_ptr<Mesh> child) noexcept = 0;
     virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept = 0;
     virtual Mesh* TransfertChildToNeighbor(Mesh* child) noexcept = 0;
-    virtual void UpdateItemToGrid(Mesh* object) noexcept = 0;
-    virtual void AddItemToGrid(Mesh* object) noexcept = 0;
-    virtual void RemoveItemToGrid(Mesh* object) noexcept = 0;
+    virtual void UpdateChildPlacement(Mesh* object) noexcept = 0;
+    virtual void AddMeshToGrid(Mesh* object) noexcept = 0;
+    virtual void RemoveItemsToGrid(Mesh* object) noexcept = 0;
     virtual std::vector<Mesh*> childs() noexcept = 0;
     virtual bool hasNoChilds() const = 0;
     virtual std::vector<Mesh*> AllStubMeshs() noexcept = 0;

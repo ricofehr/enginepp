@@ -623,14 +623,10 @@ bool WiredGrid::IsCooordsAreCorrect(glm::ivec3 coords) const
     return true;
 }
 
-void WiredGrid::RemoveItem(nextfloor::objects::Mesh* object) noexcept
+void WiredGrid::RemoveMesh(nextfloor::objects::Mesh* object) noexcept
 {
-    for (auto i = 0; i < width_boxes_count(); i++) {
-        for (auto j = 0; j < height_boxes_count(); j++) {
-            for (auto k = 0; k < depth_boxes_count(); k++) {
-                RemoveItemToGrid(glm::ivec3(i, j, k), object);
-            }
-        }
+    for (auto& coords : object->coords()) {
+        RemoveItemToGrid(coords, object);
     }
 }
 

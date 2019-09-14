@@ -40,7 +40,7 @@ public:
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const = 0;
 
     virtual std::vector<GridBox*> AddItem(Mesh* object) noexcept = 0;
-    virtual void RemoveItem(Mesh* object) noexcept = 0;
+    virtual void RemoveMesh(Mesh* object) noexcept = 0;
     virtual bool IsInside(glm::vec3 location_object) const noexcept = 0;
 
     virtual void DisplayGrid() const noexcept = 0;

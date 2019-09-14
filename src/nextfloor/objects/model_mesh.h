@@ -48,9 +48,9 @@ public:
     virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept override;
     virtual Mesh* TransfertChildToNeighbor(Mesh* child) noexcept override;
 
-    virtual void UpdateItemToGrid(Mesh* object) noexcept override final;
-    virtual void AddItemToGrid(Mesh* object) noexcept override final;
-    virtual void RemoveItemToGrid(Mesh* object) noexcept override final;
+    virtual void UpdateChildPlacement(Mesh* object) noexcept override final;
+    virtual void AddMeshToGrid(Mesh* object) noexcept override final;
+    virtual void RemoveItemsToGrid(Mesh* object) noexcept override final;
 
     virtual bool IsLastObstacle(Mesh* obstacle) const noexcept override final;
     virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) noexcept override final;
@@ -139,6 +139,8 @@ public:
         }
         return ret_childs;
     }
+
+    // virtual std::vector<GridBox*> grid_coords() const override { return coords_list_; }
 
 protected:
     ModelMesh();

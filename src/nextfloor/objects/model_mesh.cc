@@ -162,7 +162,7 @@ void ModelMesh::Move() noexcept
 
     if (IsMoved()) {
         if (parent_->IsInside(this)) {
-            parent_->UpdateItemToGrid(this);
+            parent_->UpdateChildPlacement(this);
         }
         else {
             parent_ = parent_->TransfertChildToNeighbor(this);
@@ -176,10 +176,10 @@ bool ModelMesh::IsInside(Mesh* mesh) noexcept
     return grid()->IsInside(mesh->location());
 }
 
-void ModelMesh::UpdateItemToGrid(Mesh* item) noexcept
+void ModelMesh::UpdateChildPlacement(Mesh* item) noexcept
 {
-    RemoveItemToGrid(item);
-    AddItemToGrid(item);
+    RemoveItemsToGrid(item);
+    AddMeshToGrid(item);
 }
 
 Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child) noexcept
@@ -219,7 +219,7 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
         objects_.push_back(std::move(object));
     }
 
-    AddItemToGrid(object_raw);
+    AddMeshToGrid(object_raw);
     /* Ensure object is well added */
     assert(objects_.size() == initial_objects_size + 1);
     unlock();
@@ -227,24 +227,18 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
     return object_raw;
 }
 
-void ModelMesh::AddItemToGrid(Mesh* object) noexcept
+void ModelMesh::AddMeshToGrid(Mesh* object) noexcept
 {
-    if (grid_ == nullptr) {
-        if (parent_ != nullptr) {
-            parent_->AddItemToGrid(object);
-        }
-    }
-    else {
-        auto coords_list = grid_->AddItem(object);
-        dynamic_cast<ModelMesh*>(object)->set_gridcoords(coords_list);
-    }
+    assert(grid_ != nullptr);
+    auto coords_list = grid_->AddItem(object);
+    dynamic_cast<ModelMesh*>(object)->set_gridcoords(coords_list);
 }
 
 std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
 {
     std::unique_ptr<Mesh> ret{nullptr};
 
-    RemoveItemToGrid(child);
+    RemoveItemsToGrid(child);
 
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         if (objects_[cnt].get() == child) {
@@ -263,10 +257,10 @@ std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
     return ret;
 }
 
-void ModelMesh::RemoveItemToGrid(Mesh* object) noexcept
+void ModelMesh::RemoveItemsToGrid(Mesh* object) noexcept
 {
     assert(grid_ != nullptr);
-    grid_->RemoveItem(object);
+    grid_->RemoveMesh(object);
 }
 
 

@@ -47,7 +47,7 @@ public:
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept override;
 
     virtual std::vector<nextfloor::objects::GridBox*> AddItem(nextfloor::objects::Mesh* object) noexcept override;
-    virtual void RemoveItem(nextfloor::objects::Mesh* object) noexcept override;
+    virtual void RemoveMesh(nextfloor::objects::Mesh* object) noexcept override;
     virtual bool IsInside(glm::vec3 location_object) const noexcept override;
 
     virtual void DisplayGrid() const noexcept override;
