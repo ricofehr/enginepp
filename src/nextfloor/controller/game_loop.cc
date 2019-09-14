@@ -31,11 +31,12 @@ GameLoop::GameLoop()
     sInstanciated = true;
 
     using nextfloor::core::CommonServices;
+    auto player = CommonServices::getFactory()->MakePlayer(glm::vec3(0.0f, -2.0f, 7.0f));
+    player_ = player.get();
     universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
-    player_ = universe_->AddIntoChild(CommonServices::getFactory()->MakePlayer(glm::vec3(0.0f, -2.0f, 7.0f)));
+    universe_->AddIntoChild(std::move(player));
     game_window_ = CommonServices::getFactory()->MakeSceneWindow();
     input_handler_ = CommonServices::getFactory()->MakeInputHandler();
-    assert(game_window_ != nullptr);
 }
 
 /**

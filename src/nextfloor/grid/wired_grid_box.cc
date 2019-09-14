@@ -6,6 +6,8 @@
 
 #include "nextfloor/grid/wired_grid_box.h"
 
+#include <iostream>
+
 namespace nextfloor {
 
 namespace grid {
@@ -19,7 +21,7 @@ WiredGridBox::WiredGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner)
 
 void WiredGridBox::add(nextfloor::objects::Mesh* object) noexcept
 {
-    if (IsInside(object)) {
+    if (IsInto(object)) {
         return;
     }
     occupants_.push_back(object);
@@ -28,7 +30,8 @@ void WiredGridBox::add(nextfloor::objects::Mesh* object) noexcept
 void WiredGridBox::remove(nextfloor::objects::Mesh* object) noexcept
 {
     for (auto cnt = 0; cnt < occupants_.size(); cnt++) {
-        if (object == occupants_[cnt]) {
+        if (occupants_[cnt] == object) {
+            // std::cout << "Remove From GridBox" << std::endl;
             occupants_.erase(occupants_.begin() + cnt);
             return;
         }
@@ -52,7 +55,7 @@ std::vector<nextfloor::objects::Mesh*> WiredGridBox::other_occupants(nextfloor::
     return others;
 }
 
-bool WiredGridBox::IsInside(nextfloor::objects::Mesh* object) const noexcept
+bool WiredGridBox::IsInto(nextfloor::objects::Mesh* object) const noexcept
 {
     for (auto& occupant : occupants_) {
         if (object == occupant) {

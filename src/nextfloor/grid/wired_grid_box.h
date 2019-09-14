@@ -39,7 +39,7 @@ public:
     virtual void clear() noexcept override;
     virtual std::vector<nextfloor::objects::Mesh*> other_occupants(nextfloor::objects::Mesh* object) noexcept override;
 
-    virtual bool IsInside(nextfloor::objects::Mesh* object) const noexcept override;
+    virtual bool IsInto(nextfloor::objects::Mesh* object) const noexcept override;
     virtual bool IsEmpty() const noexcept override;
     virtual bool IsFilled() const noexcept override;
 

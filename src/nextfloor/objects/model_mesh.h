@@ -164,8 +164,6 @@ protected:
     RendererEngine* renderer_{nullptr};
 
 private:
-    std::unique_ptr<Mesh> TransfertChild(Mesh* child) noexcept;
-
     void InitCollisionEngine();
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
 

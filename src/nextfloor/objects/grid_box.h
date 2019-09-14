@@ -26,7 +26,7 @@ public:
     virtual void remove(Mesh* object) noexcept = 0;
     virtual void clear() noexcept = 0;
 
-    virtual bool IsInside(Mesh* object) const noexcept = 0;
+    virtual bool IsInto(Mesh* object) const noexcept = 0;
     virtual bool IsEmpty() const noexcept = 0;
     virtual bool IsFilled() const noexcept = 0;
 

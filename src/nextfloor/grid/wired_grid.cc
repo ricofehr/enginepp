@@ -535,7 +535,7 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindOccupants(glm::ivec3 coord
     return boxes_[coords.x][coords.y][coords.z]->occupants();
 }
 
-std::vector<nextfloor::objects::GridBox*> WiredGrid::AddItemToGrid(nextfloor::objects::Mesh* object) noexcept
+std::vector<nextfloor::objects::GridBox*> WiredGrid::AddItem(nextfloor::objects::Mesh* object) noexcept
 {
     return ParseGridForObjectPlacements(object);
 }
@@ -623,7 +623,7 @@ bool WiredGrid::IsCooordsAreCorrect(glm::ivec3 coords) const
     return true;
 }
 
-void WiredGrid::RemoveItemToGrid(nextfloor::objects::Mesh* object) noexcept
+void WiredGrid::RemoveItem(nextfloor::objects::Mesh* object) noexcept
 {
     for (auto i = 0; i < width_boxes_count(); i++) {
         for (auto j = 0; j < height_boxes_count(); j++) {

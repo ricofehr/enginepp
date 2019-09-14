@@ -46,8 +46,8 @@ public:
     virtual glm::vec3 CalculateFirstPointInGrid() const noexcept override final;
     virtual glm::vec3 CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept override;
 
-    virtual std::vector<nextfloor::objects::GridBox*> AddItemToGrid(nextfloor::objects::Mesh* object) noexcept override;
-    virtual void RemoveItemToGrid(nextfloor::objects::Mesh* object) noexcept override;
+    virtual std::vector<nextfloor::objects::GridBox*> AddItem(nextfloor::objects::Mesh* object) noexcept override;
+    virtual void RemoveItem(nextfloor::objects::Mesh* object) noexcept override;
     virtual bool IsInside(glm::vec3 location_object) const noexcept override;
 
     virtual void DisplayGrid() const noexcept override;
@@ -120,8 +120,8 @@ private:
     std::vector<nextfloor::objects::Mesh*> FindFrontPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
     std::vector<nextfloor::objects::Mesh*> FindFrontCenterPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
     std::vector<nextfloor::objects::Mesh*> FindFrontRightPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
-    std::vector<nextfloor::objects::Mesh*>
-      FindFrontRightBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
+    std::vector<nextfloor::objects::Mesh*> FindFrontRightBottomPositionCollisionNeighbors(glm::vec3 coords) const
+      noexcept;
     std::vector<nextfloor::objects::Mesh*> FindFrontRightTopPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
     std::vector<nextfloor::objects::Mesh*> FindFrontLeftPositionCollisionNeighbors(glm::vec3 coords) const noexcept;
     std::vector<nextfloor::objects::Mesh*> FindFrontLeftBottomPositionCollisionNeighbors(glm::vec3 coords) const noexcept;

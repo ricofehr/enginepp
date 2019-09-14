@@ -170,34 +170,10 @@ void ModelMesh::Move() noexcept
     }
 }
 
-Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child) noexcept
+bool ModelMesh::IsInside(Mesh* mesh) noexcept
 {
-    assert(parent_ != nullptr);
-    assert(child != nullptr);
-
-    return parent_->AddIntoChild(TransfertChild(child));
-}
-
-std::unique_ptr<Mesh> ModelMesh::TransfertChild(Mesh* child) noexcept
-{
-    std::unique_ptr<Mesh> ret{nullptr};
-
-    RemoveItemToGrid(child);
-    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
-        if (objects_[cnt].get() == child) {
-            lock();
-            auto initial_count_childs = objects_.size();
-            ret = std::move(objects_[cnt]);
-            objects_.erase(objects_.begin() + cnt);
-            /* Ensure child is erased from current objects_ array */
-            assert(initial_count_childs == objects_.size() + 1);
-            unlock();
-
-            return ret;
-        }
-    }
-
-    return ret;
+    assert(grid() != nullptr);
+    return grid()->IsInside(mesh->location());
 }
 
 void ModelMesh::UpdateItemToGrid(Mesh* item) noexcept
@@ -206,23 +182,26 @@ void ModelMesh::UpdateItemToGrid(Mesh* item) noexcept
     AddItemToGrid(item);
 }
 
+Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child) noexcept
+{
+    assert(parent_ != nullptr);
+    assert(child != nullptr);
+
+    return parent_->AddIntoChild(remove_child(child));
+}
+
 Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
 {
     assert(mesh != nullptr);
 
     for (auto& object : objects_) {
         if (object->IsInside(mesh.get())) {
-            return object->add_child(std::move(mesh));
+            object->add_child(std::move(mesh));
+            return object.get();
         }
     }
 
     return nullptr;
-}
-
-bool ModelMesh::IsInside(Mesh* mesh) noexcept
-{
-    assert(grid() != nullptr);
-    return grid()->IsInside(mesh->location());
 }
 
 Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
@@ -256,7 +235,7 @@ void ModelMesh::AddItemToGrid(Mesh* object) noexcept
         }
     }
     else {
-        auto coords_list = grid_->AddItemToGrid(object);
+        auto coords_list = grid_->AddItem(object);
         dynamic_cast<ModelMesh*>(object)->set_gridcoords(coords_list);
     }
 }
@@ -266,6 +245,7 @@ std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
     std::unique_ptr<Mesh> ret{nullptr};
 
     RemoveItemToGrid(child);
+
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         if (objects_[cnt].get() == child) {
             lock();
@@ -285,15 +265,10 @@ std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
 
 void ModelMesh::RemoveItemToGrid(Mesh* object) noexcept
 {
-    if (grid_ == nullptr) {
-        if (parent_ != nullptr) {
-            parent_->RemoveItemToGrid(object);
-        }
-    }
-    else {
-        grid_->RemoveItemToGrid(object);
-    }
+    assert(grid_ != nullptr);
+    grid_->RemoveItem(object);
 }
+
 
 bool ModelMesh::IsLastObstacle(Mesh* obstacle) const noexcept
 {
