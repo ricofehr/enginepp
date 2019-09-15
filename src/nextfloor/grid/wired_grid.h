@@ -77,6 +77,8 @@ public:
 protected:
     virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(glm::ivec3 coords) = 0;
 
+    std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh* object) noexcept;
+
     void InitBoxes() noexcept;
     void DeleteGrid() noexcept;
 
@@ -103,7 +105,6 @@ private:
     std::vector<nextfloor::objects::Mesh*> FindOccupants(glm::ivec3 coords) const noexcept;
     nextfloor::objects::GridBox* AddItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept;
     void RemoveItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* object) noexcept;
-    std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh* object) noexcept;
 
     glm::ivec3 PointToCoords(glm::vec3 point) noexcept;
     glm::ivec3 CalculateCoordsLengthBetweenPoints(glm::vec3 point_min, glm::vec3 point_max);

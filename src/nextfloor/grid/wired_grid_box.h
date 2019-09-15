@@ -61,9 +61,6 @@ public:
             occupants.insert(occupants.end(), meshes.begin(), meshes.end());
         }
 
-        // sort(occupants.begin(), occupants.end());
-        // occupants.erase(unique(occupants.begin(), occupants.end()), occupants.end());
-
         return occupants;
     }
 

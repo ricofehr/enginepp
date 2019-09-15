@@ -31,7 +31,6 @@ void WiredGridBox::remove(nextfloor::objects::Mesh* object) noexcept
 {
     for (auto cnt = 0; cnt < occupants_.size(); cnt++) {
         if (occupants_[cnt] == object) {
-            // std::cout << "Remove From GridBox" << std::endl;
             occupants_.erase(occupants_.begin() + cnt);
             return;
         }

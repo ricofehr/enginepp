@@ -7,6 +7,7 @@
 #include "nextfloor/grid/wired_grid.h"
 
 #include <tbb/tbb.h>
+#include <tbb/task_group.h>
 #include <iostream>
 
 #include "nextfloor/grid/wired_grid_box.h"
@@ -165,12 +166,17 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindCollisionNeighbors(glm::ve
 {
     std::vector<nextfloor::objects::Mesh*> neighbors = FindOccupants(coords);
 
-    auto front_neighbors = FindFrontPositionCollisionNeighbors(coords);
-    auto right_neighbors = FindRightPositionCollisionNeighbors(coords);
-    auto back_neighbors = FindBackPositionCollisionNeighbors(coords);
-    auto left_neighbors = FindLeftPositionCollisionNeighbors(coords);
-    auto bottom_neighbors = FindBottomPositionCollisionNeighbors(coords);
-    auto top_neighbors = FindTopPositionCollisionNeighbors(coords);
+    tbb::task_group tasks;
+    std::vector<nextfloor::objects::Mesh*> front_neighbors, right_neighbors;
+    std::vector<nextfloor::objects::Mesh*> back_neighbors, left_neighbors;
+    std::vector<nextfloor::objects::Mesh*> bottom_neighbors, top_neighbors;
+    tasks.run([&] { front_neighbors = FindFrontPositionCollisionNeighbors(coords); });
+    tasks.run([&] { right_neighbors = FindRightPositionCollisionNeighbors(coords); });
+    tasks.run([&] { back_neighbors = FindBackPositionCollisionNeighbors(coords); });
+    tasks.run([&] { left_neighbors = FindLeftPositionCollisionNeighbors(coords); });
+    tasks.run([&] { bottom_neighbors = FindBottomPositionCollisionNeighbors(coords); });
+    tasks.run([&] { top_neighbors = FindTopPositionCollisionNeighbors(coords); });
+    tasks.wait();
 
     neighbors.insert(neighbors.end(), front_neighbors.begin(), front_neighbors.end());
     neighbors.insert(neighbors.end(), right_neighbors.begin(), right_neighbors.end());
@@ -179,6 +185,9 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindCollisionNeighbors(glm::ve
     neighbors.insert(neighbors.end(), bottom_neighbors.begin(), bottom_neighbors.end());
     neighbors.insert(neighbors.end(), top_neighbors.begin(), top_neighbors.end());
 
+    sort(neighbors.begin(), neighbors.end());
+    neighbors.erase(unique(neighbors.begin(), neighbors.end()), neighbors.end());
+
     return neighbors;
 }
 
@@ -186,13 +195,18 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontPositionCollisionNeig
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
 
-    auto center_neighbors = FindFrontCenterPositionCollisionNeighbors(coords);
-    auto right_neighbors = FindFrontRightPositionCollisionNeighbors(coords);
-    auto right_bottom_neighbors = FindFrontRightBottomPositionCollisionNeighbors(coords);
-    auto right_top_neighbors = FindFrontRightTopPositionCollisionNeighbors(coords);
-    auto left_neighbors = FindFrontLeftPositionCollisionNeighbors(coords);
-    auto left_bottom_neighbors = FindFrontLeftBottomPositionCollisionNeighbors(coords);
-    auto left_top_neighbors = FindFrontLeftTopPositionCollisionNeighbors(coords);
+    tbb::task_group tasks;
+    std::vector<nextfloor::objects::Mesh*> center_neighbors, right_neighbors, left_neighbors;
+    std::vector<nextfloor::objects::Mesh*> right_bottom_neighbors, right_top_neighbors;
+    std::vector<nextfloor::objects::Mesh*> left_bottom_neighbors, left_top_neighbors;
+    tasks.run([&] { center_neighbors = FindFrontCenterPositionCollisionNeighbors(coords); });
+    tasks.run([&] { right_neighbors = FindFrontRightPositionCollisionNeighbors(coords); });
+    tasks.run([&] { right_bottom_neighbors = FindFrontRightBottomPositionCollisionNeighbors(coords); });
+    tasks.run([&] { right_top_neighbors = FindFrontRightTopPositionCollisionNeighbors(coords); });
+    tasks.run([&] { left_neighbors = FindFrontLeftPositionCollisionNeighbors(coords); });
+    tasks.run([&] { left_bottom_neighbors = FindFrontLeftBottomPositionCollisionNeighbors(coords); });
+    tasks.run([&] { left_top_neighbors = FindFrontLeftTopPositionCollisionNeighbors(coords); });
+    tasks.wait();
 
     neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
     neighbors.insert(neighbors.end(), right_neighbors.begin(), right_neighbors.end());
@@ -201,6 +215,9 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindFrontPositionCollisionNeig
     neighbors.insert(neighbors.end(), left_neighbors.begin(), left_neighbors.end());
     neighbors.insert(neighbors.end(), left_bottom_neighbors.begin(), left_bottom_neighbors.end());
     neighbors.insert(neighbors.end(), left_top_neighbors.begin(), left_top_neighbors.end());
+
+    sort(neighbors.begin(), neighbors.end());
+    neighbors.erase(unique(neighbors.begin(), neighbors.end()), neighbors.end());
 
     return neighbors;
 }
@@ -305,13 +322,19 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindRightPositionCollisionNeig
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
 
-    auto center_neighbors = FindRightCenterPositionCollisionNeighbors(coords);
-    auto bottom_neighbors = FindRightBottomPositionCollisionNeighbors(coords);
-    auto top_neighbors = FindRightTopPositionCollisionNeighbors(coords);
+    tbb::task_group tasks;
+    std::vector<nextfloor::objects::Mesh*> center_neighbors, bottom_neighbors, top_neighbors;
+    tasks.run([&] { center_neighbors = FindRightCenterPositionCollisionNeighbors(coords); });
+    tasks.run([&] { bottom_neighbors = FindRightBottomPositionCollisionNeighbors(coords); });
+    tasks.run([&] { top_neighbors = FindRightTopPositionCollisionNeighbors(coords); });
+    tasks.wait();
 
     neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
     neighbors.insert(neighbors.end(), bottom_neighbors.begin(), bottom_neighbors.end());
     neighbors.insert(neighbors.end(), top_neighbors.begin(), top_neighbors.end());
+
+    sort(neighbors.begin(), neighbors.end());
+    neighbors.erase(unique(neighbors.begin(), neighbors.end()), neighbors.end());
 
     return neighbors;
 }
@@ -352,13 +375,18 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackPositionCollisionNeigh
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
 
-    auto center_neighbors = FindBackCenterPositionCollisionNeighbors(coords);
-    auto right_neighbors = FindBackRightPositionCollisionNeighbors(coords);
-    auto right_bottom_neighbors = FindBackRightBottomPositionCollisionNeighbors(coords);
-    auto right_top_neighbors = FindBackRightTopPositionCollisionNeighbors(coords);
-    auto left_neighbors = FindBackLeftPositionCollisionNeighbors(coords);
-    auto left_bottom_neighbors = FindBackLeftBottomPositionCollisionNeighbors(coords);
-    auto left_top_neighbors = FindBackLeftTopPositionCollisionNeighbors(coords);
+    tbb::task_group tasks;
+    std::vector<nextfloor::objects::Mesh*> center_neighbors, right_neighbors, left_neighbors;
+    std::vector<nextfloor::objects::Mesh*> right_bottom_neighbors, right_top_neighbors;
+    std::vector<nextfloor::objects::Mesh*> left_bottom_neighbors, left_top_neighbors;
+    tasks.run([&] { center_neighbors = FindBackCenterPositionCollisionNeighbors(coords); });
+    tasks.run([&] { right_neighbors = FindBackRightPositionCollisionNeighbors(coords); });
+    tasks.run([&] { right_bottom_neighbors = FindBackRightBottomPositionCollisionNeighbors(coords); });
+    tasks.run([&] { right_top_neighbors = FindBackRightTopPositionCollisionNeighbors(coords); });
+    tasks.run([&] { left_neighbors = FindBackLeftPositionCollisionNeighbors(coords); });
+    tasks.run([&] { left_bottom_neighbors = FindBackLeftBottomPositionCollisionNeighbors(coords); });
+    tasks.run([&] { left_top_neighbors = FindBackLeftTopPositionCollisionNeighbors(coords); });
+    tasks.wait();
 
     neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
     neighbors.insert(neighbors.end(), right_neighbors.begin(), right_neighbors.end());
@@ -368,8 +396,8 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindBackPositionCollisionNeigh
     neighbors.insert(neighbors.end(), left_bottom_neighbors.begin(), left_bottom_neighbors.end());
     neighbors.insert(neighbors.end(), left_top_neighbors.begin(), left_top_neighbors.end());
 
-    // sort(neighbors.begin(), neighbors.end());
-    // neighbors.erase(unique(neighbors.begin(), neighbors.end()), neighbors.end());
+    sort(neighbors.begin(), neighbors.end());
+    neighbors.erase(unique(neighbors.begin(), neighbors.end()), neighbors.end());
 
     return neighbors;
 }
@@ -472,13 +500,19 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindLeftPositionCollisionNeigh
 {
     std::vector<nextfloor::objects::Mesh*> neighbors(0);
 
-    auto center_neighbors = FindLeftCenterPositionCollisionNeighbors(coords);
-    auto bottom_neighbors = FindLeftBottomPositionCollisionNeighbors(coords);
-    auto top_neighbors = FindLeftTopPositionCollisionNeighbors(coords);
+    tbb::task_group tasks;
+    std::vector<nextfloor::objects::Mesh*> center_neighbors, bottom_neighbors, top_neighbors;
+    tasks.run([&] { center_neighbors = FindLeftCenterPositionCollisionNeighbors(coords); });
+    tasks.run([&] { bottom_neighbors = FindLeftBottomPositionCollisionNeighbors(coords); });
+    tasks.run([&] { top_neighbors = FindLeftTopPositionCollisionNeighbors(coords); });
+    tasks.wait();
 
     neighbors.insert(neighbors.end(), center_neighbors.begin(), center_neighbors.end());
     neighbors.insert(neighbors.end(), bottom_neighbors.begin(), bottom_neighbors.end());
     neighbors.insert(neighbors.end(), top_neighbors.begin(), top_neighbors.end());
+
+    sort(neighbors.begin(), neighbors.end());
+    neighbors.erase(unique(neighbors.begin(), neighbors.end()), neighbors.end());
 
     return neighbors;
 }
