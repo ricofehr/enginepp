@@ -23,9 +23,7 @@ void Player::Move() noexcept
 {
     if (IsMoved()) {
         border_->ComputeNewLocation();
-    }
 
-    if (IsMoved()) {
         if (parent_->IsInside(this)) {
             parent_->UpdateChildPlacement(this);
         }

@@ -32,6 +32,8 @@ public:
 
     virtual ~Room() override = default;
 
+    virtual void InitChildsIntoGrid() override final;
+
     bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;
 
     void AddRock(glm::vec3 relative_location) noexcept;

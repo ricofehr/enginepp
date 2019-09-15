@@ -18,7 +18,6 @@ Room::Room(glm::vec3 location)
 
     grid_ = CommonServices::getFactory()->MakeRoomGrid(this);
     border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale());
-
     AddWalls();
 }
 
@@ -30,6 +29,18 @@ void Room::AddWalls() noexcept
     AddLeftWall();
     AddFloor();
     AddRoof();
+}
+
+void Room::InitChildsIntoGrid()
+{
+    for (auto& object : objects_) {
+        if (object->hasNoChilds()) {
+            object->AddIntoAscendantGrid();
+        }
+        else {
+            object->InitChildsIntoGrid();
+        }
+    }
 }
 
 void Room::AddRock(glm::vec3 relative_location) noexcept

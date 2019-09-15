@@ -93,32 +93,27 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexc
     for (auto& neighbor : all_neighbors) {
         if (target->IsNeighborEligibleForCollision(neighbor)) {
             collision_neighbors.push_back(neighbor);
-            // auto neighbor_meshes = neighbor->AllStubMeshs();
-            // collision_neighbors.insert(collision_neighbors.end(), neighbor_meshes.begin(), neighbor_meshes.end());
         }
     }
-
-    // std::cout << all_neighbors.size() << "::" << collision_neighbors.size() << std::endl;
 
     return collision_neighbors;
 }
 
 bool ModelMesh::IsNeighborEligibleForCollision(Mesh* neighbor) const
 {
-    auto vector_neighbor = neighbor->location() - location();
-    return IsNeighborReachable(neighbor) && IsInSameDirection(vector_neighbor);
+    return IsInDirection(neighbor) && IsNeighborReachable(neighbor);
 }
 
 bool ModelMesh::IsNeighborReachable(Mesh* neighbor) const
 {
     auto vector_neighbor = neighbor->location() - location();
     return glm::length(movement()) + glm::length(neighbor->movement())
-           >= glm::length(vector_neighbor) - (diagonal() + neighbor->diagonal());
-    // // / 2.0f;
+           >= glm::length(vector_neighbor) - (diagonal() + neighbor->diagonal()) / 2.0f;
 }
 
-bool ModelMesh::IsInSameDirection(glm::vec3 target_vector) const
+bool ModelMesh::IsInDirection(Mesh* target) const
 {
+    auto target_vector = target->location() - location();
     return glm::dot(movement(), target_vector) > 0;
 }
 
@@ -212,9 +207,12 @@ Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
 {
     assert(mesh != nullptr);
 
+    auto mesh_raw = mesh.get();
+
     for (auto& object : objects_) {
-        if (object->IsInside(mesh.get())) {
+        if (object->IsInside(mesh_raw)) {
             object->add_child(std::move(mesh));
+            mesh_raw->AddIntoAscendantGrid();
             return object.get();
         }
     }
@@ -237,7 +235,6 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
         objects_.push_back(std::move(object));
     }
 
-    AddMeshToGrid(object_raw);
     /* Ensure object is well added */
     assert(objects_.size() == initial_objects_size + 1);
     unlock();
@@ -245,11 +242,32 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
     return object_raw;
 }
 
+void ModelMesh::InitChildsIntoGrid()
+{
+    for (auto& object : objects_) {
+        if (!object->hasNoChilds()) {
+            object->InitChildsIntoGrid();
+        }
+        object->AddIntoAscendantGrid();
+    }
+}
+
+void ModelMesh::AddIntoAscendantGrid()
+{
+    assert(parent_ != nullptr);
+    parent_->AddMeshToGrid(this);
+}
+
 void ModelMesh::AddMeshToGrid(Mesh* object) noexcept
 {
-    assert(grid_ != nullptr);
-    auto coords_list = grid_->AddItem(object);
-    dynamic_cast<ModelMesh*>(object)->set_gridcoords(coords_list);
+    if (grid_ == nullptr) {
+        assert(parent_ != nullptr);
+        parent_->AddMeshToGrid(object);
+    }
+    else {
+        auto coords_list = grid_->AddItem(object);
+        dynamic_cast<ModelMesh*>(object)->set_gridcoords(coords_list);
+    }
 }
 
 std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
@@ -277,8 +295,13 @@ std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
 
 void ModelMesh::RemoveItemsToGrid(Mesh* object) noexcept
 {
-    assert(grid_ != nullptr);
-    grid_->RemoveMesh(object);
+    // assert(grid_ != nullptr);
+    if (grid_ == nullptr) {
+        parent_->RemoveItemsToGrid(object);
+    }
+    else {
+        grid_->RemoveMesh(object);
+    }
 }
 
 

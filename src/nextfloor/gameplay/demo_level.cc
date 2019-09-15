@@ -41,6 +41,8 @@ std::unique_ptr<nextfloor::objects::Mesh> DemoLevel::GenerateUniverse() noexcept
         }
     }
 
+    universe->InitChildsIntoGrid();
+
     return universe;
 }
 

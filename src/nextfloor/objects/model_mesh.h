@@ -68,7 +68,7 @@ public:
     virtual glm::vec3 location() const noexcept override { return border_->location(); }
     virtual glm::vec3 dimension() const noexcept override { return border_->dimension(); }
     virtual float diagonal() const noexcept override final { return border_->diagonal(); }
-    Grid* grid() const noexcept { return grid_.get(); }
+    Grid* grid() const { return grid_.get(); }
     virtual Camera* camera() const noexcept override;
     virtual bool IsCamera() const override { return camera_ != nullptr; }
     virtual bool IsPlayer() const override { return false; }
@@ -141,6 +141,9 @@ public:
         return ret_childs;
     }
 
+    virtual void InitChildsIntoGrid() override;
+    virtual void AddIntoAscendantGrid() override;
+
     // virtual std::vector<GridBox*> grid_coords() const override { return coords_list_; }
 
 protected:
@@ -173,7 +176,7 @@ private:
     void PivotCollision() noexcept;
 
     bool IsNeighborReachable(Mesh* neighbor) const;
-    bool IsInSameDirection(glm::vec3 target_vector) const;
+    bool IsInDirection(Mesh* target) const;
 
     void LogCollision(Mesh* obstacle, float obstacle_distance);
 

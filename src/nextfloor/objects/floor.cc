@@ -18,7 +18,6 @@ Floor::Floor(glm::vec3 location, glm::vec3 scale)
     border_ = CommonServices::getFactory()->MakeBorder(location, scale);
     brick_dimension_ = glm::vec3(kBRICK_WIDTH, kBRICK_HEIGHT, kBRICK_DEPTH);
     bricks_count_ = border_->dimension() / brick_dimension_;
-    grid_ = CommonServices::getFactory()->MakeGrid(this, bricks_count_, brick_dimension_);
     AddBricks(location - scale, location + scale);
 }
 

@@ -107,12 +107,62 @@ float CubeBorder::CalculateDepth()
 
 glm::vec3 CubeBorder::getFirstPoint()
 {
-    return coords_model_matrix_computed_.at(0);
+    auto first_point = coords_model_matrix_computed_.at(0);
+    auto last_point = coords_model_matrix_computed_.at(6);
+
+    /* Add padding */
+    if (first_point.x < last_point.x) {
+        first_point.x += 0.10f;
+    }
+    else {
+        first_point.x -= 0.10f;
+    }
+
+    if (first_point.y < last_point.y) {
+        first_point.y += 0.10f;
+    }
+    else {
+        first_point.y -= 0.10f;
+    }
+
+    if (first_point.z < last_point.z) {
+        first_point.z += 0.10f;
+    }
+    else {
+        first_point.z -= 0.10f;
+    }
+
+    return first_point;
 }
 
 glm::vec3 CubeBorder::getLastPoint()
 {
-    return coords_model_matrix_computed_.at(6);
+    auto first_point = coords_model_matrix_computed_.at(0);
+    auto last_point = coords_model_matrix_computed_.at(6);
+
+    /* Add padding */
+    if (first_point.x < last_point.x) {
+        last_point.x -= 0.10f;
+    }
+    else {
+        last_point.x += 0.10f;
+    }
+
+    if (first_point.y < last_point.y) {
+        last_point.y -= 0.10f;
+    }
+    else {
+        last_point.y += 0.10f;
+    }
+
+    if (first_point.z < last_point.z) {
+        last_point.z -= 0.10f;
+    }
+    else {
+        last_point.z += 0.10f;
+    }
+
+    return last_point;
 }
 
 bool CubeBorder::IsObstacleInCollisionAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part)

@@ -18,7 +18,7 @@ namespace nextfloor {
 
 namespace objects {
 
-class GridBox;
+class Grid;
 
 /**
  *  @class Mesh
@@ -53,6 +53,9 @@ public:
 
     virtual bool IsLastObstacle(Mesh* obstacle) const noexcept = 0;
     virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) noexcept = 0;
+
+    virtual void InitChildsIntoGrid() = 0;
+    virtual void AddIntoAscendantGrid() = 0;
 
     virtual void PrepareDraw() = 0;
 

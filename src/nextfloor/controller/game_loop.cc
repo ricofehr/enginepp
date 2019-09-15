@@ -106,17 +106,9 @@ void GameLoop::Loop()
         }
 
         game_window_->PrepareDisplay();
-        auto rooms = universe_->childs();
-        for (auto& r : rooms) {
-            if (r->IsInside(player_)) {
-                r->DetectCollision();
-                r->Move();
-                r->Draw();
-            }
-        }
-        // universe_->DetectCollision();
-        // universe_->Move();
-        // universe_->Draw();
+        universe_->DetectCollision();
+        universe_->Move();
+        universe_->Draw();
         game_window_->SwapBuffers();
         LogLoop();
 

@@ -112,7 +112,7 @@ void WiredGrid::InitBoxes() noexcept
 
 glm::vec3 WiredGrid::CalculateFirstPointInGrid() const noexcept
 {
-    return owner_->location() - glm::vec3(width() / 2, height() / 2, depth() / 2);
+    return owner_->location() - box_dimension_ / 2.0f - glm::vec3(width() / 2, height() / 2, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateAbsoluteCoordinates(glm::ivec3 coords) const noexcept
@@ -567,25 +567,6 @@ std::vector<nextfloor::objects::Mesh*> WiredGrid::FindTopPositionCollisionNeighb
     return neighbors;
 }
 
-// std::vector<nextfloor::objects::Mesh*> WiredGrid::FindAllOccupants() const noexcept
-// {
-//     std::vector<nextfloor::objects::Mesh*> all_occupants;
-
-//     for (auto i = 0; i < width_boxes_count(); i++) {
-//         for (auto j = 0; j < height_boxes_count(); j++) {
-//             for (auto k = 0; k < depth_boxes_count(); k++) {
-//                 auto occupants = boxes_[i][j][k]->occupants();
-//                 all_occupants.insert(all_occupants.end(), occupants.begin(), occupants.end());
-//             }
-//         }
-//     }
-
-//     sort(all_occupants.begin(), all_occupants.end());
-//     all_occupants.erase(unique(all_occupants.begin(), all_occupants.end()), all_occupants.end());
-
-//     return all_occupants;
-// }
-
 std::vector<nextfloor::objects::Mesh*> WiredGrid::FindOccupants(glm::ivec3 coords) const noexcept
 {
     return boxes_[coords.x][coords.y][coords.z]->occupants();
@@ -645,8 +626,9 @@ float WiredGrid::min_box_side_dimension() const noexcept
 glm::ivec3 WiredGrid::PointToCoords(glm::vec3 point) noexcept
 {
     glm::vec3 grid0 = CalculateFirstPointInGrid();
-    glm::vec3 coords = (glm::vec3(point.x, point.y, point.z) - grid0) / box_dimension_;
+    glm::vec3 coords = (point - grid0) / box_dimension_;
 
+    /* Trunc beacause grid is indexed from 0 by step 1 */
     return glm::ivec3(
       static_cast<int>(trunc(coords.x)), static_cast<int>(trunc(coords.y)), static_cast<int>(trunc(coords.z)));
 }
@@ -693,14 +675,16 @@ void WiredGrid::RemoveItemToGrid(glm::ivec3 coords, nextfloor::objects::Mesh* ob
 
 void WiredGrid::DisplayGrid() const noexcept
 {
-    std::string object_type{"MODEL3D"};
-
-    std::cout << "=== GRID FOR " << object_type << " ID " << owner_->id() << " ===" << std::endl << std::endl;
+    std::cout << "=== GRID FOR ID " << owner_->id() << " ===" << std::endl << std::endl;
     for (auto y = 0; y < height_boxes_count(); y++) {
         std::cout << "=== Floor " << y << std::endl;
         for (auto z = 0; z < depth_boxes_count(); z++) {
             for (auto x = 0; x < width_boxes_count(); x++) {
-                std::cout << "  " << boxes_[x][y][z]->size();
+                std::cout << "  ";
+                if (boxes_[x][y][z]->size() < 10) {
+                    std::cout << "0";
+                }
+                std::cout << boxes_[x][y][z]->size();
             }
 
             std::cout << std::endl;
