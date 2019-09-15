@@ -10,9 +10,7 @@ namespace nextfloor {
 
 namespace objects {
 
-BackWall::BackWall(glm::vec3 location, glm::vec3 scale)
-      : WidthWall(location, scale)
-{}
+BackWall::BackWall(glm::vec3 location, glm::vec3 scale) : WidthWall(location, scale) {}
 
 void BackWall::PrepareDraw() noexcept
 {
@@ -22,6 +20,8 @@ void BackWall::PrepareDraw() noexcept
     else {
         AddWindow();
     }
+
+    WidthWall::PrepareDraw();
 }
 
 }  // namespace objects

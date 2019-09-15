@@ -55,7 +55,7 @@ public:
 
     virtual bool IsLastObstacle(Mesh* obstacle) const noexcept override final;
     virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) noexcept override final;
-    virtual void PrepareDraw() override { Polygon::NewFrame(); }
+    virtual void PrepareDraw() override;
 
     virtual bool IsFrontPositionFilled() const noexcept override;
     virtual bool IsRightPositionFilled() const noexcept override;

@@ -142,8 +142,6 @@ void CubeGlRendererEngine::Draw(const glm::mat4& mvp) noexcept
     using nextfloor::core::CommonServices;
 
     {
-        tbb::mutex::scoped_lock lock(mutex_);
-
         if (!is_initialized_) {
             Init();
         }

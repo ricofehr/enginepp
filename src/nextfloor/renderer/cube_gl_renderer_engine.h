@@ -9,8 +9,6 @@
 
 #include "nextfloor/renderer/gl_renderer_engine.h"
 
-#include <tbb/mutex.h>
-
 namespace nextfloor {
 
 namespace renderer {
@@ -35,7 +33,6 @@ private:
     void CreateElementBuffer() noexcept;
     void CreateTextureBuffer() noexcept;
 
-    tbb::mutex mutex_;
     bool is_initialized_ = false;
 };
 

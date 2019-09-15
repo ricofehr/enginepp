@@ -2,8 +2,6 @@
  *  @file engine_model.cc
  *  @brief EngineModel class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
- *
- *
  */
 
 #include "nextfloor/objects/model_mesh.h"
@@ -38,10 +36,17 @@ bool operator!=(const ModelMesh& o1, const ModelMesh& o2)
     return o1.id_ != o2.id_;
 }
 
+void ModelMesh::PrepareDraw()
+{
+    Polygon::NewFrame();
+    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(); });
+}
+
 void ModelMesh::Draw() noexcept
 {
-    /* Custom overrided actions before drawing object */
-    PrepareDraw();
+    tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
+        polygons_[counter]->UpdateModelViewProjectionMatrix();
+    });
 
     /* Draw meshes of current object */
     for (auto& polygon : polygons_) {
@@ -89,12 +94,16 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexc
     all_neighbors.erase(unique(all_neighbors.begin(), all_neighbors.end()), all_neighbors.end());
     all_neighbors.erase(std::remove(all_neighbors.begin(), all_neighbors.end(), target));
 
+    tbb::mutex mutex;
     std::vector<Mesh*> collision_neighbors(0);
-    for (auto& neighbor : all_neighbors) {
+    // for (auto& neighbor : all_neighbors) {
+    tbb::parallel_for(0, (int)all_neighbors.size(), 1, [&](int i) {
+        auto neighbor = all_neighbors[i];
         if (target->IsNeighborEligibleForCollision(neighbor)) {
+            tbb::mutex::scoped_lock lock_map(mutex);
             collision_neighbors.push_back(neighbor);
         }
-    }
+    });
 
     return collision_neighbors;
 }
@@ -153,10 +162,6 @@ void ModelMesh::Move() noexcept
             polygons_[counter]->MoveLocation();
         });
     }
-
-    tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
-        polygons_[counter]->UpdateModelViewProjectionMatrix();
-    });
 
     /*
      *  Compute GL coords for childs

@@ -20,6 +20,8 @@ void FrontWall::PrepareDraw() noexcept
     else {
         AddWindow();
     }
+
+    WidthWall::PrepareDraw();
 }
 
 }  // namespace objects

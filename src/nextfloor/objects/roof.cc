@@ -39,9 +39,12 @@ void Roof::AddWindow() noexcept {}
 
 void Roof::PrepareDraw() noexcept
 {
+    auto room = parent_;
     if (parent_->IsTopPositionFilled()) {
         AddDoor();
     }
+
+    Wall::PrepareDraw();
 }
 
 }  // namespace objects

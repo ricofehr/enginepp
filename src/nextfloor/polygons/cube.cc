@@ -10,9 +10,7 @@ namespace nextfloor {
 
 namespace polygons {
 
-Cube::Cube(glm::vec3 location, float scale)
-      : Cube(location, glm::vec3(scale))
-{}
+Cube::Cube(glm::vec3 location, float scale) : Cube(location, glm::vec3(scale)) {}
 
 Cube::Cube(glm::vec3 location, glm::vec3 scale)
 {

@@ -23,27 +23,14 @@ Universe::Universe()
 
 void Universe::Draw() noexcept
 {
-    int active_index = 0;
-
-    /* Select displayed rooms: 2 clipping levels or all rooms (clipping is 0) */
-    display_rooms_.clear();
-
-    for (auto cnt = 0; cnt < objects_.size(); cnt++) {
-        if (cnt != active_index) {
-            display_rooms_.push_back(objects_[cnt].get());
-        }
-    }
-
-    /* Ensure active room is in first position */
-    display_rooms_.insert(display_rooms_.begin(), objects_[active_index].get());
-
     /* Universe is only ready after 10 hops */
     if (ready()) {
         DetectCollision();
         Move();
+        PrepareDraw();
 
         /* Draw Rooms on Gl Scene */
-        for (auto& r : display_rooms_) {
+        for (auto& r : objects_) {
             r->Draw();
         }
     }

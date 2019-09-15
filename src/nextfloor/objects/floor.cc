@@ -41,6 +41,8 @@ void Floor::PrepareDraw() noexcept
     if (parent_->IsBottomPositionFilled()) {
         AddDoor();
     }
+
+    Wall::PrepareDraw();
 }
 
 }  // namespace objects
