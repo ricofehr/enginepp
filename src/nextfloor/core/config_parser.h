@@ -15,16 +15,11 @@ namespace core {
 
 /**
  *  @class ConfigParser
- *  @brief Abstract class for config management
+ *  @brief pure interface for config management
  */
 class ConfigParser {
 
 public:
-    ConfigParser(ConfigParser&&) = default;
-    ConfigParser& operator=(ConfigParser&&) = default;
-    ConfigParser(const ConfigParser&) = delete;
-    ConfigParser& operator=(const ConfigParser&) = delete;
-
     virtual ~ConfigParser() = default;
 
     virtual void Initialize() = 0;
@@ -49,11 +44,8 @@ public:
     virtual bool IsAllDebugEnabled() const = 0;
     virtual bool IsPerfDebugEnabled() const = 0;
 
-protected:
-    ConfigParser() = default;
-
 private:
-    virtual bool IsExist(std::string key) = 0;
+    virtual bool IsExist(const std::string& key) const = 0;
     virtual void InitDefaultValues() = 0;
     virtual void DisplayHelp(const std::string& command_name) const = 0;
 };

@@ -31,12 +31,12 @@ GameLoop::GameLoop()
     sInstanciated = true;
 
     using nextfloor::core::CommonServices;
-    auto player = CommonServices::getFactory()->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
+    auto player = CommonServices::getFactory().MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
     player_ = player.get();
-    universe_ = CommonServices::getFactory()->MakeLevel()->GenerateUniverse();
+    universe_ = CommonServices::getFactory().MakeLevel()->GenerateUniverse();
     universe_->AddIntoChild(std::move(player));
-    game_window_ = CommonServices::getFactory()->MakeSceneWindow();
-    input_handler_ = CommonServices::getFactory()->MakeInputHandler();
+    game_window_ = CommonServices::getFactory().MakeSceneWindow();
+    input_handler_ = CommonServices::getFactory().MakeInputHandler();
 }
 
 /**
@@ -48,25 +48,25 @@ void GameLoop::LogLoop()
 
     using nextfloor::core::CommonServices;
 
-    if (CommonServices::getTimer()->IsNewSecondElapsed()) {
+    if (CommonServices::getTimer().IsNewSecondElapsed()) {
 
         /* Header for test datas output */
-        if (sFirstLoop && CommonServices::getConfig()->IsTestDebugEnabled()) {
-            CommonServices::getLog()->Write("TIME:FPS:NBOBJALL:NBOBJMOVE");
+        if (sFirstLoop && CommonServices::getConfig().IsTestDebugEnabled()) {
+            CommonServices::getLog().Write("TIME:FPS:NBOBJALL:NBOBJMOVE");
         }
         /* Print if debug */
-        if (CommonServices::getConfig()->IsAllDebugEnabled()) {
+        if (CommonServices::getConfig().IsAllDebugEnabled()) {
             std::ostringstream message_frame;
-            message_frame << 1000.0 / static_cast<double>(CommonServices::getTimer()->getLoopCountBySecond())
+            message_frame << 1000.0 / static_cast<double>(CommonServices::getTimer().getLoopCountBySecond())
                           << " ms/frame - ";
-            CommonServices::getLog()->Write(std::move(message_frame));
+            CommonServices::getLog().Write(std::move(message_frame));
         }
 
-        if (CommonServices::getConfig()->IsPerfDebugEnabled()) {
+        if (CommonServices::getConfig().IsPerfDebugEnabled()) {
             LogFps();
         }
 
-        CommonServices::getLog()->WriteLine("");
+        CommonServices::getLog().WriteLine("");
         /* First loop is ok */
         sFirstLoop = false;
     }
@@ -77,9 +77,9 @@ void GameLoop::LogFps()
     using nextfloor::core::CommonServices;
 
     std::ostringstream message_fps;
-    message_fps << CommonServices::getTimer()->getLoopCountBySecond();
+    message_fps << CommonServices::getTimer().getLoopCountBySecond();
     message_fps << " fps (move factor: " << game_window_->getFpsFixMoveFactor() << ") - ";
-    CommonServices::getLog()->Write(std::move(message_fps));
+    CommonServices::getLog().Write(std::move(message_fps));
 }
 
 void GameLoop::Loop()
@@ -88,9 +88,9 @@ void GameLoop::Loop()
 
     /* Draw if window is focused and destroy window if ESC is pressed */
     do {
-        CommonServices::getTimer()->Loop();
+        CommonServices::getTimer().Loop();
 
-        if (CommonServices::getTimer()->getLoopCountBySecond() != 0) {
+        if (CommonServices::getTimer().getLoopCountBySecond() != 0) {
             game_window_->UpdateMoveFactor();
             universe_->toready();
         }
@@ -114,7 +114,7 @@ void GameLoop::Loop()
     } while (!input_handler_->IsCloseWindowEventOccurs());
 }
 
-GameLoop::~GameLoop()
+GameLoop::~GameLoop() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

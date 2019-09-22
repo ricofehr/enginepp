@@ -21,16 +21,10 @@ class ProgramExit : public Exit {
 
 public:
     ProgramExit();
+    ~ProgramExit() noexcept final;
 
-    ProgramExit(ProgramExit&&) = default;
-    ProgramExit& operator=(ProgramExit&&) = default;
-    ProgramExit(const ProgramExit&) = delete;
-    ProgramExit& operator=(const ProgramExit&) = delete;
-
-    virtual ~ProgramExit() override final;
-
-    virtual void ExitOnError() const noexcept override final;
-    virtual void ExitOnSuccess() const noexcept override final;
+    void ExitOnError() const final;
+    void ExitOnSuccess() const final;
 };
 
 }  // namespace core

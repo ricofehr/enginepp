@@ -10,9 +10,9 @@ namespace nextfloor {
 
 namespace objects {
 
-BackWall::BackWall(glm::vec3 location, glm::vec3 scale) : WidthWall(location, scale) {}
+BackWall::BackWall(const glm::vec3& location, const glm::vec3& scale) : WidthWall(location, scale) {}
 
-void BackWall::PrepareDraw() noexcept
+void BackWall::PrepareDraw()
 {
     if (parent_->IsBackPositionFilled()) {
         AddDoor();

@@ -23,25 +23,17 @@ public:
     virtual void SwapBuffers() = 0;
     virtual void UpdateMoveFactor() = 0;
 
-    virtual void* window() = 0;
+    virtual void* window() const = 0;
 
     /**
      *  GameWindow Global Variables Accessors
      */
-    virtual float getWidth() = 0;
-    virtual float getHeight() = 0;
-    virtual float getFpsFixMoveFactor() = 0;  // move_factor_; }
+    virtual float getWidth() const = 0;
+    virtual float getHeight() const = 0;
+    virtual float getFpsFixMoveFactor() const = 0;  // move_factor_; }
 
-    virtual unsigned int getMatrixId() = 0;
-    virtual unsigned int getProgramId() = 0;
-
-protected:
-    SceneWindow() = default;
-
-    SceneWindow(SceneWindow&&) = default;
-    SceneWindow& operator=(SceneWindow&&) = default;
-    SceneWindow(const SceneWindow&) = default;
-    SceneWindow& operator=(const SceneWindow&) = default;
+    virtual unsigned int getMatrixId() const = 0;
+    virtual unsigned int getProgramId() const = 0;
 };
 
 }  // namespace renderer

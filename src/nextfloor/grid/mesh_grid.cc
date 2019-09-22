@@ -13,19 +13,19 @@ namespace nextfloor {
 namespace grid {
 
 
-MeshGrid::MeshGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension)
+MeshGrid::MeshGrid(nextfloor::objects::Mesh* owner, const glm::ivec3& boxes_count, const glm::vec3& box_dimension)
       : WiredGrid(owner, boxes_count, box_dimension)
 {
     InitBoxes();
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> MeshGrid::AllocateGridBox(glm::ivec3 grid_coords)
+std::unique_ptr<nextfloor::objects::GridBox> MeshGrid::AllocateGridBox(const glm::ivec3& grid_coords)
 {
     using nextfloor::core::CommonServices;
-    return CommonServices::getFactory()->MakeGridBox(grid_coords, this);
+    return CommonServices::getFactory().MakeGridBox(grid_coords, this);
 }
 
-MeshGrid::~MeshGrid()
+MeshGrid::~MeshGrid() noexcept
 {
     DeleteGrid();
 }

@@ -35,7 +35,7 @@ int PseudoRandomGenerator::GenerateNumber() const
     return rand();
 }
 
-PseudoRandomGenerator::~PseudoRandomGenerator()
+PseudoRandomGenerator::~PseudoRandomGenerator() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

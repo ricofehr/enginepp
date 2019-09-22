@@ -32,7 +32,7 @@ GlRendererFactory::GlRendererFactory()
 }
 
 
-nextfloor::objects::RendererEngine* GlRendererFactory::MakeCubeRenderer(std::string texture)
+nextfloor::objects::RendererEngine* GlRendererFactory::MakeCubeRenderer(const std::string& texture)
 {
     static tbb::mutex renderer_mutex_;
 
@@ -47,7 +47,7 @@ nextfloor::objects::RendererEngine* GlRendererFactory::MakeCubeRenderer(std::str
     return renderers_[texture].get();
 }
 
-nextfloor::renderer::Shader* GlRendererFactory::MakeVertexShader(std::string shader_path, unsigned int program_id)
+nextfloor::renderer::Shader* GlRendererFactory::MakeVertexShader(const std::string& shader_path, unsigned int program_id)
 {
     static tbb::mutex vertex_mutex_;
 
@@ -63,7 +63,7 @@ nextfloor::renderer::Shader* GlRendererFactory::MakeVertexShader(std::string sha
     return shaders_[shader_path].get();
 }
 
-nextfloor::renderer::Shader* GlRendererFactory::MakeFragmentShader(std::string shader_path, unsigned int program_id)
+nextfloor::renderer::Shader* GlRendererFactory::MakeFragmentShader(const std::string& shader_path, unsigned int program_id)
 {
     static tbb::mutex fragment_mutex_;
 
@@ -105,7 +105,7 @@ std::unique_ptr<nextfloor::renderer::SceneInput> GlRendererFactory::MakeSceneInp
     return std::make_unique<GlSceneInput>(MakeSceneWindow());
 }
 
-GlRendererFactory::~GlRendererFactory()
+GlRendererFactory::~GlRendererFactory() noexcept
 {
     sInstanciated = false;
 }

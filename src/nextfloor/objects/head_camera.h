@@ -25,28 +25,22 @@ class HeadCamera : public Camera {
 
 public:
     HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle);
+    ~HeadCamera() final = default;
 
-    HeadCamera(HeadCamera&&) = default;
-    HeadCamera& operator=(HeadCamera&&) = default;
-    HeadCamera(const HeadCamera&) = delete;
-    HeadCamera& operator=(const HeadCamera&) = delete;
+    void ComputeOrientation() final;
+    void ComputeFOV(float delta_fov) final;
 
-    virtual ~HeadCamera() override = default;
-
-    virtual void ComputeOrientation() noexcept override;
-    virtual void ComputeFOV(float delta_fov) noexcept override;
-
-    virtual glm::vec3 location() const override { return owner_->location(); }
-    virtual glm::vec3 direction() const override { return direction_; }
-    virtual glm::vec3 head() const override { return head_; }
-    virtual float fov() const override { return fov_; }
-    virtual void increment_angles(float horizontal_angle, float vertical_angle) override
+    glm::vec3 location() const final { return owner_->location(); }
+    glm::vec3 direction() const final { return direction_; }
+    glm::vec3 head() const final { return head_; }
+    float fov() const final { return fov_; }
+    void increment_angles(float horizontal_angle, float vertical_angle) final
     {
         horizontal_angle_ += horizontal_angle;
         vertical_angle_ += vertical_angle;
     }
 
-    virtual void set_active() override;
+    void set_active() override;
 
 private:
     void init_active();

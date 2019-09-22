@@ -20,14 +20,8 @@ namespace grid {
 class UniverseGridBox : public WiredGridBox {
 
 public:
-    UniverseGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner);
-
-    UniverseGridBox(UniverseGridBox&&) = default;
-    UniverseGridBox& operator=(UniverseGridBox&&) = default;
-    UniverseGridBox(const UniverseGridBox&) = default;
-    UniverseGridBox& operator=(const UniverseGridBox&) = default;
-
-    virtual ~UniverseGridBox() = default;
+    UniverseGridBox(const glm::vec3& coords, nextfloor::objects::Grid* owner);
+    ~UniverseGridBox() final = default;
 };
 
 }  // namespace grid

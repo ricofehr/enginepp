@@ -16,22 +16,16 @@ namespace renderer {
 class CubeGlRendererEngine : public GlRendererEngine {
 
 public:
-    CubeGlRendererEngine(std::string texture);
+    CubeGlRendererEngine(const std::string& texture);
+    ~CubeGlRendererEngine() final = default;
 
-    CubeGlRendererEngine(CubeGlRendererEngine&&) = default;
-    CubeGlRendererEngine& operator=(CubeGlRendererEngine&&) = default;
-    CubeGlRendererEngine(const CubeGlRendererEngine&) = default;
-    CubeGlRendererEngine& operator=(const CubeGlRendererEngine&) = default;
-
-    virtual ~CubeGlRendererEngine() override = default;
-
-    virtual void Draw(const glm::mat4& mvp) noexcept override final;
+    void Draw(const glm::mat4& mvp) final;
 
 private:
     void Init();
-    void CreateVertexBuffer() noexcept;
-    void CreateElementBuffer() noexcept;
-    void CreateTextureBuffer() noexcept;
+    void CreateVertexBuffer();
+    void CreateElementBuffer();
+    void CreateTextureBuffer();
 
     bool is_initialized_ = false;
 };

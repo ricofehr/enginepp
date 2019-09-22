@@ -29,11 +29,6 @@ public:
     static constexpr int kDEBUG_COLLISION = 3;
     static constexpr int kDEBUG_ALL = 4;
 
-    Log(Log&&) = default;
-    Log& operator=(Log&&) = default;
-    Log(const Log&) = delete;
-    Log& operator=(const Log&) = delete;
-
     virtual ~Log() = default;
 
     virtual void Write(std::ostringstream&& log_line) const = 0;
@@ -41,9 +36,6 @@ public:
 
     virtual void WriteLine(std::ostringstream&& log_line) const = 0;
     virtual void WriteLine(const std::string& log_line) const = 0;
-
-protected:
-    Log() = default;
 };
 
 }  // namespace core

@@ -16,7 +16,7 @@ void FragmentGlShader::LoadShader()
 {
     using nextfloor::core::CommonServices;
 
-    std::string shader_code = CommonServices::getFileIO()->ReadFile(shader_filepath_);
+    std::string shader_code = CommonServices::getFileIO().ReadFile(shader_filepath_);
     const char* shader_pointer = shader_code.c_str();
 
     shader_id_ = glCreateShader(GL_FRAGMENT_SHADER);

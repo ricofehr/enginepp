@@ -31,16 +31,10 @@ public:
     static constexpr int kPARALLELL_TBB = 2;
     static constexpr int kPARALLELL_CL = 3;
 
-    virtual ~NearerCollisionEngine() = default;
+    ~NearerCollisionEngine() override = default;
 
     /* Template Method : Detect if a collision exists between target and obstacle. */
-    virtual void DetectCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle);
-
-    /**
-     *  Primitive Operation subclassed: compute collision distance between borders of 2 objects
-     *  @return parted (as fraction of setted move) distance between the 2 borders
-     */
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) = 0;
+    void DetectCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) final;
 
 protected:
     NearerCollisionEngine() = default;

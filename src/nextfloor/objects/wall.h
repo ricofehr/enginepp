@@ -24,22 +24,15 @@ namespace objects {
 class Wall : public ModelMesh {
 
 public:
-    virtual ~Wall() = default;
+    ~Wall() override = default;
 
-    virtual void AddDoor() noexcept = 0;
-    virtual void AddWindow() noexcept = 0;
+    virtual void AddDoor() = 0;
+    virtual void AddWindow() = 0;
 
 protected:
-    Wall() = default;
+    virtual void AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint);
 
-    Wall(Wall&&) = default;
-    Wall& operator=(Wall&&) = default;
-    Wall(const Wall&) = delete;
-    Wall& operator=(const Wall&) = delete;
-
-    virtual void AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint) noexcept;
-
-    virtual std::string texture_file() const noexcept = 0;
+    virtual std::string texture_file() const = 0;
 
     glm::vec3 brick_dimension_{0.0f};
     glm::ivec3 bricks_count_{0, 0, 0};

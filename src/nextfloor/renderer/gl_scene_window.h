@@ -24,25 +24,19 @@ class GlSceneWindow : public SceneWindow {
 
 public:
     GlSceneWindow();
+    ~GlSceneWindow() noexcept final;
 
-    GlSceneWindow(GlSceneWindow&&) = default;
-    GlSceneWindow& operator=(GlSceneWindow&&) = default;
-    GlSceneWindow(const GlSceneWindow&) = default;
-    GlSceneWindow& operator=(const GlSceneWindow&) = default;
+    void Initialization() final;
+    void PrepareDisplay() final;
+    void SwapBuffers() final;
+    void UpdateMoveFactor() final;
 
-    virtual ~GlSceneWindow() override;
-
-    virtual void Initialization() override;
-    virtual void PrepareDisplay() override;
-    virtual void SwapBuffers() override;
-    virtual void UpdateMoveFactor() override;
-
-    virtual void* window() override { return glfw_window_; }
-    virtual GLuint getMatrixId() override { return matrix_id_; }
-    virtual GLuint getProgramId() override { return program_id_; }
-    virtual float getWidth() override { return window_width_; }
-    virtual float getHeight() override { return window_height_; }
-    virtual float getFpsFixMoveFactor() override { return 1.0f; }  // move_factor_; }
+    void* window() const final { return glfw_window_; }
+    GLuint getMatrixId() const final { return matrix_id_; }
+    GLuint getProgramId() const final { return program_id_; }
+    float getWidth() const final { return window_width_; }
+    float getHeight() const final { return window_height_; }
+    float getFpsFixMoveFactor() const final { return 1.0f; }  // move_factor_; }
 
 private:
     /** Fps target for speed movement compute on Engine */

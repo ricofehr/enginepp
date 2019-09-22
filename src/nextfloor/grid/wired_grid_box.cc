@@ -13,21 +13,21 @@ namespace nextfloor {
 namespace grid {
 
 
-WiredGridBox::WiredGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner)
+WiredGridBox::WiredGridBox(const glm::vec3& coords, nextfloor::objects::Grid* owner)
 {
     coords_ = coords;
     owner_ = owner;
 }
 
-void WiredGridBox::add(nextfloor::objects::Mesh* object) noexcept
+void WiredGridBox::add(nextfloor::objects::Mesh* object)
 {
-    if (IsInto(object)) {
+    if (IsInto(*object)) {
         return;
     }
     occupants_.push_back(object);
 }
 
-void WiredGridBox::remove(nextfloor::objects::Mesh* object) noexcept
+void WiredGridBox::remove(nextfloor::objects::Mesh* object)
 {
     for (auto cnt = 0; cnt < occupants_.size(); cnt++) {
         if (occupants_[cnt] == object) {
@@ -37,16 +37,16 @@ void WiredGridBox::remove(nextfloor::objects::Mesh* object) noexcept
     }
 }
 
-void WiredGridBox::clear() noexcept
+void WiredGridBox::clear()
 {
     occupants_.clear();
 }
 
-std::vector<nextfloor::objects::Mesh*> WiredGridBox::other_occupants(nextfloor::objects::Mesh* object) noexcept
+std::vector<nextfloor::objects::Mesh*> WiredGridBox::other_occupants(const nextfloor::objects::Mesh& object) const
 {
     std::vector<nextfloor::objects::Mesh*> others(0);
-    for (auto& occupant : occupants_) {
-        if (occupant->id() != object->id()) {
+    for (const auto& occupant : occupants_) {
+        if (occupant->id() != object.id()) {
             others.push_back(occupant);
         }
     }
@@ -54,52 +54,52 @@ std::vector<nextfloor::objects::Mesh*> WiredGridBox::other_occupants(nextfloor::
     return others;
 }
 
-bool WiredGridBox::IsInto(nextfloor::objects::Mesh* object) const noexcept
+bool WiredGridBox::IsInto(const nextfloor::objects::Mesh& object) const
 {
-    for (auto& occupant : occupants_) {
-        if (object == occupant) {
+    for (const auto& occupant : occupants_) {
+        if (object.id() == occupant->id()) {
             return true;
         }
     }
     return false;
 }
 
-bool WiredGridBox::IsEmpty() const noexcept
+bool WiredGridBox::IsEmpty() const
 {
     return occupants_.size() == 0;
 }
 
-bool WiredGridBox::IsFilled() const noexcept
+bool WiredGridBox::IsFilled() const
 {
     return occupants_.size() != 0;
 }
 
-bool WiredGridBox::IsFrontPositionFilled() const noexcept
+bool WiredGridBox::IsFrontPositionFilled() const
 {
     return owner_->IsFrontPositionFilled(coords_);
 }
 
-bool WiredGridBox::IsRightPositionFilled() const noexcept
+bool WiredGridBox::IsRightPositionFilled() const
 {
     return owner_->IsRightPositionFilled(coords_);
 }
 
-bool WiredGridBox::IsBackPositionFilled() const noexcept
+bool WiredGridBox::IsBackPositionFilled() const
 {
     return owner_->IsBackPositionFilled(coords_);
 }
 
-bool WiredGridBox::IsLeftPositionFilled() const noexcept
+bool WiredGridBox::IsLeftPositionFilled() const
 {
     return owner_->IsLeftPositionFilled(coords_);
 }
 
-bool WiredGridBox::IsBottomPositionFilled() const noexcept
+bool WiredGridBox::IsBottomPositionFilled() const
 {
     return owner_->IsBottomPositionFilled(coords_);
 }
 
-bool WiredGridBox::IsTopPositionFilled() const noexcept
+bool WiredGridBox::IsTopPositionFilled() const
 {
     return owner_->IsTopPositionFilled(coords_);
 }

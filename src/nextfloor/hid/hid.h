@@ -26,11 +26,6 @@ typedef struct {
 class HID {
 
 public:
-    HID(HID&&) noexcept = default;
-    HID& operator=(HID&&) noexcept = default;
-    HID(const HID&) = default;
-    HID& operator=(const HID&) = default;
-
     virtual ~HID() = default;
 
     /**
@@ -58,13 +53,6 @@ public:
     virtual void PollEvents() = 0;
 
     virtual bool IsCloseWindowEventOccurs() = 0;
-
-protected:
-    /**
-     *  Default Construtor
-     *  Protected scope ensures Abstract Class Design
-     */
-    HID() = default;
 };
 
 }  // namespace hid

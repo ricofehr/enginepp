@@ -36,13 +36,13 @@ public:
      *  Default constructor
      */
     MouseKeyboard();
+    ~MouseKeyboard() final = default;
 
     MouseKeyboard(MouseKeyboard&&) = default;
     MouseKeyboard& operator=(MouseKeyboard&&) = default;
-    MouseKeyboard(const MouseKeyboard&) = default;
-    MouseKeyboard& operator=(const MouseKeyboard&) = default;
+    MouseKeyboard(const MouseKeyboard&) = delete;
+    MouseKeyboard& operator=(const MouseKeyboard&) = delete;
 
-    virtual ~MouseKeyboard() override = default;
 
     /**
      *  Check if a button is pressed
@@ -50,25 +50,25 @@ public:
      *  @param  ACTION_BUTTON Button to be checked
      *  @return               True if pressed
      */
-    bool isPressed(int ACTION_BUTTON) override final;
+    bool isPressed(int ACTION_BUTTON) final;
 
     /**
      * Get HID Pointer angles changes
      * @param  window GL Window
      * @return        HIDPointer struct with orientation angles changes
      */
-    HIDPointer RecordHIDPointer() override final;
+    HIDPointer RecordHIDPointer() final;
 
     /**
      *  Return current "Field of View"
      *  @param  window GL Main Window
      *  @return        Current Field of View
      */
-    float RecordFOV() override final;
+    float RecordFOV() final;
 
-    virtual void PollEvents() override final;
+    virtual void PollEvents() final;
 
-    virtual bool IsCloseWindowEventOccurs() override final;
+    virtual bool IsCloseWindowEventOccurs() final;
 
 private:
     std::unique_ptr<nextfloor::renderer::SceneInput> scene_input_;

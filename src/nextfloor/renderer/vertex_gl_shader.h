@@ -22,15 +22,9 @@ class VertexGlShader : public GlShader {
 
 public:
     VertexGlShader(std::string shader_path, GLuint program_id) : GlShader(shader_path, program_id){};
+    ~VertexGlShader() final = default;
 
-    VertexGlShader(VertexGlShader&&) = default;
-    VertexGlShader& operator=(VertexGlShader&&) = default;
-    VertexGlShader(const VertexGlShader&) = default;
-    VertexGlShader& operator=(const VertexGlShader&) = default;
-
-    virtual ~VertexGlShader() override = default;
-
-    virtual void LoadShader() override final;
+    void LoadShader() final;
 };
 
 }  // namespace renderer

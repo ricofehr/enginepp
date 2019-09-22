@@ -20,16 +20,7 @@ namespace actions {
 class FireAction : public Action {
 
 public:
-    FireAction() = default;
-
-    FireAction(FireAction&&) = default;
-    FireAction& operator=(FireAction&&) = default;
-    FireAction(const FireAction&) = default;
-    FireAction& operator=(const FireAction&) = default;
-
-    virtual ~FireAction() override = default;
-
-    void execute(nextfloor::objects::Mesh* actor) override final;
+    void execute(nextfloor::objects::Mesh* actor) final;
 };
 
 }  // namespace actions

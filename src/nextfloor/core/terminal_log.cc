@@ -44,7 +44,7 @@ void TerminalLog::WriteLine(const std::string& log_line) const
     std::cerr << log_line << std::endl;
 }
 
-TerminalLog::~TerminalLog()
+TerminalLog::~TerminalLog() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

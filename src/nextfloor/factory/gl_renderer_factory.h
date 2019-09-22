@@ -24,19 +24,18 @@ class GlRendererFactory : public RendererFactory {
 
 public:
     GlRendererFactory();
+    ~GlRendererFactory() noexcept final;
 
     GlRendererFactory(GlRendererFactory&&) = default;
     GlRendererFactory& operator=(GlRendererFactory&&) = default;
-    GlRendererFactory(const GlRendererFactory&) = default;
-    GlRendererFactory& operator=(const GlRendererFactory&) = default;
+    GlRendererFactory(const GlRendererFactory&) = delete;
+    GlRendererFactory& operator=(const GlRendererFactory&) = delete;
 
-    virtual ~GlRendererFactory() override;
-
-    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) override;
-    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path, unsigned int program_id) override;
-    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path, unsigned int program_id) override;
-    virtual nextfloor::renderer::SceneWindow* MakeSceneWindow() override;
-    virtual std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() override;
+    nextfloor::objects::RendererEngine* MakeCubeRenderer(const std::string& texture) final;
+    nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) final;
+    nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) final;
+    nextfloor::renderer::SceneWindow* MakeSceneWindow() final;
+    std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() final;
 
 private:
     std::map<std::string, std::unique_ptr<nextfloor::objects::RendererEngine>> renderers_;

@@ -20,17 +20,8 @@ namespace factory {
 class MouseHidFactory : public HidFactory {
 
 public:
-    MouseHidFactory() = default;
-
-    MouseHidFactory(MouseHidFactory&&) = default;
-    MouseHidFactory& operator=(MouseHidFactory&&) = default;
-    MouseHidFactory(const MouseHidFactory&) = default;
-    MouseHidFactory& operator=(const MouseHidFactory&) = default;
-
-    virtual ~MouseHidFactory() override = default;
-
-    virtual std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler() override;
-    virtual std::unique_ptr<nextfloor::hid::HID> MakeHid() override;
+    std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler() const final;
+    std::unique_ptr<nextfloor::hid::HID> MakeHid() const final;
 };
 
 }  // namespace factory

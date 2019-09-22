@@ -43,7 +43,7 @@ void ModelMesh::PrepareDraw()
     tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(); });
 }
 
-void ModelMesh::Draw() noexcept
+void ModelMesh::Draw()
 {
     tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
         polygons_[counter]->UpdateModelViewProjectionMatrix();
@@ -64,10 +64,9 @@ void ModelMesh::Draw() noexcept
 bool ModelMesh::IsInCameraFieldOfView() const
 {
     using nextfloor::core::CommonServices;
-    auto camera = CommonServices::getActiveCamera();
 
     /* For rooms, display always the one where we're in */
-    if (grid() != nullptr && IsInside(camera->location())) {
+    if (grid() != nullptr && IsInside(CommonServices::getActiveCamera().location())) {
         return true;
     }
 
@@ -75,16 +74,16 @@ bool ModelMesh::IsInCameraFieldOfView() const
      * For nearer object, or bigger object, increase fov
      * TODO : avoid magics numbers
      */
-    auto vector = location() - camera->location();
-    auto cos_camera_vector
-      = glm::dot(camera->direction(), vector) / (glm::length(camera->direction()) * glm::length(vector));
-    float camera_fov = glm::length(vector) < 4.0f || diagonal() > 3.0f ? 95.0f : camera->fov();
+    auto vector = location() - CommonServices::getActiveCamera().location();
+    auto cos_camera_vector = glm::dot(CommonServices::getActiveCamera().direction(), vector)
+                             / (glm::length(CommonServices::getActiveCamera().direction()) * glm::length(vector));
+    float camera_fov = glm::length(vector) < 4.0f || diagonal() > 3.0f ? 95.0f : CommonServices::getActiveCamera().fov();
 
     /* From dot product rule to known wich side is a point from an other */
     return cos_camera_vector >= cos(camera_fov * M_PI / 180.0f);
 }
 
-void ModelMesh::DetectCollision() noexcept
+void ModelMesh::DetectCollision()
 {
     if (IsMoved()) {
         PivotCollision();
@@ -93,13 +92,13 @@ void ModelMesh::DetectCollision() noexcept
     tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->DetectCollision(); });
 }
 
-void ModelMesh::PivotCollision() noexcept
+void ModelMesh::PivotCollision()
 {
     using nextfloor::core::CommonServices;
-    static CollisionEngine* collision_engine = CommonServices::getFactory()->MakeCollisionEngine();
+    static CollisionEngine* collision_engine = CommonServices::getFactory().MakeCollisionEngine();
 
     /* Prepare vector for collision compute */
-    std::vector<Mesh*> test_objects = parent_->FindCollisionNeighborsOf(this);
+    std::vector<Mesh*> test_objects = parent_->FindCollisionNeighborsOf(*this);
 
     /* Parallell collision loop for objects with tbb */
     tbb::parallel_for(0, (int)test_objects.size(), 1, [&](int i) {
@@ -108,24 +107,24 @@ void ModelMesh::PivotCollision() noexcept
     });
 }
 
-std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexcept
+std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(const Mesh& target) const
 {
     std::vector<Mesh*> all_neighbors(0);
-    for (auto& coord : target->coords()) {
+    for (auto& coord : target.coords()) {
         auto neighbors = grid()->FindCollisionNeighbors(coord);
         all_neighbors.insert(all_neighbors.end(), neighbors.begin(), neighbors.end());
     }
 
     sort(all_neighbors.begin(), all_neighbors.end());
     all_neighbors.erase(unique(all_neighbors.begin(), all_neighbors.end()), all_neighbors.end());
-    all_neighbors.erase(std::remove(all_neighbors.begin(), all_neighbors.end(), target));
+    all_neighbors.erase(std::remove(all_neighbors.begin(), all_neighbors.end(), &target));
 
     tbb::mutex mutex;
     std::vector<Mesh*> collision_neighbors(0);
     // for (auto& neighbor : all_neighbors) {
     tbb::parallel_for(0, (int)all_neighbors.size(), 1, [&](int i) {
         auto neighbor = all_neighbors[i];
-        if (target->IsNeighborEligibleForCollision(neighbor)) {
+        if (target.IsNeighborEligibleForCollision(*neighbor)) {
             tbb::mutex::scoped_lock lock_map(mutex);
             collision_neighbors.push_back(neighbor);
         }
@@ -134,25 +133,25 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(Mesh* target) const noexc
     return collision_neighbors;
 }
 
-bool ModelMesh::IsNeighborEligibleForCollision(Mesh* neighbor) const
+bool ModelMesh::IsNeighborEligibleForCollision(const Mesh& neighbor) const
 {
     return IsInDirection(neighbor) && IsNeighborReachable(neighbor);
 }
 
-bool ModelMesh::IsNeighborReachable(Mesh* neighbor) const
+bool ModelMesh::IsNeighborReachable(const Mesh& neighbor) const
 {
-    auto vector_neighbor = neighbor->location() - location();
-    return glm::length(movement()) + glm::length(neighbor->movement())
-           >= glm::length(vector_neighbor) - (diagonal() + neighbor->diagonal()) / 2.0f;
+    auto vector_neighbor = neighbor.location() - location();
+    return glm::length(movement()) + glm::length(neighbor.movement())
+           >= glm::length(vector_neighbor) - (diagonal() + neighbor.diagonal()) / 2.0f;
 }
 
-bool ModelMesh::IsInDirection(Mesh* target) const
+bool ModelMesh::IsInDirection(const Mesh& target) const
 {
-    auto target_vector = target->location() - location();
+    auto target_vector = target.location() - location();
     return glm::dot(movement(), target_vector) > 0;
 }
 
-std::vector<Mesh*> ModelMesh::AllStubMeshs() noexcept
+std::vector<Mesh*> ModelMesh::AllStubMeshs()
 {
     std::vector<Mesh*> meshes(0);
 
@@ -169,7 +168,7 @@ std::vector<Mesh*> ModelMesh::AllStubMeshs() noexcept
     return meshes;
 }
 
-std::vector<glm::ivec3> ModelMesh::coords()
+std::vector<glm::ivec3> ModelMesh::coords() const
 {
     std::vector<glm::ivec3> grid_coords(0);
     for (auto& box : coords_list_) {
@@ -179,7 +178,7 @@ std::vector<glm::ivec3> ModelMesh::coords()
     return grid_coords;
 }
 
-void ModelMesh::Move() noexcept
+void ModelMesh::Move()
 {
     if (IsMoved()) {
         border_->ComputeNewLocation();
@@ -205,7 +204,7 @@ void ModelMesh::Move() noexcept
     }
 
     if (IsMoved()) {
-        if (parent_->IsInside(this)) {
+        if (parent_->IsInside(*this)) {
             parent_->UpdateChildPlacement(this);
         }
         else {
@@ -214,25 +213,25 @@ void ModelMesh::Move() noexcept
     }
 }
 
-bool ModelMesh::IsInside(Mesh* mesh) noexcept
+bool ModelMesh::IsInside(const Mesh& mesh) const
 {
     assert(grid() != nullptr);
-    return grid()->IsInside(mesh->location());
+    return grid()->IsInside(mesh.location());
 }
 
-bool ModelMesh::IsInside(glm::vec3 location) const
+bool ModelMesh::IsInside(const glm::vec3& location) const
 {
     assert(grid() != nullptr);
     return grid()->IsInside(location);
 }
 
-void ModelMesh::UpdateChildPlacement(Mesh* item) noexcept
+void ModelMesh::UpdateChildPlacement(Mesh* item)
 {
     RemoveItemsToGrid(item);
     AddMeshToGrid(item);
 }
 
-Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child) noexcept
+Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child)
 {
     assert(parent_ != nullptr);
     assert(child != nullptr);
@@ -240,14 +239,14 @@ Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child) noexcept
     return parent_->AddIntoChild(remove_child(child));
 }
 
-Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
+Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh)
 {
     assert(mesh != nullptr);
 
     auto mesh_raw = mesh.get();
 
     for (auto& object : objects_) {
-        if (object->IsInside(mesh_raw)) {
+        if (object->IsInside(*mesh_raw)) {
             object->add_child(std::move(mesh));
             mesh_raw->AddIntoAscendantGrid();
             return object.get();
@@ -257,7 +256,7 @@ Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept
     return nullptr;
 }
 
-Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object) noexcept
+Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object)
 {
     auto object_raw = object.get();
     object_raw->set_parent(this);
@@ -295,7 +294,7 @@ void ModelMesh::AddIntoAscendantGrid()
     parent_->AddMeshToGrid(this);
 }
 
-void ModelMesh::AddMeshToGrid(Mesh* object) noexcept
+void ModelMesh::AddMeshToGrid(Mesh* object)
 {
     if (grid_ == nullptr) {
         assert(parent_ != nullptr);
@@ -307,7 +306,7 @@ void ModelMesh::AddMeshToGrid(Mesh* object) noexcept
     }
 }
 
-std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
+std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child)
 {
     std::unique_ptr<Mesh> ret{nullptr};
 
@@ -330,7 +329,7 @@ std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child) noexcept
     return ret;
 }
 
-void ModelMesh::RemoveItemsToGrid(Mesh* object) noexcept
+void ModelMesh::RemoveItemsToGrid(Mesh* object)
 {
     // assert(grid_ != nullptr);
     if (grid_ == nullptr) {
@@ -342,12 +341,12 @@ void ModelMesh::RemoveItemsToGrid(Mesh* object) noexcept
 }
 
 
-bool ModelMesh::IsLastObstacle(Mesh* obstacle) const noexcept
+bool ModelMesh::IsLastObstacle(Mesh* obstacle) const
 {
     return obstacle_ == obstacle;
 }
 
-void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) noexcept
+void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
 {
     /* Update obstacle and distance if lower than former */
     lock();
@@ -359,21 +358,21 @@ void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) 
         }
 
         using nextfloor::core::CommonServices;
-        if (CommonServices::getConfig()->IsCollisionDebugEnabled()) {
-            LogCollision(obstacle, obstacle_distance);
+        if (CommonServices::getConfig().IsCollisionDebugEnabled()) {
+            LogCollision(*obstacle, obstacle_distance);
         }
     }
     unlock();
 }
 
-void ModelMesh::LogCollision(Mesh* obstacle, float obstacle_distance)
+void ModelMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)
 {
     using nextfloor::core::CommonServices;
 
     std::ostringstream message;
-    message << "Object::" << id() << " - Obstacle::" << obstacle->id();
+    message << "Object::" << id() << " - Obstacle::" << obstacle.id();
     message << " - Distance::" << obstacle_distance;
-    CommonServices::getLog()->WriteLine(std::move(message));
+    CommonServices::getLog().WriteLine(std::move(message));
 }
 
 void ModelMesh::TransferCameraToOtherMesh(Mesh* other)
@@ -382,7 +381,7 @@ void ModelMesh::TransferCameraToOtherMesh(Mesh* other)
     camera_ = nullptr;
 }
 
-Camera* ModelMesh::camera() const noexcept
+Camera* ModelMesh::camera() const
 {
     if (camera_ == nullptr) {
         return nullptr;
@@ -390,7 +389,7 @@ Camera* ModelMesh::camera() const noexcept
     return camera_.get();
 }
 
-bool ModelMesh::IsFrontPositionFilled() const noexcept
+bool ModelMesh::IsFrontPositionFilled() const
 {
     for (auto& coord : coords_list_) {
         if (coord->IsFrontPositionFilled()) {
@@ -401,7 +400,7 @@ bool ModelMesh::IsFrontPositionFilled() const noexcept
     return false;
 }
 
-bool ModelMesh::IsRightPositionFilled() const noexcept
+bool ModelMesh::IsRightPositionFilled() const
 {
     for (auto& coord : coords_list_) {
         if (coord->IsRightPositionFilled()) {
@@ -412,7 +411,7 @@ bool ModelMesh::IsRightPositionFilled() const noexcept
     return false;
 }
 
-bool ModelMesh::IsBackPositionFilled() const noexcept
+bool ModelMesh::IsBackPositionFilled() const
 {
     for (auto& coord : coords_list_) {
         if (coord->IsBackPositionFilled()) {
@@ -423,7 +422,7 @@ bool ModelMesh::IsBackPositionFilled() const noexcept
     return false;
 }
 
-bool ModelMesh::IsLeftPositionFilled() const noexcept
+bool ModelMesh::IsLeftPositionFilled() const
 {
     for (auto& coord : coords_list_) {
         if (coord->IsLeftPositionFilled()) {
@@ -434,7 +433,7 @@ bool ModelMesh::IsLeftPositionFilled() const noexcept
     return false;
 }
 
-bool ModelMesh::IsBottomPositionFilled() const noexcept
+bool ModelMesh::IsBottomPositionFilled() const
 {
     for (auto& coord : coords_list_) {
         if (coord->IsBottomPositionFilled()) {
@@ -445,7 +444,7 @@ bool ModelMesh::IsBottomPositionFilled() const noexcept
     return false;
 }
 
-bool ModelMesh::IsTopPositionFilled() const noexcept
+bool ModelMesh::IsTopPositionFilled() const
 {
     for (auto& coord : coords_list_) {
         if (coord->IsTopPositionFilled()) {

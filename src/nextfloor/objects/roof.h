@@ -24,18 +24,12 @@ namespace objects {
 class Roof : public Wall {
 
 public:
-    Roof(glm::vec3 location, glm::vec3 scale);
+    Roof(const glm::vec3& location, const glm::vec3& scale);
+    ~Roof() final = default;
 
-    Roof(Roof&&) = default;
-    Roof& operator=(Roof&&) = default;
-    Roof(const Roof&) = delete;
-    Roof& operator=(const Roof&) = delete;
-
-    virtual ~Roof() override = default;
-
-    virtual void AddDoor() noexcept override;
-    virtual void AddWindow() noexcept override;
-    virtual void PrepareDraw() noexcept override;
+    void AddDoor() final;
+    void AddWindow() final;
+    void PrepareDraw() final;
 
 private:
     static constexpr char kTEXTURE[] = "assets/sky.png";
@@ -44,7 +38,7 @@ private:
     static constexpr float kBRICK_HEIGHT = 0.25f;
     static constexpr float kBRICK_DEPTH = 2.0f;
 
-    virtual std::string texture_file() const noexcept override { return kTEXTURE; }
+    std::string texture_file() const final { return kTEXTURE; }
 };
 
 }  // namespace objects

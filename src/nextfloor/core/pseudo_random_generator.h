@@ -21,15 +21,9 @@ class PseudoRandomGenerator : public RandomGenerator {
 
 public:
     PseudoRandomGenerator();
+    ~PseudoRandomGenerator() noexcept final;
 
-    PseudoRandomGenerator(PseudoRandomGenerator&&) = default;
-    PseudoRandomGenerator& operator=(PseudoRandomGenerator&&) = default;
-    PseudoRandomGenerator(const PseudoRandomGenerator&) = delete;
-    PseudoRandomGenerator& operator=(const PseudoRandomGenerator&) = delete;
-
-    virtual ~PseudoRandomGenerator() override final;
-
-    virtual int GenerateNumber() const override final;
+    int GenerateNumber() const final;
 };
 
 }  // namespace core

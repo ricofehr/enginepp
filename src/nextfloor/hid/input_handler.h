@@ -21,11 +21,6 @@ namespace hid {
 class InputHandler {
 
 public:
-    InputHandler(InputHandler&&) noexcept = default;
-    InputHandler& operator=(InputHandler&&) noexcept = default;
-    InputHandler(const InputHandler&) = default;
-    InputHandler& operator=(const InputHandler&) = default;
-
     virtual ~InputHandler() = default;
 
     /**
@@ -48,9 +43,6 @@ public:
 
     virtual void PollEvents() = 0;
     virtual bool IsCloseWindowEventOccurs() = 0;
-
-protected:
-    InputHandler() = default;
 };
 
 }  // namespace hid

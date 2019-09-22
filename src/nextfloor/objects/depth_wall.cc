@@ -12,16 +12,16 @@ namespace nextfloor {
 
 namespace objects {
 
-DepthWall::DepthWall(glm::vec3 location, glm::vec3 scale)
+DepthWall::DepthWall(const glm::vec3& location, const glm::vec3& scale)
 {
     using nextfloor::core::CommonServices;
-    border_ = CommonServices::getFactory()->MakeBorder(location, scale);
+    border_ = CommonServices::getFactory().MakeBorder(location, scale);
     brick_dimension_ = glm::vec3(kBRICK_WIDTH, kBRICK_HEIGHT, kBRICK_DEPTH);
     bricks_count_ = border_->dimension() / brick_dimension_;
     AddBricks(location - scale, location + scale);
 }
 
-void DepthWall::AddDoor() noexcept
+void DepthWall::AddDoor()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
@@ -32,7 +32,7 @@ void DepthWall::AddDoor() noexcept
     }
 }
 
-void DepthWall::AddWindow() noexcept
+void DepthWall::AddWindow()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();

@@ -24,15 +24,7 @@ class Level {
 public:
     virtual ~Level() = default;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() noexcept = 0;
-
-protected:
-    Level() = default;
-
-    Level(Level&&) = default;
-    Level& operator=(Level&&) = default;
-    Level(const Level&) = delete;
-    Level& operator=(const Level&) = delete;
+    virtual std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() const = 0;
 };
 
 }  // namespace gameplay

@@ -27,11 +27,11 @@ namespace polygons {
 class MeshPolygon : public nextfloor::objects::Polygon {
 
 public:
-    virtual ~MeshPolygon() = default;
+    ~MeshPolygon() noexcept override = default;
 
-    virtual void UpdateModelViewProjectionMatrix() override;
+    void UpdateModelViewProjectionMatrix() final;
 
-    virtual inline void MoveLocation() noexcept override
+    inline void MoveLocation() final
     {
         location_ += movement() * move_factor();
 
@@ -42,28 +42,19 @@ public:
         move_factor_ = 1.0f;
     }
 
-    virtual bool IsMoved() const override
-    {
-        return movement_[0] != 0.0f || movement_[1] != 0.0f || movement_[2] != 0.0f;
-    }
+    bool IsMoved() const final { return movement_[0] != 0.0f || movement_[1] != 0.0f || movement_[2] != 0.0f; }
 
-    virtual float move_factor() const override { return fabs(move_factor_); }
-    virtual glm::vec3 movement() const override;
-    virtual glm::vec3 location() const override { return location_; }
-    virtual glm::vec3 scale() const override { return scale_; }
+    float move_factor() const final { return fabs(move_factor_); }
+    glm::vec3 movement() const final;
+    glm::vec3 location() const final { return location_; }
+    glm::vec3 scale() const final { return scale_; }
 
-    virtual void set_move_factor(float move_factor) override { move_factor_ = move_factor; }
-    virtual void set_movement(glm::vec3 movement) override { movement_ = movement; }
-    virtual void InverseMove() override { movement_ = -movement_; }
+    void set_move_factor(float move_factor) final { move_factor_ = move_factor; }
+    void set_movement(const glm::vec3& movement) final { movement_ = movement; }
+    void InverseMove() final { movement_ = -movement_; }
 
 protected:
     MeshPolygon() = default;
-
-    MeshPolygon(MeshPolygon&&) = default;
-    MeshPolygon& operator=(MeshPolygon&&) = default;
-    MeshPolygon(const MeshPolygon&) = default;
-    MeshPolygon& operator=(const MeshPolygon&) = default;
-
 
     /** MVP (Model View Projection) GL matrix for current 3d shape */
     glm::mat4 mvp_;

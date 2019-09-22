@@ -20,16 +20,7 @@ namespace factory {
 class RandomedGameFactory : public GameFactory {
 
 public:
-    RandomedGameFactory() = default;
-
-    RandomedGameFactory(RandomedGameFactory&&) = default;
-    RandomedGameFactory& operator=(RandomedGameFactory&&) = default;
-    RandomedGameFactory(const RandomedGameFactory&) = default;
-    RandomedGameFactory& operator=(const RandomedGameFactory&) = default;
-
-    virtual ~RandomedGameFactory() override;
-
-    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() override final;
+    std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const final;
 };
 
 }  // namespace factory

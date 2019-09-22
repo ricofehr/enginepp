@@ -25,16 +25,16 @@ namespace renderer {
 class GlRendererEngine : public nextfloor::objects::RendererEngine {
 
 public:
-    GlRendererEngine(std::string texture);
+    ~GlRendererEngine() override = default;
+
+protected:
+    GlRendererEngine(const std::string& texture);
 
     GlRendererEngine(GlRendererEngine&&) = default;
     GlRendererEngine& operator=(GlRendererEngine&&) = default;
-    GlRendererEngine(const GlRendererEngine&) = default;
-    GlRendererEngine& operator=(const GlRendererEngine&) = default;
+    GlRendererEngine(const GlRendererEngine&) = delete;
+    GlRendererEngine& operator=(const GlRendererEngine&) = delete;
 
-    virtual ~GlRendererEngine() override = default;
-
-protected:
     GLuint elementbuffer_;
     GLuint vertexbuffer_;
     GLuint texturebuffer_;

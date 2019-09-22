@@ -20,22 +20,13 @@ namespace factory {
 class ActionFactory : public CommandFactory {
 
 public:
-    ActionFactory() = default;
-
-    ActionFactory(ActionFactory&&) = default;
-    ActionFactory& operator=(ActionFactory&&) = default;
-    ActionFactory(const ActionFactory&) = default;
-    ActionFactory& operator=(const ActionFactory&) = default;
-
-    virtual ~ActionFactory() override = default;
-
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeFireAction() override;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() override;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() override;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() override;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() override;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() override;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeRunAction() override;
+    std::unique_ptr<nextfloor::actions::Action> MakeFireAction() const final;
+    std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() const final;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() const final;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() const final;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() const final;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() const final;
+    std::unique_ptr<nextfloor::actions::Action> MakeRunAction() const final;
 };
 
 }  // namespace factory

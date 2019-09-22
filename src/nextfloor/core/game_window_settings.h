@@ -23,19 +23,13 @@ class GameWindowSettings : public WindowSettings {
 
 public:
     GameWindowSettings(nextfloor::renderer::SceneWindow* window);
+    ~GameWindowSettings() final = default;
 
-    GameWindowSettings(GameWindowSettings&&) = default;
-    GameWindowSettings& operator=(GameWindowSettings&&) = default;
-    GameWindowSettings(const GameWindowSettings&) = default;
-    GameWindowSettings& operator=(const GameWindowSettings&) = default;
-
-    virtual ~GameWindowSettings() override = default;
-
-    virtual float getWidth() override;
-    virtual float getHeight() override;
-    virtual float getFpsFixMoveFactor() override;
-    virtual unsigned int getMatrixId() override;
-    virtual unsigned int getProgramId() override;
+    float getWidth() const final;
+    float getHeight() const final;
+    float getFpsFixMoveFactor() const final;
+    unsigned int getMatrixId() const final;
+    unsigned int getProgramId() const final;
 
 private:
     nextfloor::renderer::SceneWindow* game_window_;

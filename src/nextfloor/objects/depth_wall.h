@@ -23,19 +23,13 @@ namespace objects {
 class DepthWall : public Wall {
 
 public:
-    virtual ~DepthWall() override = default;
+    ~DepthWall() override = default;
 
-    virtual void AddDoor() noexcept override;
-    virtual void AddWindow() noexcept override;
+    void AddDoor() final;
+    void AddWindow() final;
 
 protected:
-    DepthWall(glm::vec3 location, glm::vec3 scale);
-
-    DepthWall(DepthWall&&) = default;
-    DepthWall& operator=(DepthWall&&) = default;
-    DepthWall(const DepthWall&) = delete;
-    DepthWall& operator=(const DepthWall&) = delete;
-
+    DepthWall(const glm::vec3& location, const glm::vec3& scale);
 
 private:
     static constexpr char kTEXTURE[] = "assets/wall.png";
@@ -44,7 +38,7 @@ private:
     static constexpr float kBRICK_HEIGHT = 2.0f;
     static constexpr float kBRICK_DEPTH = 2.0f;
 
-    virtual std::string texture_file() const noexcept override { return kTEXTURE; }
+    std::string texture_file() const final { return kTEXTURE; }
 };
 
 }  // namespace objects

@@ -23,18 +23,12 @@ namespace objects {
 class Player : public ModelMesh {
 
 public:
-    Player(glm::vec3 location);
-
-    Player(Player&&) = default;
-    Player& operator=(Player&&) = default;
-    Player(const Player&) = delete;
-    Player& operator=(const Player&) = delete;
-
-    virtual ~Player() override = default;
+    Player(const glm::vec3& location);
+    ~Player() final = default;
 
 
-    virtual void Move() noexcept override;
-    virtual bool IsPlayer() const override { return true; }
+    void Move() final;
+    bool IsPlayer() const final { return true; }
 };
 
 }  // namespace objects

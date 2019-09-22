@@ -20,14 +20,8 @@ namespace grid {
 class RoomGridBox : public WiredGridBox {
 
 public:
-    RoomGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner);
-
-    RoomGridBox(RoomGridBox&&) = default;
-    RoomGridBox& operator=(RoomGridBox&&) = default;
-    RoomGridBox(const RoomGridBox&) = default;
-    RoomGridBox& operator=(const RoomGridBox&) = default;
-
-    virtual ~RoomGridBox() = default;
+    RoomGridBox(const glm::vec3& coords, nextfloor::objects::Grid* owner);
+    ~RoomGridBox() final = default;
 };
 
 }  // namespace grid

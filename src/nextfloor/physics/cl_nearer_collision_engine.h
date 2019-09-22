@@ -9,7 +9,7 @@
 
 /* OpenCL 1.2 */
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
-#define CL_HPP_TARGET_OPENCL_VERSION  120
+#define CL_HPP_TARGET_OPENCL_VERSION 120
 
 #define CL_HPP_ENABLE_EXCEPTIONS
 
@@ -37,18 +37,17 @@ class ClNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
     ClNearerCollisionEngine();
+    ~ClNearerCollisionEngine() final = default;
 
-    ClNearerCollisionEngine(ClNearerCollisionEngine&&) = default;
-    ClNearerCollisionEngine& operator=(ClNearerCollisionEngine&&) = default;
+    ClNearerCollisionEngine(ClNearerCollisionEngine&&) = delete;
+    ClNearerCollisionEngine& operator=(ClNearerCollisionEngine&&) = delete;
     ClNearerCollisionEngine(const ClNearerCollisionEngine&) = delete;
     ClNearerCollisionEngine& operator=(const ClNearerCollisionEngine&) = delete;
 
-    virtual ~ClNearerCollisionEngine() override = default;
-
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) override final;
+    float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) final;
 
 protected:
-    virtual void InitCollisionEngine() override final;
+    void InitCollisionEngine() final;
 
 private:
     void HandleErrorOnInit(cl::Error error);

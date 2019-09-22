@@ -36,13 +36,13 @@ GameInputHandler::GameInputHandler()
 
     /* Init Command Pointers */
     using nextfloor::core::CommonServices;
-    move_up_command_ = CommonServices::getFactory()->MakeMoveUpAction();
-    move_down_command_ = CommonServices::getFactory()->MakeMoveDownAction();
-    move_left_command_ = CommonServices::getFactory()->MakeMoveLeftAction();
-    move_right_command_ = CommonServices::getFactory()->MakeMoveRightAction();
-    jump_command_ = CommonServices::getFactory()->MakeJumpAction();
-    run_command_ = CommonServices::getFactory()->MakeRunAction();
-    fire_command_ = CommonServices::getFactory()->MakeFireAction();
+    move_up_command_ = CommonServices::getFactory().MakeMoveUpAction();
+    move_down_command_ = CommonServices::getFactory().MakeMoveDownAction();
+    move_left_command_ = CommonServices::getFactory().MakeMoveLeftAction();
+    move_right_command_ = CommonServices::getFactory().MakeMoveRightAction();
+    jump_command_ = CommonServices::getFactory().MakeJumpAction();
+    run_command_ = CommonServices::getFactory().MakeRunAction();
+    fire_command_ = CommonServices::getFactory().MakeFireAction();
 }
 
 nextfloor::actions::Action* GameInputHandler::HandlerInput()

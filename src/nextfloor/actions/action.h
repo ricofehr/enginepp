@@ -15,25 +15,16 @@ namespace actions {
 
 /**
  *  @class Action
- *  @brief Action interface, baseclass for apply Action Pattern to player and NPJ actions
+ *  @brief Action pure interface, baseclass for apply Action Pattern to player and NPJ actions
  */
 class Action {
 
 public:
-    Action(Action&&) = default;
-    Action& operator=(Action&&) = default;
-    Action(const Action&) = default;
-    Action& operator=(const Action&) = default;
-
     virtual ~Action() = default;
-
     /**
      * Execute Action on target object (actor)
      */
     virtual void execute(nextfloor::objects::Mesh* actor) = 0;
-
-protected:
-    Action() = default;
 };
 
 }  // namespace actions

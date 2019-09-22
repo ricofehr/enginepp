@@ -13,26 +13,18 @@ namespace core {
 
 /**
  * @class WindowSettings
- * Base Class For Window Settings (adapter from Scene Window object with only some accessors)
+ * Base Pure interface For Window Settings (adapter from Scene Window object with only some accessors)
  */
 class WindowSettings {
 
 public:
     virtual ~WindowSettings() = default;
 
-    virtual float getWidth() = 0;
-    virtual float getHeight() = 0;
-    virtual float getFpsFixMoveFactor() = 0;
-    virtual unsigned int getMatrixId() = 0;
-    virtual unsigned int getProgramId() = 0;
-
-protected:
-    WindowSettings() = default;
-
-    WindowSettings(WindowSettings&&) = default;
-    WindowSettings& operator=(WindowSettings&&) = default;
-    WindowSettings(const WindowSettings&) = default;
-    WindowSettings& operator=(const WindowSettings&) = default;
+    virtual float getWidth() const = 0;
+    virtual float getHeight() const = 0;
+    virtual float getFpsFixMoveFactor() const = 0;
+    virtual unsigned int getMatrixId() const = 0;
+    virtual unsigned int getProgramId() const = 0;
 };
 
 }  // namespace core

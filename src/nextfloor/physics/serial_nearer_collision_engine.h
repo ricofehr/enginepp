@@ -23,18 +23,12 @@ class SerialNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
     SerialNearerCollisionEngine();
+    ~SerialNearerCollisionEngine() final = default;
 
-    SerialNearerCollisionEngine(SerialNearerCollisionEngine&&) = default;
-    SerialNearerCollisionEngine& operator=(SerialNearerCollisionEngine&&) = default;
-    SerialNearerCollisionEngine(const SerialNearerCollisionEngine&) = delete;
-    SerialNearerCollisionEngine& operator=(const SerialNearerCollisionEngine&) = delete;
-
-    virtual ~SerialNearerCollisionEngine() override = default;
-
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) override final;
+    float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) final;
 
 private:
-    void InitCollisionEngine() override final;
+    void InitCollisionEngine() final;
 };
 
 }  // namespace physics

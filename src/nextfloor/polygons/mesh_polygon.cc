@@ -26,7 +26,7 @@ namespace polygons {
 glm::vec3 MeshPolygon::movement() const
 {
     using nextfloor::core::CommonServices;
-    return movement_ * CommonServices::getWindowSettings()->getFpsFixMoveFactor();
+    return movement_ * CommonServices::getWindowSettings().getFpsFixMoveFactor();
 }
 
 void MeshPolygon::UpdateModelViewProjectionMatrix()
@@ -48,12 +48,11 @@ glm::mat4 MeshPolygon::GetProjectionMatrix()
 {
     using nextfloor::core::CommonServices;
 
-    auto camera = CommonServices::getActiveCamera();
-    glm::mat4 projection_matrix = glm::perspective(glm::radians(camera->fov()),
-                                                   CommonServices::getWindowSettings()->getWidth()
-                                                     / CommonServices::getWindowSettings()->getHeight(),
-                                                   0.1f,
-                                                   300.0f);
+    glm::mat4 projection_matrix
+      = glm::perspective(glm::radians(CommonServices::getActiveCamera().fov()),
+                         CommonServices::getWindowSettings().getWidth() / CommonServices::getWindowSettings().getHeight(),
+                         0.1f,
+                         300.0f);
     return projection_matrix;
 }
 
@@ -61,8 +60,10 @@ glm::mat4 MeshPolygon::GetViewMatrix()
 {
     using nextfloor::core::CommonServices;
 
-    auto camera = CommonServices::getActiveCamera();
-    glm::mat4 view_matrix = glm::lookAt(camera->location(), camera->location() + camera->direction(), camera->head());
+    glm::mat4 view_matrix
+      = glm::lookAt(CommonServices::getActiveCamera().location(),
+                    CommonServices::getActiveCamera().location() + CommonServices::getActiveCamera().direction(),
+                    CommonServices::getActiveCamera().head());
 
     return view_matrix;
 }

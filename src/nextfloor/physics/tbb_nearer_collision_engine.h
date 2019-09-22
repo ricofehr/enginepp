@@ -23,18 +23,12 @@ class TbbNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
     TbbNearerCollisionEngine();
+    ~TbbNearerCollisionEngine() final = default;
 
-    TbbNearerCollisionEngine(TbbNearerCollisionEngine&&) = default;
-    TbbNearerCollisionEngine& operator=(TbbNearerCollisionEngine&&) = default;
-    TbbNearerCollisionEngine(const TbbNearerCollisionEngine&) = delete;
-    TbbNearerCollisionEngine& operator=(const TbbNearerCollisionEngine&) = delete;
-
-    virtual ~TbbNearerCollisionEngine() override = default;
-
-    virtual float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) override final;
+    float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) final;
 
 private:
-    virtual void InitCollisionEngine() override final;
+    void InitCollisionEngine() final;
 };
 
 }  // namespace physics

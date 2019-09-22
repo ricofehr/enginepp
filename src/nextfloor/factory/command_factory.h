@@ -22,21 +22,13 @@ class CommandFactory {
 public:
     virtual ~CommandFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeFireAction() = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeRunAction() = 0;
-
-protected:
-    CommandFactory() = default;
-
-    CommandFactory(CommandFactory&&) = default;
-    CommandFactory& operator=(CommandFactory&&) = default;
-    CommandFactory(const CommandFactory&) = default;
-    CommandFactory& operator=(const CommandFactory&) = default;
+    virtual std::unique_ptr<nextfloor::actions::Action> MakeFireAction() const = 0;
+    virtual std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() const = 0;
+    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() const = 0;
+    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() const = 0;
+    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() const = 0;
+    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() const = 0;
+    virtual std::unique_ptr<nextfloor::actions::Action> MakeRunAction() const = 0;
 };
 
 }  // namespace factory

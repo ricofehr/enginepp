@@ -20,16 +20,7 @@ namespace actions {
 class MoveDownAction : public Action {
 
 public:
-    MoveDownAction() = default;
-
-    MoveDownAction(MoveDownAction&&) = default;
-    MoveDownAction& operator=(MoveDownAction&&) = default;
-    MoveDownAction(const MoveDownAction&) = default;
-    MoveDownAction& operator=(const MoveDownAction&) = default;
-
-    virtual ~MoveDownAction() override = default;
-
-    void execute(nextfloor::objects::Mesh* actor) override final;
+    void execute(nextfloor::objects::Mesh* actor) final;
 };
 
 }  // namespace actions

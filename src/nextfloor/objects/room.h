@@ -23,29 +23,20 @@ namespace objects {
 class Room : public ModelMesh {
 
 public:
-    Room(glm::vec3 location);
+    Room(const glm::vec3& location);
+    ~Room() final = default;
 
-    Room(Room&&) = default;
-    Room& operator=(Room&&) = default;
-    Room(const Room&) = delete;
-    Room& operator=(const Room&) = delete;
-
-    virtual ~Room() override = default;
-
-    virtual void InitChildsIntoGrid() override final;
-
-    bool IsInsideWall(glm::ivec3 grid_coords) const noexcept;
-
-    void AddRock(glm::vec3 relative_location) noexcept;
+    void InitChildsIntoGrid() final;
 
 private:
-    void AddWalls() noexcept;
-    void AddFrontWall() noexcept;
-    void AddRightWall() noexcept;
-    void AddBackWall() noexcept;
-    void AddLeftWall() noexcept;
-    void AddFloor() noexcept;
-    void AddRoof() noexcept;
+    void AddRock(const glm::vec3& relative_location);
+    void AddWalls();
+    void AddFrontWall();
+    void AddRightWall();
+    void AddBackWall();
+    void AddLeftWall();
+    void AddFloor();
+    void AddRoof();
 };
 
 }  // namespace objects

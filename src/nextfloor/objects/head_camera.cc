@@ -23,7 +23,7 @@ HeadCamera::HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle
     init_active();
 }
 
-void HeadCamera::ComputeOrientation() noexcept
+void HeadCamera::ComputeOrientation()
 {
     /* Direction : Spherical coordinates to Cartesian coordinates conversion */
     direction_[0] = cos(vertical_angle_) * sin(horizontal_angle_);
@@ -37,7 +37,7 @@ void HeadCamera::ComputeOrientation() noexcept
     head_ = glm::cross(right, direction_);
 }
 
-void HeadCamera::ComputeFOV(float delta_fov) noexcept
+void HeadCamera::ComputeFOV(float delta_fov)
 {
     fov_ = fov_ + delta_fov;
     /* fov cant be less than 5° and more than 130° */

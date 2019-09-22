@@ -22,13 +22,13 @@ UniverseGrid::UniverseGrid(nextfloor::objects::Mesh* owner)
     InitBoxes();
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> UniverseGrid::AllocateGridBox(glm::ivec3 grid_coords)
+std::unique_ptr<nextfloor::objects::GridBox> UniverseGrid::AllocateGridBox(const glm::ivec3& grid_coords)
 {
     using nextfloor::core::CommonServices;
-    return CommonServices::getFactory()->MakeUniverseGridBox(grid_coords, this);
+    return CommonServices::getFactory().MakeUniverseGridBox(grid_coords, this);
 }
 
-UniverseGrid::~UniverseGrid()
+UniverseGrid::~UniverseGrid() noexcept
 {
     DeleteGrid();
 }

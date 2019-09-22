@@ -22,7 +22,7 @@ TbbNearerCollisionEngine::TbbNearerCollisionEngine()
 void TbbNearerCollisionEngine::InitCollisionEngine()
 {
     using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
+    granularity_ = CommonServices::getConfig().getCollisionGranularity();
 }
 
 float TbbNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
@@ -34,7 +34,7 @@ float TbbNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* targe
 
     tbb::parallel_for(1, (granularity_ + 1), 1, [&](int fact) {
         float parted_move = static_cast<float>(fact) / granularity_;
-        if (target_border->IsObstacleInCollisionAfterPartedMove(obstacle_border, parted_move)) {
+        if (target_border->IsObstacleInCollisionAfterPartedMove(*obstacle_border, parted_move)) {
             float test_collision = static_cast<float>(fact - 1) / granularity_;
 
             tbb::mutex::scoped_lock lock_map(distance_mutex);

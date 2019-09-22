@@ -20,20 +20,14 @@ class GlSceneInput : public SceneInput {
 
 public:
     GlSceneInput(SceneWindow* window);
+    ~GlSceneInput() final = default;
 
-    GlSceneInput(GlSceneInput&&) = default;
-    GlSceneInput& operator=(GlSceneInput&&) = default;
-    GlSceneInput(const GlSceneInput&) = default;
-    GlSceneInput& operator=(const GlSceneInput&) = default;
-
-    virtual ~GlSceneInput() override = default;
-
-    virtual void PollEvents() override;
-    virtual bool IsCloseWindowEventOccurs() override;
-    virtual bool IsPressed(int ACTION_BUTTON) override;
-    virtual glm::vec2 GetCursorPos() override;
-    virtual void SetCursorPos(float x, float y) override;
-    // virtual void SetScrollCallBack(void (*on_scroll)(void* window, double delta_x, double delta_y)) override;
+    void PollEvents() final;
+    bool IsCloseWindowEventOccurs() final;
+    bool IsPressed(int ACTION_BUTTON) final;
+    glm::vec2 GetCursorPos() final;
+    void SetCursorPos(float x, float y) final;
+    // void SetScrollCallBack(void (*on_scroll)(void* window, double delta_x, double delta_y)) override;
 
 private:
     int getKeyValueForAction(int ACTION_BUTTON);

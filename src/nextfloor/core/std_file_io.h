@@ -24,18 +24,12 @@ class StdFileIO : public FileIO {
 
 public:
     StdFileIO();
+    ~StdFileIO() noexcept final;
 
-    StdFileIO(StdFileIO&&) = default;
-    StdFileIO& operator=(StdFileIO&&) = default;
-    StdFileIO(const StdFileIO&) = delete;
-    StdFileIO& operator=(const StdFileIO&) = delete;
-
-    virtual ~StdFileIO() override final;
-
-    virtual std::string ReadFile(std::string file_path) const override final;
+    std::string ReadFile(const std::string& file_path) const final;
 
 private:
-    void HandleErrorOnReadFile(std::string file_path) const;
+    void HandleErrorOnReadFile(const std::string& file_path) const;
 };
 
 }  // namespace core

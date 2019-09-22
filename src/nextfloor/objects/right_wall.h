@@ -22,16 +22,10 @@ namespace objects {
 class RightWall : public DepthWall {
 
 public:
-    RightWall(glm::vec3 location, glm::vec3 scale);
+    RightWall(const glm::vec3& location, const glm::vec3& scale);
+    ~RightWall() final = default;
 
-    RightWall(RightWall&&) = default;
-    RightWall& operator=(RightWall&&) = default;
-    RightWall(const RightWall&) = delete;
-    RightWall& operator=(const RightWall&) = delete;
-
-    virtual ~RightWall() override = default;
-
-    virtual void PrepareDraw() noexcept override;
+    void PrepareDraw() final;
 };
 
 }  // namespace objects

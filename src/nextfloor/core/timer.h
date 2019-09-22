@@ -13,19 +13,14 @@ namespace core {
 
 /**
  *  @class Timer
- *  @brief Abstract class who defines Timer operations
+ *  @brief Pure interface who defines Timer operations
  */
 class Timer {
 
 public:
-    Timer(Timer&&) = default;
-    Timer& operator=(Timer&&) = default;
-    Timer(const Timer&) = delete;
-    Timer& operator=(const Timer&) = delete;
-
     virtual ~Timer() = default;
 
-    virtual void Loop() noexcept = 0;
+    virtual void Loop() = 0;
 
     /**
      *  Accessors
@@ -34,11 +29,8 @@ public:
     virtual bool IsNewSecondElapsed() const = 0;
     virtual int getLoopCountBySecond() const = 0;
 
-protected:
-    Timer() = default;
-
 private:
-    virtual void ComputeTimers() noexcept = 0;
+    virtual void ComputeTimers() = 0;
 };
 
 

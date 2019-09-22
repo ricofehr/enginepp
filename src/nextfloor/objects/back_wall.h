@@ -24,16 +24,10 @@ namespace objects {
 class BackWall : public WidthWall {
 
 public:
-    BackWall(glm::vec3 location, glm::vec3 scale);
+    BackWall(const glm::vec3& location, const glm::vec3& scale);
+    ~BackWall() final = default;
 
-    BackWall(BackWall&&) = default;
-    BackWall& operator=(BackWall&&) = default;
-    BackWall(const BackWall&) = delete;
-    BackWall& operator=(const BackWall&) = delete;
-
-    virtual ~BackWall() override = default;
-
-    virtual void PrepareDraw() noexcept override;
+    void PrepareDraw() final;
 };
 
 }  // namespace objects

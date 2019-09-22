@@ -11,8 +11,7 @@ namespace nextfloor {
 namespace grid {
 
 
-UniverseGridBox::UniverseGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner)
-      : WiredGridBox(coords, owner)
+UniverseGridBox::UniverseGridBox(const glm::vec3& coords, nextfloor::objects::Grid* owner) : WiredGridBox(coords, owner)
 {}
 
 }  // namespace grid

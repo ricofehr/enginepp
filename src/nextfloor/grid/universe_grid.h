@@ -23,16 +23,10 @@ class UniverseGrid : public WiredGrid {
 
 public:
     UniverseGrid(nextfloor::objects::Mesh* owner);
-
-    UniverseGrid(UniverseGrid&&) = default;
-    UniverseGrid& operator=(UniverseGrid&&) = default;
-    UniverseGrid(const UniverseGrid&) = delete;
-    UniverseGrid& operator=(const UniverseGrid&) = delete;
-
-    virtual ~UniverseGrid() override;
+    ~UniverseGrid() noexcept final;
 
 protected:
-    virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
+    std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords) final;
 
 private:
     /*

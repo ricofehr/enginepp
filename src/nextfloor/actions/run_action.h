@@ -20,16 +20,7 @@ namespace actions {
 class RunAction : public Action {
 
 public:
-    RunAction() = default;
-
-    RunAction(RunAction&&) = default;
-    RunAction& operator=(RunAction&&) = default;
-    RunAction(const RunAction&) = default;
-    RunAction& operator=(const RunAction&) = default;
-
-    virtual ~RunAction() override = default;
-
-    void execute(nextfloor::objects::Mesh* actor) override final;
+    void execute(nextfloor::objects::Mesh* actor) final;
 };
 
 }  // namespace actions

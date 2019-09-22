@@ -10,15 +10,15 @@ namespace nextfloor {
 
 namespace polygons {
 
-Cube::Cube(glm::vec3 location, float scale) : Cube(location, glm::vec3(scale)) {}
+Cube::Cube(const glm::vec3& location, float scale) : Cube(location, glm::vec3(scale)) {}
 
-Cube::Cube(glm::vec3 location, glm::vec3 scale)
+Cube::Cube(const glm::vec3& location, const glm::vec3& scale)
 {
     location_ = location;
     scale_ = scale;
 }
 
-void Cube::Draw(nextfloor::objects::RendererEngine* renderer) noexcept
+void Cube::Draw(nextfloor::objects::RendererEngine* renderer)
 {
     renderer->Draw(mvp_);
 }

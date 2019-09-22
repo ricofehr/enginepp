@@ -30,11 +30,11 @@ public:
     virtual void UpdateModelViewProjectionMatrix() = 0;
     virtual void Draw(nextfloor::objects::RendererEngine* renderer) = 0;
 
-    virtual void MoveLocation() noexcept = 0;
+    virtual void MoveLocation() = 0;
     virtual bool IsMoved() const = 0;
 
     virtual void set_move_factor(float move_factor) = 0;
-    virtual void set_movement(glm::vec3 move) = 0;
+    virtual void set_movement(const glm::vec3& move) = 0;
     virtual void InverseMove() = 0;
 
     virtual float move_factor() const = 0;
@@ -46,13 +46,6 @@ public:
 
 protected:
     static bool is_viewprojection_setted_;
-
-    Polygon() = default;
-
-    Polygon(Polygon&&) = default;
-    Polygon& operator=(Polygon&&) = default;
-    Polygon(const Polygon&) = default;
-    Polygon& operator=(const Polygon&) = default;
 };
 
 }  // namespace objects

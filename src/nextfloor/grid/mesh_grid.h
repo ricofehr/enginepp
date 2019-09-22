@@ -22,17 +22,11 @@ namespace grid {
 class MeshGrid : public WiredGrid {
 
 public:
-    MeshGrid(nextfloor::objects::Mesh* owner, glm::ivec3 boxes_count, glm::vec3 box_dimension);
-
-    MeshGrid(MeshGrid&&) = default;
-    MeshGrid& operator=(MeshGrid&&) = default;
-    MeshGrid(const MeshGrid&) = delete;
-    MeshGrid& operator=(const MeshGrid&) = delete;
-
-    virtual ~MeshGrid() override;
+    MeshGrid(nextfloor::objects::Mesh* owner, const glm::ivec3& boxes_count, const glm::vec3& box_dimension);
+    ~MeshGrid() noexcept final;
 
 protected:
-    virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
+    std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords) final;
 };
 
 }  // namespace grid

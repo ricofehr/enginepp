@@ -23,22 +23,22 @@ namespace renderer {
 class GlShader : public Shader {
 
 public:
-    virtual ~GlShader() override = default;
+    ~GlShader() override = default;
 
-    virtual void LinkShader() override;
-    virtual void DetachShader() override;
-    virtual void CheckShader() override;
-    virtual void CheckProgram() override;
+    void LinkShader() final;
+    void DetachShader() final;
+    void CheckShader() final;
+    void CheckProgram() final;
 
-    virtual GLuint shader_id() override { return shader_id_; }
+    GLuint shader_id() final { return shader_id_; }
 
 protected:
-    GlShader(std::string shader_filepath, GLuint program_id);
+    GlShader(const std::string& shader_filepath, GLuint program_id);
 
     GlShader(GlShader&&) = default;
     GlShader& operator=(GlShader&&) = default;
-    GlShader(const GlShader&) = default;
-    GlShader& operator=(const GlShader&) = default;
+    GlShader(const GlShader&) = delete;
+    GlShader& operator=(const GlShader&) = delete;
 
 
     std::string shader_filepath_;

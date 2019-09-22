@@ -26,21 +26,13 @@ namespace factory {
 class RendererFactory {
 
 public:
-    RendererFactory(RendererFactory&&) = default;
-    RendererFactory& operator=(RendererFactory&&) = default;
-    RendererFactory(const RendererFactory&) = default;
-    RendererFactory& operator=(const RendererFactory&) = default;
-
     virtual ~RendererFactory() = default;
 
-    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture) = 0;
-    virtual nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path, unsigned int program_id) = 0;
-    virtual nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path, unsigned int program_id) = 0;
+    virtual nextfloor::objects::RendererEngine* MakeCubeRenderer(const std::string& texture) = 0;
+    virtual nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) = 0;
+    virtual nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) = 0;
     virtual nextfloor::renderer::SceneWindow* MakeSceneWindow() = 0;
     virtual std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() = 0;
-
-protected:
-    RendererFactory() = default;
 };
 
 }  // namespace factory

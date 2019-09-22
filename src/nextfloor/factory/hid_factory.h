@@ -23,16 +23,8 @@ class HidFactory {
 public:
     virtual ~HidFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::hid::HID> MakeHid() = 0;
-    virtual std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler() = 0;
-
-protected:
-    HidFactory() = default;
-
-    HidFactory(HidFactory&&) = default;
-    HidFactory& operator=(HidFactory&&) = default;
-    HidFactory(const HidFactory&) = default;
-    HidFactory& operator=(const HidFactory&) = default;
+    virtual std::unique_ptr<nextfloor::hid::HID> MakeHid() const = 0;
+    virtual std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler() const = 0;
 };
 
 }  // namespace factory

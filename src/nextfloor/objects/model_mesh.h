@@ -32,50 +32,50 @@ class ModelMesh : public Mesh {
 public:
     static constexpr int kMODEL_CAMERA = 2;
 
-    virtual ~ModelMesh() override = default;
+    ~ModelMesh() override = default;
 
     friend bool operator==(const ModelMesh& o1, const ModelMesh& o2);
     friend bool operator!=(const ModelMesh& o1, const ModelMesh& o2);
 
-    virtual void Draw() noexcept override;
-    virtual void DetectCollision() noexcept override;
-    virtual std::vector<Mesh*> FindCollisionNeighborsOf(Mesh* target) const noexcept override;
-    virtual bool IsNeighborEligibleForCollision(Mesh* neighbor) const override;
-    virtual void Move() noexcept override;
+    void Draw() override;
+    void DetectCollision() final;
+    std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
+    bool IsNeighborEligibleForCollision(const Mesh& neighbor) const final;
+    void Move() override;
 
-    virtual Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept override final;
-    virtual bool IsInside(Mesh* mesh) noexcept override final;
-    virtual Mesh* add_child(std::unique_ptr<Mesh> object) noexcept override final;
-    virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept override;
-    virtual Mesh* TransfertChildToNeighbor(Mesh* child) noexcept override;
+    Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) final;
+    bool IsInside(const Mesh& mesh) const final;
+    Mesh* add_child(std::unique_ptr<Mesh> object) final;
+    std::unique_ptr<Mesh> remove_child(Mesh* child) final;
+    Mesh* TransfertChildToNeighbor(Mesh* child) final;
 
-    virtual void UpdateChildPlacement(Mesh* object) noexcept override final;
-    virtual void AddMeshToGrid(Mesh* object) noexcept override final;
-    virtual void RemoveItemsToGrid(Mesh* object) noexcept override final;
+    void UpdateChildPlacement(Mesh* object) final;
+    void AddMeshToGrid(Mesh* object) final;
+    void RemoveItemsToGrid(Mesh* object) final;
 
-    virtual bool IsLastObstacle(Mesh* obstacle) const noexcept override final;
-    virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) noexcept override final;
-    virtual void PrepareDraw() override;
+    bool IsLastObstacle(Mesh* obstacle) const final;
+    void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) final;
+    void PrepareDraw() override;
 
-    virtual bool IsFrontPositionFilled() const noexcept override;
-    virtual bool IsRightPositionFilled() const noexcept override;
-    virtual bool IsBackPositionFilled() const noexcept override;
-    virtual bool IsLeftPositionFilled() const noexcept override;
-    virtual bool IsBottomPositionFilled() const noexcept override;
-    virtual bool IsTopPositionFilled() const noexcept override;
+    bool IsFrontPositionFilled() const final;
+    bool IsRightPositionFilled() const final;
+    bool IsBackPositionFilled() const final;
+    bool IsLeftPositionFilled() const final;
+    bool IsBottomPositionFilled() const final;
+    bool IsTopPositionFilled() const final;
 
-    virtual int id() const override { return id_; }
-    virtual glm::vec3 location() const noexcept override { return border_->location(); }
-    virtual glm::vec3 dimension() const noexcept override { return border_->dimension(); }
-    virtual float diagonal() const noexcept override final { return border_->diagonal(); }
+    int id() const final { return id_; }
+    glm::vec3 location() const final { return border_->location(); }
+    glm::vec3 dimension() const final { return border_->dimension(); }
+    float diagonal() const final { return border_->diagonal(); }
     Grid* grid() const { return grid_.get(); }
-    virtual Camera* camera() const noexcept override;
-    virtual bool IsCamera() const override { return camera_ != nullptr; }
-    virtual bool IsPlayer() const override { return false; }
-    virtual glm::vec3 movement() const noexcept override { return border_->movement(); }
+    Camera* camera() const final;
+    bool IsCamera() const final { return camera_ != nullptr; }
+    bool IsPlayer() const override { return false; }
+    glm::vec3 movement() const final { return border_->movement(); }
 
-    virtual void set_parent(Mesh* parent) override { parent_ = parent; }
-    virtual void set_movement(glm::vec3 movement) override
+    void set_parent(Mesh* parent) final { parent_ = parent; }
+    void set_movement(const glm::vec3& movement) final
     {
         border_->set_movement(movement);
         for (auto& object : objects_) {
@@ -87,7 +87,7 @@ public:
         }
     }
 
-    virtual void set_move_factor(float move_factor) noexcept override
+    void set_move_factor(float move_factor) final
     {
         border_->set_move_factor(move_factor);
         for (auto& object : objects_) {
@@ -99,25 +99,25 @@ public:
         }
     }
 
-    virtual void set_camera(std::unique_ptr<Camera> camera) override { camera_ = std::move(camera); }
-    virtual void TransferCameraToOtherMesh(Mesh* other) override;
+    void set_camera(std::unique_ptr<Camera> camera) final { camera_ = std::move(camera); }
+    void TransferCameraToOtherMesh(Mesh* other) final;
 
-    virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept override final
+    std::vector<glm::vec3> getCoordsModelMatrixComputed() const final
     {
         return border_->getCoordsModelMatrixComputed();
     }
 
-    virtual Border* border() const noexcept override final { return border_.get(); }
+    Border* border() const final { return border_.get(); }
 
-    virtual std::vector<glm::ivec3> coords() override;
-    virtual bool ready() const override { return ready_; }
-    virtual void toready() override { ready_ = true; }
+    std::vector<glm::ivec3> coords() const final;
+    bool ready() const final { return ready_; }
+    void toready() final { ready_ = true; }
 
-    virtual bool hasNoChilds() const override { return objects_.size() == 0; }
+    bool hasNoChilds() const final { return objects_.size() == 0; }
 
-    virtual std::vector<Mesh*> AllStubMeshs() noexcept override;
+    std::vector<Mesh*> AllStubMeshs() final;
 
-    virtual std::vector<Mesh*> childs() noexcept override
+    std::vector<Mesh*> childs() final
     {
         std::vector<Mesh*> ret_childs(0);
         for (auto& object : objects_) {
@@ -126,7 +126,7 @@ public:
         return ret_childs;
     }
 
-    virtual std::vector<Mesh*> descendants() const noexcept override
+    std::vector<Mesh*> descendants() const final
     {
         std::vector<Mesh*> ret_childs(0);
         for (auto& object : objects_) {
@@ -141,21 +141,21 @@ public:
         return ret_childs;
     }
 
-    virtual void InitChildsIntoGrid() override;
-    virtual void AddIntoAscendantGrid() override;
+    void InitChildsIntoGrid() override;
+    void AddIntoAscendantGrid() final;
 
-    virtual bool IsInCameraFieldOfView() const override;
+    bool IsInCameraFieldOfView() const final;
 
 protected:
     ModelMesh();
 
-    ModelMesh(ModelMesh&&) = default;
-    ModelMesh& operator=(ModelMesh&&) = default;
+    ModelMesh(ModelMesh&&) = delete;
+    ModelMesh& operator=(ModelMesh&&) = delete;
     ModelMesh(const ModelMesh&) = delete;
     ModelMesh& operator=(const ModelMesh&) = delete;
 
-    virtual void lock() override final { mutex_.lock(); }
-    virtual void unlock() override final { mutex_.unlock(); }
+    void lock() final { mutex_.lock(); }
+    void unlock() final { mutex_.unlock(); }
 
     bool IsMoved() const { return border_->IsMoved(); }
     void ResetObstacle();
@@ -173,13 +173,13 @@ protected:
 private:
     void InitCollisionEngine();
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
-    void PivotCollision() noexcept;
-    virtual bool IsInside(glm::vec3 location) const;
+    void PivotCollision();
+    bool IsInside(const glm::vec3& location) const;
 
-    bool IsNeighborReachable(Mesh* neighbor) const;
-    bool IsInDirection(Mesh* target) const;
+    bool IsNeighborReachable(const Mesh& neighbor) const;
+    bool IsInDirection(const Mesh& target) const;
 
-    void LogCollision(Mesh* obstacle, float obstacle_distance);
+    void LogCollision(const Mesh& obstacle, float obstacle_distance);
 
     int id_{0};
 

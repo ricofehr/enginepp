@@ -13,23 +13,15 @@ namespace core {
 
 /**
  *  @class Exit
- *  @brief Abstract class who defines Exit operations
+ *  @brief pure interface who defines Exit operations
  */
 class Exit {
 
 public:
-    Exit(Exit&&) = default;
-    Exit& operator=(Exit&&) = default;
-    Exit(const Exit&) = delete;
-    Exit& operator=(const Exit&) = delete;
-
     virtual ~Exit() = default;
 
-    virtual void ExitOnError() const noexcept = 0;
-    virtual void ExitOnSuccess() const noexcept = 0;
-
-protected:
-    Exit() = default;
+    virtual void ExitOnError() const = 0;
+    virtual void ExitOnSuccess() const = 0;
 };
 
 }  // namespace core

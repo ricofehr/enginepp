@@ -25,56 +25,50 @@ class FileConfigParser : public ConfigParser {
 
 public:
     FileConfigParser();
+    ~FileConfigParser() noexcept final;
 
-    FileConfigParser(FileConfigParser&&) = default;
-    FileConfigParser& operator=(FileConfigParser&&) = default;
-    FileConfigParser(const FileConfigParser&) = delete;
-    FileConfigParser& operator=(const FileConfigParser&) = delete;
-
-    virtual ~FileConfigParser() override final;
-
-    virtual void Initialize() override final;
-    virtual void Display() const override final;
-    virtual void ManageProgramParameters(int argc, char* argv[]) override final;
+    void Initialize() final;
+    void Display() const final;
+    void ManageProgramParameters(int argc, char* argv[]) final;
 
     /*
      * Config Accessors
      */
-    virtual float getWindowWidth() const override final { return getSetting<float>("width"); }
+    float getWindowWidth() const final { return getSetting<float>("width"); }
 
-    virtual float getWindowHeight() const override final { return getSetting<float>("height"); }
+    float getWindowHeight() const final { return getSetting<float>("height"); }
 
-    virtual bool isVsync() const override final { return getSetting<bool>("vsync"); }
+    bool isVsync() const final { return getSetting<bool>("vsync"); }
 
-    virtual bool isGridMode() const override final { return getSetting<bool>("grid"); }
+    bool isGridMode() const final { return getSetting<bool>("grid"); }
 
-    virtual int getExecutionDuration() const override final { return getSetting<int>("execution_time"); }
+    int getExecutionDuration() const final { return getSetting<int>("execution_time"); }
 
-    virtual int getDebugLevel() const override final { return getSetting<int>("debug"); }
+    int getDebugLevel() const final { return getSetting<int>("debug"); }
 
-    virtual int getCollisionGranularity() const override final { return getSetting<int>("granularity"); }
+    int getCollisionGranularity() const final { return getSetting<int>("granularity"); }
 
-    virtual int getClippingLevel() const override final { return getSetting<int>("clipping"); }
+    int getClippingLevel() const final { return getSetting<int>("clipping"); }
 
-    virtual int getThreadsCount() const override final
+    int getThreadsCount() const final
     {
         return getSetting<int>("workers_count") > 0 ? getSetting<int>("workers_count")
                                                     : tbb::task_scheduler_init::default_num_threads();
     }
 
-    virtual int getParallellAlgoType() const override final { return getSetting<int>("parallell"); }
+    int getParallellAlgoType() const final { return getSetting<int>("parallell"); }
 
-    virtual bool IsCollisionDebugEnabled() const override final;
-    virtual bool IsTestDebugEnabled() const override final;
-    virtual bool IsAllDebugEnabled() const override final;
-    virtual bool IsPerfDebugEnabled() const override final;
+    bool IsCollisionDebugEnabled() const final;
+    bool IsTestDebugEnabled() const final;
+    bool IsAllDebugEnabled() const final;
+    bool IsPerfDebugEnabled() const final;
 
 private:
-    inline virtual bool IsExist(std::string key) override final { return config_.exists(key); }
+    inline bool IsExist(const std::string& key) const final { return config_.exists(key); }
 
     /* Parameter Accessor */
-    template<typename T>
-    inline T getSetting(std::string key) const
+    template <typename T>
+    inline T getSetting(const std::string& key) const
     {
         T value;
         config_.lookupValue(key, value);
@@ -82,8 +76,8 @@ private:
     }
 
     /* Parameter Mutator */
-    template<typename T>
-    inline void setSetting(std::string key, libconfig::Setting::Type setting_type, T value)
+    template <typename T>
+    inline void setSetting(const std::string& key, libconfig::Setting::Type setting_type, T&& value)
     {
         libconfig::Setting& config_root = config_.getRoot();
         if (config_root.exists(key)) {
@@ -93,8 +87,8 @@ private:
     }
 
     void ParseConfigFile();
-    virtual void InitDefaultValues() override final;
-    virtual void DisplayHelp(const std::string& command_name) const override final;
+    void InitDefaultValues() final;
+    void DisplayHelp(const std::string& command_name) const final;
 
     void SetDefaultParallellValueIfEmpty();
     void SetDefaultParallellThreadCountValueIfEmpty();

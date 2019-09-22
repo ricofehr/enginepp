@@ -17,11 +17,11 @@ namespace objects {
 Universe::Universe()
 {
     using nextfloor::core::CommonServices;
-    grid_ = CommonServices::getFactory()->MakeUniverseGrid(this);
-    border_ = CommonServices::getFactory()->MakeBorder(glm::vec3(0.0f), grid_->scale());
+    grid_ = CommonServices::getFactory().MakeUniverseGrid(this);
+    border_ = CommonServices::getFactory().MakeBorder(glm::vec3(0.0f), grid_->scale());
 }
 
-void Universe::Draw() noexcept
+void Universe::Draw()
 {
     /* Universe is only ready after 10 hops */
     if (ready()) {

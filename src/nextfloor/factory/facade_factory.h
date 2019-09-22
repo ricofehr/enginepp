@@ -58,84 +58,86 @@ class FacadeFactory {
 
 public:
     FacadeFactory();
+    ~FacadeFactory() noexcept;
 
     FacadeFactory(FacadeFactory&&) = default;
     FacadeFactory& operator=(FacadeFactory&&) = default;
-    FacadeFactory(const FacadeFactory&) = default;
-    FacadeFactory& operator=(const FacadeFactory&) = default;
-
-    ~FacadeFactory();
+    FacadeFactory(const FacadeFactory&) = delete;
+    FacadeFactory& operator=(const FacadeFactory&) = delete;
 
     /* MeshFactory Part */
-    std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse();
+    std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() const;
 
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(glm::vec3 location);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(glm::vec3 location, glm::vec3 scale);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(glm::vec3 location, glm::vec3 scale);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(glm::vec3 location, glm::vec3 scale);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(glm::vec3 location, glm::vec3 scale);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(glm::vec3 location, glm::vec3 scale);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(glm::vec3 location, glm::vec3 scale);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(glm::vec3 location, glm::vec3 scale, std::string texture);
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(const glm::vec3& location) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(const glm::vec3& location,
+                                                            const glm::vec3& scale,
+                                                            const std::string& texture) const;
 
-    std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(glm::vec3 location);
+    std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(const glm::vec3& location) const;
 
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRock(glm::vec3 location);
-    std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(glm::vec3 location);
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRock(const glm::vec3& location) const;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(const glm::vec3& location) const;
 
-    std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner);
+    std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const;
 
-    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(glm::vec3 location, glm::vec3 scale);
+    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const;
 
-    std::unique_ptr<nextfloor::objects::Border> MakeBorder(glm::vec3 location, glm::vec3 scale);
+    std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const;
 
-    std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe);
-    std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room);
+    std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) const;
+    std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room) const;
     std::unique_ptr<nextfloor::objects::Grid> MakeGrid(nextfloor::objects::Mesh* owner,
-                                                       glm::ivec3 boxes_count,
-                                                       glm::vec3 box_dimension);
-    std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(glm::vec3 grid_coords,
-                                                                 nextfloor::objects::Grid* room_grid);
-    std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(glm::vec3 grid_coords,
-                                                                     nextfloor::objects::Grid* universe_grid);
-    std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(glm::vec3 grid_coords, nextfloor::objects::Grid* grid);
+                                                       const glm::ivec3& boxes_count,
+                                                       const glm::vec3& box_dimension) const;
+    std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(const glm::vec3& grid_coords,
+                                                                 nextfloor::objects::Grid* room_grid) const;
+    std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(const glm::vec3& grid_coords,
+                                                                     nextfloor::objects::Grid* universe_grid) const;
+    std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(const glm::vec3& grid_coords,
+                                                             nextfloor::objects::Grid* grid) const;
 
     /* RendererFactory Part */
-    nextfloor::objects::RendererEngine* MakeCubeRenderer(std::string texture);
-    nextfloor::renderer::Shader* MakeVertexShader(std::string shader_path, unsigned int program_id);
-    nextfloor::renderer::Shader* MakeFragmentShader(std::string shader_path, unsigned int program_id);
+    nextfloor::objects::RendererEngine* MakeCubeRenderer(const std::string& texture);
+    nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id);
+    nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id);
     nextfloor::renderer::SceneWindow* MakeSceneWindow();
     std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput();
 
     /* PhysicsFactory Part */
-    nextfloor::objects::CollisionEngine* MakeCollisionEngine();
+    nextfloor::objects::CollisionEngine* MakeCollisionEngine() const;
 
     /* GameplayFactory Part */
-    std::unique_ptr<nextfloor::gameplay::Level> MakeLevel();
+    std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const;
 
     /* HidFactory Part */
-    std::unique_ptr<nextfloor::hid::HID> MakeHid();
-    std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler();
+    std::unique_ptr<nextfloor::hid::HID> MakeHid() const;
+    std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler() const;
 
     /* CoreFacotry Part */
-    std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser();
-    std::unique_ptr<nextfloor::core::Exit> MakeExit();
-    std::unique_ptr<nextfloor::core::FileIO> MakeFileIO();
-    std::unique_ptr<nextfloor::core::Timer> MakeTimer();
-    std::unique_ptr<nextfloor::core::Log> MakeLog();
-    std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator();
-    std::unique_ptr<MeshFactory> MakeMeshFactory();
-    std::unique_ptr<HidFactory> MakeHidFactory();
-    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* window);
+    std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const;
+    std::unique_ptr<nextfloor::core::Exit> MakeExit() const;
+    std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const;
+    std::unique_ptr<nextfloor::core::Timer> MakeTimer() const;
+    std::unique_ptr<nextfloor::core::Log> MakeLog() const;
+    std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const;
+    std::unique_ptr<MeshFactory> MakeMeshFactory() const;
+    std::unique_ptr<HidFactory> MakeHidFactory() const;
+    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* window) const;
 
     /* CommandFactory Part */
-    std::unique_ptr<nextfloor::actions::Action> MakeFireAction();
-    std::unique_ptr<nextfloor::actions::Action> MakeJumpAction();
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction();
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction();
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction();
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction();
-    std::unique_ptr<nextfloor::actions::Action> MakeRunAction();
+    std::unique_ptr<nextfloor::actions::Action> MakeFireAction() const;
+    std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() const;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() const;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() const;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() const;
+    std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() const;
+    std::unique_ptr<nextfloor::actions::Action> MakeRunAction() const;
 
 private:
     std::unique_ptr<MeshFactory> mesh_factory_;

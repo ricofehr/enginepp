@@ -13,22 +13,14 @@ namespace core {
 
 /**
  *  @class RandomGenerator
- *  @brief Abstract class who defines random generator operations
+ *  @brief Pure interface who defines random generator operations
  */
 class RandomGenerator {
 
 public:
-    RandomGenerator(RandomGenerator&&) = default;
-    RandomGenerator& operator=(RandomGenerator&&) = default;
-    RandomGenerator(const RandomGenerator&) = delete;
-    RandomGenerator& operator=(const RandomGenerator&) = delete;
-
     virtual ~RandomGenerator() = default;
 
     virtual int GenerateNumber() const = 0;
-
-protected:
-    RandomGenerator() = default;
 };
 
 }  // namespace core

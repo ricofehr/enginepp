@@ -23,7 +23,7 @@ void MoveRightAction::execute(nextfloor::objects::Mesh* actor)
             movement = actor->camera()->direction();
             if (actor->IsPlayer()) {
                 using nextfloor::core::CommonServices;
-                movement *= CommonServices::getTimer()->getDeltaTimeSinceLastLoop();
+                movement *= CommonServices::getTimer().getDeltaTimeSinceLastLoop();
             }
             head = camera->head();
         }

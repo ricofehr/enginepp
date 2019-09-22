@@ -23,14 +23,8 @@ namespace objects {
 class WallBrick : public ModelMesh {
 
 public:
-    WallBrick(glm::vec3 location, glm::vec3 scale, std::string texture);
-
-    WallBrick(WallBrick&&) = default;
-    WallBrick& operator=(WallBrick&&) = default;
-    WallBrick(const WallBrick&) = delete;
-    WallBrick& operator=(const WallBrick&) = delete;
-
-    virtual ~WallBrick() override = default;
+    WallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture);
+    ~WallBrick() final = default;
 };
 
 }  // namespace objects

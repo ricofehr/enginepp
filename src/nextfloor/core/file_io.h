@@ -20,17 +20,9 @@ namespace core {
 class FileIO {
 
 public:
-    FileIO(FileIO&&) = default;
-    FileIO& operator=(FileIO&&) = default;
-    FileIO(const FileIO&) = delete;
-    FileIO& operator=(const FileIO&) = delete;
-
     virtual ~FileIO() = default;
 
-    virtual std::string ReadFile(std::string file_path) const = 0;
-
-protected:
-    FileIO() = default;
+    virtual std::string ReadFile(const std::string& file_path) const = 0;
 };
 
 }  // namespace core

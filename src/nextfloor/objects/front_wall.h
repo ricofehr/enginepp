@@ -22,16 +22,10 @@ namespace objects {
 class FrontWall : public WidthWall {
 
 public:
-    FrontWall(glm::vec3 location, glm::vec3 scale);
+    FrontWall(const glm::vec3& location, const glm::vec3& scale);
+    ~FrontWall() final = default;
 
-    FrontWall(FrontWall&&) = default;
-    FrontWall& operator=(FrontWall&&) = default;
-    FrontWall(const FrontWall&) = delete;
-    FrontWall& operator=(const FrontWall&) = delete;
-
-    virtual ~FrontWall() override = default;
-
-    virtual void PrepareDraw() noexcept override;
+    void PrepareDraw() final;
 };
 
 }  // namespace objects

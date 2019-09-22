@@ -24,14 +24,8 @@ namespace objects {
 class Rock : public ModelMesh {
 
 public:
-    Rock(glm::vec3 location, float scale);
-
-    Rock(Rock&&) = default;
-    Rock& operator=(Rock&&) = default;
-    Rock(const Rock&) = delete;
-    Rock& operator=(const Rock&) = delete;
-
-    virtual ~Rock() override = default;
+    Rock(const glm::vec3& location, float scale);
+    ~Rock() final = default;
 
 private:
     static constexpr char kTEXTURE[] = "assets/rock.jpg";

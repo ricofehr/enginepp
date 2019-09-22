@@ -18,15 +18,7 @@ class RendererEngine {
 public:
     virtual ~RendererEngine() = default;
 
-    virtual void Draw(const glm::mat4& mvp) noexcept = 0;
-
-protected:
-    RendererEngine() = default;
-
-    RendererEngine(RendererEngine&&) = default;
-    RendererEngine& operator=(RendererEngine&&) = default;
-    RendererEngine(const RendererEngine&) = default;
-    RendererEngine& operator=(const RendererEngine&) = default;
+    virtual void Draw(const glm::mat4& mvp) = 0;
 };
 
 }  // namespace objects

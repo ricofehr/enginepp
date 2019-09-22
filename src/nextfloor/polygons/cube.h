@@ -22,17 +22,11 @@ namespace polygons {
 class Cube : public MeshPolygon {
 
 public:
-    Cube(glm::vec3 location, glm::vec3 scale);
-    Cube(glm::vec3 location, float scale);
+    Cube(const glm::vec3& location, float scale);
+    Cube(const glm::vec3& location, const glm::vec3& scale);
+    ~Cube() final = default;
 
-    Cube(Cube&&) = default;
-    Cube& operator=(Cube&&) = default;
-    Cube(const Cube&) = default;
-    Cube& operator=(const Cube&) = default;
-
-    virtual ~Cube() override = default;
-
-    void Draw(nextfloor::objects::RendererEngine* renderer) noexcept override final;
+    void Draw(nextfloor::objects::RendererEngine* renderer) final;
 };
 
 }  // namespace polygons

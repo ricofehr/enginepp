@@ -167,7 +167,7 @@ void FileConfigParser::ManageProgramParameters(int argc, char* argv[])
 
         if (IsHelpParameter(parameter_name)) {
             DisplayHelp(program_name);
-            CommonServices::getExit()->ExitOnSuccess();
+            CommonServices::getExit().ExitOnSuccess();
         }
 
         if (IsDisplayConfigParameter(parameter_name)) {
@@ -192,7 +192,7 @@ void FileConfigParser::ManageProgramParameters(int argc, char* argv[])
 
     if (is_display_config) {
         Display();
-        CommonServices::getExit()->ExitOnSuccess();
+        CommonServices::getExit().ExitOnSuccess();
     }
 }
 
@@ -311,25 +311,25 @@ void FileConfigParser::EnsureCoherentWorkerSetting()
 
 bool FileConfigParser::IsCollisionDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_COLLISION;
+    return getDebugLevel() >= CommonServices::getLog().kDEBUG_COLLISION;
 }
 
 bool FileConfigParser::IsTestDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_TEST;
+    return getDebugLevel() >= CommonServices::getLog().kDEBUG_TEST;
 }
 
 bool FileConfigParser::IsAllDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_ALL;
+    return getDebugLevel() >= CommonServices::getLog().kDEBUG_ALL;
 }
 
 bool FileConfigParser::IsPerfDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_PERF;
+    return getDebugLevel() >= CommonServices::getLog().kDEBUG_PERF;
 }
 
-FileConfigParser::~FileConfigParser()
+FileConfigParser::~FileConfigParser() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

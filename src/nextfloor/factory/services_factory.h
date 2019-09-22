@@ -20,22 +20,13 @@ namespace factory {
 class ServicesFactory : public CoreFactory {
 
 public:
-    ServicesFactory() = default;
-
-    ServicesFactory(ServicesFactory&&) = default;
-    ServicesFactory& operator=(ServicesFactory&&) = default;
-    ServicesFactory(const ServicesFactory&) = delete;
-    ServicesFactory& operator=(const ServicesFactory&) = delete;
-
-    virtual ~ServicesFactory() override = default;
-
-    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() override;
-    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() override;
-    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() override;
-    virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() override;
-    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() override;
-    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() override;
-    virtual std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) override;
+    std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const final;
+    std::unique_ptr<nextfloor::core::Exit> MakeExit() const final;
+    std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const final;
+    std::unique_ptr<nextfloor::core::Timer> MakeTimer() const final;
+    std::unique_ptr<nextfloor::core::Log> MakeLog() const final;
+    std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const final;
+    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) const final;
 };
 
 }  // namespace factory

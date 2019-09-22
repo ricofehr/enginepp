@@ -12,16 +12,16 @@ namespace nextfloor {
 
 namespace objects {
 
-Room::Room(glm::vec3 location)
+Room::Room(const glm::vec3& location)
 {
     using nextfloor::core::CommonServices;
 
-    grid_ = CommonServices::getFactory()->MakeRoomGrid(this);
-    border_ = CommonServices::getFactory()->MakeBorder(location, grid_->scale());
+    grid_ = CommonServices::getFactory().MakeRoomGrid(this);
+    border_ = CommonServices::getFactory().MakeBorder(location, grid_->scale());
     AddWalls();
 }
 
-void Room::AddWalls() noexcept
+void Room::AddWalls()
 {
     AddFrontWall();
     AddRightWall();
@@ -43,52 +43,52 @@ void Room::InitChildsIntoGrid()
     }
 }
 
-void Room::AddRock(glm::vec3 relative_location) noexcept
+void Room::AddRock(const glm::vec3& relative_location)
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeRock(grid()->CalculateFirstPointInGrid() + relative_location));
+    add_child(CommonServices::getFactory().MakeRock(grid()->CalculateFirstPointInGrid() + relative_location));
 }
 
-void Room::AddFrontWall() noexcept
+void Room::AddFrontWall()
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeFrontWall(grid()->CalculateFrontSideLocation(),
-                                                          grid()->CalculateFrontSideBorderScale()));
+    add_child(CommonServices::getFactory().MakeFrontWall(grid()->CalculateFrontSideLocation(),
+                                                         grid()->CalculateFrontSideBorderScale()));
 }
 
-void Room::AddRightWall() noexcept
+void Room::AddRightWall()
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeRightWall(grid()->CalculateRightSideLocation(),
-                                                          grid()->CalculateRightSideBorderScale()));
+    add_child(CommonServices::getFactory().MakeRightWall(grid()->CalculateRightSideLocation(),
+                                                         grid()->CalculateRightSideBorderScale()));
 }
 
-void Room::AddBackWall() noexcept
+void Room::AddBackWall()
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeBackWall(grid()->CalculateBackSideLocation(),
-                                                         grid()->CalculateBackSideBorderScale()));
+    add_child(CommonServices::getFactory().MakeBackWall(grid()->CalculateBackSideLocation(),
+                                                        grid()->CalculateBackSideBorderScale()));
 }
 
-void Room::AddLeftWall() noexcept
+void Room::AddLeftWall()
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeLeftWall(grid()->CalculateLeftSideLocation(),
-                                                         grid()->CalculateLeftSideBorderScale()));
+    add_child(CommonServices::getFactory().MakeLeftWall(grid()->CalculateLeftSideLocation(),
+                                                        grid()->CalculateLeftSideBorderScale()));
 }
 
-void Room::AddFloor() noexcept
+void Room::AddFloor()
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeFloor(grid()->CalculateBottomSideLocation(),
-                                                      grid()->CalculateBottomSideBorderScale()));
+    add_child(CommonServices::getFactory().MakeFloor(grid()->CalculateBottomSideLocation(),
+                                                     grid()->CalculateBottomSideBorderScale()));
 }
 
-void Room::AddRoof() noexcept
+void Room::AddRoof()
 {
     using nextfloor::core::CommonServices;
-    add_child(CommonServices::getFactory()->MakeRoof(grid()->CalculateTopSideLocation(),
-                                                     grid()->CalculateTopSideBorderScale()));
+    add_child(
+      CommonServices::getFactory().MakeRoof(grid()->CalculateTopSideLocation(), grid()->CalculateTopSideBorderScale()));
 }
 
 }  // namespace objects

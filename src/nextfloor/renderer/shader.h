@@ -29,14 +29,6 @@ public:
     virtual void CheckProgram() = 0;
 
     virtual unsigned shader_id() = 0;
-
-protected:
-    Shader() = default;
-
-    Shader(Shader&&) = default;
-    Shader& operator=(Shader&&) = default;
-    Shader(const Shader&) = default;
-    Shader& operator=(const Shader&) = default;
 };
 
 }  // namespace renderer

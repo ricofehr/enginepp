@@ -21,16 +21,10 @@ namespace renderer {
 class FragmentGlShader : public GlShader {
 
 public:
-    FragmentGlShader(std::string shader_path, GLuint program_id) : GlShader(shader_path, program_id){};
+    FragmentGlShader(const std::string& shader_path, GLuint program_id) : GlShader(shader_path, program_id){};
+    ~FragmentGlShader() final = default;
 
-    FragmentGlShader(FragmentGlShader&&) = default;
-    FragmentGlShader& operator=(FragmentGlShader&&) = default;
-    FragmentGlShader(const FragmentGlShader&) = default;
-    FragmentGlShader& operator=(const FragmentGlShader&) = default;
-
-    virtual ~FragmentGlShader() override = default;
-
-    virtual void LoadShader() override final;
+    void LoadShader() final;
 };
 
 }  // namespace renderer

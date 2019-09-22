@@ -25,19 +25,13 @@ class TerminalLog : public Log {
 
 public:
     TerminalLog();
+    ~TerminalLog() noexcept final;
 
-    TerminalLog(TerminalLog&&) = default;
-    TerminalLog& operator=(TerminalLog&&) = default;
-    TerminalLog(const TerminalLog&) = delete;
-    TerminalLog& operator=(const TerminalLog&) = delete;
+    void Write(std::ostringstream&& log_str) const final;
+    void Write(const std::string& log_str) const final;
 
-    virtual ~TerminalLog() override final;
-
-    virtual void Write(std::ostringstream&& log_str) const override final;
-    virtual void Write(const std::string& log_str) const override final;
-
-    virtual void WriteLine(std::ostringstream&& log_line) const override final;
-    virtual void WriteLine(const std::string& log_line) const override final;
+    void WriteLine(std::ostringstream&& log_line) const final;
+    void WriteLine(const std::string& log_line) const final;
 };
 
 }  // namespace core

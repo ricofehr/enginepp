@@ -26,33 +26,25 @@ public:
 
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const = 0;
     virtual void ComputeNewLocation() = 0;
-    virtual bool IsObstacleInCollisionAfterPartedMove(Border* obstacle, float move_part) = 0;
+    virtual bool IsObstacleInCollisionAfterPartedMove(const Border& obstacle, float move_part) const = 0;
 
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 dimension() const = 0;
     virtual glm::vec3 movement() const = 0;
     virtual float move_factor() const = 0;
-    virtual bool IsMoved() const noexcept = 0;
-    virtual float diagonal() const noexcept = 0;
+    virtual bool IsMoved() const = 0;
+    virtual float diagonal() const = 0;
 
-    virtual void set_movement(glm::vec3 movement) const = 0;
-    virtual void set_move_factor(float move_factor) const = 0;
+    virtual void set_movement(const glm::vec3& movement) = 0;
+    virtual void set_move_factor(float move_factor) = 0;
 
-    virtual float CalculateWidth() = 0;
-    virtual float CalculateHeight() = 0;
-    virtual float CalculateDepth() = 0;
-    virtual glm::vec3 RetrieveFirstPointAfterPartedMove(float move_part) = 0;
+    virtual float CalculateWidth() const = 0;
+    virtual float CalculateHeight() const = 0;
+    virtual float CalculateDepth() const = 0;
+    virtual glm::vec3 RetrieveFirstPointAfterPartedMove(float move_part) const = 0;
 
-    virtual glm::vec3 getFirstPoint() = 0;
-    virtual glm::vec3 getLastPoint() = 0;
-
-protected:
-    Border() = default;
-
-    Border(Border&&) = default;
-    Border& operator=(Border&&) = default;
-    Border(const Border&) = delete;
-    Border& operator=(const Border&) = delete;
+    virtual glm::vec3 getFirstPoint() const = 0;
+    virtual glm::vec3 getLastPoint() const = 0;
 };
 
 }  // namespace objects

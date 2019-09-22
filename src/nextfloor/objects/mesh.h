@@ -31,54 +31,54 @@ public:
 
     virtual void Draw() = 0;
     virtual void DetectCollision() = 0;
-    virtual std::vector<Mesh*> FindCollisionNeighborsOf(Mesh* target) const noexcept = 0;
-    virtual bool IsNeighborEligibleForCollision(Mesh* neighbor) const = 0;
+    virtual std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const = 0;
+    virtual bool IsNeighborEligibleForCollision(const Mesh& neighbor) const = 0;
     virtual void Move() = 0;
 
-    virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const noexcept = 0;
+    virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const = 0;
 
-    virtual Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) noexcept = 0;
-    virtual bool IsInside(Mesh* mesh) noexcept = 0;
-    virtual Mesh* add_child(std::unique_ptr<Mesh> child) noexcept = 0;
-    virtual std::unique_ptr<Mesh> remove_child(Mesh* child) noexcept = 0;
-    virtual Mesh* TransfertChildToNeighbor(Mesh* child) noexcept = 0;
-    virtual void UpdateChildPlacement(Mesh* object) noexcept = 0;
-    virtual void AddMeshToGrid(Mesh* object) noexcept = 0;
-    virtual void RemoveItemsToGrid(Mesh* object) noexcept = 0;
-    virtual std::vector<Mesh*> childs() noexcept = 0;
+    virtual Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) = 0;
+    virtual bool IsInside(const Mesh& mesh) const = 0;
+    virtual Mesh* add_child(std::unique_ptr<Mesh> child) = 0;
+    virtual std::unique_ptr<Mesh> remove_child(Mesh* child) = 0;
+    virtual Mesh* TransfertChildToNeighbor(Mesh* child) = 0;
+    virtual void UpdateChildPlacement(Mesh* object) = 0;
+    virtual void AddMeshToGrid(Mesh* object) = 0;
+    virtual void RemoveItemsToGrid(Mesh* object) = 0;
+    virtual std::vector<Mesh*> childs() = 0;
     virtual bool hasNoChilds() const = 0;
-    virtual std::vector<Mesh*> AllStubMeshs() noexcept = 0;
-    virtual std::vector<Mesh*> descendants() const noexcept = 0;
-    virtual std::vector<glm::ivec3> coords() = 0;
+    virtual std::vector<Mesh*> AllStubMeshs() = 0;
+    virtual std::vector<Mesh*> descendants() const = 0;
+    virtual std::vector<glm::ivec3> coords() const = 0;
 
-    virtual bool IsLastObstacle(Mesh* obstacle) const noexcept = 0;
-    virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) noexcept = 0;
+    virtual bool IsLastObstacle(Mesh* obstacle) const = 0;
+    virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) = 0;
 
     virtual void InitChildsIntoGrid() = 0;
     virtual void AddIntoAscendantGrid() = 0;
 
     virtual void PrepareDraw() = 0;
 
-    virtual bool IsFrontPositionFilled() const noexcept = 0;
-    virtual bool IsRightPositionFilled() const noexcept = 0;
-    virtual bool IsBackPositionFilled() const noexcept = 0;
-    virtual bool IsLeftPositionFilled() const noexcept = 0;
-    virtual bool IsBottomPositionFilled() const noexcept = 0;
-    virtual bool IsTopPositionFilled() const noexcept = 0;
+    virtual bool IsFrontPositionFilled() const = 0;
+    virtual bool IsRightPositionFilled() const = 0;
+    virtual bool IsBackPositionFilled() const = 0;
+    virtual bool IsLeftPositionFilled() const = 0;
+    virtual bool IsBottomPositionFilled() const = 0;
+    virtual bool IsTopPositionFilled() const = 0;
 
     virtual int id() const = 0;
-    virtual glm::vec3 location() const noexcept = 0;
-    virtual glm::vec3 dimension() const noexcept = 0;
-    virtual glm::vec3 movement() const noexcept = 0;
-    virtual float diagonal() const noexcept = 0;
-    virtual Border* border() const noexcept = 0;
-    virtual Camera* camera() const noexcept = 0;
+    virtual glm::vec3 location() const = 0;
+    virtual glm::vec3 dimension() const = 0;
+    virtual glm::vec3 movement() const = 0;
+    virtual float diagonal() const = 0;
+    virtual Border* border() const = 0;
+    virtual Camera* camera() const = 0;
     virtual bool IsCamera() const = 0;
     virtual bool IsPlayer() const = 0;
 
     virtual void set_parent(Mesh* parent) = 0;
-    virtual void set_movement(glm::vec3 movement) = 0;
-    virtual void set_move_factor(float move_factor) noexcept = 0;
+    virtual void set_movement(const glm::vec3& movement) = 0;
+    virtual void set_move_factor(float move_factor) = 0;
     virtual void set_camera(std::unique_ptr<Camera> camera) = 0;
     virtual void TransferCameraToOtherMesh(Mesh* other) = 0;
 
@@ -89,14 +89,6 @@ public:
     virtual void toready() = 0;
 
     virtual bool IsInCameraFieldOfView() const = 0;
-
-protected:
-    Mesh() = default;
-
-    Mesh(Mesh&&) = default;
-    Mesh& operator=(Mesh&&) = default;
-    Mesh(const Mesh&) = delete;
-    Mesh& operator=(const Mesh&) = delete;
 };
 
 }  // namespace objects

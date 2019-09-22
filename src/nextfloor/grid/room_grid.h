@@ -23,16 +23,10 @@ class RoomGrid : public WiredGrid {
 
 public:
     RoomGrid(nextfloor::objects::Mesh* owner);
-
-    RoomGrid(RoomGrid&&) = default;
-    RoomGrid& operator=(RoomGrid&&) = default;
-    RoomGrid(const RoomGrid&) = delete;
-    RoomGrid& operator=(const RoomGrid&) = delete;
-
-    virtual ~RoomGrid() override;
+    ~RoomGrid() noexcept final;
 
 protected:
-    virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(glm::ivec3 grid_coords) override final;
+    std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords) final;
 
 private:
     /*

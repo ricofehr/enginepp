@@ -23,15 +23,9 @@ class Universe : public ModelMesh {
 
 public:
     Universe();
+    ~Universe() final = default;
 
-    Universe(Universe&&) = default;
-    Universe& operator=(Universe&&) = default;
-    Universe(const Universe&) = delete;
-    Universe& operator=(const Universe&) = delete;
-
-    virtual ~Universe() override = default;
-
-    void Draw() noexcept override final;
+    void Draw() final;
 
 private:
     /** filtering only rooms with display state */

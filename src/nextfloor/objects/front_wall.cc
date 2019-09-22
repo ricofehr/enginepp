@@ -10,9 +10,9 @@ namespace nextfloor {
 
 namespace objects {
 
-FrontWall::FrontWall(glm::vec3 location, glm::vec3 scale) : WidthWall(location, scale) {}
+FrontWall::FrontWall(const glm::vec3& location, const glm::vec3& scale) : WidthWall(location, scale) {}
 
-void FrontWall::PrepareDraw() noexcept
+void FrontWall::PrepareDraw()
 {
     if (parent_->IsFrontPositionFilled()) {
         AddDoor();

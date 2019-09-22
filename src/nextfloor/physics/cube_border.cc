@@ -56,18 +56,20 @@ static const std::vector<glm::vec3> sDefaultCoords = {
 }  // anonymous namespace
 
 
-CubeBorder::CubeBorder(glm::vec3 location, glm::vec3 scale) : CubeBorder(location, scale, sDefaultCoords) {}
+CubeBorder::CubeBorder(const glm::vec3& location, const glm::vec3& scale) : CubeBorder(location, scale, sDefaultCoords)
+{}
 
-CubeBorder::CubeBorder(glm::vec3 location, float scale) : CubeBorder(location, glm::vec3(scale), sDefaultCoords) {}
+CubeBorder::CubeBorder(const glm::vec3& location, float scale) : CubeBorder(location, glm::vec3(scale), sDefaultCoords)
+{}
 
-CubeBorder::CubeBorder(glm::vec3 location, float scale, std::vector<glm::vec3> coords)
+CubeBorder::CubeBorder(const glm::vec3& location, float scale, std::vector<glm::vec3> coords)
       : CubeBorder(location, glm::vec3(scale), coords)
 {}
 
-CubeBorder::CubeBorder(glm::vec3 location, glm::vec3 scale, std::vector<glm::vec3> coords)
+CubeBorder::CubeBorder(const glm::vec3& location, const glm::vec3& scale, std::vector<glm::vec3> coords)
 {
     using nextfloor::core::CommonServices;
-    cube_ = CommonServices::getFactory()->MakeCube(location, glm::vec3(scale));
+    cube_ = CommonServices::getFactory().MakeCube(location, glm::vec3(scale));
     coords_ = coords;
     ComputesModelMatrixCoords();
 }
@@ -90,22 +92,22 @@ void CubeBorder::ComputesModelMatrixCoords()
     });
 }
 
-float CubeBorder::CalculateWidth()
+float CubeBorder::CalculateWidth() const
 {
     return coords_model_matrix_computed_.at(1).x - getFirstPoint().x;
 }
 
-float CubeBorder::CalculateHeight()
+float CubeBorder::CalculateHeight() const
 {
     return coords_model_matrix_computed_.at(3).y - getFirstPoint().y;
 }
 
-float CubeBorder::CalculateDepth()
+float CubeBorder::CalculateDepth() const
 {
     return coords_model_matrix_computed_.at(4).z - getFirstPoint().z;
 }
 
-glm::vec3 CubeBorder::getFirstPoint()
+glm::vec3 CubeBorder::getFirstPoint() const
 {
     auto first_point = coords_model_matrix_computed_.at(0);
     auto last_point = coords_model_matrix_computed_.at(6);
@@ -135,7 +137,7 @@ glm::vec3 CubeBorder::getFirstPoint()
     return first_point;
 }
 
-glm::vec3 CubeBorder::getLastPoint()
+glm::vec3 CubeBorder::getLastPoint() const
 {
     auto first_point = coords_model_matrix_computed_.at(0);
     auto last_point = coords_model_matrix_computed_.at(6);
@@ -165,7 +167,7 @@ glm::vec3 CubeBorder::getLastPoint()
     return last_point;
 }
 
-bool CubeBorder::IsObstacleInCollisionAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part)
+bool CubeBorder::IsObstacleInCollisionAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
 {
     if (!IsObstacleInSameWidthAfterPartedMove(obstacle, move_part)) {
         return false;
@@ -182,12 +184,12 @@ bool CubeBorder::IsObstacleInCollisionAfterPartedMove(nextfloor::objects::Border
     return true;
 }
 
-bool CubeBorder::IsObstacleInSameWidthAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part)
+bool CubeBorder::IsObstacleInSameWidthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
 {
     auto current_x_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).x;
-    auto obstacle_x_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).x;
+    auto obstacle_x_afer_parted_move = obstacle.RetrieveFirstPointAfterPartedMove(move_part).x;
 
-    if (current_x_afer_parted_move <= obstacle_x_afer_parted_move + obstacle->CalculateWidth()
+    if (current_x_afer_parted_move <= obstacle_x_afer_parted_move + obstacle.CalculateWidth()
         && obstacle_x_afer_parted_move <= current_x_afer_parted_move + CalculateWidth()) {
         return true;
     }
@@ -195,12 +197,12 @@ bool CubeBorder::IsObstacleInSameWidthAfterPartedMove(nextfloor::objects::Border
     return false;
 }
 
-bool CubeBorder::IsObstacleInSameHeightAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part)
+bool CubeBorder::IsObstacleInSameHeightAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
 {
     auto current_y_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).y;
-    auto obstacle_y_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).y;
+    auto obstacle_y_afer_parted_move = obstacle.RetrieveFirstPointAfterPartedMove(move_part).y;
 
-    if (current_y_afer_parted_move >= obstacle_y_afer_parted_move + obstacle->CalculateHeight()
+    if (current_y_afer_parted_move >= obstacle_y_afer_parted_move + obstacle.CalculateHeight()
         && obstacle_y_afer_parted_move >= current_y_afer_parted_move + CalculateHeight()) {
         return true;
     }
@@ -208,12 +210,12 @@ bool CubeBorder::IsObstacleInSameHeightAfterPartedMove(nextfloor::objects::Borde
     return false;
 }
 
-bool CubeBorder::IsObstacleInSameDepthAfterPartedMove(nextfloor::objects::Border* obstacle, float move_part)
+bool CubeBorder::IsObstacleInSameDepthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
 {
     auto current_z_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).z;
-    auto obstacle_z_afer_parted_move = obstacle->RetrieveFirstPointAfterPartedMove(move_part).z;
+    auto obstacle_z_afer_parted_move = obstacle.RetrieveFirstPointAfterPartedMove(move_part).z;
 
-    if (current_z_afer_parted_move >= obstacle_z_afer_parted_move + obstacle->CalculateDepth()
+    if (current_z_afer_parted_move >= obstacle_z_afer_parted_move + obstacle.CalculateDepth()
         && obstacle_z_afer_parted_move >= current_z_afer_parted_move + CalculateDepth()) {
         return true;
     }
@@ -221,7 +223,7 @@ bool CubeBorder::IsObstacleInSameDepthAfterPartedMove(nextfloor::objects::Border
     return false;
 }
 
-glm::vec3 CubeBorder::RetrieveFirstPointAfterPartedMove(float move_part)
+glm::vec3 CubeBorder::RetrieveFirstPointAfterPartedMove(float move_part) const
 {
     return getFirstPoint() + move_part * glm::vec3(movement().x, movement().y, movement().z);
 }

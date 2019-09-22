@@ -22,54 +22,45 @@ namespace factory {
 class GameFactory : public MeshFactory {
 
 public:
-    GameFactory();
+    std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(const glm::vec3& location) const final;
 
-    GameFactory(GameFactory&&) = default;
-    GameFactory& operator=(GameFactory&&) = default;
-    GameFactory(const GameFactory&) = default;
-    GameFactory& operator=(const GameFactory&) = default;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(const glm::vec3& location, const glm::vec3& scale) const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(const glm::vec3& location, const glm::vec3& scale) const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(const glm::vec3& location,
+                                                            const glm::vec3& scale,
+                                                            const std::string& texture) const final;
 
-    virtual ~GameFactory() override;
+    std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(const glm::vec3& location) const final;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(glm::vec3 location) override;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeRock(const glm::vec3& location) const final;
+    std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(const glm::vec3& location) const final;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(glm::vec3 location, glm::vec3 scale) override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(glm::vec3 location, glm::vec3 scale) override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(glm::vec3 location, glm::vec3 scale) override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(glm::vec3 location, glm::vec3 scale) override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(glm::vec3 location, glm::vec3 scale) override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(glm::vec3 location, glm::vec3 scale) override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(glm::vec3 location,
-                                                                    glm::vec3 scale,
-                                                                    std::string texture) override;
+    std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const final;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(glm::vec3 location) override;
+    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const final;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeRock(glm::vec3 location) override;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(glm::vec3 location) override;
+    std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const final;
 
-    virtual std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) override;
+    std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) const final;
+    std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room) const final;
+    std::unique_ptr<nextfloor::objects::Grid> MakeGrid(nextfloor::objects::Mesh* owner,
+                                                       const glm::ivec3& boxes_count,
+                                                       const glm::vec3& box_dimension) const final;
+    std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(const glm::vec3& grid_coords,
+                                                                 nextfloor::objects::Grid* room_grid) const final;
+    std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(const glm::vec3& coords,
+                                                                     nextfloor::objects::Grid* grid) const final;
+    std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(const glm::vec3& grid_coords,
+                                                             nextfloor::objects::Grid* grid) const final;
 
-    virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(glm::vec3 location, glm::vec3 scale) override;
+    nextfloor::objects::CollisionEngine* MakeCollisionEngine() const final;
 
-    virtual std::unique_ptr<nextfloor::objects::Border> MakeBorder(glm::vec3 location, glm::vec3 scale) override;
-
-    virtual std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) override;
-    virtual std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room) override;
-    virtual std::unique_ptr<nextfloor::objects::Grid> MakeGrid(nextfloor::objects::Mesh* owner,
-                                                               glm::ivec3 boxes_count,
-                                                               glm::vec3 box_dimension) override;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(glm::vec3 grid_coords,
-                                                                         nextfloor::objects::Grid* room_grid) override;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(glm::vec3 coords,
-                                                                             nextfloor::objects::Grid* grid) override;
-    virtual std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(glm::vec3 grid_coords,
-                                                                     nextfloor::objects::Grid* grid) override;
-
-    virtual nextfloor::objects::CollisionEngine* MakeCollisionEngine() override;
-
-    virtual std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() override;
+    std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const override;
 };
 
 }  // namespace factory

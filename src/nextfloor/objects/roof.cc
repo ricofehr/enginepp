@@ -12,16 +12,16 @@ namespace nextfloor {
 
 namespace objects {
 
-Roof::Roof(glm::vec3 location, glm::vec3 scale)
+Roof::Roof(const glm::vec3& location, const glm::vec3& scale)
 {
     using nextfloor::core::CommonServices;
-    border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(scale));
+    border_ = CommonServices::getFactory().MakeBorder(location, glm::vec3(scale));
     brick_dimension_ = glm::vec3(kBRICK_WIDTH, kBRICK_HEIGHT, kBRICK_DEPTH);
     bricks_count_ = border_->dimension() / brick_dimension_;
     AddBricks(location - scale, location + scale);
 }
 
-void Roof::AddDoor() noexcept
+void Roof::AddDoor()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
@@ -35,11 +35,10 @@ void Roof::AddDoor() noexcept
 }
 
 
-void Roof::AddWindow() noexcept {}
+void Roof::AddWindow() {}
 
-void Roof::PrepareDraw() noexcept
+void Roof::PrepareDraw()
 {
-    auto room = parent_;
     if (parent_->IsTopPositionFilled()) {
         AddDoor();
     }

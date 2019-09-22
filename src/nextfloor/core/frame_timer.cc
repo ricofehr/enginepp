@@ -37,14 +37,14 @@ FrameTimer::FrameTimer()
     sInstanciated = true;
 }
 
-void FrameTimer::Loop() noexcept
+void FrameTimer::Loop()
 {
     ComputeTimers();
     ComputeFps();
     CheckEndProgram();
 }
 
-void FrameTimer::ComputeTimers() noexcept
+void FrameTimer::ComputeTimers()
 {
     static double sLastTime = GetNow();
 
@@ -54,7 +54,7 @@ void FrameTimer::ComputeTimers() noexcept
     totaltime_since_beginning_ += deltatime_since_lastloop_;
 }
 
-void FrameTimer::ComputeFps() noexcept
+void FrameTimer::ComputeFps()
 {
     static int sLastSecondTime = static_cast<int>(totaltime_since_beginning_);
     static int sNbFrames = 0;
@@ -71,15 +71,15 @@ void FrameTimer::ComputeFps() noexcept
     }
 }
 
-void FrameTimer::CheckEndProgram() noexcept
+void FrameTimer::CheckEndProgram()
 {
-    int end_time = CommonServices::getConfig()->getExecutionDuration();
+    int end_time = CommonServices::getConfig().getExecutionDuration();
     if (end_time && totaltime_since_beginning_ >= end_time) {
-        CommonServices::getExit()->ExitOnSuccess();
+        CommonServices::getExit().ExitOnSuccess();
     }
 }
 
-FrameTimer::~FrameTimer()
+FrameTimer::~FrameTimer() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

@@ -27,7 +27,7 @@ StdFileIO::StdFileIO()
     sInstanciated = true;
 }
 
-std::string StdFileIO::ReadFile(std::string file_path) const
+std::string StdFileIO::ReadFile(const std::string& file_path) const
 {
     std::string file_str;
     std::ifstream file_stream(file_path, std::ios::in);
@@ -45,15 +45,15 @@ std::string StdFileIO::ReadFile(std::string file_path) const
     return file_str;
 }
 
-void StdFileIO::HandleErrorOnReadFile(std::string file_path) const
+void StdFileIO::HandleErrorOnReadFile(const std::string& file_path) const
 {
     std::ostringstream message;
     message << "Unable to open " << file_path;
-    CommonServices::getLog()->WriteLine(std::move(message));
-    CommonServices::getExit()->ExitOnError();
+    CommonServices::getLog().WriteLine(std::move(message));
+    CommonServices::getExit().ExitOnError();
 }
 
-StdFileIO::~StdFileIO()
+StdFileIO::~StdFileIO() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

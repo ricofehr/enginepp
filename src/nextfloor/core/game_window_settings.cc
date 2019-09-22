@@ -15,27 +15,27 @@ GameWindowSettings::GameWindowSettings(nextfloor::renderer::SceneWindow* window)
     game_window_ = window;
 }
 
-float GameWindowSettings::getWidth()
+float GameWindowSettings::getWidth() const
 {
     return game_window_->getWidth();
 }
 
-float GameWindowSettings::getHeight()
+float GameWindowSettings::getHeight() const
 {
     return game_window_->getHeight();
 }
 
-float GameWindowSettings::getFpsFixMoveFactor()
+float GameWindowSettings::getFpsFixMoveFactor() const
 {
     return game_window_->getFpsFixMoveFactor();
 }
 
-unsigned int GameWindowSettings::getMatrixId()
+unsigned int GameWindowSettings::getMatrixId() const
 {
     return game_window_->getMatrixId();
 }
 
-unsigned int GameWindowSettings::getProgramId()
+unsigned int GameWindowSettings::getProgramId() const
 {
     return game_window_->getProgramId();
 }

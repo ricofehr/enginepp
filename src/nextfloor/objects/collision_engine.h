@@ -30,14 +30,6 @@ public:
      *  @return parted (as fraction of setted move) distance between the 2 borders
      */
     virtual float ComputeCollision(Mesh* target, Mesh* obstacle) = 0;
-
-protected:
-    CollisionEngine() = default;
-
-    CollisionEngine(CollisionEngine&&) = default;
-    CollisionEngine& operator=(CollisionEngine&&) = default;
-    CollisionEngine(const CollisionEngine&) = delete;
-    CollisionEngine& operator=(const CollisionEngine&) = delete;
 };
 
 }  // namespace objects

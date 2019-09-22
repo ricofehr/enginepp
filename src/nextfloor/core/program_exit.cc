@@ -25,17 +25,17 @@ ProgramExit::ProgramExit()
     sInstanciated = true;
 }
 
-void ProgramExit::ExitOnError() const noexcept
+void ProgramExit::ExitOnError() const
 {
     exit(1);
 }
 
-void ProgramExit::ExitOnSuccess() const noexcept
+void ProgramExit::ExitOnSuccess() const
 {
     exit(0);
 }
 
-ProgramExit::~ProgramExit()
+ProgramExit::~ProgramExit() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

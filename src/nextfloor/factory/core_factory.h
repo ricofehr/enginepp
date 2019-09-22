@@ -32,21 +32,14 @@ class CoreFactory {
 public:
     virtual ~CoreFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() = 0;
-    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() = 0;
-    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() = 0;
-    virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() = 0;
-    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() = 0;
-    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() = 0;
-    virtual std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) = 0;
-
-protected:
-    CoreFactory() = default;
-
-    CoreFactory(CoreFactory&&) = default;
-    CoreFactory& operator=(CoreFactory&&) = default;
-    CoreFactory(const CoreFactory&) = delete;
-    CoreFactory& operator=(const CoreFactory&) = delete;
+    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const = 0;
+    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() const = 0;
+    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const = 0;
+    virtual std::unique_ptr<nextfloor::core::Timer> MakeTimer() const = 0;
+    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() const = 0;
+    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const = 0;
+    virtual std::unique_ptr<nextfloor::core::WindowSettings>
+      MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) const = 0;
 };
 
 }  // namespace factory

@@ -22,7 +22,7 @@ SerialNearerCollisionEngine::SerialNearerCollisionEngine()
 void SerialNearerCollisionEngine::InitCollisionEngine()
 {
     using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
+    granularity_ = CommonServices::getConfig().getCollisionGranularity();
 }
 
 float SerialNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
@@ -32,7 +32,7 @@ float SerialNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* ta
 
     for (float fact = 1.0f; fact <= granularity_; fact += 1.0f) {
         float parted_move = fact / granularity_;
-        if (target_border->IsObstacleInCollisionAfterPartedMove(obstacle_border, parted_move)) {
+        if (target_border->IsObstacleInCollisionAfterPartedMove(*obstacle_border, parted_move)) {
             return (fact - 1.0f) / granularity_;
         }
     }

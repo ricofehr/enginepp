@@ -10,8 +10,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-
-GlRendererEngine::GlRendererEngine(std::string texture)
+GlRendererEngine::GlRendererEngine(const std::string& texture)
 {
     texture_ = texture;
 }

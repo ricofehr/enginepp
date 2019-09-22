@@ -24,13 +24,12 @@ class GameLoop {
 
 public:
     GameLoop();
+    ~GameLoop() noexcept;
 
     GameLoop(GameLoop&&) = default;
     GameLoop& operator=(GameLoop&&) = default;
     GameLoop(const GameLoop&) = delete;
     GameLoop& operator=(const GameLoop&) = delete;
-
-    ~GameLoop();
 
     void Loop();
 

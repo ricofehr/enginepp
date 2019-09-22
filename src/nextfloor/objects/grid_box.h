@@ -22,33 +22,25 @@ class GridBox {
 public:
     virtual ~GridBox() = default;
 
-    virtual void add(Mesh* object) noexcept = 0;
-    virtual void remove(Mesh* object) noexcept = 0;
-    virtual void clear() noexcept = 0;
+    virtual void add(Mesh* object) = 0;
+    virtual void remove(Mesh* object) = 0;
+    virtual void clear() = 0;
 
-    virtual bool IsInto(Mesh* object) const noexcept = 0;
-    virtual bool IsEmpty() const noexcept = 0;
-    virtual bool IsFilled() const noexcept = 0;
+    virtual bool IsInto(const Mesh& object) const = 0;
+    virtual bool IsEmpty() const = 0;
+    virtual bool IsFilled() const = 0;
 
-    virtual int size() const noexcept = 0;
-    virtual glm::vec3 coords() const noexcept = 0;
-    virtual std::vector<nextfloor::objects::Mesh*> other_occupants(nextfloor::objects::Mesh* object) noexcept = 0;
-    virtual std::vector<nextfloor::objects::Mesh*> occupants() noexcept = 0;
+    virtual int size() const = 0;
+    virtual glm::vec3 coords() const = 0;
+    virtual std::vector<nextfloor::objects::Mesh*> other_occupants(const nextfloor::objects::Mesh& object) const = 0;
+    virtual std::vector<nextfloor::objects::Mesh*> occupants() const = 0;
 
-    virtual bool IsFrontPositionFilled() const noexcept = 0;
-    virtual bool IsRightPositionFilled() const noexcept = 0;
-    virtual bool IsLeftPositionFilled() const noexcept = 0;
-    virtual bool IsBackPositionFilled() const noexcept = 0;
-    virtual bool IsBottomPositionFilled() const noexcept = 0;
-    virtual bool IsTopPositionFilled() const noexcept = 0;
-
-protected:
-    GridBox() = default;
-
-    GridBox(GridBox&&) = default;
-    GridBox& operator=(GridBox&&) = default;
-    GridBox(const GridBox&) = delete;
-    GridBox& operator=(const GridBox&) = delete;
+    virtual bool IsFrontPositionFilled() const = 0;
+    virtual bool IsRightPositionFilled() const = 0;
+    virtual bool IsLeftPositionFilled() const = 0;
+    virtual bool IsBackPositionFilled() const = 0;
+    virtual bool IsBottomPositionFilled() const = 0;
+    virtual bool IsTopPositionFilled() const = 0;
 };
 
 }  // namespace objects

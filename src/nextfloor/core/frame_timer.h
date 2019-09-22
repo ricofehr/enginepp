@@ -24,32 +24,23 @@ class FrameTimer : public Timer {
 
 public:
     FrameTimer();
+    ~FrameTimer() noexcept final;
 
-    FrameTimer(FrameTimer&&) = default;
-    FrameTimer& operator=(FrameTimer&&) = default;
-    FrameTimer(const FrameTimer&) = delete;
-    FrameTimer& operator=(const FrameTimer&) = delete;
-
-    virtual ~FrameTimer() override final;
-
-    virtual void Loop() noexcept override final;
+    void Loop() final;
 
     /**
      *  Accessors
      */
-    inline virtual float getDeltaTimeSinceLastLoop() const override final
-    {
-        return static_cast<float>(deltatime_since_lastloop_);
-    }
+    inline float getDeltaTimeSinceLastLoop() const final { return static_cast<float>(deltatime_since_lastloop_); }
 
-    virtual int getLoopCountBySecond() const override final { return current_fps_; }
+    int getLoopCountBySecond() const final { return current_fps_; }
 
-    bool IsNewSecondElapsed() const override final { return is_newsecond_elapsed_; }
+    bool IsNewSecondElapsed() const final { return is_newsecond_elapsed_; }
 
 private:
-    virtual void ComputeTimers() noexcept override final;
-    void ComputeFps() noexcept;
-    void CheckEndProgram() noexcept;
+    void ComputeTimers() final;
+    void ComputeFps();
+    void CheckEndProgram();
 
     static double deltatime_since_lastloop_;
     static double totaltime_since_beginning_;

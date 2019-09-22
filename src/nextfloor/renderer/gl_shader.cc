@@ -15,7 +15,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-GlShader::GlShader(std::string shader_filepath, GLuint program_id)
+GlShader::GlShader(const std::string& shader_filepath, GLuint program_id)
 {
     shader_filepath_ = shader_filepath;
     program_id_ = program_id;
@@ -46,8 +46,8 @@ void GlShader::CheckShader()
         glGetShaderInfoLog(shader_id_, info_log_length, nullptr, &shader_error_message[0]);
 
         using nextfloor::core::CommonServices;
-        CommonServices::getLog()->WriteLine(std::string(shader_error_message.begin(), shader_error_message.end()));
-        CommonServices::getExit()->ExitOnError();
+        CommonServices::getLog().WriteLine(std::string(shader_error_message.begin(), shader_error_message.end()));
+        CommonServices::getExit().ExitOnError();
     }
 }
 
@@ -65,8 +65,8 @@ void GlShader::CheckProgram()
         glGetProgramInfoLog(program_id_, info_log_length, nullptr, &program_error_message[0]);
 
         using nextfloor::core::CommonServices;
-        CommonServices::getLog()->WriteLine(std::string(program_error_message.begin(), program_error_message.end()));
-        CommonServices::getExit()->ExitOnError();
+        CommonServices::getLog().WriteLine(std::string(program_error_message.begin(), program_error_message.end()));
+        CommonServices::getExit().ExitOnError();
     }
 }
 

@@ -21,13 +21,13 @@ RoomGrid::RoomGrid(nextfloor::objects::Mesh* owner)
     InitBoxes();
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> RoomGrid::AllocateGridBox(glm::ivec3 grid_coords)
+std::unique_ptr<nextfloor::objects::GridBox> RoomGrid::AllocateGridBox(const glm::ivec3& grid_coords)
 {
     using nextfloor::core::CommonServices;
-    return CommonServices::getFactory()->MakeRoomGridBox(grid_coords, this);
+    return CommonServices::getFactory().MakeRoomGridBox(grid_coords, this);
 }
 
-RoomGrid::~RoomGrid()
+RoomGrid::~RoomGrid() noexcept
 {
     DeleteGrid();
 }

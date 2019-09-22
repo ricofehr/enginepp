@@ -12,19 +12,19 @@ namespace nextfloor {
 
 namespace objects {
 
-Player::Player(glm::vec3 location)
+Player::Player(const glm::vec3& location)
 {
     using nextfloor::core::CommonServices;
-    border_ = CommonServices::getFactory()->MakeBorder(location, glm::vec3(0.4f));
-    camera_ = CommonServices::getFactory()->MakeCamera(this);
+    border_ = CommonServices::getFactory().MakeBorder(location, glm::vec3(0.4f));
+    camera_ = CommonServices::getFactory().MakeCamera(this);
 }
 
-void Player::Move() noexcept
+void Player::Move()
 {
     if (IsMoved()) {
         border_->ComputeNewLocation();
 
-        if (parent_->IsInside(this)) {
+        if (parent_->IsInside(*this)) {
             parent_->UpdateChildPlacement(this);
         }
         else {

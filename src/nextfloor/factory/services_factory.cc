@@ -17,43 +17,43 @@ namespace nextfloor {
 
 namespace factory {
 
-std::unique_ptr<nextfloor::core::ConfigParser> ServicesFactory::MakeConfigParser()
+std::unique_ptr<nextfloor::core::ConfigParser> ServicesFactory::MakeConfigParser() const
 {
     using nextfloor::core::FileConfigParser;
     return std::make_unique<FileConfigParser>();
 }
 
-std::unique_ptr<nextfloor::core::Exit> ServicesFactory::MakeExit()
+std::unique_ptr<nextfloor::core::Exit> ServicesFactory::MakeExit() const
 {
     using nextfloor::core::ProgramExit;
     return std::make_unique<ProgramExit>();
 }
 
-std::unique_ptr<nextfloor::core::FileIO> ServicesFactory::MakeFileIO()
+std::unique_ptr<nextfloor::core::FileIO> ServicesFactory::MakeFileIO() const
 {
     using nextfloor::core::StdFileIO;
     return std::make_unique<StdFileIO>();
 }
 
-std::unique_ptr<nextfloor::core::Timer> ServicesFactory::MakeTimer()
+std::unique_ptr<nextfloor::core::Timer> ServicesFactory::MakeTimer() const
 {
     using nextfloor::core::FrameTimer;
     return std::make_unique<FrameTimer>();
 }
 
-std::unique_ptr<nextfloor::core::Log> ServicesFactory::MakeLog()
+std::unique_ptr<nextfloor::core::Log> ServicesFactory::MakeLog() const
 {
     using nextfloor::core::TerminalLog;
     return std::make_unique<TerminalLog>();
 }
 
-std::unique_ptr<nextfloor::core::RandomGenerator> ServicesFactory::MakeRandomGenerator()
+std::unique_ptr<nextfloor::core::RandomGenerator> ServicesFactory::MakeRandomGenerator() const
 {
     using nextfloor::core::PseudoRandomGenerator;
     return std::make_unique<PseudoRandomGenerator>();
 }
 
-std::unique_ptr<nextfloor::core::WindowSettings> ServicesFactory::MakeWindowSettings(nextfloor::renderer::SceneWindow* sw)
+std::unique_ptr<nextfloor::core::WindowSettings> ServicesFactory::MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) const
 {
     using nextfloor::core::GameWindowSettings;
     return std::make_unique<GameWindowSettings>(sw);

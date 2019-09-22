@@ -10,9 +10,9 @@ namespace nextfloor {
 
 namespace objects {
 
-RightWall::RightWall(glm::vec3 location, glm::vec3 scale) : DepthWall(location, scale) {}
+RightWall::RightWall(const glm::vec3& location, const glm::vec3& scale) : DepthWall(location, scale) {}
 
-void RightWall::PrepareDraw() noexcept
+void RightWall::PrepareDraw()
 {
     if (parent_->IsRightPositionFilled()) {
         AddDoor();

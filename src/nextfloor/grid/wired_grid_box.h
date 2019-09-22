@@ -25,35 +25,34 @@ namespace grid {
 class WiredGridBox : public nextfloor::objects::GridBox {
 
 public:
-    WiredGridBox(glm::vec3 coords, nextfloor::objects::Grid* owner);
+    WiredGridBox(const glm::vec3& coords, nextfloor::objects::Grid* owner);
+    ~WiredGridBox() override = default;
 
     WiredGridBox(WiredGridBox&&) = default;
     WiredGridBox& operator=(WiredGridBox&&) = default;
-    WiredGridBox(const WiredGridBox&) = default;
-    WiredGridBox& operator=(const WiredGridBox&) = default;
+    WiredGridBox(const WiredGridBox&) = delete;
+    WiredGridBox& operator=(const WiredGridBox&) = delete;
 
-    virtual ~WiredGridBox() override = default;
+    void add(nextfloor::objects::Mesh* object) final;
+    void remove(nextfloor::objects::Mesh* object) final;
+    void clear() final;
+    std::vector<nextfloor::objects::Mesh*> other_occupants(const nextfloor::objects::Mesh& object) const final;
 
-    virtual void add(nextfloor::objects::Mesh* object) noexcept override;
-    virtual void remove(nextfloor::objects::Mesh* object) noexcept override;
-    virtual void clear() noexcept override;
-    virtual std::vector<nextfloor::objects::Mesh*> other_occupants(nextfloor::objects::Mesh* object) noexcept override;
+    bool IsInto(const nextfloor::objects::Mesh& object) const final;
+    bool IsEmpty() const final;
+    bool IsFilled() const final;
 
-    virtual bool IsInto(nextfloor::objects::Mesh* object) const noexcept override;
-    virtual bool IsEmpty() const noexcept override;
-    virtual bool IsFilled() const noexcept override;
+    bool IsFrontPositionFilled() const final;
+    bool IsRightPositionFilled() const final;
+    bool IsBackPositionFilled() const final;
+    bool IsLeftPositionFilled() const final;
+    bool IsBottomPositionFilled() const final;
+    bool IsTopPositionFilled() const final;
 
-    virtual bool IsFrontPositionFilled() const noexcept override;
-    virtual bool IsRightPositionFilled() const noexcept override;
-    virtual bool IsBackPositionFilled() const noexcept override;
-    virtual bool IsLeftPositionFilled() const noexcept override;
-    virtual bool IsBottomPositionFilled() const noexcept override;
-    virtual bool IsTopPositionFilled() const noexcept override;
+    int size() const final { return occupants_.size(); }
+    glm::vec3 coords() const final { return coords_; }
 
-    virtual int size() const noexcept override { return occupants_.size(); }
-    virtual glm::vec3 coords() const noexcept override { return coords_; }
-
-    virtual std::vector<nextfloor::objects::Mesh*> occupants() noexcept override
+    std::vector<nextfloor::objects::Mesh*> occupants() const final
     {
         std::vector<nextfloor::objects::Mesh*> occupants;
         for (auto& occupant : occupants_) {

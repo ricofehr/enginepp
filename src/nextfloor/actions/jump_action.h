@@ -20,16 +20,7 @@ namespace actions {
 class JumpAction : public Action {
 
 public:
-    JumpAction() = default;
-
-    JumpAction(JumpAction&&) = default;
-    JumpAction& operator=(JumpAction&&) = default;
-    JumpAction(const JumpAction&) = default;
-    JumpAction& operator=(const JumpAction&) = default;
-
-    virtual ~JumpAction() override = default;
-
-    void execute(nextfloor::objects::Mesh* actor) override final;
+    void execute(nextfloor::objects::Mesh* actor) final;
 };
 
 }  // namespace actions

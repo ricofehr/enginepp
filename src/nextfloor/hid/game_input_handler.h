@@ -21,34 +21,33 @@ class GameInputHandler : public InputHandler {
 
 public:
     GameInputHandler();
+    ~GameInputHandler() final = default;
 
-    GameInputHandler(GameInputHandler&&) noexcept = default;
-    GameInputHandler& operator=(GameInputHandler&&) noexcept = default;
-    GameInputHandler(const GameInputHandler&) = default;
-    GameInputHandler& operator=(const GameInputHandler&) = default;
-
-    virtual ~GameInputHandler() override = default;
+    GameInputHandler(GameInputHandler&&) = default;
+    GameInputHandler& operator=(GameInputHandler&&) = default;
+    GameInputHandler(const GameInputHandler&) = delete;
+    GameInputHandler& operator=(const GameInputHandler&) = delete;
 
     /**
      *  Get Current State Input
      *  @return Command Object
      */
-    virtual nextfloor::actions::Action* HandlerInput() override final;
+    nextfloor::actions::Action* HandlerInput() final;
 
     /**
      *  Get HID Pointer angles changes
      *  @return HIDPointer struct
      */
-    virtual HIDPointer RecordHIDPointer() override final;
+    HIDPointer RecordHIDPointer() final;
 
     /**
      *  Get FOV (FieldOfView) Current State
      *  @return FOV value
      */
-    virtual float RecordFOV() override final;
+    float RecordFOV() final;
 
-    virtual void PollEvents() override final;
-    virtual bool IsCloseWindowEventOccurs() override final;
+    void PollEvents() final;
+    bool IsCloseWindowEventOccurs() final;
 
 private:
     /** The main hid */
