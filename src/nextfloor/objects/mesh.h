@@ -88,6 +88,8 @@ public:
     virtual bool ready() const = 0;
     virtual void toready() = 0;
 
+    virtual bool IsInCameraFieldOfView() const = 0;
+
 protected:
     Mesh() = default;
 

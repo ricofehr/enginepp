@@ -144,7 +144,7 @@ public:
     virtual void InitChildsIntoGrid() override;
     virtual void AddIntoAscendantGrid() override;
 
-    // virtual std::vector<GridBox*> grid_coords() const override { return coords_list_; }
+    virtual bool IsInCameraFieldOfView() const override;
 
 protected:
     ModelMesh();
@@ -174,6 +174,7 @@ private:
     void InitCollisionEngine();
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
     void PivotCollision() noexcept;
+    virtual bool IsInside(glm::vec3 location) const;
 
     bool IsNeighborReachable(Mesh* neighbor) const;
     bool IsInDirection(Mesh* target) const;

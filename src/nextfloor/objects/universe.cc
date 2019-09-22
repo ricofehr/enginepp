@@ -31,7 +31,9 @@ void Universe::Draw() noexcept
 
         /* Draw Rooms on Gl Scene */
         for (auto& r : objects_) {
-            r->Draw();
+            if (r->IsInCameraFieldOfView()) {
+                r->Draw();
+            }
         }
     }
 }

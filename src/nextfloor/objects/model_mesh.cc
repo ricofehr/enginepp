@@ -8,6 +8,7 @@
 
 #include <sstream>
 #include <tbb/tbb.h>
+#include <math.h>
 
 #include "nextfloor/core/common_services.h"
 
@@ -49,13 +50,38 @@ void ModelMesh::Draw() noexcept
     });
 
     /* Draw meshes of current object */
-    for (auto& polygon : polygons_) {
-        polygon->Draw(renderer_);
+    if (IsInCameraFieldOfView()) {
+        for (auto& polygon : polygons_) {
+            polygon->Draw(renderer_);
+        }
     }
 
     for (auto& object : objects_) {
         object->Draw();
     }
+}
+
+bool ModelMesh::IsInCameraFieldOfView() const
+{
+    using nextfloor::core::CommonServices;
+    auto camera = CommonServices::getActiveCamera();
+
+    /* For rooms, display always the one where we're in */
+    if (grid() != nullptr && IsInside(camera->location())) {
+        return true;
+    }
+
+    /*
+     * For nearer object, or bigger object, increase fov
+     * TODO : avoid magics numbers
+     */
+    auto vector = location() - camera->location();
+    auto cos_camera_vector
+      = glm::dot(camera->direction(), vector) / (glm::length(camera->direction()) * glm::length(vector));
+    float camera_fov = glm::length(vector) < 4.0f || diagonal() > 3.0f ? 95.0f : camera->fov();
+
+    /* From dot product rule to known wich side is a point from an other */
+    return cos_camera_vector >= cos(camera_fov * M_PI / 180.0f);
 }
 
 void ModelMesh::DetectCollision() noexcept
@@ -192,6 +218,12 @@ bool ModelMesh::IsInside(Mesh* mesh) noexcept
 {
     assert(grid() != nullptr);
     return grid()->IsInside(mesh->location());
+}
+
+bool ModelMesh::IsInside(glm::vec3 location) const
+{
+    assert(grid() != nullptr);
+    return grid()->IsInside(location);
 }
 
 void ModelMesh::UpdateChildPlacement(Mesh* item) noexcept
