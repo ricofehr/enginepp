@@ -7,13 +7,11 @@
 
 #include <glm/glm.hpp>
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace actions {
 
-void MoveRightAction::execute(nextfloor::objects::Mesh* actor)
+void MoveRightAction::execute(nextfloor::objects::Mesh* actor, double elapsed_time)
 {
     glm::vec3 movement = actor->movement();
     glm::vec3 head = actor->movement();
@@ -22,8 +20,7 @@ void MoveRightAction::execute(nextfloor::objects::Mesh* actor)
         if (camera != nullptr) {
             movement = actor->camera()->direction();
             if (actor->IsPlayer()) {
-                using nextfloor::core::CommonServices;
-                movement *= CommonServices::getTimer().getDeltaTimeSinceLastLoop();
+                movement *= elapsed_time;
             }
             head = camera->head();
         }

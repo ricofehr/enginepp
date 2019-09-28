@@ -41,7 +41,7 @@ public:
      *  @param  window  GL Main Window
      *  @return        HID Delta pointer angles (horizontal / vertical)
      */
-    virtual HIDPointer RecordHIDPointer() = 0;
+    virtual HIDPointer RecordHIDPointer(double elapsed_time) = 0;
 
     /**
      *  Return current "Field of View"

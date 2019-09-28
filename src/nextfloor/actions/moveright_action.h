@@ -20,7 +20,7 @@ namespace actions {
 class MoveRightAction : public Action {
 
 public:
-    void execute(nextfloor::objects::Mesh* actor) final;
+    void execute(nextfloor::objects::Mesh* actor, double elapsed_time) final;
 };
 
 }  // namespace actions

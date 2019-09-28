@@ -187,17 +187,16 @@ void GlSceneWindow::PrepareDisplay()
     glPolygonMode(GL_FRONT_AND_BACK, polygon_mode_);
 }
 
-void GlSceneWindow::UpdateMoveFactor()
+void GlSceneWindow::UpdateMoveFactor(int fps)
 {
     using nextfloor::core::CommonServices;
 
     /** Fps displayed can't be greater than monitor refresh rate */
-    auto fps_real = CommonServices::getTimer().getLoopCountBySecond();
-    if (fps_real > monitor_refresh_rate_) {
-        fps_real = monitor_refresh_rate_;
+    if (fps > monitor_refresh_rate_) {
+        fps = monitor_refresh_rate_;
     }
 
-    move_factor_ = kFpsBase / fps_real;
+    move_factor_ = kFpsBase / fps;
 }
 
 void GlSceneWindow::SwapBuffers()

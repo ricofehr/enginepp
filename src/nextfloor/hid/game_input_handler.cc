@@ -80,9 +80,9 @@ nextfloor::actions::Action* GameInputHandler::HandlerInput()
     return nullptr;
 }
 
-HIDPointer GameInputHandler::RecordHIDPointer()
+HIDPointer GameInputHandler::RecordHIDPointer(double elapsed_time)
 {
-    return hid_->RecordHIDPointer();
+    return hid_->RecordHIDPointer(elapsed_time);
 }
 
 float GameInputHandler::RecordFOV()

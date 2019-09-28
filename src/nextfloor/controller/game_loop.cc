@@ -32,6 +32,7 @@ GameLoop::GameLoop()
     sInstanciated = true;
 
     using nextfloor::core::CommonServices;
+    timer_ = CommonServices::getFactory().MakeTimer();
     auto player = CommonServices::getFactory().MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
     player_ = player.get();
     universe_ = CommonServices::getFactory().MakeLevel()->GenerateUniverse();
@@ -70,11 +71,9 @@ void GameLoop::Loop()
 
 void GameLoop::UpdateTime()
 {
-    using nextfloor::core::CommonServices;
-
-    CommonServices::getTimer().Loop();
-    if (CommonServices::getTimer().getLoopCountBySecond() != 0) {
-        game_window_->UpdateMoveFactor();
+    timer_->Loop();
+    if (timer_->getLoopCountBySecond() != 0) {
+        game_window_->UpdateMoveFactor(timer_->getLoopCountBySecond());
         universe_->toready();
     }
 }
@@ -83,7 +82,7 @@ void GameLoop::UpdateCameraOrientation()
 {
     auto camera = game_cameras_.front();
     camera->ComputeFOV(input_handler_->RecordFOV());
-    auto angles = input_handler_->RecordHIDPointer();
+    auto angles = input_handler_->RecordHIDPointer(timer_->getDeltaTimeSinceLastLoop());
     camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
     camera->ComputeOrientation();
 }
@@ -92,7 +91,7 @@ void GameLoop::HandlerInput()
 {
     auto command = input_handler_->HandlerInput();
     if (command) {
-        command->execute(player_);
+        command->execute(player_, timer_->getDeltaTimeSinceLastLoop());
     }
 }
 
@@ -112,7 +111,7 @@ void GameLoop::LogLoop()
 
     using nextfloor::core::CommonServices;
 
-    if (CommonServices::getTimer().IsNewSecondElapsed()) {
+    if (timer_->IsNewSecondElapsed()) {
 
         /* Header for test datas output */
         if (sFirstLoop && CommonServices::getConfig().IsTestDebugEnabled()) {
@@ -121,8 +120,7 @@ void GameLoop::LogLoop()
         /* Print if debug */
         if (CommonServices::getConfig().IsAllDebugEnabled()) {
             std::ostringstream message_frame;
-            message_frame << 1000.0 / static_cast<double>(CommonServices::getTimer().getLoopCountBySecond())
-                          << " ms/frame - ";
+            message_frame << 1000.0 / static_cast<double>(timer_->getLoopCountBySecond()) << " ms/frame - ";
             CommonServices::getLog().Write(std::move(message_frame));
         }
 
@@ -141,7 +139,7 @@ void GameLoop::LogFps()
     using nextfloor::core::CommonServices;
 
     std::ostringstream message_fps;
-    message_fps << CommonServices::getTimer().getLoopCountBySecond();
+    message_fps << timer_->getLoopCountBySecond();
     message_fps << " fps (move factor: " << game_window_->getFpsFixMoveFactor() << ") - ";
     CommonServices::getLog().Write(std::move(message_fps));
 }

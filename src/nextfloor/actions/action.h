@@ -24,7 +24,7 @@ public:
     /**
      * Execute Action on target object (actor)
      */
-    virtual void execute(nextfloor::objects::Mesh* actor) = 0;
+    virtual void execute(nextfloor::objects::Mesh* actor, double elapsed_time) = 0;
 };
 
 }  // namespace actions

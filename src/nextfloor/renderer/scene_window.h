@@ -21,7 +21,7 @@ public:
     virtual void Initialization() = 0;
     virtual void PrepareDisplay() = 0;
     virtual void SwapBuffers() = 0;
-    virtual void UpdateMoveFactor() = 0;
+    virtual void UpdateMoveFactor(int fps) = 0;
 
     virtual void* window() const = 0;
 

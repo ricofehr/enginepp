@@ -43,8 +43,6 @@ public:
 
     static const FileIO& getFileIO() { return Instance()->fileIO(); }
 
-    static Timer& getTimer() { return Instance()->timer(); }
-
     static const Log& getLog() { return Instance()->log(); }
 
     static const RandomGenerator& getRandomGenerator() { return Instance()->random_generator(); }
@@ -96,12 +94,6 @@ private:
         return *(file_io_.get());
     }
 
-    Timer& timer()
-    {
-        assert(timer_ != nullptr);
-        return *(timer_.get());
-    }
-
     const Log& log() const
     {
         assert(log_ != nullptr);
@@ -134,7 +126,6 @@ private:
     std::unique_ptr<ConfigParser> config_{nullptr};
     std::unique_ptr<WindowSettings> window_settings_{nullptr};
     std::unique_ptr<FileIO> file_io_{nullptr};
-    std::unique_ptr<Timer> timer_{nullptr};
     std::unique_ptr<Log> log_{nullptr};
     std::unique_ptr<RandomGenerator> random_generator_{nullptr};
     std::unique_ptr<Exit> exit_{nullptr};

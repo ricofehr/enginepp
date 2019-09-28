@@ -38,7 +38,7 @@ public:
      *  Get HID Pointer angles changes
      *  @return HIDPointer struct
      */
-    HIDPointer RecordHIDPointer() final;
+    HIDPointer RecordHIDPointer(double elapsed_time) final;
 
     /**
      *  Get FOV (FieldOfView) Current State

@@ -5,14 +5,12 @@
  */
 #include "nextfloor/actions/run_action.h"
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace actions {
 
 /* TODO: Implement Run Execute action */
-void RunAction::execute(nextfloor::objects::Mesh* actor)
+void RunAction::execute(nextfloor::objects::Mesh* actor, double elapsed_time)
 {
     ;
 }

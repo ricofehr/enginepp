@@ -29,7 +29,7 @@ public:
     void Initialization() final;
     void PrepareDisplay() final;
     void SwapBuffers() final;
-    void UpdateMoveFactor() final;
+    void UpdateMoveFactor(int fps) final;
 
     void* window() const final { return glfw_window_; }
     GLuint getMatrixId() const final { return matrix_id_; }

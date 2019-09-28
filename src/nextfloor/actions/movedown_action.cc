@@ -5,13 +5,11 @@
  */
 #include "nextfloor/actions/movedown_action.h"
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace actions {
 
-void MoveDownAction::execute(nextfloor::objects::Mesh* actor)
+void MoveDownAction::execute(nextfloor::objects::Mesh* actor, double elapsed_time)
 {
     glm::vec3 movement = actor->movement();
     if (actor->IsCamera()) {
@@ -19,8 +17,7 @@ void MoveDownAction::execute(nextfloor::objects::Mesh* actor)
         if (camera != nullptr) {
             movement = actor->camera()->direction();
             if (actor->IsPlayer()) {
-                using nextfloor::core::CommonServices;
-                movement *= CommonServices::getTimer().getDeltaTimeSinceLastLoop();
+                movement *= elapsed_time;
             }
         }
     }

@@ -65,7 +65,7 @@ bool MouseKeyboard::isPressed(int ACTION_BUTTON)
  * @param  window GL Window
  * @return        HIDPointer struct with orientation angles changes
  */
-HIDPointer MouseKeyboard::RecordHIDPointer()
+HIDPointer MouseKeyboard::RecordHIDPointer(double elapsed_time)
 {
     using nextfloor::core::CommonServices;
     float window_width = CommonServices::getConfig().getWindowWidth();
@@ -87,10 +87,8 @@ HIDPointer MouseKeyboard::RecordHIDPointer()
     }
 
 
-    HIDPointer pointer = {hid_speed * CommonServices::getTimer().getDeltaTimeSinceLastLoop()
-                            * static_cast<float>(window_width / 2 - mouse_position.x),
-                          hid_speed * CommonServices::getTimer().getDeltaTimeSinceLastLoop()
-                            * static_cast<float>(window_height / 2 - mouse_position.y)};
+    HIDPointer pointer = {hid_speed * elapsed_time * static_cast<float>(window_width / 2 - mouse_position.x),
+                          hid_speed * elapsed_time * static_cast<float>(window_height / 2 - mouse_position.y)};
 
     /* Reset Cursor position at center of screen */
     scene_input_->SetCursorPos(window_width / 2, window_height / 2);

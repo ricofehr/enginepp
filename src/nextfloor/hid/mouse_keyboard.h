@@ -57,7 +57,7 @@ public:
      * @param  window GL Window
      * @return        HIDPointer struct with orientation angles changes
      */
-    HIDPointer RecordHIDPointer() final;
+    HIDPointer RecordHIDPointer(double elapsed_time) final;
 
     /**
      *  Return current "Field of View"

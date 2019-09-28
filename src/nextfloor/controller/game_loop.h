@@ -14,6 +14,7 @@
 #include "nextfloor/objects/collision_engine.h"
 #include "nextfloor/renderer/scene_window.h"
 #include "nextfloor/hid/input_handler.h"
+#include "nextfloor/core/timer.h"
 
 namespace nextfloor {
 
@@ -50,6 +51,7 @@ private:
     nextfloor::renderer::SceneWindow* game_window_{nullptr};
     nextfloor::objects::Mesh* player_{nullptr};
     std::list<nextfloor::objects::Camera*> game_cameras_;
+    std::unique_ptr<nextfloor::core::Timer> timer_{nullptr};
 };
 
 }  // namespace controller
