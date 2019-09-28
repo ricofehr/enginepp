@@ -13,6 +13,8 @@ namespace nextfloor {
 
 namespace objects {
 
+class Mesh;
+
 /**
  *  @class Camera
  *  @brief Camera Abstract representation.\n
@@ -24,12 +26,12 @@ public:
 
     virtual void ComputeOrientation() = 0;
     virtual void ComputeFOV(float delta_fov) = 0;
+    virtual bool IsInFieldOfView(const Mesh& target) const = 0;
 
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 direction() const = 0;
     virtual glm::vec3 head() const = 0;
     virtual float fov() const = 0;
-    virtual void set_active() = 0;
 
     virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
 };

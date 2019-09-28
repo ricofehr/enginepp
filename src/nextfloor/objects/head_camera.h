@@ -29,6 +29,7 @@ public:
 
     void ComputeOrientation() final;
     void ComputeFOV(float delta_fov) final;
+    bool IsInFieldOfView(const Mesh& target) const final;
 
     glm::vec3 location() const final { return owner_->location(); }
     glm::vec3 direction() const final { return direction_; }
@@ -39,8 +40,6 @@ public:
         horizontal_angle_ += horizontal_angle;
         vertical_angle_ += vertical_angle;
     }
-
-    void set_active() override;
 
 private:
     void init_active();

@@ -45,6 +45,7 @@ public:
 
     Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) final;
     bool IsInside(const Mesh& mesh) const final;
+    bool IsInside(const glm::vec3& location) const final;
     Mesh* add_child(std::unique_ptr<Mesh> object) final;
     std::unique_ptr<Mesh> remove_child(Mesh* child) final;
     Mesh* TransfertChildToNeighbor(Mesh* child) final;
@@ -70,6 +71,7 @@ public:
     float diagonal() const final { return border_->diagonal(); }
     Grid* grid() const { return grid_.get(); }
     Camera* camera() const final;
+    std::list<Camera*> all_cameras() const final;
     bool IsCamera() const final { return camera_ != nullptr; }
     bool IsPlayer() const override { return false; }
     glm::vec3 movement() const final { return border_->movement(); }
@@ -100,6 +102,7 @@ public:
     }
 
     void set_camera(std::unique_ptr<Camera> camera) final { camera_ = std::move(camera); }
+    void set_active_camera(Camera* active_camera) final;
     void TransferCameraToOtherMesh(Mesh* other) final;
 
     std::vector<glm::vec3> getCoordsModelMatrixComputed() const final
@@ -144,8 +147,6 @@ public:
     void InitChildsIntoGrid() override;
     void AddIntoAscendantGrid() final;
 
-    bool IsInCameraFieldOfView() const final;
-
 protected:
     ModelMesh();
 
@@ -169,12 +170,12 @@ protected:
     std::unique_ptr<Camera> camera_{nullptr};
 
     RendererEngine* renderer_{nullptr};
+    Camera* active_camera_{nullptr};
 
 private:
     void InitCollisionEngine();
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
     void PivotCollision();
-    bool IsInside(const glm::vec3& location) const;
 
     bool IsNeighborReachable(const Mesh& neighbor) const;
     bool IsInDirection(const Mesh& target) const;

@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <vector>
+#include <list>
 #include <glm/glm.hpp>
 
 #include "nextfloor/objects/border.h"
@@ -39,6 +40,7 @@ public:
 
     virtual Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) = 0;
     virtual bool IsInside(const Mesh& mesh) const = 0;
+    virtual bool IsInside(const glm::vec3& location) const = 0;
     virtual Mesh* add_child(std::unique_ptr<Mesh> child) = 0;
     virtual std::unique_ptr<Mesh> remove_child(Mesh* child) = 0;
     virtual Mesh* TransfertChildToNeighbor(Mesh* child) = 0;
@@ -73,6 +75,7 @@ public:
     virtual float diagonal() const = 0;
     virtual Border* border() const = 0;
     virtual Camera* camera() const = 0;
+    virtual std::list<Camera*> all_cameras() const = 0;
     virtual bool IsCamera() const = 0;
     virtual bool IsPlayer() const = 0;
 
@@ -80,6 +83,7 @@ public:
     virtual void set_movement(const glm::vec3& movement) = 0;
     virtual void set_move_factor(float move_factor) = 0;
     virtual void set_camera(std::unique_ptr<Camera> camera) = 0;
+    virtual void set_active_camera(Camera* active_camera) = 0;
     virtual void TransferCameraToOtherMesh(Mesh* other) = 0;
 
     virtual void lock() = 0;
@@ -87,8 +91,6 @@ public:
 
     virtual bool ready() const = 0;
     virtual void toready() = 0;
-
-    virtual bool IsInCameraFieldOfView() const = 0;
 };
 
 }  // namespace objects

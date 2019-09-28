@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <sstream>
+#include <list>
 
 #include "nextfloor/actions/action.h"
 #include "nextfloor/core/common_services.h"
@@ -35,8 +36,23 @@ GameLoop::GameLoop()
     player_ = player.get();
     universe_ = CommonServices::getFactory().MakeLevel()->GenerateUniverse();
     universe_->AddIntoChild(std::move(player));
+    game_cameras_ = universe_->all_cameras();
+    SetActiveCamera(player_->camera());
     game_window_ = CommonServices::getFactory().MakeSceneWindow();
     input_handler_ = CommonServices::getFactory().MakeInputHandler();
+}
+
+void GameLoop::SetActiveCamera(nextfloor::objects::Camera* active_camera)
+{
+    std::list<nextfloor::objects::Camera*>::iterator it;
+    for (it = game_cameras_.begin(); it != game_cameras_.end(); ++it) {
+        if (*it == active_camera) {
+            game_cameras_.remove(active_camera);
+            game_cameras_.push_front(active_camera);
+            break;
+        }
+    }
+    universe_->set_active_camera(game_cameras_.front());
 }
 
 /**
@@ -95,7 +111,7 @@ void GameLoop::Loop()
             universe_->toready();
         }
 
-        auto camera = player_->camera();
+        auto camera = game_cameras_.front();
         camera->ComputeFOV(input_handler_->RecordFOV());
         auto angles = input_handler_->RecordHIDPointer();
         camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);

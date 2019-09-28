@@ -30,8 +30,9 @@ void Universe::Draw()
         PrepareDraw();
 
         /* Draw Rooms on Gl Scene */
+        assert(active_camera_ != nullptr);
         for (auto& r : objects_) {
-            if (r->IsInCameraFieldOfView()) {
+            if (active_camera_->IsInFieldOfView(*r)) {
                 r->Draw();
             }
         }

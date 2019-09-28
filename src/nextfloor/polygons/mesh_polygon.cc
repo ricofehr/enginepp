@@ -46,10 +46,11 @@ void MeshPolygon::UpdateModelViewProjectionMatrix()
 
 glm::mat4 MeshPolygon::GetProjectionMatrix()
 {
+    assert(active_camera_ != nullptr);
     using nextfloor::core::CommonServices;
 
     glm::mat4 projection_matrix
-      = glm::perspective(glm::radians(CommonServices::getActiveCamera().fov()),
+      = glm::perspective(glm::radians(active_camera_->fov()),
                          CommonServices::getWindowSettings().getWidth() / CommonServices::getWindowSettings().getHeight(),
                          0.1f,
                          300.0f);
@@ -58,12 +59,10 @@ glm::mat4 MeshPolygon::GetProjectionMatrix()
 
 glm::mat4 MeshPolygon::GetViewMatrix()
 {
-    using nextfloor::core::CommonServices;
+    assert(active_camera_ != nullptr);
 
-    glm::mat4 view_matrix
-      = glm::lookAt(CommonServices::getActiveCamera().location(),
-                    CommonServices::getActiveCamera().location() + CommonServices::getActiveCamera().direction(),
-                    CommonServices::getActiveCamera().head());
+    glm::mat4 view_matrix = glm::lookAt(
+      active_camera_->location(), active_camera_->location() + active_camera_->direction(), active_camera_->head());
 
     return view_matrix;
 }

@@ -6,6 +6,8 @@
 
 #include "nextfloor/objects/head_camera.h"
 
+#include <math.h>
+
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -20,7 +22,6 @@ HeadCamera::HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle
     fov_ = 45.0f;
 
     ComputeOrientation();
-    init_active();
 }
 
 void HeadCamera::ComputeOrientation()
@@ -45,19 +46,25 @@ void HeadCamera::ComputeFOV(float delta_fov)
     fov_ = fov_ > 130.0f ? 130.0f : fov_;
 }
 
-void HeadCamera::init_active()
+bool HeadCamera::IsInFieldOfView(const Mesh& target) const
 {
     using nextfloor::core::CommonServices;
 
-    if (!CommonServices::IsActiveCamera()) {
-        set_active();
+    /* For rooms, display always the one where we're in */
+    if (target.IsInside(location())) {
+        return true;
     }
-}
 
-void HeadCamera::set_active()
-{
-    using nextfloor::core::CommonServices;
-    CommonServices::setActiveCamera(this);
+    /*
+     * For nearer object, or bigger object, increase fov
+     * TODO : avoid magics numbers
+     */
+    auto vector = target.location() - location();
+    auto cos_camera_vector = glm::dot(direction(), vector) / (glm::length(direction()) * glm::length(vector));
+    float camera_fov = glm::length(vector) < 4.0f || target.diagonal() > 3.0f ? 95.0f : fov();
+
+    /* From dot product rule to known wich side is a point from an other */
+    return cos_camera_vector >= cos(camera_fov * M_PI / 180.0f);
 }
 
 }  // namespace objects

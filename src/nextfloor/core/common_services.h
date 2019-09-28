@@ -53,16 +53,7 @@ public:
 
     static nextfloor::factory::FacadeFactory& getFactory() { return Instance()->factory(); }
 
-    static const nextfloor::objects::Camera& getActiveCamera() { return Instance()->camera_active(); }
-
     static void initWindowSettings(nextfloor::renderer::SceneWindow* window) { Instance()->makeWindowSettings(window); }
-
-    static bool IsActiveCamera() { return Instance()->camera_active_ != nullptr; }
-
-    static void setActiveCamera(nextfloor::objects::Camera* camera_active)
-    {
-        Instance()->camera_active_ = camera_active;
-    }
 
 protected:
     CommonServices();
@@ -135,12 +126,6 @@ private:
         return *(factory_.get());
     }
 
-    const nextfloor::objects::Camera& camera_active() const
-    {
-        assert(camera_active_ != nullptr);
-        return *camera_active_;
-    }
-
     void makeWindowSettings(nextfloor::renderer::SceneWindow* window)
     {
         window_settings_ = factory_->MakeWindowSettings(window);
@@ -154,7 +139,6 @@ private:
     std::unique_ptr<RandomGenerator> random_generator_{nullptr};
     std::unique_ptr<Exit> exit_{nullptr};
     std::unique_ptr<nextfloor::factory::FacadeFactory> factory_{nullptr};
-    nextfloor::objects::Camera* camera_active_{nullptr};
 };
 
 }  // namespace core

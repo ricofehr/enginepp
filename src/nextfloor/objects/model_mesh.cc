@@ -8,7 +8,6 @@
 
 #include <sstream>
 #include <tbb/tbb.h>
-#include <math.h>
 
 #include "nextfloor/core/common_services.h"
 
@@ -50,7 +49,8 @@ void ModelMesh::Draw()
     });
 
     /* Draw meshes of current object */
-    if (IsInCameraFieldOfView()) {
+    assert(active_camera_ != nullptr);
+    if (active_camera_->IsInFieldOfView(*this)) {
         for (auto& polygon : polygons_) {
             polygon->Draw(renderer_);
         }
@@ -59,28 +59,6 @@ void ModelMesh::Draw()
     for (auto& object : objects_) {
         object->Draw();
     }
-}
-
-bool ModelMesh::IsInCameraFieldOfView() const
-{
-    using nextfloor::core::CommonServices;
-
-    /* For rooms, display always the one where we're in */
-    if (grid() != nullptr && IsInside(CommonServices::getActiveCamera().location())) {
-        return true;
-    }
-
-    /*
-     * For nearer object, or bigger object, increase fov
-     * TODO : avoid magics numbers
-     */
-    auto vector = location() - CommonServices::getActiveCamera().location();
-    auto cos_camera_vector = glm::dot(CommonServices::getActiveCamera().direction(), vector)
-                             / (glm::length(CommonServices::getActiveCamera().direction()) * glm::length(vector));
-    float camera_fov = glm::length(vector) < 4.0f || diagonal() > 3.0f ? 95.0f : CommonServices::getActiveCamera().fov();
-
-    /* From dot product rule to known wich side is a point from an other */
-    return cos_camera_vector >= cos(camera_fov * M_PI / 180.0f);
 }
 
 void ModelMesh::DetectCollision()
@@ -107,6 +85,7 @@ void ModelMesh::PivotCollision()
     });
 }
 
+/* Move this function into Grid Object */
 std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(const Mesh& target) const
 {
     std::vector<Mesh*> all_neighbors(0);
@@ -215,13 +194,14 @@ void ModelMesh::Move()
 
 bool ModelMesh::IsInside(const Mesh& mesh) const
 {
-    assert(grid() != nullptr);
-    return grid()->IsInside(mesh.location());
+    return IsInside(mesh.location());
 }
 
 bool ModelMesh::IsInside(const glm::vec3& location) const
 {
-    assert(grid() != nullptr);
+    if (grid() == nullptr) {
+        return false;
+    }
     return grid()->IsInside(location);
 }
 
@@ -260,6 +240,7 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object)
 {
     auto object_raw = object.get();
     object_raw->set_parent(this);
+    object_raw->set_active_camera(active_camera_);
 
     lock();
     auto initial_objects_size = objects_.size();
@@ -387,6 +368,35 @@ Camera* ModelMesh::camera() const
         return nullptr;
     }
     return camera_.get();
+}
+
+std::list<Camera*> ModelMesh::all_cameras() const
+{
+    std::list<Camera*> cameras(0);
+
+    for (const auto& object : objects_) {
+        auto child_cameras = object->all_cameras();
+        cameras.merge(child_cameras);
+    }
+
+    if (camera() != nullptr) {
+        cameras.push_back(camera());
+    }
+
+    return cameras;
+}
+
+void ModelMesh::set_active_camera(Camera* active_camera)
+{
+    for (auto& object : objects_) {
+        object->set_active_camera(active_camera);
+    }
+
+    for (auto& polygon : polygons_) {
+        polygon->set_active_camera(active_camera);
+    }
+
+    active_camera_ = active_camera;
 }
 
 bool ModelMesh::IsFrontPositionFilled() const

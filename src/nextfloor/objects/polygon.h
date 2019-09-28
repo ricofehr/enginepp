@@ -10,6 +10,7 @@
 #include <math.h>
 #include <glm/glm.hpp>
 
+#include "nextfloor/objects/camera.h"
 #include "nextfloor/objects/renderer_engine.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -33,6 +34,7 @@ public:
     virtual void MoveLocation() = 0;
     virtual bool IsMoved() const = 0;
 
+    virtual void set_active_camera(nextfloor::objects::Camera* active_camera) = 0;
     virtual void set_move_factor(float move_factor) = 0;
     virtual void set_movement(const glm::vec3& move) = 0;
     virtual void InverseMove() = 0;
