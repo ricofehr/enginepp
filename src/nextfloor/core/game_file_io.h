@@ -1,11 +1,11 @@
 /**
- *  @file std_file_io.h
+ *  @file game_file_io.h
  *  @brief File I/O Operations
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_CORE_STDFILEIO_H_
-#define NEXTFLOOR_CORE_STDFILEIO_H_
+#ifndef NEXTFLOOR_CORE_GAMEFILEIO_H_
+#define NEXTFLOOR_CORE_GAMEFILEIO_H_
 
 #include "nextfloor/core/file_io.h"
 
@@ -17,14 +17,14 @@ namespace nextfloor {
 namespace core {
 
 /**
- *  @class GenericFileIO
+ *  @class GameFileIO
  *  @brief contains standard FileIO Operations for the engine
  */
-class StdFileIO : public FileIO {
+class GameFileIO : public FileIO {
 
 public:
-    StdFileIO();
-    ~StdFileIO() noexcept final;
+    GameFileIO();
+    ~GameFileIO() noexcept final;
 
     std::string ReadFile(const std::string& file_path) const final;
 
@@ -36,4 +36,4 @@ private:
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_CORE_STDFILEIO_H_
+#endif  // NEXTFLOOR_CORE_GAMEFILEIO_H_

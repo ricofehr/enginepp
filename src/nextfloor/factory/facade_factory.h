@@ -34,7 +34,7 @@
 #include "nextfloor/core/config_parser.h"
 #include "nextfloor/core/exit.h"
 #include "nextfloor/core/file_io.h"
-#include "nextfloor/core/timer.h"
+#include "nextfloor/core/frame_timer.h"
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/random_generator.h"
 
@@ -123,7 +123,7 @@ public:
     std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const;
     std::unique_ptr<nextfloor::core::Exit> MakeExit() const;
     std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const;
-    std::unique_ptr<nextfloor::core::Timer> MakeTimer() const;
+    std::unique_ptr<nextfloor::core::FrameTimer> MakeFrameTimer() const;
     std::unique_ptr<nextfloor::core::Log> MakeLog() const;
     std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const;
     std::unique_ptr<MeshFactory> MakeMeshFactory() const;

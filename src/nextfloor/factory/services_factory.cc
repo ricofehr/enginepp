@@ -6,10 +6,10 @@
 #include "nextfloor/factory/services_factory.h"
 
 #include "nextfloor/core/file_config_parser.h"
-#include "nextfloor/core/frame_timer.h"
+#include "nextfloor/core/game_timer.h"
 #include "nextfloor/core/program_exit.h"
 #include "nextfloor/core/pseudo_random_generator.h"
-#include "nextfloor/core/std_file_io.h"
+#include "nextfloor/core/game_file_io.h"
 #include "nextfloor/core/terminal_log.h"
 #include "nextfloor/core/game_window_settings.h"
 
@@ -31,14 +31,14 @@ std::unique_ptr<nextfloor::core::Exit> ServicesFactory::MakeExit() const
 
 std::unique_ptr<nextfloor::core::FileIO> ServicesFactory::MakeFileIO() const
 {
-    using nextfloor::core::StdFileIO;
-    return std::make_unique<StdFileIO>();
+    using nextfloor::core::GameFileIO;
+    return std::make_unique<GameFileIO>();
 }
 
-std::unique_ptr<nextfloor::core::Timer> ServicesFactory::MakeTimer() const
+std::unique_ptr<nextfloor::core::FrameTimer> ServicesFactory::MakeFrameTimer() const
 {
-    using nextfloor::core::FrameTimer;
-    return std::make_unique<FrameTimer>();
+    using nextfloor::core::GameTimer;
+    return std::make_unique<GameTimer>();
 }
 
 std::unique_ptr<nextfloor::core::Log> ServicesFactory::MakeLog() const

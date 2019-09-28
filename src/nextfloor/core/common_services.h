@@ -11,7 +11,6 @@
 
 #include "nextfloor/core/config_parser.h"
 #include "nextfloor/core/file_io.h"
-#include "nextfloor/core/timer.h"
 #include "nextfloor/core/random_generator.h"
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/exit.h"

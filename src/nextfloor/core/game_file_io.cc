@@ -1,10 +1,10 @@
 /**
- *  @file std_file_io.cc
+ *  @file game_file_io.cc
  *  @brief File I/O Operations
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/std_file_io.h"
+#include "nextfloor/core/game_file_io.h"
 
 #include <cassert>
 #include <sstream>
@@ -21,13 +21,13 @@ static bool sInstanciated = false;
 
 }  // anonymous namespace
 
-StdFileIO::StdFileIO()
+GameFileIO::GameFileIO()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-std::string StdFileIO::ReadFile(const std::string& file_path) const
+std::string GameFileIO::ReadFile(const std::string& file_path) const
 {
     std::string file_str;
     std::ifstream file_stream(file_path, std::ios::in);
@@ -45,7 +45,7 @@ std::string StdFileIO::ReadFile(const std::string& file_path) const
     return file_str;
 }
 
-void StdFileIO::HandleErrorOnReadFile(const std::string& file_path) const
+void GameFileIO::HandleErrorOnReadFile(const std::string& file_path) const
 {
     std::ostringstream message;
     message << "Unable to open " << file_path;
@@ -53,7 +53,7 @@ void StdFileIO::HandleErrorOnReadFile(const std::string& file_path) const
     CommonServices::getExit().ExitOnError();
 }
 
-StdFileIO::~StdFileIO() noexcept
+GameFileIO::~GameFileIO() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;

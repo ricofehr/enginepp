@@ -7,47 +7,30 @@
 #ifndef NEXTFLOOR_CORE_FRAMETIMER_H_
 #define NEXTFLOOR_CORE_FRAMETIMER_H_
 
-#include "nextfloor/core/timer.h"
-
-#include <memory>
-#include <chrono>
-
 namespace nextfloor {
 
 namespace core {
 
 /**
- *  @class FrameTimer
- *  @brief FrameTimer maintains timer management between frames
+ *  @class Timer
+ *  @brief Pure interface who defines timer management between frames
  */
-class FrameTimer : public Timer {
+class FrameTimer {
 
 public:
-    FrameTimer();
-    ~FrameTimer() noexcept final;
+    virtual ~FrameTimer() = default;
 
-    void Loop() final;
+    virtual void Loop() = 0;
 
     /**
      *  Accessors
      */
-    inline float getDeltaTimeSinceLastLoop() const final { return static_cast<float>(deltatime_since_lastloop_); }
-
-    int getLoopCountBySecond() const final { return current_fps_; }
-
-    bool IsNewSecondElapsed() const final { return is_newsecond_elapsed_; }
+    virtual float getDeltaTimeSinceLastLoop() const = 0;
+    virtual bool IsNewSecondElapsed() const = 0;
+    virtual int getLoopCountBySecond() const = 0;
 
 private:
-    void ComputeTimers() final;
-    void ComputeFps();
-    void CheckEndProgram();
-
-    static double deltatime_since_lastloop_;
-    static double totaltime_since_beginning_;
-    static int current_fps_;
-
-    /** True if current Loop is into a new elapsed second */
-    static bool is_newsecond_elapsed_;
+    virtual void ComputeTimers() = 0;
 };
 
 

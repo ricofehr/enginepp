@@ -213,9 +213,9 @@ std::unique_ptr<nextfloor::core::FileIO> FacadeFactory::MakeFileIO() const
     return core_factory_->MakeFileIO();
 }
 
-std::unique_ptr<nextfloor::core::Timer> FacadeFactory::MakeTimer() const
+std::unique_ptr<nextfloor::core::FrameTimer> FacadeFactory::MakeFrameTimer() const
 {
-    return core_factory_->MakeTimer();
+    return core_factory_->MakeFrameTimer();
 }
 
 std::unique_ptr<nextfloor::core::Log> FacadeFactory::MakeLog() const

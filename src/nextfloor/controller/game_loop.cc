@@ -32,7 +32,7 @@ GameLoop::GameLoop()
     sInstanciated = true;
 
     using nextfloor::core::CommonServices;
-    timer_ = CommonServices::getFactory().MakeTimer();
+    timer_ = CommonServices::getFactory().MakeFrameTimer();
     auto player = CommonServices::getFactory().MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
     player_ = player.get();
     universe_ = CommonServices::getFactory().MakeLevel()->GenerateUniverse();

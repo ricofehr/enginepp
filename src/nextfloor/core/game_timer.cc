@@ -1,10 +1,10 @@
 /**
  *  @file frame_timer.cc
- *  @brief FrameTimer Implementation File : Init frame timers
+ *  @brief GameTimer Implementation File : Init frame timers
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/frame_timer.h"
+#include "nextfloor/core/game_timer.h"
 
 #include <cassert>
 
@@ -26,25 +26,25 @@ static double GetNow()
 
 }  // anonymous namespace
 
-double FrameTimer::deltatime_since_lastloop_ = 0.0f;
-double FrameTimer::totaltime_since_beginning_ = 0.0f;
-int FrameTimer::current_fps_ = 0;
-bool FrameTimer::is_newsecond_elapsed_ = false;
+double GameTimer::deltatime_since_lastloop_ = 0.0f;
+double GameTimer::totaltime_since_beginning_ = 0.0f;
+int GameTimer::current_fps_ = 0;
+bool GameTimer::is_newsecond_elapsed_ = false;
 
-FrameTimer::FrameTimer()
+GameTimer::GameTimer()
 {
     assert(!sInstanciated);
     sInstanciated = true;
 }
 
-void FrameTimer::Loop()
+void GameTimer::Loop()
 {
     ComputeTimers();
     ComputeFps();
     CheckEndProgram();
 }
 
-void FrameTimer::ComputeTimers()
+void GameTimer::ComputeTimers()
 {
     static double sLastTime = GetNow();
 
@@ -54,7 +54,7 @@ void FrameTimer::ComputeTimers()
     totaltime_since_beginning_ += deltatime_since_lastloop_;
 }
 
-void FrameTimer::ComputeFps()
+void GameTimer::ComputeFps()
 {
     static int sLastSecondTime = static_cast<int>(totaltime_since_beginning_);
     static int sNbFrames = 0;
@@ -71,7 +71,7 @@ void FrameTimer::ComputeFps()
     }
 }
 
-void FrameTimer::CheckEndProgram()
+void GameTimer::CheckEndProgram()
 {
     int end_time = CommonServices::getConfig().getExecutionDuration();
     if (end_time && totaltime_since_beginning_ >= end_time) {
@@ -79,7 +79,7 @@ void FrameTimer::CheckEndProgram()
     }
 }
 
-FrameTimer::~FrameTimer() noexcept
+GameTimer::~GameTimer() noexcept
 {
     assert(sInstanciated);
     sInstanciated = false;
