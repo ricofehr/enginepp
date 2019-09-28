@@ -55,6 +55,54 @@ void GameLoop::SetActiveCamera(nextfloor::objects::Camera* active_camera)
     universe_->set_active_camera(game_cameras_.front());
 }
 
+void GameLoop::Loop()
+{
+    do {
+        UpdateTime();
+        UpdateCameraOrientation();
+        HandlerInput();
+        DrawUniverse();
+        LogLoop();
+
+        input_handler_->PollEvents();
+    } while (!input_handler_->IsCloseWindowEventOccurs());
+}
+
+void GameLoop::UpdateTime()
+{
+    using nextfloor::core::CommonServices;
+
+    CommonServices::getTimer().Loop();
+    if (CommonServices::getTimer().getLoopCountBySecond() != 0) {
+        game_window_->UpdateMoveFactor();
+        universe_->toready();
+    }
+}
+
+void GameLoop::UpdateCameraOrientation()
+{
+    auto camera = game_cameras_.front();
+    camera->ComputeFOV(input_handler_->RecordFOV());
+    auto angles = input_handler_->RecordHIDPointer();
+    camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
+    camera->ComputeOrientation();
+}
+
+void GameLoop::HandlerInput()
+{
+    auto command = input_handler_->HandlerInput();
+    if (command) {
+        command->execute(player_);
+    }
+}
+
+void GameLoop::DrawUniverse()
+{
+    game_window_->PrepareDisplay();
+    universe_->Draw();
+    game_window_->SwapBuffers();
+}
+
 /**
  *   Display global details for each seconds
  */
@@ -96,38 +144,6 @@ void GameLoop::LogFps()
     message_fps << CommonServices::getTimer().getLoopCountBySecond();
     message_fps << " fps (move factor: " << game_window_->getFpsFixMoveFactor() << ") - ";
     CommonServices::getLog().Write(std::move(message_fps));
-}
-
-void GameLoop::Loop()
-{
-    using nextfloor::core::CommonServices;
-
-    /* Draw if window is focused and destroy window if ESC is pressed */
-    do {
-        CommonServices::getTimer().Loop();
-
-        if (CommonServices::getTimer().getLoopCountBySecond() != 0) {
-            game_window_->UpdateMoveFactor();
-            universe_->toready();
-        }
-
-        auto camera = game_cameras_.front();
-        camera->ComputeFOV(input_handler_->RecordFOV());
-        auto angles = input_handler_->RecordHIDPointer();
-        camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
-        camera->ComputeOrientation();
-        auto command = input_handler_->HandlerInput();
-        if (command) {
-            command->execute(player_);
-        }
-
-        game_window_->PrepareDisplay();
-        universe_->Draw();
-        game_window_->SwapBuffers();
-        LogLoop();
-
-        input_handler_->PollEvents();
-    } while (!input_handler_->IsCloseWindowEventOccurs());
 }
 
 GameLoop::~GameLoop() noexcept

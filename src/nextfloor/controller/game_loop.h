@@ -37,9 +37,13 @@ public:
     void Loop();
 
 private:
+    void SetActiveCamera(nextfloor::objects::Camera* active_camera);
+    void UpdateTime();
+    void UpdateCameraOrientation();
+    void HandlerInput();
+    void DrawUniverse();
     void LogLoop();
     void LogFps();
-    void SetActiveCamera(nextfloor::objects::Camera* active_camera);
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
     std::unique_ptr<nextfloor::hid::InputHandler> input_handler_{nullptr};
