@@ -73,9 +73,9 @@ void GameTimer::ComputeFps()
 
 void GameTimer::CheckEndProgram()
 {
-    int end_time = CommonServices::getConfig().getExecutionDuration();
+    int end_time = CommonServices::getConfig()->getExecutionDuration();
     if (end_time && totaltime_since_beginning_ >= end_time) {
-        CommonServices::getExit().ExitOnSuccess();
+        CommonServices::getExit()->ExitOnSuccess();
     }
 }
 

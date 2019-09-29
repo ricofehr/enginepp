@@ -14,9 +14,9 @@ namespace objects {
 
 Player::Player(const glm::vec3& location)
 {
-    using nextfloor::core::CommonServices;
-    border_ = CommonServices::getFactory().MakeBorder(location, glm::vec3(0.4f));
-    camera_ = CommonServices::getFactory().MakeCamera(this);
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    border_ = factory->MakeBorder(location, glm::vec3(0.4f));
+    camera_ = factory->MakeCamera(this);
 }
 
 void Player::Move()

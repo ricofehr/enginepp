@@ -14,11 +14,10 @@ namespace objects {
 
 Rock::Rock(const glm::vec3& location, float scale)
 {
-    using nextfloor::core::CommonServices;
-
-    polygons_.push_back(CommonServices::getFactory().MakeCube(location, glm::vec3(scale)));
-    border_ = CommonServices::getFactory().MakeBorder(location, glm::vec3(scale));
-    renderer_ = CommonServices::getFactory().MakeCubeRenderer(kTEXTURE);
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    polygons_.push_back(factory->MakeCube(location, glm::vec3(scale)));
+    border_ = factory->MakeBorder(location, glm::vec3(scale));
+    renderer_ = factory->MakeCubeRenderer(kTEXTURE);
 
     set_movement(glm::vec3(0.3, 0.01, 0.05));
 }

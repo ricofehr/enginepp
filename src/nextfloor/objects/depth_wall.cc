@@ -14,8 +14,8 @@ namespace objects {
 
 DepthWall::DepthWall(const glm::vec3& location, const glm::vec3& scale)
 {
-    using nextfloor::core::CommonServices;
-    border_ = CommonServices::getFactory().MakeBorder(location, scale);
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    border_ = factory->MakeBorder(location, scale);
     brick_dimension_ = glm::vec3(kBRICK_WIDTH, kBRICK_HEIGHT, kBRICK_DEPTH);
     bricks_count_ = border_->dimension() / brick_dimension_;
     AddBricks(location - scale, location + scale);

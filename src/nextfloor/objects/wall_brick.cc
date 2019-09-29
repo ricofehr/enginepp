@@ -14,11 +14,10 @@ namespace objects {
 
 WallBrick::WallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture)
 {
-    using nextfloor::core::CommonServices;
-
-    polygons_.push_back(CommonServices::getFactory().MakeCube(location, scale));
-    border_ = CommonServices::getFactory().MakeBorder(location, scale);
-    renderer_ = CommonServices::getFactory().MakeCubeRenderer(texture);
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    polygons_.push_back(factory->MakeCube(location, scale));
+    border_ = factory->MakeBorder(location, scale);
+    renderer_ = factory->MakeCubeRenderer(texture);
 }
 
 }  // namespace objects

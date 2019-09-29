@@ -14,8 +14,8 @@ namespace gameplay {
 
 std::unique_ptr<nextfloor::objects::Mesh> RandomLevel::GenerateUniverse() const
 {
-    using nextfloor::core::CommonServices;
-    return CommonServices::getFactory().MakeUniverse();
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    return factory->MakeUniverse();
 }
 
 }  // namespace gameplay

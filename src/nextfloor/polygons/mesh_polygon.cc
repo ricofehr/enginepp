@@ -26,7 +26,7 @@ namespace polygons {
 glm::vec3 MeshPolygon::movement() const
 {
     using nextfloor::core::CommonServices;
-    return movement_ * CommonServices::getWindowSettings().getFpsFixMoveFactor();
+    return movement_ * CommonServices::getWindowSettings()->getFpsFixMoveFactor();
 }
 
 void MeshPolygon::UpdateModelViewProjectionMatrix()
@@ -49,11 +49,11 @@ glm::mat4 MeshPolygon::GetProjectionMatrix()
     assert(active_camera_ != nullptr);
     using nextfloor::core::CommonServices;
 
-    glm::mat4 projection_matrix
-      = glm::perspective(glm::radians(active_camera_->fov()),
-                         CommonServices::getWindowSettings().getWidth() / CommonServices::getWindowSettings().getHeight(),
-                         0.1f,
-                         300.0f);
+    glm::mat4 projection_matrix = glm::perspective(glm::radians(active_camera_->fov()),
+                                                   CommonServices::getWindowSettings()->getWidth()
+                                                     / CommonServices::getWindowSettings()->getHeight(),
+                                                   0.1f,
+                                                   300.0f);
     return projection_matrix;
 }
 

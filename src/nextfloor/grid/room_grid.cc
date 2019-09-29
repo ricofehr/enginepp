@@ -23,8 +23,8 @@ RoomGrid::RoomGrid(nextfloor::objects::Mesh* owner)
 
 std::unique_ptr<nextfloor::objects::GridBox> RoomGrid::AllocateGridBox(const glm::ivec3& grid_coords)
 {
-    using nextfloor::core::CommonServices;
-    return CommonServices::getFactory().MakeRoomGridBox(grid_coords, this);
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    return factory->MakeRoomGridBox(grid_coords, this);
 }
 
 RoomGrid::~RoomGrid() noexcept

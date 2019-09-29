@@ -31,16 +31,16 @@ GameLoop::GameLoop()
     assert(!sInstanciated);
     sInstanciated = true;
 
-    using nextfloor::core::CommonServices;
-    timer_ = CommonServices::getFactory().MakeFrameTimer();
-    auto player = CommonServices::getFactory().MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    timer_ = factory->MakeFrameTimer();
+    auto player = factory->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
     player_ = player.get();
-    universe_ = CommonServices::getFactory().MakeLevel()->GenerateUniverse();
+    universe_ = factory->MakeLevel()->GenerateUniverse();
     universe_->AddIntoChild(std::move(player));
     game_cameras_ = universe_->all_cameras();
     SetActiveCamera(player_->camera());
-    game_window_ = CommonServices::getFactory().MakeSceneWindow();
-    input_handler_ = CommonServices::getFactory().MakeInputHandler();
+    game_window_ = factory->MakeSceneWindow();
+    input_handler_ = factory->MakeInputHandler();
 }
 
 void GameLoop::SetActiveCamera(nextfloor::objects::Camera* active_camera)
@@ -114,21 +114,21 @@ void GameLoop::LogLoop()
     if (timer_->IsNewSecondElapsed()) {
 
         /* Header for test datas output */
-        if (sFirstLoop && CommonServices::getConfig().IsTestDebugEnabled()) {
-            CommonServices::getLog().Write("TIME:FPS:NBOBJALL:NBOBJMOVE");
+        if (sFirstLoop && CommonServices::getConfig()->IsTestDebugEnabled()) {
+            CommonServices::getLog()->Write("TIME:FPS:NBOBJALL:NBOBJMOVE");
         }
         /* Print if debug */
-        if (CommonServices::getConfig().IsAllDebugEnabled()) {
+        if (CommonServices::getConfig()->IsAllDebugEnabled()) {
             std::ostringstream message_frame;
             message_frame << 1000.0 / static_cast<double>(timer_->getLoopCountBySecond()) << " ms/frame - ";
-            CommonServices::getLog().Write(std::move(message_frame));
+            CommonServices::getLog()->Write(std::move(message_frame));
         }
 
-        if (CommonServices::getConfig().IsPerfDebugEnabled()) {
+        if (CommonServices::getConfig()->IsPerfDebugEnabled()) {
             LogFps();
         }
 
-        CommonServices::getLog().WriteLine("");
+        CommonServices::getLog()->WriteLine("");
         /* First loop is ok */
         sFirstLoop = false;
     }
@@ -141,7 +141,7 @@ void GameLoop::LogFps()
     std::ostringstream message_fps;
     message_fps << timer_->getLoopCountBySecond();
     message_fps << " fps (move factor: " << game_window_->getFpsFixMoveFactor() << ") - ";
-    CommonServices::getLog().Write(std::move(message_fps));
+    CommonServices::getLog()->Write(std::move(message_fps));
 }
 
 GameLoop::~GameLoop() noexcept

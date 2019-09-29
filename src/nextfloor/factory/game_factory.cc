@@ -190,7 +190,7 @@ nextfloor::objects::CollisionEngine* GameFactory::MakeCollisionEngine() const
     CollisionEngine* engine_collision{nullptr};
 
     /* Get parallell type from config */
-    int type_parallell = CommonServices::getConfig().getParallellAlgoType();
+    int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
 
     switch (type_parallell) {  // clang-format off
         case NearerCollisionEngine::kPARALLELL_TBB:

@@ -11,8 +11,6 @@ namespace objects {
 
 void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint)
 {
-    using nextfloor::core::CommonServices;
-
     auto padding = brick_dimension_ / 2.0f;
     firstpoint += padding;
     lastpoint -= padding;
@@ -22,8 +20,8 @@ void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint)
         for (float y = firstpoint.y; y <= lastpoint.y; y += brick_dimension_.y) {
             for (float z = firstpoint.z; z <= lastpoint.z; z += brick_dimension_.z) {
                 auto brick_location = glm::vec3(x, y, z);
-                add_child(
-                  CommonServices::getFactory().MakeWallBrick(brick_location, brick_dimension_ / 2.0f, texture_file()));
+                auto factory = nextfloor::core::CommonServices::getFactory();
+                add_child(factory->MakeWallBrick(brick_location, brick_dimension_ / 2.0f, texture_file()));
             }
         }
     }

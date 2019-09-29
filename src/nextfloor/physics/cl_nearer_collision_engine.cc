@@ -30,7 +30,7 @@ void ClNearerCollisionEngine::InitCollisionEngine()
     size_t num;
 
     using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig().getCollisionGranularity();
+    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 
     // try {
     /* Query for platforms */
@@ -101,8 +101,8 @@ void ClNearerCollisionEngine::HandleErrorOnInit(cl::Error error)
 
     std::ostringstream message;
     message << error.what() << "(" << error.err() << ")";
-    CommonServices::getLog().WriteLine(std::move(message));
-    CommonServices::getExit().ExitOnError();
+    CommonServices::getLog()->WriteLine(std::move(message));
+    CommonServices::getExit()->ExitOnError();
 }
 
 float ClNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)

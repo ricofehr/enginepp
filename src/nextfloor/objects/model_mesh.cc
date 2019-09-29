@@ -72,8 +72,8 @@ void ModelMesh::DetectCollision()
 
 void ModelMesh::PivotCollision()
 {
-    using nextfloor::core::CommonServices;
-    static CollisionEngine* collision_engine = CommonServices::getFactory().MakeCollisionEngine();
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    static CollisionEngine* collision_engine = factory->MakeCollisionEngine();
 
     /* Prepare vector for collision compute */
     std::vector<Mesh*> test_objects = parent_->FindCollisionNeighborsOf(*this);
@@ -339,7 +339,7 @@ void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
         }
 
         using nextfloor::core::CommonServices;
-        if (CommonServices::getConfig().IsCollisionDebugEnabled()) {
+        if (CommonServices::getConfig()->IsCollisionDebugEnabled()) {
             LogCollision(*obstacle, obstacle_distance);
         }
     }
@@ -353,7 +353,7 @@ void ModelMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)
     std::ostringstream message;
     message << "Object::" << id() << " - Obstacle::" << obstacle.id();
     message << " - Distance::" << obstacle_distance;
-    CommonServices::getLog().WriteLine(std::move(message));
+    CommonServices::getLog()->WriteLine(std::move(message));
 }
 
 void ModelMesh::TransferCameraToOtherMesh(Mesh* other)

@@ -49,8 +49,8 @@ void GameFileIO::HandleErrorOnReadFile(const std::string& file_path) const
 {
     std::ostringstream message;
     message << "Unable to open " << file_path;
-    CommonServices::getLog().WriteLine(std::move(message));
-    CommonServices::getExit().ExitOnError();
+    CommonServices::getLog()->WriteLine(std::move(message));
+    CommonServices::getExit()->ExitOnError();
 }
 
 GameFileIO::~GameFileIO() noexcept

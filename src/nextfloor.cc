@@ -16,10 +16,10 @@ int main(int argc, char* argv[])
     using nextfloor::core::CommonServices;
 
     /* Init Config */
-    CommonServices::getConfig().Initialize();
+    CommonServices::getConfig()->Initialize();
 
     /* Manage program parameters */
-    CommonServices::getConfig().ManageProgramParameters(argc, argv);
+    CommonServices::getConfig()->ManageProgramParameters(argc, argv);
 
     /* Init GL Scene */
     GameLoop game_loop;
@@ -27,5 +27,5 @@ int main(int argc, char* argv[])
     /* Frame Loop */
     game_loop.Loop();
 
-    CommonServices::getExit().ExitOnSuccess();
+    CommonServices::getExit()->ExitOnSuccess();
 }

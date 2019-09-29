@@ -20,7 +20,7 @@ void InitGLFW()
 {
     if (!glfwInit()) {
         using nextfloor::core::CommonServices;
-        CommonServices::getLog().WriteLine("Failed to initialize GLFW");
+        CommonServices::getLog()->WriteLine("Failed to initialize GLFW");
         exit(-1);
     }
 }
@@ -40,7 +40,7 @@ void InitGlew()
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         using nextfloor::core::CommonServices;
-        CommonServices::getLog().WriteLine("Failed to initialize GLEW");
+        CommonServices::getLog()->WriteLine("Failed to initialize GLEW");
         exit(-1);
     }
 }
@@ -82,9 +82,9 @@ void GlSceneWindow::Initialization()
 
 void GlSceneWindow::InitWindowSize()
 {
-    using nextfloor::core::CommonServices;
-    window_width_ = CommonServices::getConfig().getWindowWidth();
-    window_height_ = CommonServices::getConfig().getWindowHeight();
+    auto config = nextfloor::core::CommonServices::getConfig();
+    window_width_ = config->getWindowWidth();
+    window_height_ = config->getWindowHeight();
 }
 
 void GlSceneWindow::CreateWindow()
@@ -93,7 +93,7 @@ void GlSceneWindow::CreateWindow()
     glfw_window_ = glfwCreateWindow(window_width_, window_height_, "=== Engine ===", nullptr, nullptr);
     if (glfw_window_ == nullptr) {
         using nextfloor::core::CommonServices;
-        CommonServices::getLog().WriteLine("Failed to open GLFW window");
+        CommonServices::getLog()->WriteLine("Failed to open GLFW window");
         glfwTerminate();
         exit(-1);
     }
@@ -118,9 +118,8 @@ void GlSceneWindow::InitVAO()
 
 void GlSceneWindow::InitVSync()
 {
-    using nextfloor::core::CommonServices;
-
-    is_vsync_enabled_ = CommonServices::getConfig().isVsync();
+    auto config = nextfloor::core::CommonServices::getConfig();
+    is_vsync_enabled_ = config->isVsync();
     if (!is_vsync_enabled_) {
         glfwSwapInterval(0);
     }
@@ -133,9 +132,9 @@ void GlSceneWindow::InitProgramId()
 
 void GlSceneWindow::LoadShaders()
 {
-    using nextfloor::core::CommonServices;
-    vertex_shader_ = CommonServices::getFactory().MakeVertexShader(kVERTEXFILEPATH, program_id_);
-    fragment_shader_ = CommonServices::getFactory().MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    vertex_shader_ = factory->MakeVertexShader(kVERTEXFILEPATH, program_id_);
+    fragment_shader_ = factory->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
 
     vertex_shader_->LoadShader();
     fragment_shader_->LoadShader();
@@ -154,9 +153,8 @@ void GlSceneWindow::InitMatrixId()
 
 void GlSceneWindow::InitPolygonMode()
 {
-    using nextfloor::core::CommonServices;
-
-    if (CommonServices::getConfig().isGridMode()) {
+    auto config = nextfloor::core::CommonServices::getConfig();
+    if (config->isGridMode()) {
         polygon_mode_ = GL_LINE;
     }
     else {
@@ -189,8 +187,6 @@ void GlSceneWindow::PrepareDisplay()
 
 void GlSceneWindow::UpdateMoveFactor(int fps)
 {
-    using nextfloor::core::CommonServices;
-
     /** Fps displayed can't be greater than monitor refresh rate */
     if (fps > monitor_refresh_rate_) {
         fps = monitor_refresh_rate_;

@@ -35,14 +35,14 @@ GameInputHandler::GameInputHandler()
     hid_ = std::make_unique<MouseKeyboard>();
 
     /* Init Command Pointers */
-    using nextfloor::core::CommonServices;
-    move_up_command_ = CommonServices::getFactory().MakeMoveUpAction();
-    move_down_command_ = CommonServices::getFactory().MakeMoveDownAction();
-    move_left_command_ = CommonServices::getFactory().MakeMoveLeftAction();
-    move_right_command_ = CommonServices::getFactory().MakeMoveRightAction();
-    jump_command_ = CommonServices::getFactory().MakeJumpAction();
-    run_command_ = CommonServices::getFactory().MakeRunAction();
-    fire_command_ = CommonServices::getFactory().MakeFireAction();
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    move_up_command_ = factory->MakeMoveUpAction();
+    move_down_command_ = factory->MakeMoveDownAction();
+    move_left_command_ = factory->MakeMoveLeftAction();
+    move_right_command_ = factory->MakeMoveRightAction();
+    jump_command_ = factory->MakeJumpAction();
+    run_command_ = factory->MakeRunAction();
+    fire_command_ = factory->MakeFireAction();
 }
 
 nextfloor::actions::Action* GameInputHandler::HandlerInput()

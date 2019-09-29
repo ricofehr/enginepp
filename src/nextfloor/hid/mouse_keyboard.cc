@@ -43,9 +43,8 @@ static void OnScroll(void* window, double delta_x, double delta_y)
 
 MouseKeyboard::MouseKeyboard()
 {
-    using nextfloor::core::CommonServices;
-    scene_input_ = CommonServices::getFactory().MakeSceneInput();
-    /* Ensure we can capture keys being pressed below */
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    scene_input_ = factory->MakeSceneInput();
 }
 
 /**
@@ -68,8 +67,8 @@ bool MouseKeyboard::isPressed(int ACTION_BUTTON)
 HIDPointer MouseKeyboard::RecordHIDPointer(double elapsed_time)
 {
     using nextfloor::core::CommonServices;
-    float window_width = CommonServices::getConfig().getWindowWidth();
-    float window_height = CommonServices::getConfig().getWindowHeight();
+    float window_width = CommonServices::getConfig()->getWindowWidth();
+    float window_height = CommonServices::getConfig()->getWindowHeight();
 
     const float hid_speed = 0.1f;
 

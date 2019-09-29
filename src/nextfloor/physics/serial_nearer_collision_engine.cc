@@ -22,7 +22,7 @@ SerialNearerCollisionEngine::SerialNearerCollisionEngine()
 void SerialNearerCollisionEngine::InitCollisionEngine()
 {
     using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig().getCollisionGranularity();
+    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 }
 
 float SerialNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)

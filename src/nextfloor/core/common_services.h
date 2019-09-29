@@ -36,19 +36,19 @@ public:
     /*
      *  Service Accessors
      */
-    static ConfigParser& getConfig() { return Instance()->config(); }
+    static ConfigParser* getConfig() { return Instance()->config(); }
 
-    static const WindowSettings& getWindowSettings() { return Instance()->window_settings(); }
+    static const WindowSettings* getWindowSettings() { return Instance()->window_settings(); }
 
-    static const FileIO& getFileIO() { return Instance()->fileIO(); }
+    static const FileIO* getFileIO() { return Instance()->fileIO(); }
 
-    static const Log& getLog() { return Instance()->log(); }
+    static const Log* getLog() { return Instance()->log(); }
 
-    static const RandomGenerator& getRandomGenerator() { return Instance()->random_generator(); }
+    static const RandomGenerator* getRandomGenerator() { return Instance()->random_generator(); }
 
-    static const Exit& getExit() { return Instance()->exit(); }
+    static const Exit* getExit() { return Instance()->exit(); }
 
-    static nextfloor::factory::FacadeFactory& getFactory() { return Instance()->factory(); }
+    static nextfloor::factory::FacadeFactory* getFactory() { return Instance()->factory(); }
 
     static void initWindowSettings(nextfloor::renderer::SceneWindow* window) { Instance()->makeWindowSettings(window); }
 
@@ -75,46 +75,46 @@ private:
         return instance;
     }
 
-    ConfigParser& config()
+    ConfigParser* config()
     {
         assert(config_ != nullptr);
-        return *(config_.get());
+        return config_.get();
     }
 
-    const WindowSettings& window_settings()
+    const WindowSettings* window_settings()
     {
         assert(window_settings_ != nullptr);
-        return *(window_settings_.get());
+        return window_settings_.get();
     }
 
-    const FileIO& fileIO()
+    const FileIO* fileIO()
     {
         assert(file_io_ != nullptr);
-        return *(file_io_.get());
+        return file_io_.get();
     }
 
-    const Log& log() const
+    const Log* log() const
     {
         assert(log_ != nullptr);
-        return *(log_.get());
+        return log_.get();
     }
 
-    const RandomGenerator& random_generator() const
+    const RandomGenerator* random_generator() const
     {
         assert(random_generator_ != nullptr);
-        return *(random_generator_.get());
+        return random_generator_.get();
     }
 
-    const Exit& exit() const
+    const Exit* exit() const
     {
         assert(exit_ != nullptr);
-        return *(exit_.get());
+        return exit_.get();
     }
 
-    nextfloor::factory::FacadeFactory& factory() const
+    nextfloor::factory::FacadeFactory* factory() const
     {
         assert(factory_ != nullptr);
-        return *(factory_.get());
+        return factory_.get();
     }
 
     void makeWindowSettings(nextfloor::renderer::SceneWindow* window)
