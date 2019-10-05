@@ -77,6 +77,7 @@ void GameLoop::HandlerInput()
 void GameLoop::Draw()
 {
     game_window_->PrepareDisplay();
+    level_->Move();
     level_->Draw();
     game_window_->SwapBuffers();
 }

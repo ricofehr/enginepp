@@ -12,6 +12,7 @@
 #include <list>
 #include <glm/glm.hpp>
 
+#include "nextfloor/objects/polygon.h"
 #include "nextfloor/objects/border.h"
 #include "nextfloor/objects/camera.h"
 
@@ -30,7 +31,7 @@ class Mesh {
 public:
     virtual ~Mesh() = default;
 
-    virtual void Draw() = 0;
+    virtual std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) = 0;
     virtual void DetectCollision() = 0;
     virtual std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const = 0;
     virtual bool IsNeighborEligibleForCollision(const Mesh& neighbor) const = 0;
@@ -59,7 +60,7 @@ public:
     virtual void InitChildsIntoGrid() = 0;
     virtual void AddIntoAscendantGrid() = 0;
 
-    virtual void PrepareDraw() = 0;
+    virtual void PrepareDraw(const Camera& active_camera) = 0;
 
     virtual bool IsFrontPositionFilled() const = 0;
     virtual bool IsRightPositionFilled() const = 0;
@@ -83,7 +84,6 @@ public:
     virtual void set_movement(const glm::vec3& movement) = 0;
     virtual void set_move_factor(float move_factor) = 0;
     virtual void set_camera(std::unique_ptr<Camera> camera) = 0;
-    virtual void set_active_camera(Camera* active_camera) = 0;
     virtual void TransferCameraToOtherMesh(Mesh* other) = 0;
 
     virtual void lock() = 0;

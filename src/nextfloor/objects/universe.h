@@ -24,12 +24,6 @@ class Universe : public ModelMesh {
 public:
     Universe();
     ~Universe() final = default;
-
-    void Draw() final;
-
-private:
-    /** filtering only rooms with display state */
-    std::vector<Mesh*> display_rooms_;
 };
 
 }  // namespace objects

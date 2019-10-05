@@ -9,9 +9,7 @@
 
 #include "nextfloor/objects/model_mesh.h"
 
-#include <memory>
-
-#include "nextfloor/objects/renderer_engine.h"
+#include <glm/glm.hpp>
 
 namespace nextfloor {
 

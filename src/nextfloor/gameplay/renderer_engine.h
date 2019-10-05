@@ -4,14 +4,14 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_RENDERERENGINE_H_
-#define NEXTFLOOR_OBJECTS_RENDERERENGINE_H_
+#ifndef NEXTFLOOR_GAMEPLAY_RENDERERENGINE_H_
+#define NEXTFLOOR_GAMEPLAY_RENDERERENGINE_H_
 
 #include <glm/glm.hpp>
 
 namespace nextfloor {
 
-namespace objects {
+namespace gameplay {
 
 class RendererEngine {
 
@@ -21,8 +21,8 @@ public:
     virtual void Draw(const glm::mat4& mvp) = 0;
 };
 
-}  // namespace objects
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_OBJECTS_RENDERERENGINE_H_
+#endif  // NEXTFLOOR_GAMEPLAY_RENDERERENGINE_H_

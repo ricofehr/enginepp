@@ -12,7 +12,7 @@ namespace objects {
 
 FrontWall::FrontWall(const glm::vec3& location, const glm::vec3& scale) : WidthWall(location, scale) {}
 
-void FrontWall::PrepareDraw()
+void FrontWall::PrepareDraw(const Camera& active_camera)
 {
     if (parent_->IsFrontPositionFilled()) {
         AddDoor();
@@ -21,7 +21,7 @@ void FrontWall::PrepareDraw()
         AddWindow();
     }
 
-    WidthWall::PrepareDraw();
+    WidthWall::PrepareDraw(active_camera);
 }
 
 }  // namespace objects

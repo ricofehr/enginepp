@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_RENDERER_GLRENDERER_H_
 #define NEXTFLOOR_RENDERER_GLRENDERER_H_
 
-#include "nextfloor/objects/renderer_engine.h"
+#include "nextfloor/gameplay/renderer_engine.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -19,7 +19,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-class GlRendererEngine : public nextfloor::objects::RendererEngine {
+class GlRendererEngine : public nextfloor::gameplay::RendererEngine {
 
 public:
     ~GlRendererEngine() override = default;

@@ -25,7 +25,7 @@ public:
     LeftWall(const glm::vec3& location, const glm::vec3& scale);
     ~LeftWall() final = default;
 
-    void PrepareDraw() final;
+    void PrepareDraw(const Camera& active_camera) final;
 };
 
 }  // namespace objects

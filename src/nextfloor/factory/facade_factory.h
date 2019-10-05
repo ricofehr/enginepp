@@ -13,7 +13,6 @@
 
 #include "nextfloor/objects/mesh.h"
 #include "nextfloor/objects/border.h"
-#include "nextfloor/objects/renderer_engine.h"
 #include "nextfloor/objects/collision_engine.h"
 #include "nextfloor/objects/grid.h"
 #include "nextfloor/objects/grid_box.h"
@@ -22,7 +21,7 @@
 #include "nextfloor/renderer/shader.h"
 #include "nextfloor/gameplay/level.h"
 
-#include "nextfloor/objects/renderer_engine.h"
+#include "nextfloor/gameplay/renderer_engine.h"
 #include "nextfloor/renderer/shader.h"
 #include "nextfloor/gameplay/scene_window.h"
 #include "nextfloor/renderer/scene_input.h"
@@ -87,6 +86,10 @@ public:
 
     std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const;
 
+    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location,
+                                                          const glm::vec3& scale,
+                                                          const std::string& texture) const;
+
     std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const;
 
     std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) const;
@@ -102,7 +105,7 @@ public:
                                                              nextfloor::objects::Grid* grid) const;
 
     /* RendererFactory Part */
-    nextfloor::objects::RendererEngine* MakeCubeRenderer(const std::string& texture);
+    nextfloor::gameplay::RendererEngine* MakeCubeRenderer(const std::string& texture);
     nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id);
     nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id);
     nextfloor::gameplay::SceneWindow* MakeSceneWindow();

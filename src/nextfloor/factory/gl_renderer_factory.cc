@@ -32,7 +32,7 @@ GlRendererFactory::GlRendererFactory()
 }
 
 
-nextfloor::objects::RendererEngine* GlRendererFactory::MakeCubeRenderer(const std::string& texture)
+nextfloor::gameplay::RendererEngine* GlRendererFactory::MakeCubeRenderer(const std::string& texture)
 {
     static tbb::mutex renderer_mutex_;
 

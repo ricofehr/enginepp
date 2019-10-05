@@ -12,7 +12,7 @@ namespace objects {
 
 LeftWall::LeftWall(const glm::vec3& location, const glm::vec3& scale) : DepthWall(location, scale) {}
 
-void LeftWall::PrepareDraw()
+void LeftWall::PrepareDraw(const Camera& active_camera)
 {
     if (parent_->IsLeftPositionFilled()) {
         AddDoor();
@@ -21,7 +21,7 @@ void LeftWall::PrepareDraw()
         AddWindow();
     }
 
-    DepthWall::PrepareDraw();
+    DepthWall::PrepareDraw(active_camera);
 }
 
 }  // namespace objects

@@ -43,6 +43,9 @@ public:
     std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const final;
 
     std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const final;
+    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location,
+                                                          const glm::vec3& scale,
+                                                          const std::string& texture) const final;
 
     std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const final;
 

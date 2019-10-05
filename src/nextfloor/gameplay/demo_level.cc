@@ -6,6 +6,8 @@
 
 #include "nextfloor/gameplay/demo_level.h"
 
+#include <tbb/tbb.h>
+
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -148,7 +150,6 @@ void DemoLevel::SetActiveCamera(nextfloor::objects::Camera* active_camera)
             break;
         }
     }
-    universe_->set_active_camera(game_cameras_.front());
 }
 
 
@@ -159,10 +160,10 @@ void DemoLevel::GenerateUniverse()
 
 void DemoLevel::UpdateCameraOrientation(HIDPointer angles, float input_fov)
 {
-    auto camera = game_cameras_.front();
-    camera->ComputeFOV(input_fov);
-    camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
-    camera->ComputeOrientation();
+    auto active_camera = game_cameras_.front();
+    active_camera->ComputeFOV(input_fov);
+    active_camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
+    active_camera->ComputeOrientation();
 }
 
 void DemoLevel::ExecutePlayerAction(Action* command, double elapsed_time)
@@ -171,9 +172,22 @@ void DemoLevel::ExecutePlayerAction(Action* command, double elapsed_time)
 }
 
 
+void DemoLevel::Move()
+{
+    universe_->DetectCollision();
+    universe_->Move();
+}
+
 void DemoLevel::Draw()
 {
-    universe_->Draw();
+    auto active_camera = game_cameras_.front();
+    universe_->PrepareDraw(*active_camera);
+    auto polygons = universe_->GetPolygonsReadyToDraw(*active_camera);
+    auto factory = nextfloor::core::CommonServices::getFactory();
+    for (const auto& polygon : polygons) {
+        auto renderer = factory->MakeCubeRenderer(polygon->texture());
+        renderer->Draw(polygon->mvp());
+    }
 }
 
 }  // namespace gameplay

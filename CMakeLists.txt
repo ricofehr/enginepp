@@ -159,6 +159,7 @@ set(gameplay_HDRS
         src/nextfloor/gameplay/input_handler.h
         src/nextfloor/gameplay/level.h
         src/nextfloor/gameplay/player.h
+        src/nextfloor/gameplay/renderer_engine.h
         src/nextfloor/gameplay/scene_window.h)
 
 set(grid_HDRS
@@ -187,7 +188,6 @@ set(objects_HDRS
         src/nextfloor/objects/mesh.h
         src/nextfloor/objects/model_mesh.h
         src/nextfloor/objects/polygon.h
-        src/nextfloor/objects/renderer_engine.h
         src/nextfloor/objects/right_wall.h
         src/nextfloor/objects/rock.h
         src/nextfloor/objects/roof.h

@@ -112,6 +112,14 @@ std::unique_ptr<nextfloor::objects::Polygon> FacadeFactory::MakeCube(const glm::
     return mesh_factory_->MakeCube(location, scale);
 }
 
+
+std::unique_ptr<nextfloor::objects::Polygon> FacadeFactory::MakeCube(const glm::vec3& location,
+                                                                     const glm::vec3& scale,
+                                                                     const std::string& texture) const
+{
+    return mesh_factory_->MakeCube(location, scale, texture);
+}
+
 std::unique_ptr<nextfloor::objects::Border> FacadeFactory::MakeBorder(const glm::vec3& location,
                                                                       const glm::vec3& scale) const
 {
@@ -153,7 +161,7 @@ std::unique_ptr<nextfloor::objects::GridBox> FacadeFactory::MakeGridBox(const gl
     return mesh_factory_->MakeUniverseGridBox(coords, grid);
 }
 
-nextfloor::objects::RendererEngine* FacadeFactory::MakeCubeRenderer(const std::string& texture)
+nextfloor::gameplay::RendererEngine* FacadeFactory::MakeCubeRenderer(const std::string& texture)
 {
     return renderer_factory_->MakeCubeRenderer(texture);
 }

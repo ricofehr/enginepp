@@ -7,11 +7,10 @@
 #ifndef NEXTFLOOR_OBJECTS_POLYGON_H_
 #define NEXTFLOOR_OBJECTS_POLYGON_H_
 
-#include <math.h>
 #include <glm/glm.hpp>
+#include <string>
 
 #include "nextfloor/objects/camera.h"
-#include "nextfloor/objects/renderer_engine.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -28,13 +27,11 @@ class Polygon {
 public:
     virtual ~Polygon() = default;
 
-    virtual void UpdateModelViewProjectionMatrix() = 0;
-    virtual void Draw(nextfloor::objects::RendererEngine* renderer) = 0;
+    virtual void UpdateModelViewProjectionMatrix(const Camera& camera) = 0;
 
     virtual void MoveLocation() = 0;
     virtual bool IsMoved() const = 0;
 
-    virtual void set_active_camera(nextfloor::objects::Camera* active_camera) = 0;
     virtual void set_move_factor(float move_factor) = 0;
     virtual void set_movement(const glm::vec3& move) = 0;
     virtual void InverseMove() = 0;
@@ -43,6 +40,8 @@ public:
     virtual glm::vec3 movement() const = 0;
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 scale() const = 0;
+    virtual glm::mat4 mvp() const = 0;
+    virtual std::string texture() const = 0;
 
     static void NewFrame() { is_viewprojection_setted_ = false; }
 

@@ -16,7 +16,6 @@
 #include "nextfloor/objects/border.h"
 #include "nextfloor/objects/grid.h"
 #include "nextfloor/objects/grid_box.h"
-#include "nextfloor/objects/renderer_engine.h"
 #include "nextfloor/objects/polygon.h"
 
 namespace nextfloor {
@@ -37,7 +36,7 @@ public:
     friend bool operator==(const ModelMesh& o1, const ModelMesh& o2);
     friend bool operator!=(const ModelMesh& o1, const ModelMesh& o2);
 
-    void Draw() override;
+    std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) override;
     void DetectCollision() final;
     std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
     bool IsNeighborEligibleForCollision(const Mesh& neighbor) const final;
@@ -56,7 +55,7 @@ public:
 
     bool IsLastObstacle(Mesh* obstacle) const final;
     void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) final;
-    void PrepareDraw() override;
+    void PrepareDraw(const Camera& active_camera) override;
 
     bool IsFrontPositionFilled() const final;
     bool IsRightPositionFilled() const final;
@@ -102,7 +101,6 @@ public:
     }
 
     void set_camera(std::unique_ptr<Camera> camera) final { camera_ = std::move(camera); }
-    void set_active_camera(Camera* active_camera) final;
     void TransferCameraToOtherMesh(Mesh* other) final;
 
     std::vector<glm::vec3> getCoordsModelMatrixComputed() const final
@@ -168,9 +166,6 @@ protected:
     std::vector<std::unique_ptr<Polygon>> polygons_;
     std::unique_ptr<Border> border_{nullptr};
     std::unique_ptr<Camera> camera_{nullptr};
-
-    RendererEngine* renderer_{nullptr};
-    Camera* active_camera_{nullptr};
 
 private:
     void InitCollisionEngine();

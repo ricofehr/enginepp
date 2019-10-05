@@ -22,11 +22,13 @@ namespace polygons {
 class Cube : public MeshPolygon {
 
 public:
-    Cube(const glm::vec3& location, float scale);
+    Cube(const glm::vec3& location, float scale, const std::string& texture);
     Cube(const glm::vec3& location, const glm::vec3& scale);
+    Cube(const glm::vec3& location, const glm::vec3& scale, const std::string& texture);
     ~Cube() final = default;
 
-    void Draw(nextfloor::objects::RendererEngine* renderer) final;
+private:
+    static constexpr char kNOTEXTURE[] = "";
 };
 
 }  // namespace polygons

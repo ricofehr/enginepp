@@ -131,6 +131,14 @@ std::unique_ptr<nextfloor::objects::Polygon> GameFactory::MakeCube(const glm::ve
     return std::make_unique<Cube>(location, scale);
 }
 
+std::unique_ptr<nextfloor::objects::Polygon> GameFactory::MakeCube(const glm::vec3& location,
+                                                                   const glm::vec3& scale,
+                                                                   const std::string& texture) const
+{
+    using nextfloor::polygons::Cube;
+    return std::make_unique<Cube>(location, scale, texture);
+}
+
 std::unique_ptr<nextfloor::objects::Border> GameFactory::MakeBorder(const glm::vec3& location, const glm::vec3& scale) const
 {
     using nextfloor::physics::CubeBorder;

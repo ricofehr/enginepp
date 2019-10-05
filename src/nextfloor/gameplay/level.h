@@ -27,6 +27,7 @@ public:
 
     virtual void toready() = 0;
     virtual void UpdateCameraOrientation(HIDPointer angles, float input_fov) = 0;
+    virtual void Move() = 0;
     virtual void Draw() = 0;
     virtual void ExecutePlayerAction(Action* command, double elapsed_time) = 0;
 };

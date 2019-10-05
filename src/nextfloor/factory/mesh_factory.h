@@ -13,7 +13,7 @@
 
 #include "nextfloor/objects/mesh.h"
 #include "nextfloor/objects/border.h"
-#include "nextfloor/objects/renderer_engine.h"
+#include "nextfloor/gameplay/renderer_engine.h"
 #include "nextfloor/objects/collision_engine.h"
 #include "nextfloor/objects/grid.h"
 #include "nextfloor/objects/grid_box.h"
@@ -62,6 +62,9 @@ public:
 
     virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location,
                                                                   const glm::vec3& scale) const = 0;
+    virtual std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location,
+                                                                  const glm::vec3& scale,
+                                                                  const std::string& texture) const = 0;
 
     virtual std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location,
                                                                    const glm::vec3& scale) const = 0;

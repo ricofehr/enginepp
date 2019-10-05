@@ -36,29 +36,32 @@ bool operator!=(const ModelMesh& o1, const ModelMesh& o2)
     return o1.id_ != o2.id_;
 }
 
-void ModelMesh::PrepareDraw()
+void ModelMesh::PrepareDraw(const Camera& active_camera)
 {
     Polygon::NewFrame();
-    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(); });
+    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(active_camera); });
+
+    tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
+        polygons_[counter]->UpdateModelViewProjectionMatrix(active_camera);
+    });
 }
 
-void ModelMesh::Draw()
+std::vector<Polygon*> ModelMesh::GetPolygonsReadyToDraw(const Camera& active_camera)
 {
-    tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
-        polygons_[counter]->UpdateModelViewProjectionMatrix();
-    });
+    std::vector<Polygon*> polygons;
 
     /* Draw meshes of current object */
-    assert(active_camera_ != nullptr);
-    if (active_camera_->IsInFieldOfView(*this)) {
-        for (auto& polygon : polygons_) {
-            polygon->Draw(renderer_);
+    if (active_camera.IsInFieldOfView(*this)) {
+        for (const auto& polygon : polygons_) {
+            polygons.push_back(polygon.get());
+        }
+        for (auto& object : objects_) {
+            auto object_polygons = object->GetPolygonsReadyToDraw(active_camera);
+            polygons.insert(polygons.end(), object_polygons.begin(), object_polygons.end());
         }
     }
 
-    for (auto& object : objects_) {
-        object->Draw();
-    }
+    return polygons;
 }
 
 void ModelMesh::DetectCollision()
@@ -240,7 +243,6 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object)
 {
     auto object_raw = object.get();
     object_raw->set_parent(this);
-    object_raw->set_active_camera(active_camera_);
 
     lock();
     auto initial_objects_size = objects_.size();
@@ -384,19 +386,6 @@ std::list<Camera*> ModelMesh::all_cameras() const
     }
 
     return cameras;
-}
-
-void ModelMesh::set_active_camera(Camera* active_camera)
-{
-    for (auto& object : objects_) {
-        object->set_active_camera(active_camera);
-    }
-
-    for (auto& polygon : polygons_) {
-        polygon->set_active_camera(active_camera);
-    }
-
-    active_camera_ = active_camera;
 }
 
 bool ModelMesh::IsFrontPositionFilled() const

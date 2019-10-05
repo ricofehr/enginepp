@@ -29,7 +29,7 @@ public:
 
     void AddDoor() final;
     void AddWindow() final;
-    void PrepareDraw() final;
+    void PrepareDraw(const Camera& active_camera) final;
 
 private:
     static constexpr char kTEXTURE[] = "assets/sky.png";

@@ -36,6 +36,7 @@ public:
     void toready() final { universe_->toready(); }
     void UpdateCameraOrientation(HIDPointer angles, float input_fov) final;
     void ExecutePlayerAction(Action* command, double elapsed_time) final;
+    void Move() final;
     void Draw() final;
 
 private:

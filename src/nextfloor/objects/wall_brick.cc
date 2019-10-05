@@ -15,9 +15,8 @@ namespace objects {
 WallBrick::WallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture)
 {
     auto factory = nextfloor::core::CommonServices::getFactory();
-    polygons_.push_back(factory->MakeCube(location, scale));
+    polygons_.push_back(factory->MakeCube(location, scale, texture));
     border_ = factory->MakeBorder(location, scale);
-    renderer_ = factory->MakeCubeRenderer(texture);
 }
 
 }  // namespace objects
