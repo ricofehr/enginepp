@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_ACTIONS_JUMPACTION_H_
 #define NEXTFLOOR_ACTIONS_JUMPACTION_H_
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace actions {
  *  @class JumpAction
  *  @brief Implements Action (Command Pattern), generate Jump action for any object
  */
-class JumpAction : public Action {
+class JumpAction : public nextfloor::gameplay::Action {
 
 public:
     void execute(nextfloor::objects::Mesh* actor, double elapsed_time) final;

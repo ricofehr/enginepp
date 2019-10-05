@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_HID_MOUSEKEYBOARD_H_
 #define NEXTFLOOR_HID_MOUSEKEYBOARD_H_
 
-#include "nextfloor/hid/hid.h"
+#include "nextfloor/gameplay/hid.h"
 
 #include <memory>
 
@@ -29,7 +29,7 @@ namespace hid {
  *  Manages keyboard / Mouse Controllers
  *  Implements HID Interface
  */
-class MouseKeyboard : public HID {
+class MouseKeyboard : public nextfloor::gameplay::HID {
 
 public:
     /**
@@ -57,7 +57,7 @@ public:
      * @param  window GL Window
      * @return        HIDPointer struct with orientation angles changes
      */
-    HIDPointer RecordHIDPointer(double elapsed_time) final;
+    nextfloor::gameplay::HIDPointer RecordHIDPointer(double elapsed_time) final;
 
     /**
      *  Return current "Field of View"

@@ -10,7 +10,7 @@ namespace nextfloor {
 
 namespace core {
 
-GameWindowSettings::GameWindowSettings(nextfloor::renderer::SceneWindow* window)
+GameWindowSettings::GameWindowSettings(nextfloor::gameplay::SceneWindow* window)
 {
     game_window_ = window;
 }

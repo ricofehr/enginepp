@@ -12,13 +12,14 @@
 #include "nextfloor/objects/mesh.h"
 #include "nextfloor/objects/camera.h"
 #include "nextfloor/objects/collision_engine.h"
-#include "nextfloor/renderer/scene_window.h"
-#include "nextfloor/hid/input_handler.h"
-#include "nextfloor/core/frame_timer.h"
+#include "nextfloor/gameplay/scene_window.h"
+#include "nextfloor/gameplay/input_handler.h"
+#include "nextfloor/gameplay/frame_timer.h"
+#include "nextfloor/gameplay/level.h"
 
 namespace nextfloor {
 
-namespace controller {
+namespace gameplay {
 
 /**
  *  @class GameLoop
@@ -47,14 +48,15 @@ private:
     void LogFps();
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
-    std::unique_ptr<nextfloor::hid::InputHandler> input_handler_{nullptr};
-    nextfloor::renderer::SceneWindow* game_window_{nullptr};
+    std::unique_ptr<InputHandler> input_handler_{nullptr};
+    SceneWindow* game_window_{nullptr};
     nextfloor::objects::Mesh* player_{nullptr};
     std::list<nextfloor::objects::Camera*> game_cameras_;
-    std::unique_ptr<nextfloor::core::FrameTimer> timer_{nullptr};
+    std::unique_ptr<FrameTimer> timer_{nullptr};
+    std::unique_ptr<Level> level_{nullptr};
 };
 
-}  // namespace controller
+}  // namespace gameplay
 
 }  // namespace nextfloor
 

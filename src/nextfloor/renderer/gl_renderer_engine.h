@@ -15,9 +15,6 @@
 
 #include <string>
 
-#include "nextfloor/renderer/scene_window.h"
-#include "nextfloor/objects/model_mesh.h"
-
 namespace nextfloor {
 
 namespace renderer {

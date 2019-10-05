@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_HID_GAMEINPUTHANDLER_H_
 #define NEXTFLOOR_HID_GAMEINPUTHANDLER_H_
 
-#include "nextfloor/hid/input_handler.h"
+#include "nextfloor/gameplay/input_handler.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace hid {
  *  @class GameInputHandler
  *  @brief GameInputHandler maintains input commands from engine
  */
-class GameInputHandler : public InputHandler {
+class GameInputHandler : public nextfloor::gameplay::InputHandler {
 
 public:
     GameInputHandler();
@@ -32,13 +32,13 @@ public:
      *  Get Current State Input
      *  @return Command Object
      */
-    nextfloor::actions::Action* HandlerInput() final;
+    nextfloor::gameplay::Action* HandlerInput() final;
 
     /**
      *  Get HID Pointer angles changes
      *  @return HIDPointer struct
      */
-    HIDPointer RecordHIDPointer(double elapsed_time) final;
+    nextfloor::gameplay::HIDPointer RecordHIDPointer(double elapsed_time) final;
 
     /**
      *  Get FOV (FieldOfView) Current State
@@ -51,16 +51,16 @@ public:
 
 private:
     /** The main hid */
-    std::unique_ptr<HID> hid_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::HID> hid_{nullptr};
 
     /** Character Commands */
-    std::unique_ptr<nextfloor::actions::Action> move_up_command_{nullptr};
-    std::unique_ptr<nextfloor::actions::Action> move_down_command_{nullptr};
-    std::unique_ptr<nextfloor::actions::Action> move_left_command_{nullptr};
-    std::unique_ptr<nextfloor::actions::Action> move_right_command_{nullptr};
-    std::unique_ptr<nextfloor::actions::Action> jump_command_{nullptr};
-    std::unique_ptr<nextfloor::actions::Action> run_command_{nullptr};
-    std::unique_ptr<nextfloor::actions::Action> fire_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> move_up_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> move_down_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> move_left_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> move_right_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> jump_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> run_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> fire_command_{nullptr};
 };
 
 }  // namespace hid

@@ -35,7 +35,7 @@ std::unique_ptr<nextfloor::core::FileIO> ServicesFactory::MakeFileIO() const
     return std::make_unique<GameFileIO>();
 }
 
-std::unique_ptr<nextfloor::core::FrameTimer> ServicesFactory::MakeFrameTimer() const
+std::unique_ptr<nextfloor::gameplay::FrameTimer> ServicesFactory::MakeFrameTimer() const
 {
     using nextfloor::core::GameTimer;
     return std::make_unique<GameTimer>();
@@ -53,7 +53,7 @@ std::unique_ptr<nextfloor::core::RandomGenerator> ServicesFactory::MakeRandomGen
     return std::make_unique<PseudoRandomGenerator>();
 }
 
-std::unique_ptr<nextfloor::core::WindowSettings> ServicesFactory::MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) const
+std::unique_ptr<nextfloor::core::WindowSettings> ServicesFactory::MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const
 {
     using nextfloor::core::GameWindowSettings;
     return std::make_unique<GameWindowSettings>(sw);

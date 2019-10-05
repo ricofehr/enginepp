@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_HEADCAMERA_H_
-#define NEXTFLOOR_OBJECTS_HEADCAMERA_H_
+#ifndef NEXTFLOOR_GAMEPLAY_HEADCAMERA_H_
+#define NEXTFLOOR_GAMEPLAY_HEADCAMERA_H_
 
 #include "nextfloor/objects/camera.h"
 
@@ -15,21 +15,21 @@
 
 namespace nextfloor {
 
-namespace objects {
+namespace gameplay {
 
 /**
  *  @class HeadCamera
  *  @brief HeadCamera, inherits Camera abstract class\n
  */
-class HeadCamera : public Camera {
+class HeadCamera : public nextfloor::objects::Camera {
 
 public:
-    HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle);
+    HeadCamera(nextfloor::objects::Mesh* owner, float horizontal_angle, float vertical_angle);
     ~HeadCamera() final = default;
 
     void ComputeOrientation() final;
     void ComputeFOV(float delta_fov) final;
-    bool IsInFieldOfView(const Mesh& target) const final;
+    bool IsInFieldOfView(const nextfloor::objects::Mesh& target) const final;
 
     glm::vec3 location() const final { return owner_->location(); }
     glm::vec3 direction() const final { return direction_; }
@@ -44,7 +44,7 @@ public:
 private:
     void init_active();
 
-    Mesh* owner_;
+    nextfloor::objects::Mesh* owner_;
     float horizontal_angle_;
     float vertical_angle_;
     float fov_;
@@ -53,8 +53,8 @@ private:
     glm::vec3 head_;
 };
 
-}  // namespace objects
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_OBJECTS_HEADCAMERA_H_
+#endif  // NEXTFLOOR_GAMEPLAY_HEADCAMERA_H_

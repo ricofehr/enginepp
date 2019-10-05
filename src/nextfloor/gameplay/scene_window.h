@@ -4,14 +4,14 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_RENDERER_SCENEWINDOW_H_
-#define NEXTFLOOR_RENDERER_SCENEWINDOW_H_
+#ifndef NEXTFLOOR_GAMEPLAY_SCENEWINDOW_H_
+#define NEXTFLOOR_GAMEPLAY_SCENEWINDOW_H_
 
 #include "nextfloor/objects/camera.h"
 
 namespace nextfloor {
 
-namespace renderer {
+namespace gameplay {
 
 class SceneWindow {
 
@@ -36,8 +36,8 @@ public:
     virtual unsigned int getProgramId() const = 0;
 };
 
-}  // namespace renderer
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_RENDERER_SCENEWINDOW_H_
+#endif  // NEXTFLOOR_GAMEPLAY_SCENEWINDOW_H_

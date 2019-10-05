@@ -12,6 +12,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "nextfloor/gameplay/scene_window.h"
+
 namespace nextfloor {
 
 namespace renderer {
@@ -19,7 +21,7 @@ namespace renderer {
 class GlSceneInput : public SceneInput {
 
 public:
-    GlSceneInput(SceneWindow* window);
+    GlSceneInput(nextfloor::gameplay::SceneWindow* window);
     ~GlSceneInput() final = default;
 
     void PollEvents() final;

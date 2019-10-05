@@ -79,7 +79,7 @@ nextfloor::renderer::Shader* GlRendererFactory::MakeFragmentShader(const std::st
     return shaders_[shader_path].get();
 }
 
-nextfloor::renderer::SceneWindow* GlRendererFactory::MakeSceneWindow()
+nextfloor::gameplay::SceneWindow* GlRendererFactory::MakeSceneWindow()
 {
     static tbb::mutex scene_mutex_;
 

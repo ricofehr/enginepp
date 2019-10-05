@@ -4,13 +4,13 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/player.h"
+#include "nextfloor/gameplay/player.h"
 
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace gameplay {
 
 Player::Player(const glm::vec3& location)
 {
@@ -35,6 +35,6 @@ void Player::Move()
     set_movement(glm::vec3(0.0f));
 }
 
-}  // namespace objects
+}  // namespace gameplay
 
 }  // namespace nextfloor

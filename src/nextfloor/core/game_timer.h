@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_CORE_GAMETIMER_H_
 #define NEXTFLOOR_CORE_GAMETIMER_H_
 
-#include "nextfloor/core/frame_timer.h"
+#include "nextfloor/gameplay/frame_timer.h"
 
 #include <memory>
 #include <chrono>
@@ -20,7 +20,7 @@ namespace core {
  *  @class GameTimer
  *  @brief GameTimer implements FrameTimer
  */
-class GameTimer : public FrameTimer {
+class GameTimer : public nextfloor::gameplay::FrameTimer {
 
 public:
     GameTimer();

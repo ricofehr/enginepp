@@ -12,7 +12,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-GlSceneInput::GlSceneInput(SceneWindow* window)
+GlSceneInput::GlSceneInput(nextfloor::gameplay::SceneWindow* window)
 {
     glfw_window_ = static_cast<GLFWwindow*>(window->window());
     glfwSetInputMode(glfw_window_, GLFW_STICKY_KEYS, GL_TRUE);

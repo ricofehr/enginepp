@@ -18,9 +18,9 @@
 #include "nextfloor/objects/floor.h"
 #include "nextfloor/objects/roof.h"
 #include "nextfloor/objects/wall_brick.h"
-#include "nextfloor/objects/player.h"
+#include "nextfloor/gameplay/player.h"
 #include "nextfloor/objects/rock.h"
-#include "nextfloor/objects/head_camera.h"
+#include "nextfloor/gameplay/head_camera.h"
 
 #include "nextfloor/grid/mesh_grid.h"
 #include "nextfloor/grid/room_grid.h"
@@ -103,8 +103,8 @@ std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeWallBrick(const glm::
 
 std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakePlayer(const glm::vec3& location) const
 {
-    using nextfloor::objects::Player;
-    return std::make_unique<nextfloor::objects::Player>(location);
+    using nextfloor::gameplay::Player;
+    return std::make_unique<Player>(location);
 }
 
 std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeRock(const glm::vec3& location) const
@@ -121,7 +121,7 @@ std::unique_ptr<nextfloor::objects::Mesh> GameFactory::MakeLittleRock(const glm:
 
 std::unique_ptr<nextfloor::objects::Camera> GameFactory::MakeCamera(nextfloor::objects::Mesh* owner) const
 {
-    using nextfloor::objects::HeadCamera;
+    using nextfloor::gameplay::HeadCamera;
     return std::make_unique<HeadCamera>(owner, 3.14f, 0.0f);
 }
 

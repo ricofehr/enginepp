@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_ACTIONS_FIREACTION_H_
 #define NEXTFLOOR_ACTIONS_FIREACTION_H_
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace actions {
  *  @class FireAction
  *  @brief Implements Action (Command Pattern), generate Fire action for any object
  */
-class FireAction : public Action {
+class FireAction : public nextfloor::gameplay::Action {
 
 public:
     void execute(nextfloor::objects::Mesh* actor, double elapsed_time) final;

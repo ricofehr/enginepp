@@ -4,13 +4,13 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/controller/game_loop.h"
+#include "nextfloor/gameplay/game_loop.h"
 
 #include <cassert>
 #include <sstream>
 #include <list>
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 #include "nextfloor/core/common_services.h"
 
 
@@ -18,7 +18,7 @@
 
 namespace nextfloor {
 
-namespace controller {
+namespace gameplay {
 
 namespace {
 
@@ -35,7 +35,8 @@ GameLoop::GameLoop()
     timer_ = factory->MakeFrameTimer();
     auto player = factory->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
     player_ = player.get();
-    universe_ = factory->MakeLevel()->GenerateUniverse();
+    level_ = factory->MakeLevel();
+    universe_ = level_->GenerateUniverse();
     universe_->AddIntoChild(std::move(player));
     game_cameras_ = universe_->all_cameras();
     SetActiveCamera(player_->camera());
@@ -150,6 +151,6 @@ GameLoop::~GameLoop() noexcept
     sInstanciated = false;
 }
 
-}  // namespace controller
+}  // namespace gameplay
 
 }  // namespace nextfloor

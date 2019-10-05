@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_FACTORY_COMMANDFACTORY_H_
 #define NEXTFLOOR_FACTORY_COMMANDFACTORY_H_
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -22,13 +22,13 @@ class CommandFactory {
 public:
     virtual ~CommandFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeFireAction() const = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() const = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() const = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() const = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() const = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() const = 0;
-    virtual std::unique_ptr<nextfloor::actions::Action> MakeRunAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveDownAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const = 0;
 };
 
 }  // namespace factory

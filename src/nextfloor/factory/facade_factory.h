@@ -20,25 +20,24 @@
 #include "nextfloor/objects/polygon.h"
 #include "nextfloor/objects/camera.h"
 #include "nextfloor/renderer/shader.h"
-#include "nextfloor/renderer/scene_window.h"
 #include "nextfloor/gameplay/level.h"
 
 #include "nextfloor/objects/renderer_engine.h"
 #include "nextfloor/renderer/shader.h"
-#include "nextfloor/renderer/scene_window.h"
+#include "nextfloor/gameplay/scene_window.h"
 #include "nextfloor/renderer/scene_input.h"
 
-#include "nextfloor/hid/hid.h"
-#include "nextfloor/hid/input_handler.h"
+#include "nextfloor/gameplay/hid.h"
+#include "nextfloor/gameplay/input_handler.h"
 
 #include "nextfloor/core/config_parser.h"
 #include "nextfloor/core/exit.h"
 #include "nextfloor/core/file_io.h"
-#include "nextfloor/core/frame_timer.h"
+#include "nextfloor/gameplay/frame_timer.h"
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/random_generator.h"
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 
 #include "nextfloor/factory/renderer_factory.h"
 #include "nextfloor/factory/mesh_factory.h"
@@ -106,7 +105,7 @@ public:
     nextfloor::objects::RendererEngine* MakeCubeRenderer(const std::string& texture);
     nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id);
     nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id);
-    nextfloor::renderer::SceneWindow* MakeSceneWindow();
+    nextfloor::gameplay::SceneWindow* MakeSceneWindow();
     std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput();
 
     /* PhysicsFactory Part */
@@ -116,28 +115,28 @@ public:
     std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const;
 
     /* HidFactory Part */
-    std::unique_ptr<nextfloor::hid::HID> MakeHid() const;
-    std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler() const;
+    std::unique_ptr<nextfloor::gameplay::HID> MakeHid() const;
+    std::unique_ptr<nextfloor::gameplay::InputHandler> MakeInputHandler() const;
 
     /* CoreFacotry Part */
     std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const;
     std::unique_ptr<nextfloor::core::Exit> MakeExit() const;
     std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const;
-    std::unique_ptr<nextfloor::core::FrameTimer> MakeFrameTimer() const;
+    std::unique_ptr<nextfloor::gameplay::FrameTimer> MakeFrameTimer() const;
     std::unique_ptr<nextfloor::core::Log> MakeLog() const;
     std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const;
     std::unique_ptr<MeshFactory> MakeMeshFactory() const;
     std::unique_ptr<HidFactory> MakeHidFactory() const;
-    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* window) const;
+    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::gameplay::SceneWindow* window) const;
 
     /* CommandFactory Part */
-    std::unique_ptr<nextfloor::actions::Action> MakeFireAction() const;
-    std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() const;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() const;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() const;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() const;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() const;
-    std::unique_ptr<nextfloor::actions::Action> MakeRunAction() const;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveDownAction() const;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const;
 
 private:
     std::unique_ptr<MeshFactory> mesh_factory_;

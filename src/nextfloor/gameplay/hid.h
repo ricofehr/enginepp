@@ -4,12 +4,12 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_HID_HID_H_
-#define NEXTFLOOR_HID_HID_H_
+#ifndef NEXTFLOOR_GAMEPLAY_HID_H_
+#define NEXTFLOOR_GAMEPLAY_HID_H_
 
 namespace nextfloor {
 
-namespace hid {
+namespace gameplay {
 
 
 /**
@@ -55,8 +55,8 @@ public:
     virtual bool IsCloseWindowEventOccurs() = 0;
 };
 
-}  // namespace hid
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_HID_HID_H_
+#endif  // NEXTFLOOR_GAMEPLAY_HID_H_

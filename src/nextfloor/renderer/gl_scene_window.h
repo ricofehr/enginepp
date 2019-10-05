@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_RENDERER_GLSCENEWINDOW_H_
 #define NEXTFLOOR_RENDERER_GLSCENEWINDOW_H_
 
-#include "nextfloor/renderer/scene_window.h"
+#include "nextfloor/gameplay/scene_window.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -20,7 +20,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-class GlSceneWindow : public SceneWindow {
+class GlSceneWindow : public nextfloor::gameplay::SceneWindow {
 
 public:
     GlSceneWindow();

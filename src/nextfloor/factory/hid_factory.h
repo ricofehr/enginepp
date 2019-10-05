@@ -7,8 +7,8 @@
 #ifndef NEXTFLOOR_FACTORY_HIDFACTORY_H_
 #define NEXTFLOOR_FACTORY_HIDFACTORY_H_
 
-#include "nextfloor/hid/hid.h"
-#include "nextfloor/hid/input_handler.h"
+#include "nextfloor/gameplay/hid.h"
+#include "nextfloor/gameplay/input_handler.h"
 
 namespace nextfloor {
 
@@ -23,8 +23,8 @@ class HidFactory {
 public:
     virtual ~HidFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::hid::HID> MakeHid() const = 0;
-    virtual std::unique_ptr<nextfloor::hid::InputHandler> MakeInputHandler() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::HID> MakeHid() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::InputHandler> MakeInputHandler() const = 0;
 };
 
 }  // namespace factory

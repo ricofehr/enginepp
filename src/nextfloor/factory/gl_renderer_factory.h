@@ -34,13 +34,13 @@ public:
     nextfloor::objects::RendererEngine* MakeCubeRenderer(const std::string& texture) final;
     nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) final;
     nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) final;
-    nextfloor::renderer::SceneWindow* MakeSceneWindow() final;
+    nextfloor::gameplay::SceneWindow* MakeSceneWindow() final;
     std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() final;
 
 private:
     std::map<std::string, std::unique_ptr<nextfloor::objects::RendererEngine>> renderers_;
     std::map<std::string, std::unique_ptr<nextfloor::renderer::Shader>> shaders_;
-    std::unique_ptr<nextfloor::renderer::SceneWindow> scene_window_;
+    std::unique_ptr<nextfloor::gameplay::SceneWindow> scene_window_;
 };
 
 }  // namespace factory

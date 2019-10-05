@@ -11,14 +11,6 @@
 #include "nextfloor/hid/mouse_keyboard.h"
 #include "nextfloor/renderer/scene_input.h"
 
-#include "nextfloor/actions/moveup_action.h"
-#include "nextfloor/actions/movedown_action.h"
-#include "nextfloor/actions/moveleft_action.h"
-#include "nextfloor/actions/moveright_action.h"
-#include "nextfloor/actions/jump_action.h"
-#include "nextfloor/actions/run_action.h"
-#include "nextfloor/actions/fire_action.h"
-
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -45,7 +37,7 @@ GameInputHandler::GameInputHandler()
     fire_command_ = factory->MakeFireAction();
 }
 
-nextfloor::actions::Action* GameInputHandler::HandlerInput()
+nextfloor::gameplay::Action* GameInputHandler::HandlerInput()
 {
     using nextfloor::renderer::SceneInput;
 
@@ -80,7 +72,7 @@ nextfloor::actions::Action* GameInputHandler::HandlerInput()
     return nullptr;
 }
 
-HIDPointer GameInputHandler::RecordHIDPointer(double elapsed_time)
+nextfloor::gameplay::HIDPointer GameInputHandler::RecordHIDPointer(double elapsed_time)
 {
     return hid_->RecordHIDPointer(elapsed_time);
 }

@@ -4,12 +4,12 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_CORE_FRAMETIMER_H_
-#define NEXTFLOOR_CORE_FRAMETIMER_H_
+#ifndef NEXTFLOOR_GAMEPLAY_FRAMETIMER_H_
+#define NEXTFLOOR_GAMEPLAY_FRAMETIMER_H_
 
 namespace nextfloor {
 
-namespace core {
+namespace gameplay {
 
 /**
  *  @class Timer
@@ -34,8 +34,8 @@ private:
 };
 
 
-}  // namespace core
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_CORE_FRAMETIMER_H_
+#endif  // NEXTFLOOR_GAMEPLAY_FRAMETIMER_H_

@@ -9,7 +9,7 @@
 
 #include "nextfloor/core/window_settings.h"
 
-#include "nextfloor/renderer/scene_window.h"
+#include "nextfloor/gameplay/scene_window.h"
 
 namespace nextfloor {
 
@@ -22,7 +22,7 @@ namespace core {
 class GameWindowSettings : public WindowSettings {
 
 public:
-    GameWindowSettings(nextfloor::renderer::SceneWindow* window);
+    GameWindowSettings(nextfloor::gameplay::SceneWindow* window);
     ~GameWindowSettings() final = default;
 
     float getWidth() const final;
@@ -32,7 +32,7 @@ public:
     unsigned int getProgramId() const final;
 
 private:
-    nextfloor::renderer::SceneWindow* game_window_;
+    nextfloor::gameplay::SceneWindow* game_window_;
 };
 
 }  // namespace core

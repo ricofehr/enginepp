@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_ACTIONS_MOVERIGHTACTION_H_
 #define NEXTFLOOR_ACTIONS_MOVERIGHTACTION_H_
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace actions {
  *  @class MoveRightAction
  *  @brief Implements Action (Command Pattern), generate Move Right action for any object
  */
-class MoveRightAction : public Action {
+class MoveRightAction : public nextfloor::gameplay::Action {
 
 public:
     void execute(nextfloor::objects::Mesh* actor, double elapsed_time) final;

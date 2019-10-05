@@ -4,14 +4,14 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_ACTIONS_ACTION_H_
-#define NEXTFLOOR_ACTIONS_ACTION_H_
+#ifndef NEXTFLOOR_GAMEPLAY_ACTION_H_
+#define NEXTFLOOR_GAMEPLAY_ACTION_H_
 
 #include "nextfloor/objects/mesh.h"
 
 namespace nextfloor {
 
-namespace actions {
+namespace gameplay {
 
 /**
  *  @class Action
@@ -27,8 +27,8 @@ public:
     virtual void execute(nextfloor::objects::Mesh* actor, double elapsed_time) = 0;
 };
 
-}  // namespace actions
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_ACTIONS_ACTION_H_
+#endif  // NEXTFLOOR_GAMEPLAY_ACTION_H_

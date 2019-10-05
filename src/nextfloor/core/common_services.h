@@ -18,6 +18,8 @@
 
 #include "nextfloor/objects/camera.h"
 
+#include "nextfloor/gameplay/scene_window.h"
+
 #include "nextfloor/factory/facade_factory.h"
 
 namespace nextfloor {
@@ -50,7 +52,7 @@ public:
 
     static nextfloor::factory::FacadeFactory* getFactory() { return Instance()->factory(); }
 
-    static void initWindowSettings(nextfloor::renderer::SceneWindow* window) { Instance()->makeWindowSettings(window); }
+    static void initWindowSettings(nextfloor::gameplay::SceneWindow* window) { Instance()->makeWindowSettings(window); }
 
 protected:
     CommonServices();
@@ -117,7 +119,7 @@ private:
         return factory_.get();
     }
 
-    void makeWindowSettings(nextfloor::renderer::SceneWindow* window)
+    void makeWindowSettings(nextfloor::gameplay::SceneWindow* window)
     {
         window_settings_ = factory_->MakeWindowSettings(window);
     }

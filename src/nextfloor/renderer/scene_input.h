@@ -10,8 +10,6 @@
 #include <functional>
 #include <glm/glm.hpp>
 
-#include "nextfloor/renderer/scene_window.h"
-
 namespace nextfloor {
 
 namespace renderer {

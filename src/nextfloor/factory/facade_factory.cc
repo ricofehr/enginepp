@@ -168,7 +168,7 @@ nextfloor::renderer::Shader* FacadeFactory::MakeFragmentShader(const std::string
     return renderer_factory_->MakeFragmentShader(shader_path, program_id);
 }
 
-nextfloor::renderer::SceneWindow* FacadeFactory::MakeSceneWindow()
+nextfloor::gameplay::SceneWindow* FacadeFactory::MakeSceneWindow()
 {
     return renderer_factory_->MakeSceneWindow();
 }
@@ -188,12 +188,12 @@ std::unique_ptr<nextfloor::gameplay::Level> FacadeFactory::MakeLevel() const
     return mesh_factory_->MakeLevel();
 }
 
-std::unique_ptr<nextfloor::hid::InputHandler> FacadeFactory::MakeInputHandler() const
+std::unique_ptr<nextfloor::gameplay::InputHandler> FacadeFactory::MakeInputHandler() const
 {
     return hid_factory_->MakeInputHandler();
 }
 
-std::unique_ptr<nextfloor::hid::HID> FacadeFactory::MakeHid() const
+std::unique_ptr<nextfloor::gameplay::HID> FacadeFactory::MakeHid() const
 {
     return hid_factory_->MakeHid();
 }
@@ -213,7 +213,7 @@ std::unique_ptr<nextfloor::core::FileIO> FacadeFactory::MakeFileIO() const
     return core_factory_->MakeFileIO();
 }
 
-std::unique_ptr<nextfloor::core::FrameTimer> FacadeFactory::MakeFrameTimer() const
+std::unique_ptr<nextfloor::gameplay::FrameTimer> FacadeFactory::MakeFrameTimer() const
 {
     return core_factory_->MakeFrameTimer();
 }
@@ -228,42 +228,42 @@ std::unique_ptr<nextfloor::core::RandomGenerator> FacadeFactory::MakeRandomGener
     return core_factory_->MakeRandomGenerator();
 }
 
-std::unique_ptr<nextfloor::core::WindowSettings> FacadeFactory::MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) const
+std::unique_ptr<nextfloor::core::WindowSettings> FacadeFactory::MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const
 {
     return core_factory_->MakeWindowSettings(sw);
 }
 
-std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeFireAction() const
+std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeFireAction() const
 {
     return command_factory_->MakeFireAction();
 }
 
-std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeJumpAction() const
+std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeJumpAction() const
 {
     return command_factory_->MakeJumpAction();
 }
 
-std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeMoveDownAction() const
+std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveDownAction() const
 {
     return command_factory_->MakeMoveDownAction();
 }
 
-std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeMoveLeftAction() const
+std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveLeftAction() const
 {
     return command_factory_->MakeMoveLeftAction();
 }
 
-std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeMoveRightAction() const
+std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveRightAction() const
 {
     return command_factory_->MakeMoveRightAction();
 }
 
-std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeMoveUpAction() const
+std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveUpAction() const
 {
     return command_factory_->MakeMoveUpAction();
 }
 
-std::unique_ptr<nextfloor::actions::Action> FacadeFactory::MakeRunAction() const
+std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeRunAction() const
 {
     return command_factory_->MakeRunAction();
 }

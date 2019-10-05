@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_PLAYER_H_
-#define NEXTFLOOR_OBJECTS_PLAYER_H_
+#ifndef NEXTFLOOR_GAMEPLAY_PLAYER_H_
+#define NEXTFLOOR_GAMEPLAY_PLAYER_H_
 
 #include "nextfloor/objects/model_mesh.h"
 
@@ -14,13 +14,13 @@
 
 namespace nextfloor {
 
-namespace objects {
+namespace gameplay {
 
 /**
  *  @class Player
  *  @brief Player model, inherits Model abstract class
  */
-class Player : public ModelMesh {
+class Player : public nextfloor::objects::ModelMesh {
 
 public:
     Player(const glm::vec3& location);
@@ -31,8 +31,8 @@ public:
     bool IsPlayer() const final { return true; }
 };
 
-}  // namespace objects
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_UNIVERSE_OBJECTS_PLAYER_H_
+#endif  // NEXTFLOOR_UNIVERSE_GAMEPLAY_PLAYER_H_

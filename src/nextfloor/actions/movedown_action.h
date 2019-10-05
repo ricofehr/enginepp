@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_ACTIONS_MOVEDOWNACTION_H_
 #define NEXTFLOOR_ACTIONS_MOVEDOWNACTION_H_
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace actions {
  *  @class MoveDownAction
  *  @brief Implements Action (Command Pattern), generate Move Down action for any object
  */
-class MoveDownAction : public Action {
+class MoveDownAction : public nextfloor::gameplay::Action {
 
 public:
     void execute(nextfloor::objects::Mesh* actor, double elapsed_time) final;

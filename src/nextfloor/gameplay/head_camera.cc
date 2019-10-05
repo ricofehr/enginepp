@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/objects/head_camera.h"
+#include "nextfloor/gameplay/head_camera.h"
 
 #include <math.h>
 
@@ -12,9 +12,9 @@
 
 namespace nextfloor {
 
-namespace objects {
+namespace gameplay {
 
-HeadCamera::HeadCamera(Mesh* owner, float horizontal_angle, float vertical_angle)
+HeadCamera::HeadCamera(nextfloor::objects::Mesh* owner, float horizontal_angle, float vertical_angle)
 {
     owner_ = owner;
     horizontal_angle_ = horizontal_angle;
@@ -46,7 +46,7 @@ void HeadCamera::ComputeFOV(float delta_fov)
     fov_ = fov_ > 130.0f ? 130.0f : fov_;
 }
 
-bool HeadCamera::IsInFieldOfView(const Mesh& target) const
+bool HeadCamera::IsInFieldOfView(const nextfloor::objects::Mesh& target) const
 {
     using nextfloor::core::CommonServices;
 
@@ -67,6 +67,6 @@ bool HeadCamera::IsInFieldOfView(const Mesh& target) const
     return cos_camera_vector >= cos(camera_fov * M_PI / 180.0f);
 }
 
-}  // namespace objects
+}  // namespace gameplay
 
 }  // namespace nextfloor

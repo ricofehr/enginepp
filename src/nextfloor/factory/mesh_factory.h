@@ -19,8 +19,6 @@
 #include "nextfloor/objects/grid_box.h"
 #include "nextfloor/objects/polygon.h"
 #include "nextfloor/objects/camera.h"
-#include "nextfloor/renderer/shader.h"
-#include "nextfloor/renderer/scene_window.h"
 #include "nextfloor/gameplay/level.h"
 
 namespace nextfloor {

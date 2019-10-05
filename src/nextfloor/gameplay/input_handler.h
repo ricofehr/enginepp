@@ -4,15 +4,15 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_HID_INPUTHANDLER_H_
-#define NEXTFLOOR_HID_INPUTHANDLER_H_
+#ifndef NEXTFLOOR_GAMEPLAY_INPUTHANDLER_H_
+#define NEXTFLOOR_GAMEPLAY_INPUTHANDLER_H_
 
-#include "nextfloor/hid/hid.h"
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/hid.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
-namespace hid {
+namespace gameplay {
 
 /**
  *  @class InputHandler
@@ -27,7 +27,7 @@ public:
      *  Get Current State Input
      *  @return Command Object
      */
-    virtual nextfloor::actions::Action* HandlerInput() = 0;
+    virtual Action* HandlerInput() = 0;
 
     /**
      *  Get HID Pointer angles changes
@@ -45,8 +45,8 @@ public:
     virtual bool IsCloseWindowEventOccurs() = 0;
 };
 
-}  // namespace hid
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_HID_INPUTHANDLER_H_
+#endif  // NEXTFLOOR_GAMEPLAY_INPUTHANDLER_H_

@@ -20,13 +20,13 @@ namespace factory {
 class ActionFactory : public CommandFactory {
 
 public:
-    std::unique_ptr<nextfloor::actions::Action> MakeFireAction() const final;
-    std::unique_ptr<nextfloor::actions::Action> MakeJumpAction() const final;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveDownAction() const final;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveLeftAction() const final;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveRightAction() const final;
-    std::unique_ptr<nextfloor::actions::Action> MakeMoveUpAction() const final;
-    std::unique_ptr<nextfloor::actions::Action> MakeRunAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveDownAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const final;
 };
 
 }  // namespace factory

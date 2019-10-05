@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_ACTIONS_RUNACTION_H_
 #define NEXTFLOOR_ACTIONS_RUNACTION_H_
 
-#include "nextfloor/actions/action.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace actions {
  *  @class MoveRunAction
  *  @brief Implements Action (Command Pattern), generate Run action for any object
  */
-class RunAction : public Action {
+class RunAction : public nextfloor::gameplay::Action {
 
 public:
     void execute(nextfloor::objects::Mesh* actor, double elapsed_time) final;

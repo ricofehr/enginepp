@@ -23,10 +23,10 @@ public:
     std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const final;
     std::unique_ptr<nextfloor::core::Exit> MakeExit() const final;
     std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const final;
-    std::unique_ptr<nextfloor::core::FrameTimer> MakeFrameTimer() const final;
+    std::unique_ptr<nextfloor::gameplay::FrameTimer> MakeFrameTimer() const final;
     std::unique_ptr<nextfloor::core::Log> MakeLog() const final;
     std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const final;
-    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::renderer::SceneWindow* sw) const final;
+    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const final;
 };
 
 }  // namespace factory
