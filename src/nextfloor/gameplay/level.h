@@ -9,7 +9,8 @@
 
 #include <memory>
 
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/gameplay/hid.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -24,7 +25,10 @@ class Level {
 public:
     virtual ~Level() = default;
 
-    virtual std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() const = 0;
+    virtual void toready() = 0;
+    virtual void UpdateCameraOrientation(HIDPointer angles, float input_fov) = 0;
+    virtual void Draw() = 0;
+    virtual void ExecutePlayerAction(Action* command, double elapsed_time) = 0;
 };
 
 }  // namespace gameplay

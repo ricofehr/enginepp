@@ -25,7 +25,26 @@ namespace gameplay {
 class DemoLevel : public Level {
 
 public:
-    std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverse() const final;
+    DemoLevel();
+    ~DemoLevel() final = default;
+
+    DemoLevel(DemoLevel&&) = default;
+    DemoLevel& operator=(DemoLevel&&) = default;
+    DemoLevel(const DemoLevel&) = delete;
+    DemoLevel& operator=(const DemoLevel&) = delete;
+
+    void toready() final { universe_->toready(); }
+    void UpdateCameraOrientation(HIDPointer angles, float input_fov) final;
+    void ExecutePlayerAction(Action* command, double elapsed_time) final;
+    void Draw() final;
+
+private:
+    void GenerateUniverse();
+    void SetActiveCamera(nextfloor::objects::Camera* active_camera);
+
+    std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
+    nextfloor::objects::Mesh* player_{nullptr};
+    std::list<nextfloor::objects::Camera*> game_cameras_;
 };
 
 }  // namespace gameplay

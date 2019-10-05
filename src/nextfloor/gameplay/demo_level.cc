@@ -126,9 +126,54 @@ std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith3Rooms()
 
 }  // namespace
 
-std::unique_ptr<nextfloor::objects::Mesh> DemoLevel::GenerateUniverse() const
+DemoLevel::DemoLevel()
 {
-    return GenerateUniverseWith3Rooms();
+    auto factory = nextfloor::core::CommonServices::getFactory();
+
+    auto player = factory->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
+    player_ = player.get();
+    GenerateUniverse();
+    universe_->AddIntoChild(std::move(player));
+    game_cameras_ = universe_->all_cameras();
+    SetActiveCamera(player_->camera());
+}
+
+void DemoLevel::SetActiveCamera(nextfloor::objects::Camera* active_camera)
+{
+    std::list<nextfloor::objects::Camera*>::iterator it;
+    for (it = game_cameras_.begin(); it != game_cameras_.end(); ++it) {
+        if (*it == active_camera) {
+            game_cameras_.remove(active_camera);
+            game_cameras_.push_front(active_camera);
+            break;
+        }
+    }
+    universe_->set_active_camera(game_cameras_.front());
+}
+
+
+void DemoLevel::GenerateUniverse()
+{
+    universe_ = GenerateUniverseWith3Rooms();
+}
+
+void DemoLevel::UpdateCameraOrientation(HIDPointer angles, float input_fov)
+{
+    auto camera = game_cameras_.front();
+    camera->ComputeFOV(input_fov);
+    camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
+    camera->ComputeOrientation();
+}
+
+void DemoLevel::ExecutePlayerAction(Action* command, double elapsed_time)
+{
+    command->execute(player_, elapsed_time);
+}
+
+
+void DemoLevel::Draw()
+{
+    universe_->Draw();
 }
 
 }  // namespace gameplay

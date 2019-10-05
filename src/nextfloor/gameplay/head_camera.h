@@ -42,8 +42,6 @@ public:
     }
 
 private:
-    void init_active();
-
     nextfloor::objects::Mesh* owner_;
     float horizontal_angle_;
     float vertical_angle_;

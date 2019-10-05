@@ -33,28 +33,9 @@ GameLoop::GameLoop()
 
     auto factory = nextfloor::core::CommonServices::getFactory();
     timer_ = factory->MakeFrameTimer();
-    auto player = factory->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
-    player_ = player.get();
     level_ = factory->MakeLevel();
-    universe_ = level_->GenerateUniverse();
-    universe_->AddIntoChild(std::move(player));
-    game_cameras_ = universe_->all_cameras();
-    SetActiveCamera(player_->camera());
     game_window_ = factory->MakeSceneWindow();
     input_handler_ = factory->MakeInputHandler();
-}
-
-void GameLoop::SetActiveCamera(nextfloor::objects::Camera* active_camera)
-{
-    std::list<nextfloor::objects::Camera*>::iterator it;
-    for (it = game_cameras_.begin(); it != game_cameras_.end(); ++it) {
-        if (*it == active_camera) {
-            game_cameras_.remove(active_camera);
-            game_cameras_.push_front(active_camera);
-            break;
-        }
-    }
-    universe_->set_active_camera(game_cameras_.front());
 }
 
 void GameLoop::Loop()
@@ -63,11 +44,10 @@ void GameLoop::Loop()
         UpdateTime();
         UpdateCameraOrientation();
         HandlerInput();
-        DrawUniverse();
+        Draw();
         LogLoop();
-
-        input_handler_->PollEvents();
-    } while (!input_handler_->IsCloseWindowEventOccurs());
+        PollEvents();
+    } while (IsNextFrame());
 }
 
 void GameLoop::UpdateTime()
@@ -75,31 +55,29 @@ void GameLoop::UpdateTime()
     timer_->Loop();
     if (timer_->getLoopCountBySecond() != 0) {
         game_window_->UpdateMoveFactor(timer_->getLoopCountBySecond());
-        universe_->toready();
+        level_->toready();
     }
 }
 
 void GameLoop::UpdateCameraOrientation()
 {
-    auto camera = game_cameras_.front();
-    camera->ComputeFOV(input_handler_->RecordFOV());
-    auto angles = input_handler_->RecordHIDPointer(timer_->getDeltaTimeSinceLastLoop());
-    camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
-    camera->ComputeOrientation();
+    auto delta_angles = input_handler_->RecordHIDPointer(timer_->getDeltaTimeSinceLastLoop());
+    auto input_fov = input_handler_->RecordFOV();
+    level_->UpdateCameraOrientation(delta_angles, input_fov);
 }
 
 void GameLoop::HandlerInput()
 {
     auto command = input_handler_->HandlerInput();
     if (command) {
-        command->execute(player_, timer_->getDeltaTimeSinceLastLoop());
+        level_->ExecutePlayerAction(command, timer_->getDeltaTimeSinceLastLoop());
     }
 }
 
-void GameLoop::DrawUniverse()
+void GameLoop::Draw()
 {
     game_window_->PrepareDisplay();
-    universe_->Draw();
+    level_->Draw();
     game_window_->SwapBuffers();
 }
 
@@ -143,6 +121,16 @@ void GameLoop::LogFps()
     message_fps << timer_->getLoopCountBySecond();
     message_fps << " fps (move factor: " << game_window_->getFpsFixMoveFactor() << ") - ";
     CommonServices::getLog()->Write(std::move(message_fps));
+}
+
+void GameLoop::PollEvents()
+{
+    input_handler_->PollEvents();
+}
+
+bool GameLoop::IsNextFrame() const
+{
+    return !input_handler_->IsCloseWindowEventOccurs();
 }
 
 GameLoop::~GameLoop() noexcept

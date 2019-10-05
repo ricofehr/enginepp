@@ -39,19 +39,17 @@ public:
     void Loop();
 
 private:
-    void SetActiveCamera(nextfloor::objects::Camera* active_camera);
     void UpdateTime();
     void UpdateCameraOrientation();
     void HandlerInput();
-    void DrawUniverse();
+    void Draw();
     void LogLoop();
     void LogFps();
+    void PollEvents();
+    bool IsNextFrame() const;
 
-    std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
     std::unique_ptr<InputHandler> input_handler_{nullptr};
     SceneWindow* game_window_{nullptr};
-    nextfloor::objects::Mesh* player_{nullptr};
-    std::list<nextfloor::objects::Camera*> game_cameras_;
     std::unique_ptr<FrameTimer> timer_{nullptr};
     std::unique_ptr<Level> level_{nullptr};
 };
