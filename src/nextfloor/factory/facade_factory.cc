@@ -9,7 +9,6 @@
 
 #include "nextfloor/factory/game_factory.h"
 #include "nextfloor/factory/gl_renderer_factory.h"
-#include "nextfloor/factory/services_factory.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -28,7 +27,6 @@ FacadeFactory::FacadeFactory()
     assert(!sInstanciated);
     mesh_factory_ = std::make_unique<GameFactory>();
     renderer_factory_ = std::make_unique<GlRendererFactory>();
-    core_factory_ = std::make_unique<ServicesFactory>();
     sInstanciated = true;
 }
 
@@ -190,41 +188,6 @@ nextfloor::objects::CollisionEngine* FacadeFactory::MakeCollisionEngine() const
 std::unique_ptr<nextfloor::gameplay::Level> FacadeFactory::MakeLevel() const
 {
     return mesh_factory_->MakeLevel();
-}
-
-std::unique_ptr<nextfloor::core::ConfigParser> FacadeFactory::MakeConfigParser() const
-{
-    return core_factory_->MakeConfigParser();
-}
-
-std::unique_ptr<nextfloor::core::Exit> FacadeFactory::MakeExit() const
-{
-    return core_factory_->MakeExit();
-}
-
-std::unique_ptr<nextfloor::core::FileIO> FacadeFactory::MakeFileIO() const
-{
-    return core_factory_->MakeFileIO();
-}
-
-std::unique_ptr<nextfloor::gameplay::FrameTimer> FacadeFactory::MakeFrameTimer() const
-{
-    return core_factory_->MakeFrameTimer();
-}
-
-std::unique_ptr<nextfloor::core::Log> FacadeFactory::MakeLog() const
-{
-    return core_factory_->MakeLog();
-}
-
-std::unique_ptr<nextfloor::core::RandomGenerator> FacadeFactory::MakeRandomGenerator() const
-{
-    return core_factory_->MakeRandomGenerator();
-}
-
-std::unique_ptr<nextfloor::core::WindowSettings> FacadeFactory::MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const
-{
-    return core_factory_->MakeWindowSettings(sw);
 }
 
 FacadeFactory::~FacadeFactory() noexcept

@@ -6,10 +6,11 @@
 
 #include <memory>
 
-#include "nextfloor/gameplay/game_loop.h"
-#include "nextfloor/core/common_services.h"
-
 #include "nextfloor/hid/mouse_hid_factory.h"
+#include "nextfloor/gameplay/game_loop.h"
+
+#include "nextfloor/core/services_core_factory.h"
+#include "nextfloor/core/common_services.h"
 
 int main(int argc, char* argv[])
 {
@@ -22,8 +23,9 @@ int main(int argc, char* argv[])
     CommonServices::getConfig()->ManageProgramParameters(argc, argv);
 
     /* Init GL Scene */
+    nextfloor::core::ServicesCoreFactory core_factory;
     nextfloor::hid::MouseHidFactory hid_factory;
-    nextfloor::gameplay::GameLoop game_loop(hid_factory);
+    nextfloor::gameplay::GameLoop game_loop(hid_factory, core_factory);
 
     /* Frame Loop */
     game_loop.Loop();

@@ -6,24 +6,17 @@
 
 #include "nextfloor/core/common_services.h"
 
-#include "nextfloor/factory/services_factory.h"
-
 namespace nextfloor {
 
 namespace core {
 
-CommonServices::CommonServices()
-{
-    Init();
-}
-
-void CommonServices::Init()
+CommonServices::CommonServices(const CoreFactory& factory)
 {
     factory_ = std::make_unique<nextfloor::factory::FacadeFactory>();
-    config_ = factory_->MakeConfigParser();
-    file_io_ = factory_->MakeFileIO();
-    log_ = factory_->MakeLog();
-    exit_ = factory_->MakeExit();
+    config_ = factory.MakeConfigParser();
+    file_io_ = factory.MakeFileIO();
+    log_ = factory.MakeLog();
+    exit_ = factory.MakeExit();
 }
 
 }  // namespace core

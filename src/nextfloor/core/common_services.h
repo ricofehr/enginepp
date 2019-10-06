@@ -20,6 +20,7 @@
 
 #include "nextfloor/gameplay/scene_window.h"
 
+#include "nextfloor/core/services_core_factory.h"
 #include "nextfloor/factory/facade_factory.h"
 
 namespace nextfloor {
@@ -55,7 +56,7 @@ public:
     static void initWindowSettings(nextfloor::gameplay::SceneWindow* window) { Instance()->makeWindowSettings(window); }
 
 protected:
-    CommonServices();
+    CommonServices(const CoreFactory& factory);
     ~CommonServices() = default;
 
     CommonServices(CommonServices&&) = default;
@@ -73,7 +74,8 @@ private:
     static CommonServices* Instance()
     {
         /* Raw pointer because static var */
-        static auto instance = new CommonServices;
+        nextfloor::core::ServicesCoreFactory factory;
+        static auto instance = new CommonServices(factory);
         return instance;
     }
 
@@ -121,7 +123,8 @@ private:
 
     void makeWindowSettings(nextfloor::gameplay::SceneWindow* window)
     {
-        window_settings_ = factory_->MakeWindowSettings(window);
+        nextfloor::core::ServicesCoreFactory factory;
+        window_settings_ = factory.MakeWindowSettings(window);
     }
 
     std::unique_ptr<ConfigParser> config_{nullptr};

@@ -22,13 +22,13 @@ static bool sInstanciated = false;
 
 }  // anonymous namespace
 
-GameLoop::GameLoop(const nextfloor::hid::HidFactory& hid_factory)
+GameLoop::GameLoop(const nextfloor::hid::HidFactory& hid_factory, const nextfloor::core::CoreFactory& core_factory)
 {
     assert(!sInstanciated);
     sInstanciated = true;
 
     auto factory = nextfloor::core::CommonServices::getFactory();
-    timer_ = factory->MakeFrameTimer();
+    timer_ = core_factory.MakeFrameTimer();
     level_ = factory->MakeLevel();
     game_window_ = factory->MakeSceneWindow();
     input_handler_ = hid_factory.MakeInputHandler();

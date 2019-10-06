@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_FACTORY_COREFACTORY_H_
-#define NEXTFLOOR_FACTORY_COREFACTORY_H_
+#ifndef NEXTFLOOR_CORE_COREFACTORY_H_
+#define NEXTFLOOR_CORE_COREFACTORY_H_
 
 #include <memory>
 
@@ -21,7 +21,7 @@
 
 namespace nextfloor {
 
-namespace factory {
+namespace core {
 
 /**
  *  @class CoreFactory
@@ -32,18 +32,17 @@ class CoreFactory {
 public:
     virtual ~CoreFactory() = default;
 
-    virtual std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const = 0;
-    virtual std::unique_ptr<nextfloor::core::Exit> MakeExit() const = 0;
-    virtual std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const = 0;
+    virtual std::unique_ptr<ConfigParser> MakeConfigParser() const = 0;
+    virtual std::unique_ptr<Exit> MakeExit() const = 0;
+    virtual std::unique_ptr<FileIO> MakeFileIO() const = 0;
     virtual std::unique_ptr<nextfloor::gameplay::FrameTimer> MakeFrameTimer() const = 0;
-    virtual std::unique_ptr<nextfloor::core::Log> MakeLog() const = 0;
-    virtual std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const = 0;
-    virtual std::unique_ptr<nextfloor::core::WindowSettings>
-      MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const = 0;
+    virtual std::unique_ptr<Log> MakeLog() const = 0;
+    virtual std::unique_ptr<RandomGenerator> MakeRandomGenerator() const = 0;
+    virtual std::unique_ptr<WindowSettings> MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const = 0;
 };
 
-}  // namespace factory
+}  // namespace core
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_FACTORY_COREFACTORY_H_
+#endif  // NEXTFLOOR_CORE_COREFACTORY_H_

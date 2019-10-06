@@ -34,13 +34,13 @@ set(core_SRCS
         src/nextfloor/core/game_window_settings.cc
         src/nextfloor/core/program_exit.cc
         src/nextfloor/core/pseudo_random_generator.cc
+        src/nextfloor/core/services_core_factory.cc
         src/nextfloor/core/terminal_log.cc)
 
 set(factory_SRCS
         src/nextfloor/factory/facade_factory.cc
         src/nextfloor/factory/game_factory.cc
-        src/nextfloor/factory/gl_renderer_factory.cc
-        src/nextfloor/factory/services_factory.cc)
+        src/nextfloor/factory/gl_renderer_factory.cc)
 
 set(gameplay_SRCS
         src/nextfloor/gameplay/demo_level.cc
@@ -126,6 +126,7 @@ set(actions_HDRS
 set(core_HDRS
         src/nextfloor/core/common_services.h
         src/nextfloor/core/config_parser.h
+        src/nextfloor/core/core_factory.h
         src/nextfloor/core/exit.h
         src/nextfloor/core/file_config_parser.h
         src/nextfloor/core/file_io.h
@@ -136,17 +137,16 @@ set(core_HDRS
         src/nextfloor/core/program_exit.h
         src/nextfloor/core/pseudo_random_generator.h
         src/nextfloor/core/random_generator.h
+        src/nextfloor/core/services_core_factory.h
         src/nextfloor/core/terminal_log.h
         src/nextfloor/core/window_settings.h)
 
 set(factory_HDRS
-        src/nextfloor/factory/core_factory.h
         src/nextfloor/factory/facade_factory.h
         src/nextfloor/factory/game_factory.h
         src/nextfloor/factory/gl_renderer_factory.h
         src/nextfloor/factory/mesh_factory.h
-        src/nextfloor/factory/renderer_factory.h
-        src/nextfloor/factory/services_factory.h)
+        src/nextfloor/factory/renderer_factory.h)
 
 set(gameplay_HDRS
         src/nextfloor/gameplay/demo_level.h

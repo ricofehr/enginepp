@@ -26,16 +26,8 @@
 #include "nextfloor/gameplay/scene_window.h"
 #include "nextfloor/renderer/scene_input.h"
 
-#include "nextfloor/core/config_parser.h"
-#include "nextfloor/core/exit.h"
-#include "nextfloor/core/file_io.h"
-#include "nextfloor/gameplay/frame_timer.h"
-#include "nextfloor/core/log.h"
-#include "nextfloor/core/random_generator.h"
-
 #include "nextfloor/factory/renderer_factory.h"
 #include "nextfloor/factory/mesh_factory.h"
-#include "nextfloor/factory/core_factory.h"
 
 namespace nextfloor {
 
@@ -111,19 +103,11 @@ public:
     std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const;
 
     /* CoreFacotry Part */
-    std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const;
-    std::unique_ptr<nextfloor::core::Exit> MakeExit() const;
-    std::unique_ptr<nextfloor::core::FileIO> MakeFileIO() const;
-    std::unique_ptr<nextfloor::gameplay::FrameTimer> MakeFrameTimer() const;
-    std::unique_ptr<nextfloor::core::Log> MakeLog() const;
-    std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const;
     std::unique_ptr<MeshFactory> MakeMeshFactory() const;
-    std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::gameplay::SceneWindow* window) const;
 
 private:
     std::unique_ptr<MeshFactory> mesh_factory_;
     std::unique_ptr<RendererFactory> renderer_factory_;
-    std::unique_ptr<CoreFactory> core_factory_;
 };
 
 }  // namespace factory
