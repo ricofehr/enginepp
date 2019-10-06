@@ -3,7 +3,7 @@
  *  @brief Factory Class for actor actions
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/factory/action_factory.h"
+#include "nextfloor/actions/action_factory.h"
 
 #include "nextfloor/actions/fire_action.h"
 #include "nextfloor/actions/jump_action.h"
@@ -15,50 +15,43 @@
 
 namespace nextfloor {
 
-namespace factory {
+namespace actions {
 
 std::unique_ptr<nextfloor::gameplay::Action> ActionFactory::MakeFireAction() const
 {
-    using nextfloor::actions::FireAction;
     return std::make_unique<FireAction>();
 }
 
 std::unique_ptr<nextfloor::gameplay::Action> ActionFactory::MakeJumpAction() const
 {
-    using nextfloor::actions::JumpAction;
     return std::make_unique<JumpAction>();
 }
 
 std::unique_ptr<nextfloor::gameplay::Action> ActionFactory::MakeMoveDownAction() const
 {
-    using nextfloor::actions::MoveDownAction;
     return std::make_unique<MoveDownAction>();
 }
 
 std::unique_ptr<nextfloor::gameplay::Action> ActionFactory::MakeMoveLeftAction() const
 {
-    using nextfloor::actions::MoveLeftAction;
     return std::make_unique<MoveLeftAction>();
 }
 
 std::unique_ptr<nextfloor::gameplay::Action> ActionFactory::MakeMoveRightAction() const
 {
-    using nextfloor::actions::MoveRightAction;
     return std::make_unique<MoveRightAction>();
 }
 
 std::unique_ptr<nextfloor::gameplay::Action> ActionFactory::MakeMoveUpAction() const
 {
-    using nextfloor::actions::MoveUpAction;
     return std::make_unique<MoveUpAction>();
 }
 
 std::unique_ptr<nextfloor::gameplay::Action> ActionFactory::MakeRunAction() const
 {
-    using nextfloor::actions::RunAction;
     return std::make_unique<RunAction>();
 }
 
-}  // namespace factory
+}  // namespace actions
 
 }  // namespace nextfloor

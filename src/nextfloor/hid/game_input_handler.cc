@@ -11,8 +11,6 @@
 #include "nextfloor/hid/mouse_keyboard.h"
 #include "nextfloor/renderer/scene_input.h"
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace hid {
@@ -21,20 +19,19 @@ namespace hid {
  *  Constructor
  *  @param  window  GL Main Window
  */
-GameInputHandler::GameInputHandler()
+GameInputHandler::GameInputHandler(nextfloor::actions::Factory& factory)
 {
     /** TODO: init hid in external function with config check for targetted controller */
     hid_ = std::make_unique<MouseKeyboard>();
 
     /* Init Command Pointers */
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    move_up_command_ = factory->MakeMoveUpAction();
-    move_down_command_ = factory->MakeMoveDownAction();
-    move_left_command_ = factory->MakeMoveLeftAction();
-    move_right_command_ = factory->MakeMoveRightAction();
-    jump_command_ = factory->MakeJumpAction();
-    run_command_ = factory->MakeRunAction();
-    fire_command_ = factory->MakeFireAction();
+    move_up_command_ = factory.MakeMoveUpAction();
+    move_down_command_ = factory.MakeMoveDownAction();
+    move_left_command_ = factory.MakeMoveLeftAction();
+    move_right_command_ = factory.MakeMoveRightAction();
+    jump_command_ = factory.MakeJumpAction();
+    run_command_ = factory.MakeRunAction();
+    fire_command_ = factory.MakeFireAction();
 }
 
 nextfloor::gameplay::Action* GameInputHandler::HandlerInput()

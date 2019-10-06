@@ -17,6 +17,7 @@ IF(APPLE)
 ENDIF()
 
 set(actions_SRCS
+        src/nextfloor/actions/action_factory.cc
         src/nextfloor/actions/fire_action.cc
         src/nextfloor/actions/jump_action.cc
         src/nextfloor/actions/movedown_action.cc
@@ -36,7 +37,6 @@ set(core_SRCS
         src/nextfloor/core/terminal_log.cc)
 
 set(factory_SRCS
-        src/nextfloor/factory/action_factory.cc
         src/nextfloor/factory/facade_factory.cc
         src/nextfloor/factory/game_factory.cc
         src/nextfloor/factory/gl_renderer_factory.cc
@@ -113,6 +113,8 @@ set(nextfloor_SRCS
 
 set(actions_HDRS
         src/nextfloor/actions/action.h
+        src/nextfloor/actions/action_factory.h
+        src/nextfloor/actions/factory.h
         src/nextfloor/actions/fire_action.h
         src/nextfloor/actions/jump_action.h
         src/nextfloor/actions/movedown_action.h
@@ -138,8 +140,6 @@ set(core_HDRS
         src/nextfloor/core/window_settings.h)
 
 set(factory_HDRS
-        src/nextfloor/factory/action_factory.h
-        src/nextfloor/factory/command_factory.h
         src/nextfloor/factory/core_factory.h
         src/nextfloor/factory/facade_factory.h
         src/nextfloor/factory/game_factory.h

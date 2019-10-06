@@ -11,7 +11,6 @@
 #include "nextfloor/factory/gl_renderer_factory.h"
 #include "nextfloor/factory/services_factory.h"
 #include "nextfloor/factory/mouse_hid_factory.h"
-#include "nextfloor/factory/action_factory.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -32,7 +31,6 @@ FacadeFactory::FacadeFactory()
     renderer_factory_ = std::make_unique<GlRendererFactory>();
     core_factory_ = std::make_unique<ServicesFactory>();
     hid_factory_ = std::make_unique<MouseHidFactory>();
-    command_factory_ = std::make_unique<ActionFactory>();
     sInstanciated = true;
 }
 
@@ -239,41 +237,6 @@ std::unique_ptr<nextfloor::core::RandomGenerator> FacadeFactory::MakeRandomGener
 std::unique_ptr<nextfloor::core::WindowSettings> FacadeFactory::MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const
 {
     return core_factory_->MakeWindowSettings(sw);
-}
-
-std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeFireAction() const
-{
-    return command_factory_->MakeFireAction();
-}
-
-std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeJumpAction() const
-{
-    return command_factory_->MakeJumpAction();
-}
-
-std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveDownAction() const
-{
-    return command_factory_->MakeMoveDownAction();
-}
-
-std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveLeftAction() const
-{
-    return command_factory_->MakeMoveLeftAction();
-}
-
-std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveRightAction() const
-{
-    return command_factory_->MakeMoveRightAction();
-}
-
-std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeMoveUpAction() const
-{
-    return command_factory_->MakeMoveUpAction();
-}
-
-std::unique_ptr<nextfloor::gameplay::Action> FacadeFactory::MakeRunAction() const
-{
-    return command_factory_->MakeRunAction();
 }
 
 FacadeFactory::~FacadeFactory() noexcept

@@ -4,20 +4,20 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_FACTORY_ACTIONFACTORY_H_
-#define NEXTFLOOR_FACTORY_ACTIONFACTORY_H_
+#ifndef NEXTFLOOR_ACTIONS_ACTIONFACTORY_H_
+#define NEXTFLOOR_ACTIONS_ACTIONFACTORY_H_
 
-#include "nextfloor/factory/command_factory.h"
+#include "nextfloor/actions/factory.h"
 
 namespace nextfloor {
 
-namespace factory {
+namespace actions {
 
 /**
  *  @class ActionFactory
  *  @brief Abstract Factory for player and NPJ actions
  */
-class ActionFactory : public CommandFactory {
+class ActionFactory : public Factory {
 
 public:
     std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const final;
@@ -29,8 +29,8 @@ public:
     std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const final;
 };
 
-}  // namespace factory
+}  // namespace actions
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_FACTORY_ACTIONFACTORY_H_
+#endif  // NEXTFLOOR_ACTIONS_ACTIONFACTORY_H_

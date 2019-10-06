@@ -36,13 +36,10 @@
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/random_generator.h"
 
-#include "nextfloor/gameplay/action.h"
-
 #include "nextfloor/factory/renderer_factory.h"
 #include "nextfloor/factory/mesh_factory.h"
 #include "nextfloor/factory/hid_factory.h"
 #include "nextfloor/factory/core_factory.h"
-#include "nextfloor/factory/action_factory.h"
 
 namespace nextfloor {
 
@@ -132,21 +129,11 @@ public:
     std::unique_ptr<HidFactory> MakeHidFactory() const;
     std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::gameplay::SceneWindow* window) const;
 
-    /* CommandFactory Part */
-    std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveDownAction() const;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const;
-
 private:
     std::unique_ptr<MeshFactory> mesh_factory_;
     std::unique_ptr<RendererFactory> renderer_factory_;
     std::unique_ptr<CoreFactory> core_factory_;
     std::unique_ptr<HidFactory> hid_factory_;
-    std::unique_ptr<CommandFactory> command_factory_;
 };
 
 }  // namespace factory

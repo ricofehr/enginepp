@@ -9,6 +9,8 @@
 
 #include "nextfloor/gameplay/input_handler.h"
 
+#include "nextfloor/actions/factory.h"
+
 namespace nextfloor {
 
 namespace hid {
@@ -20,7 +22,7 @@ namespace hid {
 class GameInputHandler : public nextfloor::gameplay::InputHandler {
 
 public:
-    GameInputHandler();
+    GameInputHandler(nextfloor::actions::Factory& factory);
     ~GameInputHandler() final = default;
 
     GameInputHandler(GameInputHandler&&) = default;
