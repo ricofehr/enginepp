@@ -41,10 +41,9 @@ static void OnScroll(void* window, double delta_x, double delta_y)
 
 }  // namespace
 
-MouseKeyboard::MouseKeyboard()
+MouseKeyboard::MouseKeyboard(nextfloor::renderer::RendererFactory* renderer_factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    scene_input_ = factory->MakeSceneInput();
+    scene_input_ = renderer_factory->MakeSceneInput();
 }
 
 /**

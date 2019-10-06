@@ -52,18 +52,14 @@ void ClearWindow()
 
 }  // anonymous namespace
 
-GlSceneWindow::GlSceneWindow()
+GlSceneWindow::GlSceneWindow(RendererFactory* renderer_factory)
 {
     assert(!sInstanciated);
     sInstanciated = true;
-    Initialization();
-}
 
-/**
- *  Subroutines Order is matters
- */
-void GlSceneWindow::Initialization()
-{
+    /**
+     *  Subroutines Order is matters
+     */
     InitGLFW();
     InitWindowSize();
     ConfigGL();
@@ -74,7 +70,7 @@ void GlSceneWindow::Initialization()
     InitVAO();
     InitVSync();
     InitProgramId();
-    LoadShaders();
+    LoadShaders(renderer_factory);
     InitMatrixId();
     InitPolygonMode();
     CheckPrerequisites();
@@ -130,11 +126,10 @@ void GlSceneWindow::InitProgramId()
     program_id_ = glCreateProgram();
 }
 
-void GlSceneWindow::LoadShaders()
+void GlSceneWindow::LoadShaders(RendererFactory* renderer_factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    vertex_shader_ = factory->MakeVertexShader(kVERTEXFILEPATH, program_id_);
-    fragment_shader_ = factory->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
+    vertex_shader_ = renderer_factory->MakeVertexShader(kVERTEXFILEPATH, program_id_);
+    fragment_shader_ = renderer_factory->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
 
     vertex_shader_->LoadShader();
     fragment_shader_->LoadShader();

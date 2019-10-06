@@ -7,8 +7,6 @@
 
 #include "nextfloor/objects/model_mesh_factory.h"
 
-#include "nextfloor/factory/gl_renderer_factory.h"
-
 #include "nextfloor/objects/universe.h"
 #include "nextfloor/objects/room.h"
 #include "nextfloor/objects/front_wall.h"

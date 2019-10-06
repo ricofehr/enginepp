@@ -4,17 +4,17 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_FACTORY_GLRENDERERFACTORY_H_
-#define NEXTFLOOR_FACTORY_GLRENDERERFACTORY_H_
+#ifndef NEXTFLOOR_RENDERER_GLRENDERERFACTORY_H_
+#define NEXTFLOOR_RENDERER_GLRENDERERFACTORY_H_
 
-#include "nextfloor/factory/renderer_factory.h"
+#include "nextfloor/renderer/renderer_factory.h"
 
 #include <map>
 #include <tbb/mutex.h>
 
 namespace nextfloor {
 
-namespace factory {
+namespace renderer {
 
 /**
  *  @class GlRendererFactory
@@ -32,19 +32,19 @@ public:
     GlRendererFactory& operator=(const GlRendererFactory&) = delete;
 
     nextfloor::gameplay::RendererEngine* MakeCubeRenderer(const std::string& texture) final;
-    nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) final;
-    nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) final;
+    Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) final;
+    Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) final;
     nextfloor::gameplay::SceneWindow* MakeSceneWindow() final;
-    std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() final;
+    std::unique_ptr<SceneInput> MakeSceneInput() final;
 
 private:
     std::map<std::string, std::unique_ptr<nextfloor::gameplay::RendererEngine>> renderers_;
-    std::map<std::string, std::unique_ptr<nextfloor::renderer::Shader>> shaders_;
+    std::map<std::string, std::unique_ptr<Shader>> shaders_;
     std::unique_ptr<nextfloor::gameplay::SceneWindow> scene_window_;
 };
 
-}  // namespace factory
+}  // namespace renderer
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_FACTORY_GLRENDERERFACTORY_H_
+#endif  // NEXTFLOOR_RENDERER_GLRENDERERFACTORY_H_

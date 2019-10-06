@@ -11,6 +11,7 @@
 
 #include "nextfloor/actions/action_factory.h"
 #include "nextfloor/hid/hid_factory.h"
+#include "nextfloor/renderer/renderer_factory.h"
 
 namespace nextfloor {
 
@@ -23,7 +24,9 @@ namespace hid {
 class GameInputHandler : public nextfloor::gameplay::InputHandler {
 
 public:
-    GameInputHandler(const HidFactory& hid_factory, const nextfloor::actions::ActionFactory& factory);
+    GameInputHandler(const HidFactory& hid_factory,
+                     const nextfloor::actions::ActionFactory& factory,
+                     nextfloor::renderer::RendererFactory* renderer_factory);
     ~GameInputHandler() final = default;
 
     GameInputHandler(GameInputHandler&&) = default;

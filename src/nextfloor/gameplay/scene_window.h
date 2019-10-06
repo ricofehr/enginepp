@@ -7,8 +7,6 @@
 #ifndef NEXTFLOOR_GAMEPLAY_SCENEWINDOW_H_
 #define NEXTFLOOR_GAMEPLAY_SCENEWINDOW_H_
 
-#include "nextfloor/objects/camera.h"
-
 namespace nextfloor {
 
 namespace gameplay {
@@ -18,7 +16,6 @@ class SceneWindow {
 public:
     virtual ~SceneWindow() = default;
 
-    virtual void Initialization() = 0;
     virtual void PrepareDisplay() = 0;
     virtual void SwapBuffers() = 0;
     virtual void UpdateMoveFactor(int fps) = 0;

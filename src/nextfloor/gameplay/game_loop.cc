@@ -24,25 +24,26 @@ static bool sInstanciated = false;
 
 GameLoop::GameLoop(const nextfloor::hid::HidFactory& hid_factory,
                    const nextfloor::core::CoreFactory& core_factory,
-                   const nextfloor::objects::MeshFactory& game_factory)
+                   const nextfloor::objects::MeshFactory& game_factory,
+                   const nextfloor::actions::ActionFactory& action_factory,
+                   nextfloor::renderer::RendererFactory* renderer_factory)
 {
     assert(!sInstanciated);
     sInstanciated = true;
 
-    auto factory = nextfloor::core::CommonServices::getFactory();
     timer_ = core_factory.MakeFrameTimer();
     level_ = game_factory.MakeLevel();
-    game_window_ = factory->MakeSceneWindow();
-    input_handler_ = hid_factory.MakeInputHandler();
+    game_window_ = renderer_factory->MakeSceneWindow();
+    input_handler_ = hid_factory.MakeInputHandler(action_factory, renderer_factory);
 }
 
-void GameLoop::Loop()
+void GameLoop::Loop(nextfloor::renderer::RendererFactory* renderer_factory)
 {
     do {
         UpdateTime();
         UpdateCameraOrientation();
         HandlerInput();
-        Draw();
+        Draw(renderer_factory);
         LogLoop();
         PollEvents();
     } while (IsNextFrame());
@@ -72,11 +73,11 @@ void GameLoop::HandlerInput()
     }
 }
 
-void GameLoop::Draw()
+void GameLoop::Draw(nextfloor::renderer::RendererFactory* renderer_factory)
 {
     game_window_->PrepareDisplay();
     level_->Move();
-    level_->Draw();
+    level_->Draw(renderer_factory);
     game_window_->SwapBuffers();
 }
 

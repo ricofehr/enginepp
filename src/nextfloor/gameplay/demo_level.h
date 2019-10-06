@@ -37,7 +37,7 @@ public:
     void UpdateCameraOrientation(HIDPointer angles, float input_fov) final;
     void ExecutePlayerAction(Action* command, double elapsed_time) final;
     void Move() final;
-    void Draw() final;
+    void Draw(nextfloor::renderer::RendererFactory* renderer_factory) final;
 
 private:
     void GenerateUniverse(const nextfloor::objects::MeshFactory& factory);

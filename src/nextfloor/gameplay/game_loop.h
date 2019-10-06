@@ -20,6 +20,8 @@
 #include "nextfloor/hid/hid_factory.h"
 #include "nextfloor/core/core_factory.h"
 #include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/actions/action_factory.h"
+#include "nextfloor/renderer/renderer_factory.h"
 
 namespace nextfloor {
 
@@ -34,7 +36,9 @@ class GameLoop {
 public:
     GameLoop(const nextfloor::hid::HidFactory& hid_factory,
              const nextfloor::core::CoreFactory& core_factory,
-             const nextfloor::objects::MeshFactory& game_factory);
+             const nextfloor::objects::MeshFactory& game_factory,
+             const nextfloor::actions::ActionFactory& action_factory,
+             nextfloor::renderer::RendererFactory* renderer_factory);
     ~GameLoop() noexcept;
 
     GameLoop(GameLoop&&) = default;
@@ -42,13 +46,13 @@ public:
     GameLoop(const GameLoop&) = delete;
     GameLoop& operator=(const GameLoop&) = delete;
 
-    void Loop();
+    void Loop(nextfloor::renderer::RendererFactory* renderer_factory);
 
 private:
     void UpdateTime();
     void UpdateCameraOrientation();
     void HandlerInput();
-    void Draw();
+    void Draw(nextfloor::renderer::RendererFactory* renderer_factory);
     void LogLoop();
     void LogFps();
     void PollEvents();

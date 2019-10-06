@@ -21,7 +21,6 @@
 #include "nextfloor/gameplay/scene_window.h"
 
 #include "nextfloor/core/services_core_factory.h"
-#include "nextfloor/factory/facade_factory.h"
 
 namespace nextfloor {
 
@@ -50,8 +49,6 @@ public:
     static const RandomGenerator* getRandomGenerator() { return Instance()->random_generator(); }
 
     static const Exit* getExit() { return Instance()->exit(); }
-
-    static nextfloor::factory::FacadeFactory* getFactory() { return Instance()->factory(); }
 
     static void initWindowSettings(nextfloor::gameplay::SceneWindow* window) { Instance()->makeWindowSettings(window); }
 
@@ -115,12 +112,6 @@ private:
         return exit_.get();
     }
 
-    nextfloor::factory::FacadeFactory* factory() const
-    {
-        assert(factory_ != nullptr);
-        return factory_.get();
-    }
-
     void makeWindowSettings(nextfloor::gameplay::SceneWindow* window)
     {
         nextfloor::core::ServicesCoreFactory factory;
@@ -133,7 +124,6 @@ private:
     std::unique_ptr<Log> log_{nullptr};
     std::unique_ptr<RandomGenerator> random_generator_{nullptr};
     std::unique_ptr<Exit> exit_{nullptr};
-    std::unique_ptr<nextfloor::factory::FacadeFactory> factory_{nullptr};
 };
 
 }  // namespace core

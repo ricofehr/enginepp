@@ -9,8 +9,6 @@
 
 #include "nextfloor/objects/mesh_factory.h"
 
-#include "nextfloor/factory/renderer_factory.h"
-
 namespace nextfloor {
 
 namespace objects {

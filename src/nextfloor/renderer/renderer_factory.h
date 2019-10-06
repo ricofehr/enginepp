@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_FACTORY_RENDERERFACTORY_H_
-#define NEXTFLOOR_FACTORY_RENDERERFACTORY_H_
+#ifndef NEXTFLOOR_RENDERER_RENDERERFACTORY_H_
+#define NEXTFLOOR_RENDERER_RENDERERFACTORY_H_
 
 #include <memory>
 #include <glm/glm.hpp>
@@ -17,7 +17,7 @@
 
 namespace nextfloor {
 
-namespace factory {
+namespace renderer {
 
 /**
  *  @class RendererFactory
@@ -29,14 +29,14 @@ public:
     virtual ~RendererFactory() = default;
 
     virtual nextfloor::gameplay::RendererEngine* MakeCubeRenderer(const std::string& texture) = 0;
-    virtual nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) = 0;
-    virtual nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) = 0;
+    virtual Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) = 0;
+    virtual Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) = 0;
     virtual nextfloor::gameplay::SceneWindow* MakeSceneWindow() = 0;
-    virtual std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() = 0;
+    virtual std::unique_ptr<SceneInput> MakeSceneInput() = 0;
 };
 
-}  // namespace factory
+}  // namespace renderer
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_FACTORY_RENDERERFACTORY_H_
+#endif  // NEXTFLOOR_RENDERER_RENDERERFACTORY_H_

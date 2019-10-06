@@ -175,14 +175,13 @@ void DemoLevel::Move()
     universe_->Move();
 }
 
-void DemoLevel::Draw()
+void DemoLevel::Draw(nextfloor::renderer::RendererFactory* renderer_factory)
 {
     auto active_camera = game_cameras_.front();
     universe_->PrepareDraw(*active_camera);
     auto polygons = universe_->GetPolygonsReadyToDraw(*active_camera);
-    auto factory = nextfloor::core::CommonServices::getFactory();
     for (const auto& polygon : polygons) {
-        auto renderer = factory->MakeCubeRenderer(polygon->texture());
+        auto renderer = renderer_factory->MakeCubeRenderer(polygon->texture());
         renderer->Draw(polygon->mvp());
     }
 }

@@ -20,8 +20,10 @@ namespace hid {
 class MouseHidFactory : public HidFactory {
 
 public:
-    std::unique_ptr<nextfloor::gameplay::InputHandler> MakeInputHandler() const final;
-    std::unique_ptr<nextfloor::gameplay::HID> MakeHid() const final;
+    std::unique_ptr<nextfloor::gameplay::InputHandler>
+      MakeInputHandler(const nextfloor::actions::ActionFactory& action_factory,
+                       nextfloor::renderer::RendererFactory* renderer_factory) const final;
+    std::unique_ptr<nextfloor::gameplay::HID> MakeHid(nextfloor::renderer::RendererFactory* renderer_factory) const final;
 };
 
 }  // namespace hid

@@ -12,7 +12,6 @@ namespace core {
 
 CommonServices::CommonServices(const CoreFactory& factory)
 {
-    factory_ = std::make_unique<nextfloor::factory::FacadeFactory>();
     config_ = factory.MakeConfigParser();
     file_io_ = factory.MakeFileIO();
     log_ = factory.MakeLog();
