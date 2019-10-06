@@ -23,7 +23,6 @@ public:
     std::unique_ptr<ConfigParser> MakeConfigParser() const final;
     std::unique_ptr<Exit> MakeExit() const final;
     std::unique_ptr<FileIO> MakeFileIO() const final;
-    std::unique_ptr<nextfloor::gameplay::FrameTimer> MakeFrameTimer() const final;
     std::unique_ptr<Log> MakeLog() const final;
     std::unique_ptr<RandomGenerator> MakeRandomGenerator() const final;
     std::unique_ptr<WindowSettings> MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const final;

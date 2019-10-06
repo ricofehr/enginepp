@@ -1,20 +1,66 @@
 /**
- *  @file demo_level.cc
- *  @brief DemoLevel class file
+ *  @file demo_game_factory.cc
+ *  @brief Factory Class for demo game level
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
+#include "nextfloor/gameplay/demo_game_factory.h"
 
-#include "nextfloor/gameplay/demo_level.h"
-
-#include <tbb/tbb.h>
-
-#include "nextfloor/core/common_services.h"
+#include "nextfloor/gameplay/game_level.h"
+#include "nextfloor/gameplay/game_loop.h"
+#include "nextfloor/gameplay/game_timer.h"
+#include "nextfloor/gameplay/head_camera.h"
+#include "nextfloor/gameplay/player.h"
 
 namespace nextfloor {
 
 namespace gameplay {
 
-namespace {
+
+DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
+                                 ActionFactory* action_factory,
+                                 RendererFactory* renderer_factory,
+                                 nextfloor::objects::MeshFactory* mesh_factory)
+{
+    hid_factory_ = hid_factory;
+    action_factory_ = action_factory;
+    renderer_factory_ = renderer_factory;
+    mesh_factory_ = mesh_factory;
+}
+
+
+std::unique_ptr<Loop> DemoGameFactory::MakeLoop() const
+{
+    auto level = MakeLevel();
+    auto game_window = renderer_factory_->MakeSceneWindow();
+    auto input_handler = hid_factory_->MakeInputHandler(*action_factory_, renderer_factory_);
+    auto timer = MakeFrameTimer();
+
+    return std::make_unique<GameLoop>(std::move(level), game_window, std::move(input_handler), std::move(timer));
+}
+
+std::unique_ptr<FrameTimer> DemoGameFactory::MakeFrameTimer() const
+{
+    return std::make_unique<GameTimer>();
+}
+
+std::unique_ptr<Level> DemoGameFactory::MakeLevel() const
+{
+    auto universe = GenerateUniverseWith3Rooms();
+    auto player = MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
+    return std::make_unique<GameLevel>(std::move(universe), std::move(player), renderer_factory_);
+}
+
+std::unique_ptr<nextfloor::objects::Mesh> DemoGameFactory::MakePlayer(const glm::vec3& location) const
+{
+    auto border = mesh_factory_->MakeBorder(location, glm::vec3(0.4f));
+    auto camera = MakeCamera(nullptr);
+    return std::make_unique<Player>(location, std::move(border), std::move(camera));
+}
+
+std::unique_ptr<nextfloor::objects::Camera> DemoGameFactory::MakeCamera(nextfloor::objects::Mesh* owner) const
+{
+    return std::make_unique<HeadCamera>(owner, 3.14f, 0.0f);
+}
 
 // std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith27Rooms()
 // {
@@ -97,15 +143,15 @@ namespace {
 //     return universe;
 // }
 
-std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith3Rooms(const nextfloor::objects::MeshFactory& factory)
+std::unique_ptr<nextfloor::objects::Mesh> DemoGameFactory::GenerateUniverseWith3Rooms() const
 {
-    auto universe = factory.MakeUniverse();
+    auto universe = mesh_factory_->MakeUniverse();
 
     auto first_room_location = glm::vec3(0.0f);
-    auto room = factory.MakeRoom(first_room_location);
+    auto room = mesh_factory_->MakeRoom(first_room_location);
     auto room_dimension = room->dimension();
-    room->add_child(factory.MakeRock(first_room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
-    room->add_child(factory.MakeLittleRock(first_room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
+    room->add_child(mesh_factory_->MakeRock(first_room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
+    room->add_child(mesh_factory_->MakeLittleRock(first_room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
     universe->add_child(std::move(room));
 
     auto factor_x = 0.0f;
@@ -113,9 +159,9 @@ std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith3Rooms(const nextf
     float factor_z;
     for (factor_z = -1.0f; factor_z <= 1.0f; factor_z += 2.0f) {
         auto room_location = first_room_location + glm::vec3(factor_x, factor_y, factor_z) * room_dimension;
-        auto room = factory.MakeRoom(room_location);
-        room->add_child(factory.MakeRock(room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
-        room->add_child(factory.MakeLittleRock(room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
+        auto room = mesh_factory_->MakeRoom(room_location);
+        room->add_child(mesh_factory_->MakeRock(room_location + glm::vec3(-3.0f, -1.5f, -4.0f)));
+        room->add_child(mesh_factory_->MakeLittleRock(room_location + glm::vec3(3.0f, -2.5f, -5.5f)));
         universe->add_child(std::move(room));
     }
 
@@ -124,67 +170,6 @@ std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith3Rooms(const nextf
     return universe;
 }
 
-
-}  // namespace
-
-DemoLevel::DemoLevel(const nextfloor::objects::MeshFactory& factory)
-{
-    auto player = factory.MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
-    player_ = player.get();
-    GenerateUniverse(factory);
-    universe_->AddIntoChild(std::move(player));
-    game_cameras_ = universe_->all_cameras();
-    SetActiveCamera(player_->camera());
-}
-
-void DemoLevel::SetActiveCamera(nextfloor::objects::Camera* active_camera)
-{
-    std::list<nextfloor::objects::Camera*>::iterator it;
-    for (it = game_cameras_.begin(); it != game_cameras_.end(); ++it) {
-        if (*it == active_camera) {
-            game_cameras_.remove(active_camera);
-            game_cameras_.push_front(active_camera);
-            break;
-        }
-    }
-}
-
-
-void DemoLevel::GenerateUniverse(const nextfloor::objects::MeshFactory& factory)
-{
-    universe_ = GenerateUniverseWith3Rooms(factory);
-}
-
-void DemoLevel::UpdateCameraOrientation(HIDPointer angles, float input_fov)
-{
-    auto active_camera = game_cameras_.front();
-    active_camera->ComputeFOV(input_fov);
-    active_camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
-    active_camera->ComputeOrientation();
-}
-
-void DemoLevel::ExecutePlayerAction(Action* command, double elapsed_time)
-{
-    command->execute(player_, elapsed_time);
-}
-
-
-void DemoLevel::Move()
-{
-    universe_->DetectCollision();
-    universe_->Move();
-}
-
-void DemoLevel::Draw(nextfloor::renderer::RendererFactory* renderer_factory)
-{
-    auto active_camera = game_cameras_.front();
-    universe_->PrepareDraw(*active_camera);
-    auto polygons = universe_->GetPolygonsReadyToDraw(*active_camera);
-    for (const auto& polygon : polygons) {
-        auto renderer = renderer_factory->MakeCubeRenderer(polygon->texture());
-        renderer->Draw(polygon->mvp());
-    }
-}
 
 }  // namespace gameplay
 

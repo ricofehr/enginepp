@@ -24,7 +24,9 @@ namespace gameplay {
 class Player : public nextfloor::objects::ModelMesh {
 
 public:
-    Player(const glm::vec3& location, const nextfloor::objects::MeshFactory& mesh_factory);
+    Player(const glm::vec3& location,
+           std::unique_ptr<nextfloor::objects::Border> border,
+           std::unique_ptr<nextfloor::objects::Camera> camera);
     ~Player() final = default;
 
 

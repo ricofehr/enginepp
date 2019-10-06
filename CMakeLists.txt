@@ -30,7 +30,6 @@ set(core_SRCS
         src/nextfloor/core/common_services.cc
         src/nextfloor/core/file_config_parser.cc
         src/nextfloor/core/game_file_io.cc
-        src/nextfloor/core/game_timer.cc
         src/nextfloor/core/game_window_settings.cc
         src/nextfloor/core/program_exit.cc
         src/nextfloor/core/pseudo_random_generator.cc
@@ -38,8 +37,10 @@ set(core_SRCS
         src/nextfloor/core/terminal_log.cc)
 
 set(gameplay_SRCS
-        src/nextfloor/gameplay/demo_level.cc
+        src/nextfloor/gameplay/demo_game_factory.cc
+        src/nextfloor/gameplay/game_level.cc
         src/nextfloor/gameplay/game_loop.cc
+        src/nextfloor/gameplay/game_timer.cc
         src/nextfloor/gameplay/head_camera.cc
         src/nextfloor/gameplay/player.cc)
 
@@ -109,8 +110,6 @@ set(nextfloor_SRCS
         src/nextfloor.cc)
 
 set(actions_HDRS
-        src/nextfloor/actions/action.h
-        src/nextfloor/actions/action_factory.h
         src/nextfloor/actions/fire_action.h
         src/nextfloor/actions/jump_action.h
         src/nextfloor/actions/movedown_action.h
@@ -128,7 +127,6 @@ set(core_HDRS
         src/nextfloor/core/file_config_parser.h
         src/nextfloor/core/file_io.h
         src/nextfloor/core/game_file_io.h
-        src/nextfloor/core/game_timer.h
         src/nextfloor/core/game_window_settings.h
         src/nextfloor/core/log.h
         src/nextfloor/core/program_exit.h
@@ -139,15 +137,23 @@ set(core_HDRS
         src/nextfloor/core/window_settings.h)
 
 set(gameplay_HDRS
-        src/nextfloor/gameplay/demo_level.h
+        src/nextfloor/gameplay/action.h
+        src/nextfloor/gameplay/action_factory.h
+        src/nextfloor/gameplay/demo_game_factory.h
         src/nextfloor/gameplay/frame_timer.h
+        src/nextfloor/gameplay/game_factory.h
+        src/nextfloor/gameplay/game_level.h
         src/nextfloor/gameplay/game_loop.h
+        src/nextfloor/gameplay/game_timer.h
         src/nextfloor/gameplay/head_camera.h
         src/nextfloor/gameplay/hid.h
+        src/nextfloor/gameplay/hid_factory.h
         src/nextfloor/gameplay/input_handler.h
         src/nextfloor/gameplay/level.h
+        src/nextfloor/gameplay/loop.h
         src/nextfloor/gameplay/player.h
         src/nextfloor/gameplay/renderer_engine.h
+        src/nextfloor/gameplay/renderer_factory.h
         src/nextfloor/gameplay/scene_window.h)
 
 set(grid_HDRS
@@ -161,7 +167,6 @@ set(grid_HDRS
 
 set(hid_HDRS
         src/nextfloor/hid/game_input_handler.h
-        src/nextfloor/hid/hid_factory.h
         src/nextfloor/hid/mouse_hid_factory.h
         src/nextfloor/hid/mouse_keyboard.h)
 
@@ -208,7 +213,6 @@ set(renderer_HDRS
         src/nextfloor/renderer/gl_scene_input.h
         src/nextfloor/renderer/gl_scene_window.h
         src/nextfloor/renderer/gl_shader.h
-        src/nextfloor/renderer/renderer_factory.h
         src/nextfloor/renderer/scene_input.h
         src/nextfloor/renderer/shader.h
         src/nextfloor/renderer/vertex_gl_shader.h)

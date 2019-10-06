@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_ACTIONS_SPRITEACTIONFACTORY_H_
 #define NEXTFLOOR_ACTIONS_SPRITEACTIONFACTORY_H_
 
-#include "nextfloor/actions/action_factory.h"
+#include "nextfloor/gameplay/action_factory.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace actions {
  *  @class SrpiteActionFactory
  *  @brief Concrete Action Factory for player and NPJ actions
  */
-class SpriteActionFactory : public ActionFactory {
+class SpriteActionFactory : public nextfloor::gameplay::ActionFactory {
 
 public:
     std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const final;

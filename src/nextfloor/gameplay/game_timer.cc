@@ -1,10 +1,10 @@
 /**
- *  @file frame_timer.cc
+ *  @file game_timer.cc
  *  @brief GameTimer Implementation File : Init frame timers
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/core/game_timer.h"
+#include "nextfloor/gameplay/game_timer.h"
 
 #include <cassert>
 
@@ -12,7 +12,7 @@
 
 namespace nextfloor {
 
-namespace core {
+namespace gameplay {
 
 namespace {
 
@@ -73,6 +73,8 @@ void GameTimer::ComputeFps()
 
 void GameTimer::CheckEndProgram()
 {
+    using nextfloor::core::CommonServices;
+
     int end_time = CommonServices::getConfig()->getExecutionDuration();
     if (end_time && totaltime_since_beginning_ >= end_time) {
         CommonServices::getExit()->ExitOnSuccess();
@@ -85,6 +87,6 @@ GameTimer::~GameTimer() noexcept
     sInstanciated = false;
 }
 
-}  // namespace core
+}  // namespace gameplay
 
 }  // namespace nextfloor

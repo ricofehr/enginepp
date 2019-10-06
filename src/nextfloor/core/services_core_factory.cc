@@ -6,7 +6,6 @@
 #include "nextfloor/core/services_core_factory.h"
 
 #include "nextfloor/core/file_config_parser.h"
-#include "nextfloor/core/game_timer.h"
 #include "nextfloor/core/program_exit.h"
 #include "nextfloor/core/pseudo_random_generator.h"
 #include "nextfloor/core/game_file_io.h"
@@ -30,11 +29,6 @@ std::unique_ptr<Exit> ServicesCoreFactory::MakeExit() const
 std::unique_ptr<FileIO> ServicesCoreFactory::MakeFileIO() const
 {
     return std::make_unique<GameFileIO>();
-}
-
-std::unique_ptr<nextfloor::gameplay::FrameTimer> ServicesCoreFactory::MakeFrameTimer() const
-{
-    return std::make_unique<GameTimer>();
 }
 
 std::unique_ptr<Log> ServicesCoreFactory::MakeLog() const

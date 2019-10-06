@@ -35,6 +35,9 @@ public:
     glm::vec3 direction() const final { return direction_; }
     glm::vec3 head() const final { return head_; }
     float fov() const final { return fov_; }
+
+    void set_owner(nextfloor::objects::Mesh* owner) final { owner_ = owner; }
+
     void increment_angles(float horizontal_angle, float vertical_angle) final
     {
         horizontal_angle_ += horizontal_angle;

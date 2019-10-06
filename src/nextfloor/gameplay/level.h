@@ -12,8 +12,6 @@
 #include "nextfloor/gameplay/hid.h"
 #include "nextfloor/gameplay/action.h"
 
-#include "nextfloor/renderer/renderer_factory.h"
-
 namespace nextfloor {
 
 namespace gameplay {
@@ -30,7 +28,7 @@ public:
     virtual void toready() = 0;
     virtual void UpdateCameraOrientation(HIDPointer angles, float input_fov) = 0;
     virtual void Move() = 0;
-    virtual void Draw(nextfloor::renderer::RendererFactory* renderer_factory) = 0;
+    virtual void Draw() = 0;
     virtual void ExecutePlayerAction(Action* command, double elapsed_time) = 0;
 };
 

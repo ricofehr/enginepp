@@ -27,7 +27,7 @@ public:
      */
     virtual float getWidth() const = 0;
     virtual float getHeight() const = 0;
-    virtual float getFpsFixMoveFactor() const = 0;  // move_factor_; }
+    virtual float getFpsFixMoveFactor() const = 0;
 
     virtual unsigned int getMatrixId() const = 0;
     virtual unsigned int getProgramId() const = 0;

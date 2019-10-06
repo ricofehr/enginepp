@@ -52,7 +52,7 @@ void ClearWindow()
 
 }  // anonymous namespace
 
-GlSceneWindow::GlSceneWindow(RendererFactory* renderer_factory)
+GlSceneWindow::GlSceneWindow(nextfloor::gameplay::RendererFactory* renderer_factory)
 {
     assert(!sInstanciated);
     sInstanciated = true;
@@ -126,7 +126,7 @@ void GlSceneWindow::InitProgramId()
     program_id_ = glCreateProgram();
 }
 
-void GlSceneWindow::LoadShaders(RendererFactory* renderer_factory)
+void GlSceneWindow::LoadShaders(nextfloor::gameplay::RendererFactory* renderer_factory)
 {
     vertex_shader_ = renderer_factory->MakeVertexShader(kVERTEXFILEPATH, program_id_);
     fragment_shader_ = renderer_factory->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);

@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "nextfloor/hid/mouse_hid_factory.h"
-#include "nextfloor/gameplay/game_loop.h"
+#include "nextfloor/gameplay/demo_game_factory.h"
 
 #include "nextfloor/renderer/gl_renderer_factory.h"
 #include "nextfloor/objects/model_mesh_factory.h"
@@ -27,14 +27,15 @@ int main(int argc, char* argv[])
 
     /* Init GL Scene */
     nextfloor::renderer::GlRendererFactory renderer_factory;
-    nextfloor::objects::ModelMeshFactory game_factory;
-    nextfloor::core::ServicesCoreFactory core_factory;
+    nextfloor::objects::ModelMeshFactory mesh_factory;
     nextfloor::hid::MouseHidFactory hid_factory;
     nextfloor::actions::SpriteActionFactory action_factory;
-    nextfloor::gameplay::GameLoop game_loop(hid_factory, core_factory, game_factory, action_factory, &renderer_factory);
+    nextfloor::gameplay::DemoGameFactory game_factory(&hid_factory, &action_factory, &renderer_factory, &mesh_factory);
+
+    auto game_loop = game_factory.MakeLoop();
 
     /* Frame Loop */
-    game_loop.Loop(&renderer_factory);
+    game_loop->RunLoop();
 
     CommonServices::getExit()->ExitOnSuccess();
 }

@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_RENDERER_GLRENDERERFACTORY_H_
 #define NEXTFLOOR_RENDERER_GLRENDERERFACTORY_H_
 
-#include "nextfloor/renderer/renderer_factory.h"
+#include "nextfloor/gameplay/renderer_factory.h"
 
 #include <map>
 #include <tbb/mutex.h>
@@ -20,7 +20,7 @@ namespace renderer {
  *  @class GlRendererFactory
  *  @brief GlRendererFactory Pattern for Universe Objects
  */
-class GlRendererFactory : public RendererFactory {
+class GlRendererFactory : public nextfloor::gameplay::RendererFactory {
 
 public:
     GlRendererFactory();

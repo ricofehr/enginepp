@@ -33,6 +33,8 @@ public:
     virtual glm::vec3 head() const = 0;
     virtual float fov() const = 0;
 
+    virtual void set_owner(Mesh* owner) = 0;
+
     virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
 };
 

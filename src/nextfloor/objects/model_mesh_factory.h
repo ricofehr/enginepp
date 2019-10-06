@@ -33,12 +33,8 @@ public:
                                         const glm::vec3& scale,
                                         const std::string& texture) const final;
 
-    std::unique_ptr<Mesh> MakePlayer(const glm::vec3& location) const final;
-
     std::unique_ptr<Mesh> MakeRock(const glm::vec3& location) const final;
     std::unique_ptr<Mesh> MakeLittleRock(const glm::vec3& location) const final;
-
-    std::unique_ptr<Camera> MakeCamera(Mesh* owner) const final;
 
     std::unique_ptr<Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const final;
     std::unique_ptr<Polygon> MakeCube(const glm::vec3& location,
@@ -55,8 +51,6 @@ public:
     std::unique_ptr<GridBox> MakeGridBox(const glm::vec3& grid_coords, Grid* grid) const final;
 
     CollisionEngine* MakeCollisionEngine() const final;
-
-    std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const override;
 };
 
 }  // namespace objects

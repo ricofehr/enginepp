@@ -7,21 +7,15 @@
 #ifndef NEXTFLOOR_CONTROLLER_GAMELOOP_H_
 #define NEXTFLOOR_CONTROLLER_GAMELOOP_H_
 
-#include <list>
+#include "nextfloor/gameplay/loop.h"
 
-#include "nextfloor/objects/mesh.h"
-#include "nextfloor/objects/camera.h"
-#include "nextfloor/objects/collision_engine.h"
+#include <list>
+#include <memory>
+
 #include "nextfloor/gameplay/scene_window.h"
 #include "nextfloor/gameplay/input_handler.h"
 #include "nextfloor/gameplay/frame_timer.h"
 #include "nextfloor/gameplay/level.h"
-
-#include "nextfloor/hid/hid_factory.h"
-#include "nextfloor/core/core_factory.h"
-#include "nextfloor/objects/mesh_factory.h"
-#include "nextfloor/actions/action_factory.h"
-#include "nextfloor/renderer/renderer_factory.h"
 
 namespace nextfloor {
 
@@ -31,14 +25,13 @@ namespace gameplay {
  *  @class GameLoop
  *  @brief  GameLoop manages the lifetime of the opengl scene
  */
-class GameLoop {
+class GameLoop : public Loop {
 
 public:
-    GameLoop(const nextfloor::hid::HidFactory& hid_factory,
-             const nextfloor::core::CoreFactory& core_factory,
-             const nextfloor::objects::MeshFactory& game_factory,
-             const nextfloor::actions::ActionFactory& action_factory,
-             nextfloor::renderer::RendererFactory* renderer_factory);
+    GameLoop(std::unique_ptr<Level> level,
+             SceneWindow* game_window,
+             std::unique_ptr<InputHandler> input_handler,
+             std::unique_ptr<FrameTimer> timer);
     ~GameLoop() noexcept;
 
     GameLoop(GameLoop&&) = default;
@@ -46,13 +39,13 @@ public:
     GameLoop(const GameLoop&) = delete;
     GameLoop& operator=(const GameLoop&) = delete;
 
-    void Loop(nextfloor::renderer::RendererFactory* renderer_factory);
+    void RunLoop() final;
 
 private:
     void UpdateTime();
     void UpdateCameraOrientation();
     void HandlerInput();
-    void Draw(nextfloor::renderer::RendererFactory* renderer_factory);
+    void Draw();
     void LogLoop();
     void LogFps();
     void PollEvents();

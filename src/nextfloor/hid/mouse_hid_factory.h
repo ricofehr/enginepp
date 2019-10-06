@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_HID_MOUSEHIDFACTORY_H_
 #define NEXTFLOOR_HID_MOUSEHIDFACTORY_H_
 
-#include "nextfloor/hid/hid_factory.h"
+#include "nextfloor/gameplay/hid_factory.h"
 
 namespace nextfloor {
 
@@ -17,13 +17,13 @@ namespace hid {
  *  @class MouseFactory
  *  @brief Concrete Factory for mouse / keyboard hids (human interface devices)
  */
-class MouseHidFactory : public HidFactory {
+class MouseHidFactory : public nextfloor::gameplay::HidFactory {
 
 public:
     std::unique_ptr<nextfloor::gameplay::InputHandler>
-      MakeInputHandler(const nextfloor::actions::ActionFactory& action_factory,
-                       nextfloor::renderer::RendererFactory* renderer_factory) const final;
-    std::unique_ptr<nextfloor::gameplay::HID> MakeHid(nextfloor::renderer::RendererFactory* renderer_factory) const final;
+      MakeInputHandler(const nextfloor::gameplay::ActionFactory& action_factory,
+                       nextfloor::gameplay::RendererFactory* renderer_factory) const final;
+    std::unique_ptr<nextfloor::gameplay::HID> MakeHid(nextfloor::gameplay::RendererFactory* renderer_factory) const final;
 };
 
 }  // namespace hid

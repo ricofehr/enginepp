@@ -15,13 +15,13 @@ namespace nextfloor {
 namespace hid {
 
 std::unique_ptr<nextfloor::gameplay::InputHandler>
-  MouseHidFactory::MakeInputHandler(const nextfloor::actions::ActionFactory& action_factory,
-                                    nextfloor::renderer::RendererFactory* renderer_factory) const
+  MouseHidFactory::MakeInputHandler(const nextfloor::gameplay::ActionFactory& action_factory,
+                                    nextfloor::gameplay::RendererFactory* renderer_factory) const
 {
     return std::make_unique<GameInputHandler>(*this, action_factory, renderer_factory);
 }
 
-std::unique_ptr<nextfloor::gameplay::HID> MouseHidFactory::MakeHid(nextfloor::renderer::RendererFactory* renderer_factory) const
+std::unique_ptr<nextfloor::gameplay::HID> MouseHidFactory::MakeHid(nextfloor::gameplay::RendererFactory* renderer_factory) const
 {
     return std::make_unique<MouseKeyboard>(renderer_factory);
 }

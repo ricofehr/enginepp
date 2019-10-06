@@ -12,7 +12,7 @@
 #include <memory>
 
 #include "nextfloor/renderer/scene_input.h"
-#include "nextfloor/renderer/renderer_factory.h"
+#include "nextfloor/gameplay/renderer_factory.h"
 
 /**
  *  @namespace nextfloor
@@ -36,7 +36,7 @@ public:
     /**
      *  Default constructor
      */
-    MouseKeyboard(nextfloor::renderer::RendererFactory* renderer_factory);
+    MouseKeyboard(nextfloor::gameplay::RendererFactory* renderer_factory);
     ~MouseKeyboard() final = default;
 
     MouseKeyboard(MouseKeyboard&&) = default;

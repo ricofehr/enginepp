@@ -16,9 +16,7 @@
 #include "nextfloor/objects/floor.h"
 #include "nextfloor/objects/roof.h"
 #include "nextfloor/objects/wall_brick.h"
-#include "nextfloor/gameplay/player.h"
 #include "nextfloor/objects/rock.h"
-#include "nextfloor/gameplay/head_camera.h"
 
 #include "nextfloor/grid/mesh_grid.h"
 #include "nextfloor/grid/room_grid.h"
@@ -33,8 +31,6 @@
 #include "nextfloor/physics/tbb_nearer_collision_engine.h"
 #include "nextfloor/physics/serial_nearer_collision_engine.h"
 #include "nextfloor/physics/cl_nearer_collision_engine.h"
-
-#include "nextfloor/gameplay/demo_level.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -90,12 +86,6 @@ std::unique_ptr<Mesh> ModelMeshFactory::MakeWallBrick(const glm::vec3& location,
     return std::make_unique<WallBrick>(location, scale, texture, *this);
 }
 
-std::unique_ptr<Mesh> ModelMeshFactory::MakePlayer(const glm::vec3& location) const
-{
-    using nextfloor::gameplay::Player;
-    return std::make_unique<Player>(location, *this);
-}
-
 std::unique_ptr<Mesh> ModelMeshFactory::MakeRock(const glm::vec3& location) const
 {
     return std::make_unique<Rock>(location, 1.0f, *this);
@@ -104,12 +94,6 @@ std::unique_ptr<Mesh> ModelMeshFactory::MakeRock(const glm::vec3& location) cons
 std::unique_ptr<Mesh> ModelMeshFactory::MakeLittleRock(const glm::vec3& location) const
 {
     return std::make_unique<Rock>(location, 0.5f, *this);
-}
-
-std::unique_ptr<Camera> ModelMeshFactory::MakeCamera(Mesh* owner) const
-{
-    using nextfloor::gameplay::HeadCamera;
-    return std::make_unique<HeadCamera>(owner, 3.14f, 0.0f);
 }
 
 std::unique_ptr<Polygon> ModelMeshFactory::MakeCube(const glm::vec3& location, const glm::vec3& scale) const
@@ -198,12 +182,6 @@ CollisionEngine* ModelMeshFactory::MakeCollisionEngine() const
     assert(engine_collision != nullptr);
 
     return engine_collision;
-}
-
-std::unique_ptr<nextfloor::gameplay::Level> ModelMeshFactory::MakeLevel() const
-{
-    using nextfloor::gameplay::DemoLevel;
-    return std::make_unique<DemoLevel>(*this);
 }
 
 }  // namespace objects

@@ -19,9 +19,9 @@ namespace hid {
  *  Constructor
  *  @param  window  GL Main Window
  */
-GameInputHandler::GameInputHandler(const HidFactory& hid_factory,
-                                   const nextfloor::actions::ActionFactory& action_factory,
-                                   nextfloor::renderer::RendererFactory* renderer_factory)
+GameInputHandler::GameInputHandler(const nextfloor::gameplay::HidFactory& hid_factory,
+                                   const nextfloor::gameplay::ActionFactory& action_factory,
+                                   nextfloor::gameplay::RendererFactory* renderer_factory)
 {
     /** TODO: init hid in external function with config check for targetted controller */
     hid_ = hid_factory.MakeHid(renderer_factory);

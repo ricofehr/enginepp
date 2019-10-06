@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_CORE_GAMETIMER_H_
-#define NEXTFLOOR_CORE_GAMETIMER_H_
+#ifndef NEXTFLOOR_GAMEPLAY_GAMETIMER_H_
+#define NEXTFLOOR_GAMEPLAY_GAMETIMER_H_
 
 #include "nextfloor/gameplay/frame_timer.h"
 
@@ -14,13 +14,13 @@
 
 namespace nextfloor {
 
-namespace core {
+namespace gameplay {
 
 /**
  *  @class GameTimer
  *  @brief GameTimer implements FrameTimer
  */
-class GameTimer : public nextfloor::gameplay::FrameTimer {
+class GameTimer : public FrameTimer {
 
 public:
     GameTimer();
@@ -51,8 +51,8 @@ private:
 };
 
 
-}  // namespace core
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_CORE_GAMETIMER_H_
+#endif  // NEXTFLOOR_GAMEPLAY_GAMETIMER_H_
