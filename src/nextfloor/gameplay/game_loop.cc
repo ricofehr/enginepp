@@ -10,11 +10,7 @@
 #include <sstream>
 #include <list>
 
-#include "nextfloor/gameplay/action.h"
 #include "nextfloor/core/common_services.h"
-
-
-#include "nextfloor/objects/model_mesh.h"
 
 namespace nextfloor {
 
@@ -26,7 +22,7 @@ static bool sInstanciated = false;
 
 }  // anonymous namespace
 
-GameLoop::GameLoop()
+GameLoop::GameLoop(const nextfloor::hid::HidFactory& hid_factory)
 {
     assert(!sInstanciated);
     sInstanciated = true;
@@ -35,7 +31,7 @@ GameLoop::GameLoop()
     timer_ = factory->MakeFrameTimer();
     level_ = factory->MakeLevel();
     game_window_ = factory->MakeSceneWindow();
-    input_handler_ = factory->MakeInputHandler();
+    input_handler_ = hid_factory.MakeInputHandler();
 }
 
 void GameLoop::Loop()

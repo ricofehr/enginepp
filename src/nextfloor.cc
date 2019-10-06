@@ -9,11 +9,11 @@
 #include "nextfloor/gameplay/game_loop.h"
 #include "nextfloor/core/common_services.h"
 
+#include "nextfloor/hid/mouse_hid_factory.h"
 
 int main(int argc, char* argv[])
 {
     using nextfloor::core::CommonServices;
-    using nextfloor::gameplay::GameLoop;
 
     /* Init Config */
     CommonServices::getConfig()->Initialize();
@@ -22,7 +22,8 @@ int main(int argc, char* argv[])
     CommonServices::getConfig()->ManageProgramParameters(argc, argv);
 
     /* Init GL Scene */
-    GameLoop game_loop;
+    nextfloor::hid::MouseHidFactory hid_factory;
+    nextfloor::gameplay::GameLoop game_loop(hid_factory);
 
     /* Frame Loop */
     game_loop.Loop();

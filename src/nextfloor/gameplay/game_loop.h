@@ -17,6 +17,8 @@
 #include "nextfloor/gameplay/frame_timer.h"
 #include "nextfloor/gameplay/level.h"
 
+#include "nextfloor/hid/hid_factory.h"
+
 namespace nextfloor {
 
 namespace gameplay {
@@ -28,7 +30,7 @@ namespace gameplay {
 class GameLoop {
 
 public:
-    GameLoop();
+    GameLoop(const nextfloor::hid::HidFactory& hid_factory);
     ~GameLoop() noexcept;
 
     GameLoop(GameLoop&&) = default;

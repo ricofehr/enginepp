@@ -17,14 +17,14 @@ IF(APPLE)
 ENDIF()
 
 set(actions_SRCS
-        src/nextfloor/actions/action_factory.cc
         src/nextfloor/actions/fire_action.cc
         src/nextfloor/actions/jump_action.cc
         src/nextfloor/actions/movedown_action.cc
         src/nextfloor/actions/moveleft_action.cc
         src/nextfloor/actions/moveright_action.cc
         src/nextfloor/actions/moveup_action.cc
-        src/nextfloor/actions/run_action.cc)
+        src/nextfloor/actions/run_action.cc
+        src/nextfloor/actions/sprite_action_factory.cc)
 
 set(core_SRCS
         src/nextfloor/core/common_services.cc
@@ -40,7 +40,6 @@ set(factory_SRCS
         src/nextfloor/factory/facade_factory.cc
         src/nextfloor/factory/game_factory.cc
         src/nextfloor/factory/gl_renderer_factory.cc
-        src/nextfloor/factory/mouse_hid_factory.cc
         src/nextfloor/factory/services_factory.cc)
 
 set(gameplay_SRCS
@@ -60,6 +59,7 @@ set(grid_SRCS
 
 set(hid_SRCS
         src/nextfloor/hid/game_input_handler.cc
+        src/nextfloor/hid/mouse_hid_factory.cc
         src/nextfloor/hid/mouse_keyboard.cc)
 
 set(objects_SRCS
@@ -114,14 +114,14 @@ set(nextfloor_SRCS
 set(actions_HDRS
         src/nextfloor/actions/action.h
         src/nextfloor/actions/action_factory.h
-        src/nextfloor/actions/factory.h
         src/nextfloor/actions/fire_action.h
         src/nextfloor/actions/jump_action.h
         src/nextfloor/actions/movedown_action.h
         src/nextfloor/actions/moveleft_action.h
         src/nextfloor/actions/moveright_action.h
         src/nextfloor/actions/moveup_action.h
-        src/nextfloor/actions/run_action.h)
+        src/nextfloor/actions/run_action.h
+        src/nextfloor/actions/sprite_action_factory.h)
 
 set(core_HDRS
         src/nextfloor/core/common_services.h
@@ -144,9 +144,7 @@ set(factory_HDRS
         src/nextfloor/factory/facade_factory.h
         src/nextfloor/factory/game_factory.h
         src/nextfloor/factory/gl_renderer_factory.h
-        src/nextfloor/factory/hid_factory.h
         src/nextfloor/factory/mesh_factory.h
-        src/nextfloor/factory/mouse_hid_factory.h
         src/nextfloor/factory/renderer_factory.h
         src/nextfloor/factory/services_factory.h)
 
@@ -173,6 +171,8 @@ set(grid_HDRS
 
 set(hid_HDRS
         src/nextfloor/hid/game_input_handler.h
+        src/nextfloor/hid/hid_factory.h
+        src/nextfloor/hid/mouse_hid_factory.h
         src/nextfloor/hid/mouse_keyboard.h)
 
 set(objects_HDRS

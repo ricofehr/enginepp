@@ -10,7 +10,6 @@
 #include "nextfloor/factory/game_factory.h"
 #include "nextfloor/factory/gl_renderer_factory.h"
 #include "nextfloor/factory/services_factory.h"
-#include "nextfloor/factory/mouse_hid_factory.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -30,7 +29,6 @@ FacadeFactory::FacadeFactory()
     mesh_factory_ = std::make_unique<GameFactory>();
     renderer_factory_ = std::make_unique<GlRendererFactory>();
     core_factory_ = std::make_unique<ServicesFactory>();
-    hid_factory_ = std::make_unique<MouseHidFactory>();
     sInstanciated = true;
 }
 
@@ -192,16 +190,6 @@ nextfloor::objects::CollisionEngine* FacadeFactory::MakeCollisionEngine() const
 std::unique_ptr<nextfloor::gameplay::Level> FacadeFactory::MakeLevel() const
 {
     return mesh_factory_->MakeLevel();
-}
-
-std::unique_ptr<nextfloor::gameplay::InputHandler> FacadeFactory::MakeInputHandler() const
-{
-    return hid_factory_->MakeInputHandler();
-}
-
-std::unique_ptr<nextfloor::gameplay::HID> FacadeFactory::MakeHid() const
-{
-    return hid_factory_->MakeHid();
 }
 
 std::unique_ptr<nextfloor::core::ConfigParser> FacadeFactory::MakeConfigParser() const

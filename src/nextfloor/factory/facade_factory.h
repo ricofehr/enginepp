@@ -26,9 +26,6 @@
 #include "nextfloor/gameplay/scene_window.h"
 #include "nextfloor/renderer/scene_input.h"
 
-#include "nextfloor/gameplay/hid.h"
-#include "nextfloor/gameplay/input_handler.h"
-
 #include "nextfloor/core/config_parser.h"
 #include "nextfloor/core/exit.h"
 #include "nextfloor/core/file_io.h"
@@ -38,7 +35,6 @@
 
 #include "nextfloor/factory/renderer_factory.h"
 #include "nextfloor/factory/mesh_factory.h"
-#include "nextfloor/factory/hid_factory.h"
 #include "nextfloor/factory/core_factory.h"
 
 namespace nextfloor {
@@ -114,10 +110,6 @@ public:
     /* GameplayFactory Part */
     std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const;
 
-    /* HidFactory Part */
-    std::unique_ptr<nextfloor::gameplay::HID> MakeHid() const;
-    std::unique_ptr<nextfloor::gameplay::InputHandler> MakeInputHandler() const;
-
     /* CoreFacotry Part */
     std::unique_ptr<nextfloor::core::ConfigParser> MakeConfigParser() const;
     std::unique_ptr<nextfloor::core::Exit> MakeExit() const;
@@ -126,14 +118,12 @@ public:
     std::unique_ptr<nextfloor::core::Log> MakeLog() const;
     std::unique_ptr<nextfloor::core::RandomGenerator> MakeRandomGenerator() const;
     std::unique_ptr<MeshFactory> MakeMeshFactory() const;
-    std::unique_ptr<HidFactory> MakeHidFactory() const;
     std::unique_ptr<nextfloor::core::WindowSettings> MakeWindowSettings(nextfloor::gameplay::SceneWindow* window) const;
 
 private:
     std::unique_ptr<MeshFactory> mesh_factory_;
     std::unique_ptr<RendererFactory> renderer_factory_;
     std::unique_ptr<CoreFactory> core_factory_;
-    std::unique_ptr<HidFactory> hid_factory_;
 };
 
 }  // namespace factory

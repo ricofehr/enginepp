@@ -4,10 +4,10 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_ACTIONS_ACTIONFACTORY_H_
-#define NEXTFLOOR_ACTIONS_ACTIONFACTORY_H_
+#ifndef NEXTFLOOR_ACTIONS_FACTORY_H_
+#define NEXTFLOOR_ACTIONS_FACTORY_H_
 
-#include "nextfloor/actions/factory.h"
+#include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
@@ -17,16 +17,18 @@ namespace actions {
  *  @class ActionFactory
  *  @brief Abstract Factory for player and NPJ actions
  */
-class ActionFactory : public Factory {
+class ActionFactory {
 
 public:
-    std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveDownAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const final;
+    virtual ~ActionFactory() = default;
+
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveDownAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const = 0;
+    virtual std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const = 0;
 };
 
 }  // namespace actions
