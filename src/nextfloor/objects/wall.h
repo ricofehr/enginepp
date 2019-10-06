@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <string>
 
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -30,7 +31,7 @@ public:
     virtual void AddWindow() = 0;
 
 protected:
-    virtual void AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint);
+    virtual void AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint, const MeshFactory& factory);
 
     virtual std::string texture_file() const = 0;
 

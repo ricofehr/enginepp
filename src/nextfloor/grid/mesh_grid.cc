@@ -6,6 +6,7 @@
 
 #include "nextfloor/grid/mesh_grid.h"
 
+
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -13,16 +14,19 @@ namespace nextfloor {
 namespace grid {
 
 
-MeshGrid::MeshGrid(nextfloor::objects::Mesh* owner, const glm::ivec3& boxes_count, const glm::vec3& box_dimension)
+MeshGrid::MeshGrid(nextfloor::objects::Mesh* owner,
+                   const glm::ivec3& boxes_count,
+                   const glm::vec3& box_dimension,
+                   const nextfloor::objects::MeshFactory& factory)
       : WiredGrid(owner, boxes_count, box_dimension)
 {
-    InitBoxes();
+    InitBoxes(factory);
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> MeshGrid::AllocateGridBox(const glm::ivec3& grid_coords)
+std::unique_ptr<nextfloor::objects::GridBox> MeshGrid::AllocateGridBox(const glm::ivec3& grid_coords,
+                                                                       const nextfloor::objects::MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    return factory->MakeGridBox(grid_coords, this);
+    return factory.MakeGridBox(grid_coords, this);
 }
 
 MeshGrid::~MeshGrid() noexcept

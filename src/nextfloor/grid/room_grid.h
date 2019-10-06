@@ -22,11 +22,12 @@ namespace grid {
 class RoomGrid : public WiredGrid {
 
 public:
-    RoomGrid(nextfloor::objects::Mesh* owner);
+    RoomGrid(nextfloor::objects::Mesh* owner, const nextfloor::objects::MeshFactory& factory);
     ~RoomGrid() noexcept final;
 
 protected:
-    std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords) final;
+    std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords,
+                                                                 const nextfloor::objects::MeshFactory& factory) final;
 
 private:
     /*

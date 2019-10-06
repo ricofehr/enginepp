@@ -12,22 +12,21 @@ namespace nextfloor {
 
 namespace objects {
 
-Room::Room(const glm::vec3& location)
+Room::Room(const glm::vec3& location, const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    grid_ = factory->MakeRoomGrid(this);
-    border_ = factory->MakeBorder(location, grid_->scale());
-    AddWalls();
+    grid_ = factory.MakeRoomGrid(this);
+    border_ = factory.MakeBorder(location, grid_->scale());
+    AddWalls(factory);
 }
 
-void Room::AddWalls()
+void Room::AddWalls(const MeshFactory& factory)
 {
-    AddFrontWall();
-    AddRightWall();
-    AddBackWall();
-    AddLeftWall();
-    AddFloor();
-    AddRoof();
+    AddFrontWall(factory);
+    AddRightWall(factory);
+    AddBackWall(factory);
+    AddLeftWall(factory);
+    AddFloor(factory);
+    AddRoof(factory);
 }
 
 void Room::InitChildsIntoGrid()
@@ -42,46 +41,39 @@ void Room::InitChildsIntoGrid()
     }
 }
 
-void Room::AddRock(const glm::vec3& relative_location)
+void Room::AddRock(const glm::vec3& relative_location, const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    add_child(factory->MakeRock(grid()->CalculateFirstPointInGrid() + relative_location));
+    add_child(factory.MakeRock(grid()->CalculateFirstPointInGrid() + relative_location));
 }
 
-void Room::AddFrontWall()
+void Room::AddFrontWall(const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    add_child(factory->MakeFrontWall(grid()->CalculateFrontSideLocation(), grid()->CalculateFrontSideBorderScale()));
+    add_child(factory.MakeFrontWall(grid()->CalculateFrontSideLocation(), grid()->CalculateFrontSideBorderScale()));
 }
 
-void Room::AddRightWall()
+void Room::AddRightWall(const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    add_child(factory->MakeRightWall(grid()->CalculateRightSideLocation(), grid()->CalculateRightSideBorderScale()));
+    add_child(factory.MakeRightWall(grid()->CalculateRightSideLocation(), grid()->CalculateRightSideBorderScale()));
 }
 
-void Room::AddBackWall()
+void Room::AddBackWall(const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    add_child(factory->MakeBackWall(grid()->CalculateBackSideLocation(), grid()->CalculateBackSideBorderScale()));
+    add_child(factory.MakeBackWall(grid()->CalculateBackSideLocation(), grid()->CalculateBackSideBorderScale()));
 }
 
-void Room::AddLeftWall()
+void Room::AddLeftWall(const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    add_child(factory->MakeLeftWall(grid()->CalculateLeftSideLocation(), grid()->CalculateLeftSideBorderScale()));
+    add_child(factory.MakeLeftWall(grid()->CalculateLeftSideLocation(), grid()->CalculateLeftSideBorderScale()));
 }
 
-void Room::AddFloor()
+void Room::AddFloor(const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    add_child(factory->MakeFloor(grid()->CalculateBottomSideLocation(), grid()->CalculateBottomSideBorderScale()));
+    add_child(factory.MakeFloor(grid()->CalculateBottomSideLocation(), grid()->CalculateBottomSideBorderScale()));
 }
 
-void Room::AddRoof()
+void Room::AddRoof(const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    add_child(factory->MakeRoof(grid()->CalculateTopSideLocation(), grid()->CalculateTopSideBorderScale()));
+    add_child(factory.MakeRoof(grid()->CalculateTopSideLocation(), grid()->CalculateTopSideBorderScale()));
 }
 
 }  // namespace objects

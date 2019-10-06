@@ -11,6 +11,8 @@
 
 #include <glm/glm.hpp>
 
+#include "nextfloor/objects/mesh_factory.h"
+
 namespace nextfloor {
 
 namespace objects {
@@ -22,7 +24,7 @@ namespace objects {
 class Rock : public ModelMesh {
 
 public:
-    Rock(const glm::vec3& location, float scale);
+    Rock(const glm::vec3& location, float scale, const MeshFactory& factory);
     ~Rock() final = default;
 
 private:

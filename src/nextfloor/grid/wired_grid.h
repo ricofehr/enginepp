@@ -11,6 +11,7 @@
 #include <tbb/mutex.h>
 
 #include "nextfloor/objects/grid.h"
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -72,11 +73,13 @@ protected:
     WiredGrid(const WiredGrid&) = delete;
     WiredGrid& operator=(const WiredGrid&) = delete;
 
-    virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& coords) = 0;
+    virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& coords,
+                                                                         const nextfloor::objects::MeshFactory& factory)
+      = 0;
 
     std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh* object);
 
-    void InitBoxes();
+    void InitBoxes(const nextfloor::objects::MeshFactory& factory);
     void DeleteGrid() noexcept;
 
     nextfloor::objects::GridBox* getGridBox(const glm::ivec3& coords)

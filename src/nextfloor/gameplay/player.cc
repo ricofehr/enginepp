@@ -12,11 +12,10 @@ namespace nextfloor {
 
 namespace gameplay {
 
-Player::Player(const glm::vec3& location)
+Player::Player(const glm::vec3& location, const nextfloor::objects::MeshFactory& mesh_factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    border_ = factory->MakeBorder(location, glm::vec3(0.4f));
-    camera_ = factory->MakeCamera(this);
+    border_ = mesh_factory.MakeBorder(location, glm::vec3(0.4f));
+    camera_ = mesh_factory.MakeCamera(this);
 }
 
 void Player::Move()

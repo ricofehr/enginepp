@@ -11,6 +11,7 @@
 
 #include <glm/glm.hpp>
 
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -23,7 +24,7 @@ namespace gameplay {
 class Player : public nextfloor::objects::ModelMesh {
 
 public:
-    Player(const glm::vec3& location);
+    Player(const glm::vec3& location, const nextfloor::objects::MeshFactory& mesh_factory);
     ~Player() final = default;
 
 

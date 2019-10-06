@@ -19,6 +19,7 @@
 
 #include "nextfloor/hid/hid_factory.h"
 #include "nextfloor/core/core_factory.h"
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -31,7 +32,9 @@ namespace gameplay {
 class GameLoop {
 
 public:
-    GameLoop(const nextfloor::hid::HidFactory& hid_factory, const nextfloor::core::CoreFactory& core_factory);
+    GameLoop(const nextfloor::hid::HidFactory& hid_factory,
+             const nextfloor::core::CoreFactory& core_factory,
+             const nextfloor::objects::MeshFactory& game_factory);
     ~GameLoop() noexcept;
 
     GameLoop(GameLoop&&) = default;

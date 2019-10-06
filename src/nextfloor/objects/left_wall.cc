@@ -10,7 +10,9 @@ namespace nextfloor {
 
 namespace objects {
 
-LeftWall::LeftWall(const glm::vec3& location, const glm::vec3& scale) : DepthWall(location, scale) {}
+LeftWall::LeftWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory)
+      : DepthWall(location, scale, factory)
+{}
 
 void LeftWall::PrepareDraw(const Camera& active_camera)
 {

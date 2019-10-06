@@ -13,18 +13,18 @@ namespace nextfloor {
 namespace grid {
 
 
-RoomGrid::RoomGrid(nextfloor::objects::Mesh* owner)
+RoomGrid::RoomGrid(nextfloor::objects::Mesh* owner, const nextfloor::objects::MeshFactory& factory)
       : WiredGrid(owner,
                   glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT),
                   glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
 {
-    InitBoxes();
+    InitBoxes(factory);
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> RoomGrid::AllocateGridBox(const glm::ivec3& grid_coords)
+std::unique_ptr<nextfloor::objects::GridBox> RoomGrid::AllocateGridBox(const glm::ivec3& grid_coords,
+                                                                       const nextfloor::objects::MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    return factory->MakeRoomGridBox(grid_coords, this);
+    return factory.MakeRoomGridBox(grid_coords, this);
 }
 
 RoomGrid::~RoomGrid() noexcept

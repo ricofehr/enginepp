@@ -3,13 +3,11 @@
 #include <memory>
 #include <iostream>
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace objects {
 
-void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint)
+void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint, const MeshFactory& factory)
 {
     auto padding = brick_dimension_ / 2.0f;
     firstpoint += padding;
@@ -20,8 +18,7 @@ void Wall::AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint)
         for (float y = firstpoint.y; y <= lastpoint.y; y += brick_dimension_.y) {
             for (float z = firstpoint.z; z <= lastpoint.z; z += brick_dimension_.z) {
                 auto brick_location = glm::vec3(x, y, z);
-                auto factory = nextfloor::core::CommonServices::getFactory();
-                add_child(factory->MakeWallBrick(brick_location, brick_dimension_ / 2.0f, texture_file()));
+                add_child(factory.MakeWallBrick(brick_location, brick_dimension_ / 2.0f, texture_file()));
             }
         }
     }

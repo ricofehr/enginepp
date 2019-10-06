@@ -10,7 +10,9 @@ namespace nextfloor {
 
 namespace objects {
 
-BackWall::BackWall(const glm::vec3& location, const glm::vec3& scale) : WidthWall(location, scale) {}
+BackWall::BackWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory)
+      : WidthWall(location, scale, factory)
+{}
 
 void BackWall::PrepareDraw(const Camera& active_camera)
 {

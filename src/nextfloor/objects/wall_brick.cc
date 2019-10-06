@@ -6,17 +6,14 @@
 
 #include "nextfloor/objects/wall_brick.h"
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace objects {
 
-WallBrick::WallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture)
+WallBrick::WallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture, const MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    polygons_.push_back(factory->MakeCube(location, scale, texture));
-    border_ = factory->MakeBorder(location, scale);
+    polygons_.push_back(factory.MakeCube(location, scale, texture));
+    border_ = factory.MakeBorder(location, scale);
 }
 
 }  // namespace objects

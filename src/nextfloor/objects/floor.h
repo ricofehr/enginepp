@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <string>
 
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -24,7 +25,7 @@ namespace objects {
 class Floor : public Wall {
 
 public:
-    Floor(const glm::vec3& location, const glm::vec3& scale);
+    Floor(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
     ~Floor() final = default;
 
     void AddDoor() final;

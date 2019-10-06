@@ -9,7 +9,7 @@
 
 #include "nextfloor/objects/model_mesh.h"
 
-#include <vector>
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -22,7 +22,7 @@ namespace objects {
 class Universe : public ModelMesh {
 
 public:
-    Universe();
+    Universe(const MeshFactory& factory);
     ~Universe() final = default;
 };
 

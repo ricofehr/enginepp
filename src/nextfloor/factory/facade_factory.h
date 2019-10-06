@@ -27,7 +27,6 @@
 #include "nextfloor/renderer/scene_input.h"
 
 #include "nextfloor/factory/renderer_factory.h"
-#include "nextfloor/factory/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -48,47 +47,6 @@ public:
     FacadeFactory(const FacadeFactory&) = delete;
     FacadeFactory& operator=(const FacadeFactory&) = delete;
 
-    /* MeshFactory Part */
-    std::unique_ptr<nextfloor::objects::Mesh> MakeUniverse() const;
-
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRoom(const glm::vec3& location) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeFloor(const glm::vec3& location, const glm::vec3& scale) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRoof(const glm::vec3& location, const glm::vec3& scale) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeWallBrick(const glm::vec3& location,
-                                                            const glm::vec3& scale,
-                                                            const std::string& texture) const;
-
-    std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(const glm::vec3& location) const;
-
-    std::unique_ptr<nextfloor::objects::Mesh> MakeRock(const glm::vec3& location) const;
-    std::unique_ptr<nextfloor::objects::Mesh> MakeLittleRock(const glm::vec3& location) const;
-
-    std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const;
-
-    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const;
-
-    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location,
-                                                          const glm::vec3& scale,
-                                                          const std::string& texture) const;
-
-    std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const;
-
-    std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(nextfloor::objects::Mesh* universe) const;
-    std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(nextfloor::objects::Mesh* room) const;
-    std::unique_ptr<nextfloor::objects::Grid> MakeGrid(nextfloor::objects::Mesh* owner,
-                                                       const glm::ivec3& boxes_count,
-                                                       const glm::vec3& box_dimension) const;
-    std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(const glm::vec3& grid_coords,
-                                                                 nextfloor::objects::Grid* room_grid) const;
-    std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(const glm::vec3& grid_coords,
-                                                                     nextfloor::objects::Grid* universe_grid) const;
-    std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(const glm::vec3& grid_coords,
-                                                             nextfloor::objects::Grid* grid) const;
-
     /* RendererFactory Part */
     nextfloor::gameplay::RendererEngine* MakeCubeRenderer(const std::string& texture);
     nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id);
@@ -96,17 +54,7 @@ public:
     nextfloor::gameplay::SceneWindow* MakeSceneWindow();
     std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput();
 
-    /* PhysicsFactory Part */
-    nextfloor::objects::CollisionEngine* MakeCollisionEngine() const;
-
-    /* GameplayFactory Part */
-    std::unique_ptr<nextfloor::gameplay::Level> MakeLevel() const;
-
-    /* CoreFacotry Part */
-    std::unique_ptr<MeshFactory> MakeMeshFactory() const;
-
 private:
-    std::unique_ptr<MeshFactory> mesh_factory_;
     std::unique_ptr<RendererFactory> renderer_factory_;
 };
 

@@ -11,6 +11,8 @@
 
 #include <glm/glm.hpp>
 
+#include "nextfloor/objects/mesh_factory.h"
+
 namespace nextfloor {
 
 namespace objects {
@@ -22,7 +24,7 @@ namespace objects {
 class LeftWall : public DepthWall {
 
 public:
-    LeftWall(const glm::vec3& location, const glm::vec3& scale);
+    LeftWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
     ~LeftWall() final = default;
 
     void PrepareDraw(const Camera& active_camera) final;

@@ -88,7 +88,7 @@ WiredGrid::WiredGrid(nextfloor::objects::Mesh* owner, const glm::ivec3& boxes_co
     box_dimension_ = box_dimension;
 }
 
-void WiredGrid::InitBoxes()
+void WiredGrid::InitBoxes(const nextfloor::objects::MeshFactory& factory)
 {
     using nextfloor::objects::GridBox;
 
@@ -109,7 +109,7 @@ void WiredGrid::InitBoxes()
 
             /* Ensure each vector is allocated */
             for (auto k = 0; k < depth_boxes_count(); k++) {
-                boxes_[i][j][k] = AllocateGridBox(glm::ivec3(i, j, k));
+                boxes_[i][j][k] = AllocateGridBox(glm::ivec3(i, j, k), factory);
                 assert(sizeof(boxes_[i][j][k]) == sizeof(std::unique_ptr<GridBox>));
             }
         }

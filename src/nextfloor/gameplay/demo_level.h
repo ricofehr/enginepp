@@ -12,7 +12,7 @@
 #include <memory>
 
 #include "nextfloor/objects/mesh.h"
-
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -25,7 +25,7 @@ namespace gameplay {
 class DemoLevel : public Level {
 
 public:
-    DemoLevel();
+    DemoLevel(const nextfloor::objects::MeshFactory& factory);
     ~DemoLevel() final = default;
 
     DemoLevel(DemoLevel&&) = default;
@@ -40,7 +40,7 @@ public:
     void Draw() final;
 
 private:
-    void GenerateUniverse();
+    void GenerateUniverse(const nextfloor::objects::MeshFactory& factory);
     void SetActiveCamera(nextfloor::objects::Camera* active_camera);
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};

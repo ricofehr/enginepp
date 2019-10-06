@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <string>
 
+#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -30,7 +31,7 @@ public:
     void AddWindow() final;
 
 protected:
-    WidthWall(const glm::vec3& location, const glm::vec3& scale);
+    WidthWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
 
 private:
     static constexpr char kTEXTURE[] = "assets/wall.png";

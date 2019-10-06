@@ -14,18 +14,18 @@ namespace nextfloor {
 namespace grid {
 
 
-UniverseGrid::UniverseGrid(nextfloor::objects::Mesh* owner)
+UniverseGrid::UniverseGrid(nextfloor::objects::Mesh* owner, const nextfloor::objects::MeshFactory& factory)
       : WiredGrid(owner,
                   glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT),
                   glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
 {
-    InitBoxes();
+    InitBoxes(factory);
 }
 
-std::unique_ptr<nextfloor::objects::GridBox> UniverseGrid::AllocateGridBox(const glm::ivec3& grid_coords)
+std::unique_ptr<nextfloor::objects::GridBox> UniverseGrid::AllocateGridBox(const glm::ivec3& grid_coords,
+                                                                           const nextfloor::objects::MeshFactory& factory)
 {
-    auto factory = nextfloor::core::CommonServices::getFactory();
-    return factory->MakeUniverseGridBox(grid_coords, this);
+    return factory.MakeUniverseGridBox(grid_coords, this);
 }
 
 UniverseGrid::~UniverseGrid() noexcept

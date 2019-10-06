@@ -39,7 +39,6 @@ set(core_SRCS
 
 set(factory_SRCS
         src/nextfloor/factory/facade_factory.cc
-        src/nextfloor/factory/game_factory.cc
         src/nextfloor/factory/gl_renderer_factory.cc)
 
 set(gameplay_SRCS
@@ -69,6 +68,7 @@ set(objects_SRCS
         src/nextfloor/objects/front_wall.cc
         src/nextfloor/objects/left_wall.cc
         src/nextfloor/objects/model_mesh.cc
+        src/nextfloor/objects/model_mesh_factory.cc
         src/nextfloor/objects/right_wall.cc
         src/nextfloor/objects/rock.cc
         src/nextfloor/objects/roof.cc
@@ -143,9 +143,7 @@ set(core_HDRS
 
 set(factory_HDRS
         src/nextfloor/factory/facade_factory.h
-        src/nextfloor/factory/game_factory.h
         src/nextfloor/factory/gl_renderer_factory.h
-        src/nextfloor/factory/mesh_factory.h
         src/nextfloor/factory/renderer_factory.h)
 
 set(gameplay_HDRS
@@ -186,7 +184,9 @@ set(objects_HDRS
         src/nextfloor/objects/grid_box.h
         src/nextfloor/objects/left_wall.h
         src/nextfloor/objects/mesh.h
+        src/nextfloor/objects/mesh_factory.h
         src/nextfloor/objects/model_mesh.h
+        src/nextfloor/objects/model_mesh_factory.h
         src/nextfloor/objects/polygon.h
         src/nextfloor/objects/right_wall.h
         src/nextfloor/objects/rock.h
