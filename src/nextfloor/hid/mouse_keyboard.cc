@@ -41,9 +41,9 @@ static void OnScroll(void* window, double delta_x, double delta_y)
 
 }  // namespace
 
-MouseKeyboard::MouseKeyboard(nextfloor::gameplay::RendererFactory* renderer_factory)
+MouseKeyboard::MouseKeyboard(std::unique_ptr<nextfloor::gameplay::SceneInput> scene_input)
 {
-    scene_input_ = renderer_factory->MakeSceneInput();
+    scene_input_ = std::move(scene_input);
 }
 
 /**

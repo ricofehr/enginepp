@@ -9,6 +9,9 @@
 
 #include "nextfloor/gameplay/hid_factory.h"
 
+#include "nextfloor/gameplay/action_factory.h"
+#include "nextfloor/gameplay/renderer_factory.h"
+
 namespace nextfloor {
 
 namespace hid {
@@ -20,10 +23,16 @@ namespace hid {
 class MouseHidFactory : public nextfloor::gameplay::HidFactory {
 
 public:
-    std::unique_ptr<nextfloor::gameplay::InputHandler>
-      MakeInputHandler(const nextfloor::gameplay::ActionFactory& action_factory,
-                       nextfloor::gameplay::RendererFactory* renderer_factory) const final;
-    std::unique_ptr<nextfloor::gameplay::HID> MakeHid(nextfloor::gameplay::RendererFactory* renderer_factory) const final;
+    MouseHidFactory(nextfloor::gameplay::ActionFactory* action_factory,
+                    nextfloor::gameplay::RendererFactory* renderer_factory);
+    ~MouseHidFactory() final = default;
+
+    std::unique_ptr<nextfloor::gameplay::InputHandler> MakeInputHandler() const final;
+    std::unique_ptr<nextfloor::gameplay::HID> MakeHid() const final;
+
+private:
+    nextfloor::gameplay::ActionFactory* action_factory_;
+    nextfloor::gameplay::RendererFactory* renderer_factory_;
 };
 
 }  // namespace hid

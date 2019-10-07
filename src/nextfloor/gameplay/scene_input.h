@@ -4,15 +4,15 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_RENDERER_SCENEINPUT_H_
-#define NEXTFLOOR_RENDERER_SCENEINPUT_H_
+#ifndef NEXTFLOOR_GAMEPLAY_SCENEINPUT_H_
+#define NEXTFLOOR_GAMEPLAY_SCENEINPUT_H_
 
 #include <functional>
 #include <glm/glm.hpp>
 
 namespace nextfloor {
 
-namespace renderer {
+namespace gameplay {
 
 class SceneInput {
 
@@ -40,8 +40,8 @@ public:
     // virtual void SetScrollCallBack(void (*on_scroll)(void* window, double delta_x, double delta_y)) = 0;
 };
 
-}  // namespace renderer
+}  // namespace gameplay
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_RENDERER_SCENEINPUT_H_
+#endif  // NEXTFLOOR_GAMEPLAY_SCENEINPUT_H_

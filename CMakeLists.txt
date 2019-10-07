@@ -94,6 +94,7 @@ set(renderer_SRCS
         src/nextfloor/renderer/gl_scene_input.cc
         src/nextfloor/renderer/gl_scene_window.cc
         src/nextfloor/renderer/gl_shader.cc
+        src/nextfloor/renderer/gl_shader_factory.cc
         src/nextfloor/renderer/vertex_gl_shader.cc)
 
 set(nextfloor_SRCS
@@ -154,6 +155,7 @@ set(gameplay_HDRS
         src/nextfloor/gameplay/player.h
         src/nextfloor/gameplay/renderer_engine.h
         src/nextfloor/gameplay/renderer_factory.h
+        src/nextfloor/gameplay/scene_input.h
         src/nextfloor/gameplay/scene_window.h)
 
 set(grid_HDRS
@@ -213,8 +215,9 @@ set(renderer_HDRS
         src/nextfloor/renderer/gl_scene_input.h
         src/nextfloor/renderer/gl_scene_window.h
         src/nextfloor/renderer/gl_shader.h
-        src/nextfloor/renderer/scene_input.h
+        src/nextfloor/renderer/gl_shader_factory.h
         src/nextfloor/renderer/shader.h
+        src/nextfloor/renderer/shader_factory.h
         src/nextfloor/renderer/vertex_gl_shader.h)
 
 set(nextfloor_HDRS

@@ -10,8 +10,6 @@
 #include "nextfloor/gameplay/input_handler.h"
 
 #include "nextfloor/gameplay/action_factory.h"
-#include "nextfloor/gameplay/hid_factory.h"
-#include "nextfloor/gameplay/renderer_factory.h"
 
 namespace nextfloor {
 
@@ -24,15 +22,15 @@ namespace hid {
 class GameInputHandler : public nextfloor::gameplay::InputHandler {
 
 public:
-    GameInputHandler(const nextfloor::gameplay::HidFactory& hid_factory,
-                     const nextfloor::gameplay::ActionFactory& factory,
-                     nextfloor::gameplay::RendererFactory* renderer_factory);
+    GameInputHandler(std::unique_ptr<nextfloor::gameplay::HID> hid);
     ~GameInputHandler() final = default;
 
     GameInputHandler(GameInputHandler&&) = default;
     GameInputHandler& operator=(GameInputHandler&&) = default;
     GameInputHandler(const GameInputHandler&) = delete;
     GameInputHandler& operator=(const GameInputHandler&) = delete;
+
+    void InitCommands(const nextfloor::gameplay::ActionFactory& action_factory) final;
 
     /**
      *  Get Current State Input

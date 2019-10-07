@@ -26,11 +26,11 @@ int main(int argc, char* argv[])
     CommonServices::getConfig()->ManageProgramParameters(argc, argv);
 
     /* Init GL Scene */
+    nextfloor::actions::SpriteActionFactory action_factory;
     nextfloor::renderer::GlRendererFactory renderer_factory;
     nextfloor::objects::ModelMeshFactory mesh_factory;
-    nextfloor::hid::MouseHidFactory hid_factory;
-    nextfloor::actions::SpriteActionFactory action_factory;
-    nextfloor::gameplay::DemoGameFactory game_factory(&hid_factory, &action_factory, &renderer_factory, &mesh_factory);
+    nextfloor::hid::MouseHidFactory hid_factory(&action_factory, &renderer_factory);
+    nextfloor::gameplay::DemoGameFactory game_factory(&hid_factory, &renderer_factory, &mesh_factory);
 
     auto game_loop = game_factory.MakeLoop();
 

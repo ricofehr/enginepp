@@ -15,7 +15,7 @@
 
 #include "nextfloor/objects/mesh.h"
 #include "nextfloor/renderer/shader.h"
-#include "nextfloor/gameplay/renderer_factory.h"
+#include "nextfloor/renderer/shader_factory.h"
 
 namespace nextfloor {
 
@@ -24,7 +24,7 @@ namespace renderer {
 class GlSceneWindow : public nextfloor::gameplay::SceneWindow {
 
 public:
-    GlSceneWindow(nextfloor::gameplay::RendererFactory* renderer_factory);
+    GlSceneWindow(ShaderFactory* shader_factory);
     ~GlSceneWindow() noexcept final;
 
     void PrepareDisplay() final;
@@ -45,7 +45,7 @@ private:
     static constexpr const char kVERTEXFILEPATH[] = "glsl/SimpleVertexShader.vertexshader";
     static constexpr const char kFRAGMENTFILEPATH[] = "glsl/SimpleFragmentShader.fragmentshader";
 
-    void LoadShaders(nextfloor::gameplay::RendererFactory* renderer_factory);
+    void LoadShaders(ShaderFactory* shader_factory);
     void InitVAO();
     void InitVSync();
     void CreateWindow();

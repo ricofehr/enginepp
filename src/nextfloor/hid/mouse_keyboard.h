@@ -11,8 +11,7 @@
 
 #include <memory>
 
-#include "nextfloor/renderer/scene_input.h"
-#include "nextfloor/gameplay/renderer_factory.h"
+#include "nextfloor/gameplay/scene_input.h"
 
 /**
  *  @namespace nextfloor
@@ -36,7 +35,7 @@ public:
     /**
      *  Default constructor
      */
-    MouseKeyboard(nextfloor::gameplay::RendererFactory* renderer_factory);
+    MouseKeyboard(std::unique_ptr<nextfloor::gameplay::SceneInput> scene_input);
     ~MouseKeyboard() final = default;
 
     MouseKeyboard(MouseKeyboard&&) = default;
@@ -72,7 +71,7 @@ public:
     virtual bool IsCloseWindowEventOccurs() final;
 
 private:
-    std::unique_ptr<nextfloor::renderer::SceneInput> scene_input_;
+    std::unique_ptr<nextfloor::gameplay::SceneInput> scene_input_;
 };
 
 }  // namespace hid

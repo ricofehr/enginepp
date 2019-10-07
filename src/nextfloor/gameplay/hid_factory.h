@@ -10,9 +10,6 @@
 #include "nextfloor/gameplay/hid.h"
 #include "nextfloor/gameplay/input_handler.h"
 
-#include "nextfloor/gameplay/action_factory.h"
-#include "nextfloor/gameplay/renderer_factory.h"
-
 namespace nextfloor {
 
 namespace gameplay {
@@ -26,9 +23,8 @@ class HidFactory {
 public:
     virtual ~HidFactory() = default;
 
-    virtual std::unique_ptr<InputHandler> MakeInputHandler(const ActionFactory& action_factory,
-                                                           RendererFactory* renderer_factory) const = 0;
-    virtual std::unique_ptr<HID> MakeHid(RendererFactory* renderer_factory) const = 0;
+    virtual std::unique_ptr<InputHandler> MakeInputHandler() const = 0;
+    virtual std::unique_ptr<HID> MakeHid() const = 0;
 };
 
 }  // namespace gameplay

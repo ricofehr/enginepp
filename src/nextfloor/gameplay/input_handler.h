@@ -9,6 +9,7 @@
 
 #include "nextfloor/gameplay/hid.h"
 #include "nextfloor/gameplay/action.h"
+#include "nextfloor/gameplay/action_factory.h"
 
 namespace nextfloor {
 
@@ -23,6 +24,7 @@ class InputHandler {
 public:
     virtual ~InputHandler() = default;
 
+    virtual void InitCommands(const ActionFactory& action_factory) = 0;
     /**
      *  Get Current State Input
      *  @return Command Object

@@ -15,7 +15,6 @@
 #include "nextfloor/objects/camera.h"
 
 #include "nextfloor/gameplay/hid_factory.h"
-#include "nextfloor/gameplay/action_factory.h"
 #include "nextfloor/gameplay/renderer_factory.h"
 #include "nextfloor/objects/mesh_factory.h"
 
@@ -31,7 +30,6 @@ class DemoGameFactory : public GameFactory {
 
 public:
     DemoGameFactory(HidFactory* hid_factory,
-                    ActionFactory* action_factory,
                     RendererFactory* renderer_factory,
                     nextfloor::objects::MeshFactory* mesh_factory);
     ~DemoGameFactory() final = default;
@@ -44,9 +42,10 @@ public:
 
 private:
     std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith3Rooms() const;
+    std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith7Rooms() const;
+    std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith27Rooms() const;
 
     HidFactory* hid_factory_{nullptr};
-    ActionFactory* action_factory_{nullptr};
     RendererFactory* renderer_factory_{nullptr};
     nextfloor::objects::MeshFactory* mesh_factory_{nullptr};
 };

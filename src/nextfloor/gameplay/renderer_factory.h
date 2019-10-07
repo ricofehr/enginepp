@@ -11,9 +11,8 @@
 #include <glm/glm.hpp>
 
 #include "nextfloor/gameplay/renderer_engine.h"
-#include "nextfloor/renderer/shader.h"
 #include "nextfloor/gameplay/scene_window.h"
-#include "nextfloor/renderer/scene_input.h"
+#include "nextfloor/gameplay/scene_input.h"
 
 namespace nextfloor {
 
@@ -29,10 +28,8 @@ public:
     virtual ~RendererFactory() = default;
 
     virtual RendererEngine* MakeCubeRenderer(const std::string& texture) = 0;
-    virtual nextfloor::renderer::Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) = 0;
-    virtual nextfloor::renderer::Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) = 0;
     virtual SceneWindow* MakeSceneWindow() = 0;
-    virtual std::unique_ptr<nextfloor::renderer::SceneInput> MakeSceneInput() = 0;
+    virtual std::unique_ptr<SceneInput> MakeSceneInput() = 0;
 };
 
 }  // namespace gameplay

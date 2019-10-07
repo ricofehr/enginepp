@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_RENDERER_GLSCENEINPUT_H_
 #define NEXTFLOOR_RENDERER_GLSCENEINPUT_H_
 
-#include "nextfloor/renderer/scene_input.h"
+#include "nextfloor/gameplay/scene_input.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -18,7 +18,7 @@ namespace nextfloor {
 
 namespace renderer {
 
-class GlSceneInput : public SceneInput {
+class GlSceneInput : public nextfloor::gameplay::SceneInput {
 
 public:
     GlSceneInput(nextfloor::gameplay::SceneWindow* window);

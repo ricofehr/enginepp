@@ -12,6 +12,8 @@
 #include <map>
 #include <tbb/mutex.h>
 
+#include "nextfloor/renderer/shader_factory.h"
+
 namespace nextfloor {
 
 namespace renderer {
@@ -32,15 +34,13 @@ public:
     GlRendererFactory& operator=(const GlRendererFactory&) = delete;
 
     nextfloor::gameplay::RendererEngine* MakeCubeRenderer(const std::string& texture) final;
-    Shader* MakeVertexShader(const std::string& shader_path, unsigned int program_id) final;
-    Shader* MakeFragmentShader(const std::string& shader_path, unsigned int program_id) final;
     nextfloor::gameplay::SceneWindow* MakeSceneWindow() final;
-    std::unique_ptr<SceneInput> MakeSceneInput() final;
+    std::unique_ptr<nextfloor::gameplay::SceneInput> MakeSceneInput() final;
 
 private:
     std::map<std::string, std::unique_ptr<nextfloor::gameplay::RendererEngine>> renderers_;
-    std::map<std::string, std::unique_ptr<Shader>> shaders_;
     std::unique_ptr<nextfloor::gameplay::SceneWindow> scene_window_;
+    std::unique_ptr<ShaderFactory> shader_factory_;
 };
 
 }  // namespace renderer

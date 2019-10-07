@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "nextfloor/hid/mouse_keyboard.h"
-#include "nextfloor/renderer/scene_input.h"
+#include "nextfloor/gameplay/scene_input.h"
 
 namespace nextfloor {
 
@@ -19,13 +19,13 @@ namespace hid {
  *  Constructor
  *  @param  window  GL Main Window
  */
-GameInputHandler::GameInputHandler(const nextfloor::gameplay::HidFactory& hid_factory,
-                                   const nextfloor::gameplay::ActionFactory& action_factory,
-                                   nextfloor::gameplay::RendererFactory* renderer_factory)
+GameInputHandler::GameInputHandler(std::unique_ptr<nextfloor::gameplay::HID> hid)
 {
-    /** TODO: init hid in external function with config check for targetted controller */
-    hid_ = hid_factory.MakeHid(renderer_factory);
+    hid_ = std::move(hid);
+}
 
+void GameInputHandler::InitCommands(const nextfloor::gameplay::ActionFactory& action_factory)
+{
     /* Init Command Pointers */
     move_up_command_ = action_factory.MakeMoveUpAction();
     move_down_command_ = action_factory.MakeMoveDownAction();
@@ -38,7 +38,7 @@ GameInputHandler::GameInputHandler(const nextfloor::gameplay::HidFactory& hid_fa
 
 nextfloor::gameplay::Action* GameInputHandler::HandlerInput()
 {
-    using nextfloor::renderer::SceneInput;
+    using nextfloor::gameplay::SceneInput;
 
     if (hid_->isPressed(SceneInput::kINPUT_UP)) {
         return move_up_command_.get();

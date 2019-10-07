@@ -10,8 +10,8 @@
 #include "nextfloor/renderer/cube_gl_renderer_engine.h"
 #include "nextfloor/renderer/gl_scene_window.h"
 #include "nextfloor/renderer/gl_scene_input.h"
-#include "nextfloor/renderer/vertex_gl_shader.h"
-#include "nextfloor/renderer/fragment_gl_shader.h"
+
+#include "nextfloor/renderer/gl_shader_factory.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -28,6 +28,7 @@ static bool sInstanciated = false;
 GlRendererFactory::GlRendererFactory()
 {
     assert(!sInstanciated);
+    shader_factory_ = std::make_unique<GlShaderFactory>();
     sInstanciated = true;
 }
 
@@ -47,36 +48,6 @@ nextfloor::gameplay::RendererEngine* GlRendererFactory::MakeCubeRenderer(const s
     return renderers_[texture].get();
 }
 
-Shader* GlRendererFactory::MakeVertexShader(const std::string& shader_path, unsigned int program_id)
-{
-    static tbb::mutex vertex_mutex_;
-
-    // vertex_mutex_.lock();
-    if (shaders_.find(shader_path) == shaders_.end()) {
-        shaders_[shader_path] = std::make_unique<VertexGlShader>(shader_path, program_id);
-    }
-    // vertex_mutex_.unlock();
-
-    assert(shaders_.find(shader_path) != shaders_.end());
-
-    return shaders_[shader_path].get();
-}
-
-Shader* GlRendererFactory::MakeFragmentShader(const std::string& shader_path, unsigned int program_id)
-{
-    static tbb::mutex fragment_mutex_;
-
-    // fragment_mutex_.lock();
-    if (shaders_.find(shader_path) == shaders_.end()) {
-        shaders_[shader_path] = std::make_unique<FragmentGlShader>(shader_path, program_id);
-    }
-    // fragment_mutex_.unlock();
-
-    assert(shaders_.find(shader_path) != shaders_.end());
-
-    return shaders_[shader_path].get();
-}
-
 nextfloor::gameplay::SceneWindow* GlRendererFactory::MakeSceneWindow()
 {
     static tbb::mutex scene_mutex_;
@@ -87,7 +58,7 @@ nextfloor::gameplay::SceneWindow* GlRendererFactory::MakeSceneWindow()
 
     scene_mutex_.lock();
     if (scene_window_ == nullptr) {
-        scene_window_ = std::make_unique<GlSceneWindow>(this);
+        scene_window_ = std::make_unique<GlSceneWindow>(shader_factory_.get());
         using nextfloor::core::CommonServices;
         CommonServices::initWindowSettings(scene_window_.get());
     }
@@ -96,7 +67,7 @@ nextfloor::gameplay::SceneWindow* GlRendererFactory::MakeSceneWindow()
     return scene_window_.get();
 }
 
-std::unique_ptr<SceneInput> GlRendererFactory::MakeSceneInput()
+std::unique_ptr<nextfloor::gameplay::SceneInput> GlRendererFactory::MakeSceneInput()
 {
     return std::make_unique<GlSceneInput>(MakeSceneWindow());
 }
