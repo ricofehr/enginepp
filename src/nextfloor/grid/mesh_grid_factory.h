@@ -22,15 +22,12 @@ class MeshGridFactory : public nextfloor::objects::GridFactory {
 public:
     std::unique_ptr<nextfloor::objects::Grid> MakeUniverseGrid(const glm::vec3& location) const final;
     std::unique_ptr<nextfloor::objects::Grid> MakeRoomGrid(const glm::vec3& location) const final;
-    std::unique_ptr<nextfloor::objects::Grid> MakeGrid(const glm::vec3& location,
-                                                       const glm::ivec3& boxes_count,
-                                                       const glm::vec3& box_dimension) const final;
-    std::unique_ptr<nextfloor::objects::GridBox> MakeRoomGridBox(const glm::vec3& grid_coords,
-                                                                 nextfloor::objects::Grid* room_grid) const final;
-    std::unique_ptr<nextfloor::objects::GridBox> MakeUniverseGridBox(const glm::vec3& coords,
-                                                                     nextfloor::objects::Grid* grid) const final;
-    std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(const glm::vec3& grid_coords,
-                                                             nextfloor::objects::Grid* grid) const final;
+    std::unique_ptr<nextfloor::objects::GridBox> MakeGridBox(const glm::ivec3& grid_coords) const final;
+
+private:
+    std::unique_ptr<nextfloor::objects::GridBox>*** GenerateBoxes(unsigned int grid_width,
+                                                                  unsigned int grid_height,
+                                                                  unsigned int grid_depth) const;
 };
 
 }  // namespace grid

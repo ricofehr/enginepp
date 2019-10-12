@@ -11,7 +11,6 @@
 #include <tbb/mutex.h>
 
 #include "nextfloor/objects/grid.h"
-#include "nextfloor/grid/mesh_grid_factory.h"
 
 namespace nextfloor {
 
@@ -66,20 +65,18 @@ public:
     glm::vec3 dimension() const final { return glm::vec3(width(), height(), depth()); }
 
 protected:
-    WiredGrid(const glm::vec3& location, const glm::ivec3& boxes_count, const glm::vec3& box_dimension);
+    WiredGrid(const glm::vec3& location,
+              const glm::ivec3& boxes_count,
+              const glm::vec3& box_dimension,
+              std::unique_ptr<nextfloor::objects::GridBox>*** boxes);
 
     WiredGrid(WiredGrid&&) = delete;
     WiredGrid& operator=(WiredGrid&&) = delete;
     WiredGrid(const WiredGrid&) = delete;
     WiredGrid& operator=(const WiredGrid&) = delete;
 
-    virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& coords,
-                                                                         const MeshGridFactory& factory)
-      = 0;
-
     std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh* object);
 
-    void InitBoxes(const MeshGridFactory& factory);
     void DeleteGrid() noexcept;
 
     nextfloor::objects::GridBox* getGridBox(const glm::ivec3& coords)
@@ -105,6 +102,8 @@ protected:
 
 
 private:
+    void InitBoxes();
+
     std::vector<nextfloor::objects::Mesh*> FindOccupants(const glm::ivec3& coords) const;
     nextfloor::objects::GridBox* AddItemToGrid(const glm::ivec3& coords, nextfloor::objects::Mesh* object);
     void RemoveItemToGrid(const glm::ivec3& coords, nextfloor::objects::Mesh* object);

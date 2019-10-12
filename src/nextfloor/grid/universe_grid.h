@@ -23,14 +23,6 @@ namespace grid {
 class UniverseGrid : public WiredGrid {
 
 public:
-    UniverseGrid(const glm::vec3& location, const MeshGridFactory& factory);
-    ~UniverseGrid() noexcept final;
-
-protected:
-    std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords,
-                                                                 const MeshGridFactory& factory) final;
-
-private:
     /*
      *  WiredGrid Constants For Romm Setting
      */
@@ -40,6 +32,9 @@ private:
     static constexpr float kBOX_WIDTH = 16.0f;
     static constexpr float kBOX_HEIGHT = 12.0f;
     static constexpr float kBOX_DEPTH = 16.0f;
+
+    UniverseGrid(const glm::vec3& location, std::unique_ptr<nextfloor::objects::GridBox>*** boxes);
+    ~UniverseGrid() noexcept final;
 };
 
 }  // namespace grid

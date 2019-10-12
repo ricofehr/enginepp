@@ -13,9 +13,13 @@ namespace nextfloor {
 namespace grid {
 
 
-WiredGridBox::WiredGridBox(const glm::vec3& coords, nextfloor::objects::Grid* owner)
+WiredGridBox::WiredGridBox(const glm::vec3& coords)
 {
     coords_ = coords;
+}
+
+void WiredGridBox::set_owner(nextfloor::objects::Grid* owner)
+{
     owner_ = owner;
 }
 
@@ -76,31 +80,37 @@ bool WiredGridBox::IsFilled() const
 
 bool WiredGridBox::IsFrontPositionFilled() const
 {
+    assert(owner_ != nullptr);
     return owner_->IsFrontPositionFilled(coords_);
 }
 
 bool WiredGridBox::IsRightPositionFilled() const
 {
+    assert(owner_ != nullptr);
     return owner_->IsRightPositionFilled(coords_);
 }
 
 bool WiredGridBox::IsBackPositionFilled() const
 {
+    assert(owner_ != nullptr);
     return owner_->IsBackPositionFilled(coords_);
 }
 
 bool WiredGridBox::IsLeftPositionFilled() const
 {
+    assert(owner_ != nullptr);
     return owner_->IsLeftPositionFilled(coords_);
 }
 
 bool WiredGridBox::IsBottomPositionFilled() const
 {
+    assert(owner_ != nullptr);
     return owner_->IsBottomPositionFilled(coords_);
 }
 
 bool WiredGridBox::IsTopPositionFilled() const
 {
+    assert(owner_ != nullptr);
     return owner_->IsTopPositionFilled(coords_);
 }
 

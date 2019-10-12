@@ -23,14 +23,6 @@ namespace grid {
 class RoomGrid : public WiredGrid {
 
 public:
-    RoomGrid(const glm::vec3& location, const MeshGridFactory& factory);
-    ~RoomGrid() noexcept final;
-
-protected:
-    std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords,
-                                                                 const MeshGridFactory& factory) final;
-
-private:
     /*
      *  WiredGrid Constants For Romm Setting
      */
@@ -40,6 +32,9 @@ private:
     static constexpr float kBOX_WIDTH = 2.0f;
     static constexpr float kBOX_HEIGHT = 2.0f;
     static constexpr float kBOX_DEPTH = 2.0f;
+
+    RoomGrid(const glm::vec3& location, std::unique_ptr<nextfloor::objects::GridBox>*** boxes);
+    ~RoomGrid() noexcept final;
 };
 
 }  // namespace grid

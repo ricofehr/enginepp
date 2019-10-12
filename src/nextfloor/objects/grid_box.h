@@ -13,6 +13,8 @@ namespace nextfloor {
 
 namespace objects {
 
+class Grid;
+
 /**
  *  @class GridBox
  *  @brief Abstract class who defines gridbox interface object
@@ -22,6 +24,7 @@ class GridBox {
 public:
     virtual ~GridBox() = default;
 
+    virtual void set_owner(Grid* owner) = 0;
     virtual void add(Mesh* object) = 0;
     virtual void remove(Mesh* object) = 0;
     virtual void clear() = 0;

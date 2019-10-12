@@ -30,12 +30,7 @@ public:
 
     virtual std::unique_ptr<Grid> MakeUniverseGrid(const glm::vec3& location) const = 0;
     virtual std::unique_ptr<Grid> MakeRoomGrid(const glm::vec3& location) const = 0;
-    virtual std::unique_ptr<Grid> MakeGrid(const glm::vec3& location,
-                                           const glm::ivec3& boxes_count,
-                                           const glm::vec3& box_dimension) const = 0;
-    virtual std::unique_ptr<GridBox> MakeRoomGridBox(const glm::vec3& coords, Grid* grid) const = 0;
-    virtual std::unique_ptr<GridBox> MakeUniverseGridBox(const glm::vec3& coords, Grid* grid) const = 0;
-    virtual std::unique_ptr<GridBox> MakeGridBox(const glm::vec3& coords, Grid* grid) const = 0;
+    virtual std::unique_ptr<GridBox> MakeGridBox(const glm::ivec3& coords) const = 0;
 };
 
 }  // namespace objects

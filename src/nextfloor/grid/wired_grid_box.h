@@ -25,7 +25,7 @@ namespace grid {
 class WiredGridBox : public nextfloor::objects::GridBox {
 
 public:
-    WiredGridBox(const glm::vec3& coords, nextfloor::objects::Grid* owner);
+    WiredGridBox(const glm::vec3& coords);
     ~WiredGridBox() override = default;
 
     WiredGridBox(WiredGridBox&&) = default;
@@ -33,6 +33,7 @@ public:
     WiredGridBox(const WiredGridBox&) = delete;
     WiredGridBox& operator=(const WiredGridBox&) = delete;
 
+    void set_owner(nextfloor::objects::Grid* owner) final;
     void add(nextfloor::objects::Mesh* object) final;
     void remove(nextfloor::objects::Mesh* object) final;
     void clear() final;
@@ -75,7 +76,7 @@ protected:
 
 private:
     std::vector<nextfloor::objects::Mesh*> occupants_;
-    nextfloor::objects::Grid* owner_;
+    nextfloor::objects::Grid* owner_{nullptr};
     glm::vec3 coords_;
 };
 

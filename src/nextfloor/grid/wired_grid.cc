@@ -81,39 +81,29 @@ bool IsNextCoordByZ(const glm::ivec3& min_coords, const glm::ivec3& max_coords, 
 
 }  // namespace
 
-WiredGrid::WiredGrid(const glm::vec3& location, const glm::ivec3& boxes_count, const glm::vec3& box_dimension)
+WiredGrid::WiredGrid(const glm::vec3& location,
+                     const glm::ivec3& boxes_count,
+                     const glm::vec3& box_dimension,
+                     std::unique_ptr<nextfloor::objects::GridBox>*** boxes)
 {
     location_ = location;
     boxes_count_ = boxes_count;
     box_dimension_ = box_dimension;
+    boxes_ = boxes;
+    InitBoxes();
 }
 
-void WiredGrid::InitBoxes(const MeshGridFactory& factory)
+void WiredGrid::InitBoxes()
 {
-    using nextfloor::objects::GridBox;
-
-    boxes_ = new std::unique_ptr<GridBox>**[width_boxes_count()];
-
-    /* Ensure pointer is allocated */
-    assert(sizeof(boxes_) == sizeof(void***));
-
-    for (auto i = 0; i < width_boxes_count(); i++) {
-        boxes_[i] = new std::unique_ptr<GridBox>*[height_boxes_count()];
-        /* Ensure pointer is allocated */
-        assert(sizeof(boxes_[i]) == sizeof(void**));
-
-        for (auto j = 0; j < height_boxes_count(); j++) {
-            boxes_[i][j] = new std::unique_ptr<GridBox>[depth_boxes_count()]();
-            /* Ensure pointer is allocated */
-            assert(sizeof(boxes_[i][j]) == sizeof(void*));
-
-            /* Ensure each vector is allocated */
-            for (auto k = 0; k < depth_boxes_count(); k++) {
-                boxes_[i][j][k] = AllocateGridBox(glm::ivec3(i, j, k), factory);
-                assert(sizeof(boxes_[i][j][k]) == sizeof(std::unique_ptr<GridBox>));
+    lock();
+    for (auto pi = 0; pi < width_boxes_count(); pi++) {
+        for (auto pj = 0; pj < height_boxes_count(); pj++) {
+            for (auto pk = 0; pk < depth_boxes_count(); pk++) {
+                boxes_[pi][pj][pk]->set_owner(this);
             }
         }
     }
+    unlock();
 }
 
 glm::vec3 WiredGrid::CalculateFirstPointInGrid() const
