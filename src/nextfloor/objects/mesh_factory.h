@@ -28,17 +28,6 @@ public:
 
     virtual std::unique_ptr<Mesh> MakeUniverse() const = 0;
     virtual std::unique_ptr<Mesh> MakeRoom(const glm::vec3& location) const = 0;
-
-    virtual std::unique_ptr<Mesh> MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<Mesh> MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<Mesh> MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<Mesh> MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<Mesh> MakeFloor(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<Mesh> MakeRoof(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<Mesh> MakeWallBrick(const glm::vec3& location,
-                                                const glm::vec3& scale,
-                                                const std::string& texture) const = 0;
-
     virtual std::unique_ptr<Mesh> MakeRock(const glm::vec3& location, const glm::vec3& movement) const = 0;
     virtual std::unique_ptr<Mesh> MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const = 0;
 };

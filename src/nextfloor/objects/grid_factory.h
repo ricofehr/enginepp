@@ -30,7 +30,6 @@ public:
 
     virtual std::unique_ptr<Grid> MakeUniverseGrid(const glm::vec3& location) const = 0;
     virtual std::unique_ptr<Grid> MakeRoomGrid(const glm::vec3& location) const = 0;
-    virtual std::unique_ptr<GridBox> MakeGridBox(const glm::ivec3& coords) const = 0;
 };
 
 }  // namespace objects

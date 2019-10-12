@@ -30,7 +30,6 @@ public:
 
     virtual std::unique_ptr<Loop> MakeLoop() const = 0;
     virtual std::unique_ptr<Level> MakeLevel() const = 0;
-    virtual std::unique_ptr<FrameTimer> MakeFrameTimer() const = 0;
 };
 
 }  // namespace gameplay

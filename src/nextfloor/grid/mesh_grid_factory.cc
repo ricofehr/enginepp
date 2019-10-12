@@ -24,6 +24,13 @@ std::unique_ptr<nextfloor::objects::Grid> MeshGridFactory::MakeUniverseGrid(cons
                                                         UniverseGrid::kDEPTH_BOXES_COUNT));
 }
 
+std::unique_ptr<nextfloor::objects::Grid> MeshGridFactory::MakeRoomGrid(const glm::vec3& location) const
+{
+    return std::make_unique<RoomGrid>(
+      location, GenerateBoxes(RoomGrid::kWIDTH_BOXES_COUNT, RoomGrid::kHEIGHT_BOXES_COUNT, RoomGrid::kDEPTH_BOXES_COUNT));
+}
+
+
 std::unique_ptr<nextfloor::objects::GridBox>*** MeshGridFactory::GenerateBoxes(unsigned int grid_width,
                                                                                unsigned int grid_height,
                                                                                unsigned int grid_depth) const
@@ -44,12 +51,6 @@ std::unique_ptr<nextfloor::objects::GridBox>*** MeshGridFactory::GenerateBoxes(u
     }
 
     return boxes;
-}
-
-std::unique_ptr<nextfloor::objects::Grid> MeshGridFactory::MakeRoomGrid(const glm::vec3& location) const
-{
-    return std::make_unique<RoomGrid>(
-      location, GenerateBoxes(RoomGrid::kWIDTH_BOXES_COUNT, RoomGrid::kHEIGHT_BOXES_COUNT, RoomGrid::kDEPTH_BOXES_COUNT));
 }
 
 std::unique_ptr<nextfloor::objects::GridBox> MeshGridFactory::MakeGridBox(const glm::ivec3& coords) const

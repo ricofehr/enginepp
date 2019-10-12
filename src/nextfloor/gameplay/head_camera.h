@@ -24,7 +24,7 @@ namespace gameplay {
 class HeadCamera : public nextfloor::objects::Camera {
 
 public:
-    HeadCamera(nextfloor::objects::Mesh* owner, float horizontal_angle, float vertical_angle);
+    HeadCamera(float horizontal_angle, float vertical_angle, nextfloor::objects::Mesh* owner = nullptr);
     ~HeadCamera() final = default;
 
     void ComputeOrientation() final;

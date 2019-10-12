@@ -26,7 +26,7 @@ public:
     ~GameCharacterFactory() final = default;
 
     std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(const glm::vec3& location) const override;
-    std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const override;
+    std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner = nullptr) const override;
 
 private:
     nextfloor::objects::PhysicFactory* physic_factory_{nullptr};

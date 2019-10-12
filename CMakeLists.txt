@@ -46,7 +46,6 @@ set(gameplay_SRCS
         src/nextfloor/gameplay/player.cc)
 
 set(grid_SRCS
-        src/nextfloor/grid/mesh_grid.cc
         src/nextfloor/grid/mesh_grid_factory.cc
         src/nextfloor/grid/room_grid.cc
         src/nextfloor/grid/universe_grid.cc
@@ -162,7 +161,6 @@ set(gameplay_HDRS
         src/nextfloor/gameplay/scene_window.h)
 
 set(grid_HDRS
-        src/nextfloor/grid/mesh_grid.h
         src/nextfloor/grid/mesh_grid_factory.h
         src/nextfloor/grid/room_grid.h
         src/nextfloor/grid/universe_grid.h

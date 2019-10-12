@@ -20,13 +20,13 @@ GameCharacterFactory::GameCharacterFactory(nextfloor::objects::PhysicFactory* ph
 std::unique_ptr<nextfloor::objects::Mesh> GameCharacterFactory::MakePlayer(const glm::vec3& location) const
 {
     auto border = physic_factory_->MakeBorder(location, glm::vec3(0.4f));
-    auto camera = MakeCamera(nullptr);
+    auto camera = MakeCamera();
     return std::make_unique<Player>(location, std::move(border), std::move(camera));
 }
 
 std::unique_ptr<nextfloor::objects::Camera> GameCharacterFactory::MakeCamera(nextfloor::objects::Mesh* owner) const
 {
-    return std::make_unique<HeadCamera>(owner, 3.14f, 0.0f);
+    return std::make_unique<HeadCamera>(3.14f, 0.0f, owner);
 }
 
 

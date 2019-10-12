@@ -20,7 +20,6 @@ namespace polygons {
 class MeshPolygonFactory : public nextfloor::objects::PolygonFactory {
 
 public:
-    std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location, float scale) const final;
     std::unique_ptr<nextfloor::objects::Polygon> MakeCube(const glm::vec3& location,
                                                           float scale,
                                                           const std::string& texture) const final;

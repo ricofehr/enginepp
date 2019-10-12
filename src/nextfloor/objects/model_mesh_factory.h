@@ -30,20 +30,18 @@ public:
     std::unique_ptr<Mesh> MakeUniverse() const final;
     std::unique_ptr<Mesh> MakeRoom(const glm::vec3& location) const final;
 
-    std::unique_ptr<Mesh> MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<Mesh> MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<Mesh> MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<Mesh> MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<Mesh> MakeFloor(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<Mesh> MakeRoof(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<Mesh> MakeWallBrick(const glm::vec3& location,
-                                        const glm::vec3& scale,
-                                        const std::string& texture) const final;
-
     std::unique_ptr<Mesh> MakeRock(const glm::vec3& location, const glm::vec3& movement) const final;
     std::unique_ptr<Mesh> MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const final;
 
 private:
+    std::unique_ptr<Mesh> MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<Mesh> MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<Mesh> MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<Mesh> MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<Mesh> MakeFloor(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<Mesh> MakeRoof(const glm::vec3& location, const glm::vec3& scale) const;
+    std::unique_ptr<Mesh> MakeWallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture) const;
+
     std::vector<std::unique_ptr<Mesh>> GenerateWallBricks(glm::vec3 firstpoint,
                                                           glm::vec3 lastpoint,
                                                           const glm::vec3& brick_dimension,

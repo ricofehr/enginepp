@@ -38,9 +38,10 @@ public:
 
     std::unique_ptr<Loop> MakeLoop() const override;
     std::unique_ptr<Level> MakeLevel() const override;
-    std::unique_ptr<FrameTimer> MakeFrameTimer() const final;
 
 private:
+    std::unique_ptr<FrameTimer> MakeFrameTimer() const;
+
     std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith3Rooms() const;
     std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith7Rooms() const;
     std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith27Rooms() const;

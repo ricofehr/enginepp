@@ -14,7 +14,7 @@ namespace nextfloor {
 
 namespace gameplay {
 
-HeadCamera::HeadCamera(nextfloor::objects::Mesh* owner, float horizontal_angle, float vertical_angle)
+HeadCamera::HeadCamera(float horizontal_angle, float vertical_angle, nextfloor::objects::Mesh* owner)
 {
     owner_ = owner;
     horizontal_angle_ = horizontal_angle;
