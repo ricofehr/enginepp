@@ -18,6 +18,7 @@
 #include "nextfloor/gameplay/renderer_factory.h"
 #include "nextfloor/objects/mesh_factory.h"
 #include "nextfloor/objects/character_factory.h"
+#include "nextfloor/objects/physic_factory.h"
 
 namespace nextfloor {
 
@@ -33,7 +34,8 @@ public:
     DemoGameFactory(HidFactory* hid_factory,
                     RendererFactory* renderer_factory,
                     nextfloor::objects::MeshFactory* mesh_factory,
-                    nextfloor::objects::CharacterFactory* character_factory);
+                    nextfloor::objects::CharacterFactory* character_factory,
+                    nextfloor::objects::PhysicFactory* physic_factory);
     ~DemoGameFactory() final = default;
 
     std::unique_ptr<Loop> MakeLoop() const override;
@@ -50,6 +52,7 @@ private:
     RendererFactory* renderer_factory_{nullptr};
     nextfloor::objects::MeshFactory* mesh_factory_{nullptr};
     nextfloor::objects::CharacterFactory* character_factory_{nullptr};
+    nextfloor::objects::PhysicFactory* physic_factory_{nullptr};
 };
 
 }  // namespace gameplay

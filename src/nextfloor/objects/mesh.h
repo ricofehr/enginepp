@@ -31,8 +31,9 @@ class Mesh {
 public:
     virtual ~Mesh() = default;
 
-    virtual std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) = 0;
-    virtual void DetectCollision() = 0;
+    virtual std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const = 0;
+    virtual std::vector<Mesh*> GetMovingObjects() = 0;
+    virtual std::vector<Mesh*> FindCollisionNeighbors() const = 0;
     virtual std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const = 0;
     virtual bool IsNeighborEligibleForCollision(const Mesh& neighbor) const = 0;
     virtual void Move() = 0;

@@ -28,7 +28,7 @@ public:
 
     virtual std::unique_ptr<Border> MakeBorder(const glm::vec3& location, float scale) const = 0;
     virtual std::unique_ptr<Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual CollisionEngine* MakeCollisionEngine() const = 0;
+    virtual std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const = 0;
 };
 
 }  // namespace objects

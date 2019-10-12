@@ -50,7 +50,7 @@ void ModelMesh::PrepareDraw(const Camera& active_camera)
     });
 }
 
-std::vector<Polygon*> ModelMesh::GetPolygonsReadyToDraw(const Camera& active_camera)
+std::vector<Polygon*> ModelMesh::GetPolygonsReadyToDraw(const Camera& active_camera) const
 {
     std::vector<Polygon*> polygons;
 
@@ -68,29 +68,30 @@ std::vector<Polygon*> ModelMesh::GetPolygonsReadyToDraw(const Camera& active_cam
     return polygons;
 }
 
-void ModelMesh::DetectCollision()
+std::vector<Mesh*> ModelMesh::GetMovingObjects()
 {
+    std::vector<Mesh*> moving_objects;
+
+    static tbb::mutex movers_lock;
+
     if (IsMoved()) {
-        PivotCollision();
+        moving_objects.push_back(this);
     }
 
-    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->DetectCollision(); });
+    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) {
+        auto movers = objects_[i]->GetMovingObjects();
+        if (movers.size() != 0) {
+            tbb::mutex::scoped_lock lock_map(movers_lock);
+            moving_objects.insert(moving_objects.end(), movers.begin(), movers.end());
+        }
+    });
+
+    return moving_objects;
 }
 
-void ModelMesh::PivotCollision()
+std::vector<Mesh*> ModelMesh::FindCollisionNeighbors() const
 {
-    nextfloor::polygons::MeshPolygonFactory polygon_factory;
-    nextfloor::physics::MeshPhysicFactory factory(&polygon_factory);
-    static CollisionEngine* collision_engine = factory.MakeCollisionEngine();
-
-    /* Prepare vector for collision compute */
-    std::vector<Mesh*> test_objects = parent_->FindCollisionNeighborsOf(*this);
-
-    /* Parallell collision loop for objects with tbb */
-    tbb::parallel_for(0, (int)test_objects.size(), 1, [&](int i) {
-        assert(*this != *(dynamic_cast<ModelMesh*>(test_objects[i])));
-        collision_engine->DetectCollision(this, test_objects[i]);
-    });
+    return parent_->FindCollisionNeighborsOf(*this);
 }
 
 /* Move this function into Grid Object */

@@ -16,6 +16,7 @@ namespace gameplay {
 
 GameLevel::GameLevel(std::unique_ptr<nextfloor::objects::Mesh> universe,
                      std::unique_ptr<nextfloor::objects::Mesh> player,
+                     std::unique_ptr<nextfloor::objects::CollisionEngine> collision_engine,
                      RendererFactory* renderer_factory)
 {
     player_ = player.get();
@@ -23,6 +24,7 @@ GameLevel::GameLevel(std::unique_ptr<nextfloor::objects::Mesh> universe,
     universe_->AddIntoChild(std::move(player));
     game_cameras_ = universe_->all_cameras();
     SetActiveCamera(player_->camera());
+    collision_engine_ = std::move(collision_engine);
     renderer_factory_ = renderer_factory;
 }
 
@@ -54,8 +56,24 @@ void GameLevel::ExecutePlayerAction(Action* command, double elapsed_time)
 
 void GameLevel::Move()
 {
-    universe_->DetectCollision();
+    DetectCollision();
     universe_->Move();
+}
+
+void GameLevel::DetectCollision()
+{
+    auto moving_objects = universe_->GetMovingObjects();
+    tbb::parallel_for(0, (int)moving_objects.size(), 1, [&](int i) { PivotCollisonOnObject(moving_objects[i]); });
+}
+
+void GameLevel::PivotCollisonOnObject(nextfloor::objects::Mesh* pivot)
+{
+    auto test_objects = pivot->FindCollisionNeighbors();
+
+    tbb::parallel_for(0, (int)test_objects.size(), 1, [&](int i) {
+        assert(pivot->id() != test_objects[i]->id());
+        collision_engine_->DetectCollision(pivot, test_objects[i]);
+    });
 }
 
 void GameLevel::Draw()

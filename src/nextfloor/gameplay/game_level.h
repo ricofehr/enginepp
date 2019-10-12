@@ -12,6 +12,8 @@
 #include <memory>
 
 #include "nextfloor/gameplay/renderer_factory.h"
+
+#include "nextfloor/objects/collision_engine.h"
 #include "nextfloor/objects/mesh.h"
 #include "nextfloor/objects/camera.h"
 
@@ -29,6 +31,7 @@ class GameLevel : public Level {
 public:
     GameLevel(std::unique_ptr<nextfloor::objects::Mesh> universe,
               std::unique_ptr<nextfloor::objects::Mesh> player,
+              std::unique_ptr<nextfloor::objects::CollisionEngine> collision_engine,
               RendererFactory* renderer_factory);
     ~GameLevel() final = default;
 
@@ -46,9 +49,13 @@ public:
 private:
     void SetActiveCamera(nextfloor::objects::Camera* active_camera);
 
+    void DetectCollision();
+    void PivotCollisonOnObject(nextfloor::objects::Mesh* pivot);
+
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
     nextfloor::objects::Mesh* player_{nullptr};
     std::list<nextfloor::objects::Camera*> game_cameras_;
+    std::unique_ptr<nextfloor::objects::CollisionEngine> collision_engine_{nullptr};
     RendererFactory* renderer_factory_{nullptr};
 };
 

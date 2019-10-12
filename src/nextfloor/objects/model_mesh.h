@@ -36,8 +36,9 @@ public:
     friend bool operator==(const ModelMesh& o1, const ModelMesh& o2);
     friend bool operator!=(const ModelMesh& o1, const ModelMesh& o2);
 
-    std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) override;
-    void DetectCollision() final;
+    std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const override;
+    std::vector<Mesh*> GetMovingObjects() override;
+    std::vector<Mesh*> FindCollisionNeighbors() const final;
     std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
     bool IsNeighborEligibleForCollision(const Mesh& neighbor) const final;
     void Move() override;
@@ -170,7 +171,6 @@ protected:
 private:
     void InitCollisionEngine();
     void set_gridcoords(std::vector<GridBox*> coords_list) { coords_list_ = coords_list; }
-    void PivotCollision();
 
     bool IsNeighborReachable(const Mesh& neighbor) const;
     bool IsInDirection(const Mesh& target) const;

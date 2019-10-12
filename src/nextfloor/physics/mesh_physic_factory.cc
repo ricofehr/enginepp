@@ -35,24 +35,24 @@ std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const 
     return std::make_unique<CubeBorder>(polygon_factory_->MakeCube(location, scale));
 }
 
-nextfloor::objects::CollisionEngine* MeshPhysicFactory::MakeCollisionEngine() const
+std::unique_ptr<nextfloor::objects::CollisionEngine> MeshPhysicFactory::MakeCollisionEngine() const
 {
     using nextfloor::core::CommonServices;
 
-    nextfloor::objects::CollisionEngine* engine_collision{nullptr};
+    std::unique_ptr<nextfloor::objects::CollisionEngine> engine_collision{nullptr};
 
     /* Get parallell type from config */
     int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
 
     switch (type_parallell) {  // clang-format off
         case NearerCollisionEngine::kPARALLELL_TBB:
-            engine_collision = new TbbNearerCollisionEngine();
+            engine_collision = std::make_unique<TbbNearerCollisionEngine>();
             break;
         case NearerCollisionEngine::kPARALLELL_CL:
-            engine_collision = new ClNearerCollisionEngine();
+            engine_collision = std::make_unique<ClNearerCollisionEngine>();
             break;
         default:
-            engine_collision = new SerialNearerCollisionEngine();
+            engine_collision = std::make_unique<SerialNearerCollisionEngine>();
             break;
     }  // clang-format on
 

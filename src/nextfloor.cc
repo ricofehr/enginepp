@@ -38,7 +38,8 @@ int main(int argc, char* argv[])
     nextfloor::gameplay::GameCharacterFactory character_factory(&physic_factory);
     nextfloor::objects::ModelMeshFactory mesh_factory(&polygon_factory, &grid_factory, &physic_factory);
     nextfloor::hid::MouseHidFactory hid_factory(&action_factory, &renderer_factory);
-    nextfloor::gameplay::DemoGameFactory game_factory(&hid_factory, &renderer_factory, &mesh_factory, &character_factory);
+    nextfloor::gameplay::DemoGameFactory game_factory(
+      &hid_factory, &renderer_factory, &mesh_factory, &character_factory, &physic_factory);
 
     auto game_loop = game_factory.MakeLoop();
 

@@ -19,14 +19,15 @@ namespace gameplay {
 DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
                                  RendererFactory* renderer_factory,
                                  nextfloor::objects::MeshFactory* mesh_factory,
-                                 nextfloor::objects::CharacterFactory* character_factory)
+                                 nextfloor::objects::CharacterFactory* character_factory,
+                                 nextfloor::objects::PhysicFactory* physic_factory)
 {
     hid_factory_ = hid_factory;
     renderer_factory_ = renderer_factory;
     mesh_factory_ = mesh_factory;
     character_factory_ = character_factory;
+    physic_factory_ = physic_factory;
 }
-
 
 std::unique_ptr<Loop> DemoGameFactory::MakeLoop() const
 {
@@ -47,7 +48,8 @@ std::unique_ptr<Level> DemoGameFactory::MakeLevel() const
 {
     auto universe = GenerateUniverseWith3Rooms();
     auto player = character_factory_->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
-    return std::make_unique<GameLevel>(std::move(universe), std::move(player), renderer_factory_);
+    return std::make_unique<GameLevel>(
+      std::move(universe), std::move(player), physic_factory_->MakeCollisionEngine(), renderer_factory_);
 }
 
 std::unique_ptr<nextfloor::objects::Mesh> DemoGameFactory::GenerateUniverseWith3Rooms() const
