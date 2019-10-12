@@ -11,7 +11,7 @@
 #include <tbb/mutex.h>
 
 #include "nextfloor/objects/grid.h"
-#include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/grid/mesh_grid_factory.h"
 
 namespace nextfloor {
 
@@ -66,7 +66,7 @@ public:
     glm::vec3 dimension() const final { return glm::vec3(width(), height(), depth()); }
 
 protected:
-    WiredGrid(nextfloor::objects::Mesh* owner, const glm::ivec3& boxes_count, const glm::vec3& box_dimension);
+    WiredGrid(const glm::vec3& location, const glm::ivec3& boxes_count, const glm::vec3& box_dimension);
 
     WiredGrid(WiredGrid&&) = delete;
     WiredGrid& operator=(WiredGrid&&) = delete;
@@ -74,12 +74,12 @@ protected:
     WiredGrid& operator=(const WiredGrid&) = delete;
 
     virtual std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& coords,
-                                                                         const nextfloor::objects::MeshFactory& factory)
+                                                                         const MeshGridFactory& factory)
       = 0;
 
     std::vector<nextfloor::objects::GridBox*> ParseGridForObjectPlacements(nextfloor::objects::Mesh* object);
 
-    void InitBoxes(const nextfloor::objects::MeshFactory& factory);
+    void InitBoxes(const MeshGridFactory& factory);
     void DeleteGrid() noexcept;
 
     nextfloor::objects::GridBox* getGridBox(const glm::ivec3& coords)
@@ -152,9 +152,9 @@ private:
     std::vector<nextfloor::objects::Mesh*> FindBottomPositionCollisionNeighbors(const glm::vec3& coords) const;
     std::vector<nextfloor::objects::Mesh*> FindTopPositionCollisionNeighbors(const glm::vec3& coords) const;
 
-    nextfloor::objects::Mesh* owner_;
     std::unique_ptr<nextfloor::objects::GridBox>*** boxes_;
     glm::vec3 box_dimension_;
+    glm::vec3 location_;
     glm::ivec3 boxes_count_;
     tbb::mutex mutex_;
 };

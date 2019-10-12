@@ -17,6 +17,7 @@
 #include "nextfloor/gameplay/hid_factory.h"
 #include "nextfloor/gameplay/renderer_factory.h"
 #include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/objects/character_factory.h"
 
 namespace nextfloor {
 
@@ -31,13 +32,12 @@ class DemoGameFactory : public GameFactory {
 public:
     DemoGameFactory(HidFactory* hid_factory,
                     RendererFactory* renderer_factory,
-                    nextfloor::objects::MeshFactory* mesh_factory);
+                    nextfloor::objects::MeshFactory* mesh_factory,
+                    nextfloor::objects::CharacterFactory* character_factory);
     ~DemoGameFactory() final = default;
 
     std::unique_ptr<Loop> MakeLoop() const override;
     std::unique_ptr<Level> MakeLevel() const override;
-    std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(const glm::vec3& location) const override;
-    std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const override;
     std::unique_ptr<FrameTimer> MakeFrameTimer() const final;
 
 private:
@@ -48,6 +48,7 @@ private:
     HidFactory* hid_factory_{nullptr};
     RendererFactory* renderer_factory_{nullptr};
     nextfloor::objects::MeshFactory* mesh_factory_{nullptr};
+    nextfloor::objects::CharacterFactory* character_factory_{nullptr};
 };
 
 }  // namespace gameplay

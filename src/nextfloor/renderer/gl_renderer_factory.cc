@@ -37,11 +37,11 @@ nextfloor::gameplay::RendererEngine* GlRendererFactory::MakeCubeRenderer(const s
 {
     static tbb::mutex renderer_mutex_;
 
-    // renderer_mutex_.lock();
+    renderer_mutex_.lock();
     if (renderers_.find(texture) == renderers_.end()) {
         renderers_[texture] = std::make_unique<CubeGlRendererEngine>(texture);
     }
-    // renderer_mutex_.unlock();
+    renderer_mutex_.unlock();
 
     assert(renderers_.find(texture) != renderers_.end());
 

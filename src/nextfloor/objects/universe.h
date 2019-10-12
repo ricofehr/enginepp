@@ -22,7 +22,7 @@ namespace objects {
 class Universe : public ModelMesh {
 
 public:
-    Universe(const MeshFactory& factory);
+    Universe(std::unique_ptr<Grid> grid, std::unique_ptr<Border> border);
     ~Universe() final = default;
 };
 

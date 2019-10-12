@@ -25,7 +25,7 @@ namespace objects {
 class BackWall : public WidthWall {
 
 public:
-    BackWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
+    BackWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks);
     ~BackWall() final = default;
 
     void PrepareDraw(const Camera& active_camera) final;

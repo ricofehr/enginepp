@@ -13,8 +13,8 @@ namespace nextfloor {
 namespace grid {
 
 
-RoomGrid::RoomGrid(nextfloor::objects::Mesh* owner, const nextfloor::objects::MeshFactory& factory)
-      : WiredGrid(owner,
+RoomGrid::RoomGrid(const glm::vec3& location, const MeshGridFactory& factory)
+      : WiredGrid(location,
                   glm::ivec3(kWIDTH_BOXES_COUNT, kHEIGHT_BOXES_COUNT, kDEPTH_BOXES_COUNT),
                   glm::vec3(kBOX_WIDTH, kBOX_HEIGHT, kBOX_DEPTH))
 {
@@ -22,7 +22,7 @@ RoomGrid::RoomGrid(nextfloor::objects::Mesh* owner, const nextfloor::objects::Me
 }
 
 std::unique_ptr<nextfloor::objects::GridBox> RoomGrid::AllocateGridBox(const glm::ivec3& grid_coords,
-                                                                       const nextfloor::objects::MeshFactory& factory)
+                                                                       const MeshGridFactory& factory)
 {
     return factory.MakeRoomGridBox(grid_coords, this);
 }

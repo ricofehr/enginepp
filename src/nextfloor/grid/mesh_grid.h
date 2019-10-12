@@ -9,7 +9,7 @@
 
 #include "nextfloor/grid/wired_grid.h"
 
-#include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/grid/mesh_grid_factory.h"
 #include "nextfloor/objects/mesh.h"
 
 namespace nextfloor {
@@ -23,15 +23,15 @@ namespace grid {
 class MeshGrid : public WiredGrid {
 
 public:
-    MeshGrid(nextfloor::objects::Mesh* owner,
+    MeshGrid(const glm::vec3& location,
              const glm::ivec3& boxes_count,
              const glm::vec3& box_dimension,
-             const nextfloor::objects::MeshFactory& factory);
+             const MeshGridFactory& factory);
     ~MeshGrid() noexcept final;
 
 protected:
     std::unique_ptr<nextfloor::objects::GridBox> AllocateGridBox(const glm::ivec3& grid_coords,
-                                                                 const nextfloor::objects::MeshFactory& factory) final;
+                                                                 const MeshGridFactory& factory) final;
 };
 
 }  // namespace grid

@@ -12,12 +12,12 @@ namespace nextfloor {
 
 namespace objects {
 
-DepthWall::DepthWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory)
+DepthWall::DepthWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks)
 {
-    border_ = factory.MakeBorder(location, scale);
+    border_ = std::move(border);
     brick_dimension_ = glm::vec3(kBRICK_WIDTH, kBRICK_HEIGHT, kBRICK_DEPTH);
     bricks_count_ = border_->dimension() / brick_dimension_;
-    AddBricks(location - scale, location + scale, factory);
+    AddBricks(std::move(wall_bricks));
 }
 
 void DepthWall::AddDoor()

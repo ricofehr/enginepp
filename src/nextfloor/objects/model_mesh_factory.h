@@ -9,6 +9,10 @@
 
 #include "nextfloor/objects/mesh_factory.h"
 
+#include "nextfloor/objects/polygon_factory.h"
+#include "nextfloor/objects/grid_factory.h"
+#include "nextfloor/objects/physic_factory.h"
+
 namespace nextfloor {
 
 namespace objects {
@@ -20,6 +24,9 @@ namespace objects {
 class ModelMeshFactory : public MeshFactory {
 
 public:
+    ModelMeshFactory(PolygonFactory* polygon_factory, GridFactory* grid_factory, PhysicFactory* physic_factory);
+    ~ModelMeshFactory() final = default;
+
     std::unique_ptr<Mesh> MakeUniverse() const final;
     std::unique_ptr<Mesh> MakeRoom(const glm::vec3& location) const final;
 
@@ -33,24 +40,18 @@ public:
                                         const glm::vec3& scale,
                                         const std::string& texture) const final;
 
-    std::unique_ptr<Mesh> MakeRock(const glm::vec3& location) const final;
-    std::unique_ptr<Mesh> MakeLittleRock(const glm::vec3& location) const final;
+    std::unique_ptr<Mesh> MakeRock(const glm::vec3& location, const glm::vec3& movement) const final;
+    std::unique_ptr<Mesh> MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const final;
 
-    std::unique_ptr<Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<Polygon> MakeCube(const glm::vec3& location,
-                                      const glm::vec3& scale,
-                                      const std::string& texture) const final;
+private:
+    std::vector<std::unique_ptr<Mesh>> GenerateWallBricks(glm::vec3 firstpoint,
+                                                          glm::vec3 lastpoint,
+                                                          const glm::vec3& brick_dimension,
+                                                          const std::string& texture) const;
 
-    std::unique_ptr<Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const final;
-
-    std::unique_ptr<Grid> MakeUniverseGrid(Mesh* universe) const final;
-    std::unique_ptr<Grid> MakeRoomGrid(Mesh* room) const final;
-    std::unique_ptr<Grid> MakeGrid(Mesh* owner, const glm::ivec3& boxes_count, const glm::vec3& box_dimension) const final;
-    std::unique_ptr<GridBox> MakeRoomGridBox(const glm::vec3& grid_coords, Grid* room_grid) const final;
-    std::unique_ptr<GridBox> MakeUniverseGridBox(const glm::vec3& coords, Grid* grid) const final;
-    std::unique_ptr<GridBox> MakeGridBox(const glm::vec3& grid_coords, Grid* grid) const final;
-
-    CollisionEngine* MakeCollisionEngine() const final;
+    PolygonFactory* polygon_factory_;
+    GridFactory* grid_factory_;
+    PhysicFactory* physic_factory_;
 };
 
 }  // namespace objects

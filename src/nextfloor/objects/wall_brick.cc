@@ -10,10 +10,10 @@ namespace nextfloor {
 
 namespace objects {
 
-WallBrick::WallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture, const MeshFactory& factory)
+WallBrick::WallBrick(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> bricks)
 {
-    polygons_.push_back(factory.MakeCube(location, scale, texture));
-    border_ = factory.MakeBorder(location, scale);
+    polygons_ = std::move(bricks);
+    border_ = std::move(border);
 }
 
 }  // namespace objects

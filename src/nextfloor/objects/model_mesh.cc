@@ -9,7 +9,7 @@
 #include <sstream>
 #include <tbb/tbb.h>
 
-#include "nextfloor/objects/model_mesh_factory.h"
+#include "nextfloor/physics/mesh_physic_factory.h"
 #include "nextfloor/core/common_services.h"
 
 
@@ -76,7 +76,7 @@ void ModelMesh::DetectCollision()
 
 void ModelMesh::PivotCollision()
 {
-    ModelMeshFactory factory;
+    nextfloor::physics::MeshPhysicFactory factory;
     static CollisionEngine* collision_engine = factory.MakeCollisionEngine();
 
     /* Prepare vector for collision compute */

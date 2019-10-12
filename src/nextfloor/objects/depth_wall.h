@@ -25,22 +25,19 @@ namespace objects {
 class DepthWall : public Wall {
 
 public:
-    ~DepthWall() override = default;
-
-    void AddDoor() final;
-    void AddWindow() final;
-
-protected:
-    DepthWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
-
-private:
     static constexpr char kTEXTURE[] = "assets/wall.png";
 
     static constexpr float kBRICK_WIDTH = 0.25;
     static constexpr float kBRICK_HEIGHT = 2.0f;
     static constexpr float kBRICK_DEPTH = 2.0f;
 
-    std::string texture_file() const final { return kTEXTURE; }
+    ~DepthWall() override = default;
+
+    void AddDoor() final;
+    void AddWindow() final;
+
+protected:
+    DepthWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks);
 };
 
 }  // namespace objects

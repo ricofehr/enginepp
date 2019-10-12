@@ -10,10 +10,10 @@ namespace nextfloor {
 
 namespace objects {
 
-Universe::Universe(const MeshFactory& factory)
+Universe::Universe(std::unique_ptr<Grid> grid, std::unique_ptr<Border> border)
 {
-    grid_ = factory.MakeUniverseGrid(this);
-    border_ = factory.MakeBorder(glm::vec3(0.0f), grid_->scale());
+    grid_ = std::move(grid);
+    border_ = std::move(border);
 }
 
 }  // namespace objects

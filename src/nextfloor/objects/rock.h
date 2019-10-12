@@ -11,7 +11,7 @@
 
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/objects/polygon_factory.h"
 
 namespace nextfloor {
 
@@ -24,11 +24,15 @@ namespace objects {
 class Rock : public ModelMesh {
 
 public:
-    Rock(const glm::vec3& location, float scale, const MeshFactory& factory);
-    ~Rock() final = default;
+    static constexpr float kBIG_SCALE = 1.0f;
+    static constexpr float kMEDIUM_SCALE = 0.75f;
+    static constexpr float kSMALL_SCALE = 0.5f;
+    static constexpr float kSMALLER_SCALE = 0.5f;
 
-private:
     static constexpr char kTEXTURE[] = "assets/rock.jpg";
+
+    Rock(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> rock, const glm::vec3& movement);
+    ~Rock() final = default;
 };
 
 }  // namespace objects

@@ -24,7 +24,7 @@ namespace objects {
 class FrontWall : public WidthWall {
 
 public:
-    FrontWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
+    FrontWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks);
     ~FrontWall() final = default;
 
     void PrepareDraw(const Camera& active_camera) final;

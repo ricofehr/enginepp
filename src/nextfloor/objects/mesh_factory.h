@@ -12,15 +12,6 @@
 #include <glm/glm.hpp>
 
 #include "nextfloor/objects/mesh.h"
-#include "nextfloor/objects/border.h"
-#include "nextfloor/objects/collision_engine.h"
-#include "nextfloor/objects/grid.h"
-#include "nextfloor/objects/grid_box.h"
-#include "nextfloor/objects/polygon.h"
-#include "nextfloor/objects/camera.h"
-
-#include "nextfloor/gameplay/renderer_engine.h"
-#include "nextfloor/gameplay/level.h"
 
 namespace nextfloor {
 
@@ -48,26 +39,8 @@ public:
                                                 const glm::vec3& scale,
                                                 const std::string& texture) const = 0;
 
-    virtual std::unique_ptr<Mesh> MakeRock(const glm::vec3& location) const = 0;
-    virtual std::unique_ptr<Mesh> MakeLittleRock(const glm::vec3& location) const = 0;
-
-    virtual std::unique_ptr<Polygon> MakeCube(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<Polygon> MakeCube(const glm::vec3& location,
-                                              const glm::vec3& scale,
-                                              const std::string& texture) const = 0;
-
-    virtual std::unique_ptr<Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const = 0;
-
-    virtual std::unique_ptr<Grid> MakeUniverseGrid(Mesh* universe) const = 0;
-    virtual std::unique_ptr<Grid> MakeRoomGrid(Mesh* room) const = 0;
-    virtual std::unique_ptr<Grid> MakeGrid(Mesh* owner,
-                                           const glm::ivec3& boxes_count,
-                                           const glm::vec3& box_dimension) const = 0;
-    virtual std::unique_ptr<GridBox> MakeRoomGridBox(const glm::vec3& coords, Grid* grid) const = 0;
-    virtual std::unique_ptr<GridBox> MakeUniverseGridBox(const glm::vec3& coords, Grid* grid) const = 0;
-    virtual std::unique_ptr<GridBox> MakeGridBox(const glm::vec3& coords, Grid* grid) const = 0;
-
-    virtual CollisionEngine* MakeCollisionEngine() const = 0;
+    virtual std::unique_ptr<Mesh> MakeRock(const glm::vec3& location, const glm::vec3& movement) const = 0;
+    virtual std::unique_ptr<Mesh> MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const = 0;
 };
 
 }  // namespace objects

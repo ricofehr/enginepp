@@ -24,7 +24,7 @@ namespace objects {
 class RightWall : public DepthWall {
 
 public:
-    RightWall(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
+    RightWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks);
     ~RightWall() final = default;
 
     void PrepareDraw(const Camera& active_camera) final;

@@ -81,14 +81,14 @@ bool IsNextCoordByZ(const glm::ivec3& min_coords, const glm::ivec3& max_coords, 
 
 }  // namespace
 
-WiredGrid::WiredGrid(nextfloor::objects::Mesh* owner, const glm::ivec3& boxes_count, const glm::vec3& box_dimension)
+WiredGrid::WiredGrid(const glm::vec3& location, const glm::ivec3& boxes_count, const glm::vec3& box_dimension)
 {
-    owner_ = owner;
+    location_ = location;
     boxes_count_ = boxes_count;
     box_dimension_ = box_dimension;
 }
 
-void WiredGrid::InitBoxes(const nextfloor::objects::MeshFactory& factory)
+void WiredGrid::InitBoxes(const MeshGridFactory& factory)
 {
     using nextfloor::objects::GridBox;
 
@@ -118,7 +118,7 @@ void WiredGrid::InitBoxes(const nextfloor::objects::MeshFactory& factory)
 
 glm::vec3 WiredGrid::CalculateFirstPointInGrid() const
 {
-    return owner_->location() - box_dimension_ / 2.0f - glm::vec3(width() / 2, height() / 2, depth() / 2);
+    return location_ - box_dimension_ / 2.0f - glm::vec3(width() / 2, height() / 2, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateAbsoluteCoordinates(const glm::ivec3& coords) const
@@ -669,7 +669,9 @@ void WiredGrid::RemoveItemToGrid(const glm::ivec3& coords, nextfloor::objects::M
 
 void WiredGrid::DisplayGrid() const
 {
-    std::cout << "=== GRID FOR ID " << owner_->id() << " ===" << std::endl << std::endl;
+    std::cout << "=== GRID Location (" << location_.x << ", " << location_.y << ", " << location_.z << ") "
+              << " ===" << std::endl
+              << std::endl;
     for (auto y = 0; y < height_boxes_count(); y++) {
         std::cout << "=== Floor " << y << std::endl;
         for (auto z = 0; z < depth_boxes_count(); z++) {

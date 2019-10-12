@@ -11,7 +11,7 @@
 
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/objects/polygon_factory.h"
 
 
 namespace nextfloor {
@@ -25,7 +25,7 @@ namespace objects {
 class WallBrick : public ModelMesh {
 
 public:
-    WallBrick(const glm::vec3& location, const glm::vec3& scale, const std::string& texture, const MeshFactory& factory);
+    WallBrick(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> bricks);
     ~WallBrick() final = default;
 };
 

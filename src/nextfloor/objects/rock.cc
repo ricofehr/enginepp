@@ -12,12 +12,12 @@ namespace nextfloor {
 
 namespace objects {
 
-Rock::Rock(const glm::vec3& location, float scale, const MeshFactory& factory)
+Rock::Rock(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> rock, const glm::vec3& movement)
 {
-    polygons_.push_back(factory.MakeCube(location, glm::vec3(scale), kTEXTURE));
-    border_ = factory.MakeBorder(location, glm::vec3(scale));
+    polygons_ = std::move(rock);
+    border_ = std::move(border);
 
-    set_movement(glm::vec3(0.3, 0.01, 0.05));
+    set_movement(movement);
 }
 
 }  // namespace objects

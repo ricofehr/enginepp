@@ -15,7 +15,7 @@
 #include <memory>
 
 #include "nextfloor/polygons/cube.h"
-#include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/objects/polygon_factory.h"
 
 namespace nextfloor {
 
@@ -30,16 +30,11 @@ namespace physics {
 class CubeBorder : public nextfloor::objects::Border {
 
 public:
-    CubeBorder(const glm::vec3& location, const glm::vec3& scale, const nextfloor::objects::MeshFactory& factory);
-    CubeBorder(const glm::vec3& location, float scale, const nextfloor::objects::MeshFactory& factory);
-    CubeBorder(const glm::vec3& location,
-               float scale,
-               std::vector<glm::vec3> coords,
-               const nextfloor::objects::MeshFactory& factory);
+    CubeBorder(const glm::vec3& location, const glm::vec3& scale, const nextfloor::objects::PolygonFactory& factory);
     CubeBorder(const glm::vec3& location,
                const glm::vec3& scale,
                std::vector<glm::vec3> coords,
-               const nextfloor::objects::MeshFactory& factory);
+               const nextfloor::objects::PolygonFactory& factory);
     ~CubeBorder() final = default;
 
     CubeBorder(CubeBorder&&) = default;

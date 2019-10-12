@@ -30,8 +30,6 @@ public:
 
     virtual std::unique_ptr<Loop> MakeLoop() const = 0;
     virtual std::unique_ptr<Level> MakeLevel() const = 0;
-    virtual std::unique_ptr<nextfloor::objects::Mesh> MakePlayer(const glm::vec3& location) const = 0;
-    virtual std::unique_ptr<nextfloor::objects::Camera> MakeCamera(nextfloor::objects::Mesh* owner) const = 0;
     virtual std::unique_ptr<FrameTimer> MakeFrameTimer() const = 0;
 };
 

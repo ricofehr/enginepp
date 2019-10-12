@@ -25,21 +25,18 @@ namespace objects {
 class Roof : public Wall {
 
 public:
-    Roof(const glm::vec3& location, const glm::vec3& scale, const MeshFactory& factory);
-    ~Roof() final = default;
-
-    void AddDoor() final;
-    void AddWindow() final;
-    void PrepareDraw(const Camera& active_camera) final;
-
-private:
     static constexpr char kTEXTURE[] = "assets/sky.png";
 
     static constexpr float kBRICK_WIDTH = 2.0f;
     static constexpr float kBRICK_HEIGHT = 0.25f;
     static constexpr float kBRICK_DEPTH = 2.0f;
 
-    std::string texture_file() const final { return kTEXTURE; }
+    Roof(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks);
+    ~Roof() final = default;
+
+    void AddDoor() final;
+    void AddWindow() final;
+    void PrepareDraw(const Camera& active_camera) final;
 };
 
 }  // namespace objects

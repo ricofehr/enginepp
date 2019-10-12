@@ -1,5 +1,5 @@
 /**
- *  @file game_factory.c
+ *  @file model_mesh_factory.c
  *  @brief Factory Class for universe objects
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
@@ -18,170 +18,134 @@
 #include "nextfloor/objects/wall_brick.h"
 #include "nextfloor/objects/rock.h"
 
-#include "nextfloor/grid/mesh_grid.h"
-#include "nextfloor/grid/room_grid.h"
-#include "nextfloor/grid/universe_grid.h"
-#include "nextfloor/grid/room_grid_box.h"
-#include "nextfloor/grid/universe_grid_box.h"
-#include "nextfloor/grid/wired_grid_box.h"
-
-#include "nextfloor/polygons/cube.h"
-
-#include "nextfloor/physics/cube_border.h"
-#include "nextfloor/physics/tbb_nearer_collision_engine.h"
-#include "nextfloor/physics/serial_nearer_collision_engine.h"
-#include "nextfloor/physics/cl_nearer_collision_engine.h"
-
-#include "nextfloor/core/common_services.h"
-
-
 namespace nextfloor {
 
 namespace objects {
 
+ModelMeshFactory::ModelMeshFactory(PolygonFactory* polygon_factory, GridFactory* grid_factory, PhysicFactory* physic_factory)
+{
+    polygon_factory_ = polygon_factory;
+    grid_factory_ = grid_factory;
+    physic_factory_ = physic_factory;
+}
+
 std::unique_ptr<Mesh> ModelMeshFactory::MakeUniverse() const
 {
-    return std::make_unique<Universe>(*this);
+    auto grid = grid_factory_->MakeUniverseGrid(glm::vec3(0.0f));
+    auto border = physic_factory_->MakeBorder(glm::vec3(0.0f), grid->scale());
+    return std::make_unique<Universe>(std::move(grid), std::move(border));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeRoom(const glm::vec3& location) const
 {
-    return std::make_unique<Room>(location, *this);
+    auto grid = grid_factory_->MakeRoomGrid(location);
+    auto border = physic_factory_->MakeBorder(location, grid->scale());
+
+    std::vector<std::unique_ptr<Mesh>> childs;
+    childs.push_back(MakeFrontWall(grid->CalculateFrontSideLocation(), grid->CalculateFrontSideBorderScale()));
+    childs.push_back(MakeRightWall(grid->CalculateRightSideLocation(), grid->CalculateRightSideBorderScale()));
+    childs.push_back(MakeBackWall(grid->CalculateBackSideLocation(), grid->CalculateBackSideBorderScale()));
+    childs.push_back(MakeLeftWall(grid->CalculateLeftSideLocation(), grid->CalculateLeftSideBorderScale()));
+    childs.push_back(MakeFloor(grid->CalculateBottomSideLocation(), grid->CalculateBottomSideBorderScale()));
+    childs.push_back(MakeRoof(grid->CalculateTopSideLocation(), grid->CalculateTopSideBorderScale()));
+
+    return std::make_unique<Room>(std::move(grid), std::move(border), std::move(childs));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    return std::make_unique<FrontWall>(location, scale, *this);
+    auto border = physic_factory_->MakeBorder(location, scale);
+    auto brick_dimension = glm::vec3(FrontWall::kBRICK_WIDTH, FrontWall::kBRICK_HEIGHT, FrontWall::kBRICK_DEPTH);
+    return std::make_unique<FrontWall>(
+      std::move(border), GenerateWallBricks(location - scale, location + scale, brick_dimension, FrontWall::kTEXTURE));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    return std::make_unique<RightWall>(location, scale, *this);
+    auto border = physic_factory_->MakeBorder(location, scale);
+    auto brick_dimension = glm::vec3(RightWall::kBRICK_WIDTH, RightWall::kBRICK_HEIGHT, RightWall::kBRICK_DEPTH);
+    return std::make_unique<RightWall>(
+      std::move(border), GenerateWallBricks(location - scale, location + scale, brick_dimension, RightWall::kTEXTURE));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    return std::make_unique<BackWall>(location, scale, *this);
+    auto border = physic_factory_->MakeBorder(location, scale);
+    auto brick_dimension = glm::vec3(BackWall::kBRICK_WIDTH, BackWall::kBRICK_HEIGHT, BackWall::kBRICK_DEPTH);
+    return std::make_unique<BackWall>(
+      std::move(border), GenerateWallBricks(location - scale, location + scale, brick_dimension, BackWall::kTEXTURE));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    return std::make_unique<LeftWall>(location, scale, *this);
+    auto border = physic_factory_->MakeBorder(location, scale);
+    auto brick_dimension = glm::vec3(LeftWall::kBRICK_WIDTH, LeftWall::kBRICK_HEIGHT, LeftWall::kBRICK_DEPTH);
+    return std::make_unique<LeftWall>(
+      std::move(border), GenerateWallBricks(location - scale, location + scale, brick_dimension, LeftWall::kTEXTURE));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeFloor(const glm::vec3& location, const glm::vec3& scale) const
 {
-    return std::make_unique<Floor>(location, scale, *this);
+    auto border = physic_factory_->MakeBorder(location, scale);
+    auto brick_dimension = glm::vec3(Floor::kBRICK_WIDTH, Floor::kBRICK_HEIGHT, Floor::kBRICK_DEPTH);
+    return std::make_unique<Floor>(
+      std::move(border), GenerateWallBricks(location - scale, location + scale, brick_dimension, Floor::kTEXTURE));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeRoof(const glm::vec3& location, const glm::vec3& scale) const
 {
-    return std::make_unique<Roof>(location, scale, *this);
+    auto border = physic_factory_->MakeBorder(location, scale);
+    auto brick_dimension = glm::vec3(Roof::kBRICK_WIDTH, Roof::kBRICK_HEIGHT, Roof::kBRICK_DEPTH);
+    return std::make_unique<Roof>(
+      std::move(border), GenerateWallBricks(location - scale, location + scale, brick_dimension, Roof::kTEXTURE));
+}
+
+std::vector<std::unique_ptr<Mesh>> ModelMeshFactory::GenerateWallBricks(glm::vec3 firstpoint,
+                                                                        glm::vec3 lastpoint,
+                                                                        const glm::vec3& brick_dimension,
+                                                                        const std::string& texture) const
+{
+    auto padding = brick_dimension / 2.0f;
+    std::vector<std::unique_ptr<Mesh>> bricks;
+    firstpoint += padding;
+    lastpoint -= padding;
+
+    for (float x = firstpoint.x; x <= lastpoint.x; x += brick_dimension.x) {
+        for (float y = firstpoint.y; y <= lastpoint.y; y += brick_dimension.y) {
+            for (float z = firstpoint.z; z <= lastpoint.z; z += brick_dimension.z) {
+                auto location = glm::vec3(x, y, z);
+                bricks.push_back(MakeWallBrick(location, brick_dimension / 2.0f, texture));
+            }
+        }
+    }
+
+    return bricks;
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeWallBrick(const glm::vec3& location,
                                                       const glm::vec3& scale,
                                                       const std::string& texture) const
 {
-    return std::make_unique<WallBrick>(location, scale, texture, *this);
+    auto border = physic_factory_->MakeBorder(location, scale);
+    std::vector<std::unique_ptr<Polygon>> bricks;
+    bricks.push_back(polygon_factory_->MakeCube(location, scale, texture));
+    return std::make_unique<WallBrick>(std::move(border), std::move(bricks));
 }
 
-std::unique_ptr<Mesh> ModelMeshFactory::MakeRock(const glm::vec3& location) const
+std::unique_ptr<Mesh> ModelMeshFactory::MakeRock(const glm::vec3& location, const glm::vec3& movement) const
 {
-    return std::make_unique<Rock>(location, 1.0f, *this);
+    auto border = physic_factory_->MakeBorder(location, Rock::kBIG_SCALE);
+    std::vector<std::unique_ptr<Polygon>> rocks;
+    rocks.push_back(polygon_factory_->MakeCube(location, Rock::kBIG_SCALE, Rock::kTEXTURE));
+    return std::make_unique<Rock>(std::move(border), std::move(rocks), movement);
 }
 
-std::unique_ptr<Mesh> ModelMeshFactory::MakeLittleRock(const glm::vec3& location) const
+std::unique_ptr<Mesh> ModelMeshFactory::MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const
 {
-    return std::make_unique<Rock>(location, 0.5f, *this);
-}
-
-std::unique_ptr<Polygon> ModelMeshFactory::MakeCube(const glm::vec3& location, const glm::vec3& scale) const
-{
-    using nextfloor::polygons::Cube;
-    return std::make_unique<Cube>(location, scale);
-}
-
-std::unique_ptr<Polygon> ModelMeshFactory::MakeCube(const glm::vec3& location,
-                                                    const glm::vec3& scale,
-                                                    const std::string& texture) const
-{
-    using nextfloor::polygons::Cube;
-    return std::make_unique<Cube>(location, scale, texture);
-}
-
-std::unique_ptr<Border> ModelMeshFactory::MakeBorder(const glm::vec3& location, const glm::vec3& scale) const
-{
-    using nextfloor::physics::CubeBorder;
-    return std::make_unique<CubeBorder>(location, scale, *this);
-}
-
-std::unique_ptr<Grid> ModelMeshFactory::MakeUniverseGrid(Mesh* universe) const
-{
-    using nextfloor::grid::UniverseGrid;
-    return std::make_unique<UniverseGrid>(universe, *this);
-}
-
-std::unique_ptr<Grid> ModelMeshFactory::MakeRoomGrid(Mesh* room) const
-{
-    using nextfloor::grid::RoomGrid;
-    return std::make_unique<RoomGrid>(room, *this);
-}
-
-std::unique_ptr<Grid> ModelMeshFactory::MakeGrid(Mesh* owner,
-                                                 const glm::ivec3& boxes_count,
-                                                 const glm::vec3& box_dimension) const
-{
-    using nextfloor::grid::MeshGrid;
-    return std::make_unique<MeshGrid>(owner, boxes_count, box_dimension, *this);
-}
-
-std::unique_ptr<GridBox> ModelMeshFactory::MakeRoomGridBox(const glm::vec3& coords, Grid* room_grid) const
-{
-    using nextfloor::grid::RoomGridBox;
-    return std::make_unique<RoomGridBox>(coords, room_grid);
-}
-
-std::unique_ptr<GridBox> ModelMeshFactory::MakeUniverseGridBox(const glm::vec3& coords, Grid* universe_grid) const
-{
-    using nextfloor::grid::UniverseGridBox;
-    return std::make_unique<UniverseGridBox>(coords, universe_grid);
-}
-
-std::unique_ptr<GridBox> ModelMeshFactory::MakeGridBox(const glm::vec3& grid_coords, Grid* grid) const
-{
-    using nextfloor::grid::WiredGridBox;
-    return std::make_unique<WiredGridBox>(grid_coords, grid);
-}
-
-CollisionEngine* ModelMeshFactory::MakeCollisionEngine() const
-{
-    using nextfloor::core::CommonServices;
-    using nextfloor::physics::ClNearerCollisionEngine;
-    using nextfloor::physics::NearerCollisionEngine;
-    using nextfloor::physics::SerialNearerCollisionEngine;
-    using nextfloor::physics::TbbNearerCollisionEngine;
-
-    CollisionEngine* engine_collision{nullptr};
-
-    /* Get parallell type from config */
-    int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
-
-    switch (type_parallell) {  // clang-format off
-        case NearerCollisionEngine::kPARALLELL_TBB:
-            engine_collision = new TbbNearerCollisionEngine();
-            break;
-        case NearerCollisionEngine::kPARALLELL_CL:
-            engine_collision = new ClNearerCollisionEngine();
-            break;
-        default:
-            engine_collision = new SerialNearerCollisionEngine();
-            break;
-    }  // clang-format on
-
-    assert(engine_collision != nullptr);
-
-    return engine_collision;
+    auto border = physic_factory_->MakeBorder(location, Rock::kSMALL_SCALE);
+    std::vector<std::unique_ptr<Polygon>> rocks;
+    rocks.push_back(polygon_factory_->MakeCube(location, Rock::kSMALL_SCALE, Rock::kTEXTURE));
+    return std::make_unique<Rock>(std::move(border), std::move(rocks), movement);
 }
 
 }  // namespace objects

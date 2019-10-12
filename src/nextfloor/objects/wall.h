@@ -30,11 +30,9 @@ public:
     virtual void AddDoor() = 0;
     virtual void AddWindow() = 0;
 
+    void AddBricks(std::vector<std::unique_ptr<Mesh>> wall_bricks);
+
 protected:
-    virtual void AddBricks(glm::vec3 firstpoint, glm::vec3 lastpoint, const MeshFactory& factory);
-
-    virtual std::string texture_file() const = 0;
-
     glm::vec3 brick_dimension_{0.0f};
     glm::ivec3 bricks_count_{0, 0, 0};
 };

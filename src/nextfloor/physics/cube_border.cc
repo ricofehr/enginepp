@@ -56,25 +56,14 @@ static const std::vector<glm::vec3> sDefaultCoords = {
 }  // anonymous namespace
 
 
-CubeBorder::CubeBorder(const glm::vec3& location, const glm::vec3& scale, const nextfloor::objects::MeshFactory& factory)
+CubeBorder::CubeBorder(const glm::vec3& location, const glm::vec3& scale, const nextfloor::objects::PolygonFactory& factory)
       : CubeBorder(location, scale, sDefaultCoords, factory)
-{}
-
-CubeBorder::CubeBorder(const glm::vec3& location, float scale, const nextfloor::objects::MeshFactory& factory)
-      : CubeBorder(location, glm::vec3(scale), sDefaultCoords, factory)
-{}
-
-CubeBorder::CubeBorder(const glm::vec3& location,
-                       float scale,
-                       std::vector<glm::vec3> coords,
-                       const nextfloor::objects::MeshFactory& factory)
-      : CubeBorder(location, glm::vec3(scale), coords, factory)
 {}
 
 CubeBorder::CubeBorder(const glm::vec3& location,
                        const glm::vec3& scale,
                        std::vector<glm::vec3> coords,
-                       const nextfloor::objects::MeshFactory& factory)
+                       const nextfloor::objects::PolygonFactory& factory)
 {
     cube_ = factory.MakeCube(location, glm::vec3(scale));
     coords_ = coords;
