@@ -30,11 +30,11 @@ int main(int argc, char* argv[])
     CommonServices::getConfig()->ManageProgramParameters(argc, argv);
 
     /* Init Factories */
+    nextfloor::polygons::MeshPolygonFactory polygon_factory;
     nextfloor::actions::SpriteActionFactory action_factory;
     nextfloor::renderer::GlRendererFactory renderer_factory;
     nextfloor::grid::MeshGridFactory grid_factory;
-    nextfloor::physics::MeshPhysicFactory physic_factory;
-    nextfloor::polygons::MeshPolygonFactory polygon_factory;
+    nextfloor::physics::MeshPhysicFactory physic_factory(&polygon_factory);
     nextfloor::gameplay::GameCharacterFactory character_factory(&physic_factory);
     nextfloor::objects::ModelMeshFactory mesh_factory(&polygon_factory, &grid_factory, &physic_factory);
     nextfloor::hid::MouseHidFactory hid_factory(&action_factory, &renderer_factory);

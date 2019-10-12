@@ -9,8 +9,11 @@
 #include <sstream>
 #include <tbb/tbb.h>
 
-#include "nextfloor/physics/mesh_physic_factory.h"
 #include "nextfloor/core/common_services.h"
+
+// TODO: remove this bad dependencies !
+#include "nextfloor/polygons/mesh_polygon_factory.h"
+#include "nextfloor/physics/mesh_physic_factory.h"
 
 
 namespace nextfloor {
@@ -76,7 +79,8 @@ void ModelMesh::DetectCollision()
 
 void ModelMesh::PivotCollision()
 {
-    nextfloor::physics::MeshPhysicFactory factory;
+    nextfloor::polygons::MeshPolygonFactory polygon_factory;
+    nextfloor::physics::MeshPhysicFactory factory(&polygon_factory);
     static CollisionEngine* collision_engine = factory.MakeCollisionEngine();
 
     /* Prepare vector for collision compute */

@@ -12,14 +12,17 @@
 #include "nextfloor/physics/serial_nearer_collision_engine.h"
 #include "nextfloor/physics/cl_nearer_collision_engine.h"
 
-#include "nextfloor/polygons/mesh_polygon_factory.h"
-
 #include "nextfloor/core/common_services.h"
 
 
 namespace nextfloor {
 
 namespace physics {
+
+MeshPhysicFactory::MeshPhysicFactory(nextfloor::objects::PolygonFactory* polygon_factory)
+{
+    polygon_factory_ = polygon_factory;
+}
 
 std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location, float scale) const
 {
@@ -29,8 +32,7 @@ std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const 
 std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location,
                                                                           const glm::vec3& scale) const
 {
-    nextfloor::polygons::MeshPolygonFactory polygon_factory;
-    return std::make_unique<CubeBorder>(location, scale, polygon_factory);
+    return std::make_unique<CubeBorder>(polygon_factory_->MakeCube(location, scale));
 }
 
 nextfloor::objects::CollisionEngine* MeshPhysicFactory::MakeCollisionEngine() const
