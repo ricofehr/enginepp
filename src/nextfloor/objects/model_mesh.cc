@@ -166,38 +166,20 @@ std::vector<glm::ivec3> ModelMesh::coords() const
     return grid_coords;
 }
 
-void ModelMesh::Move()
+void ModelMesh::MoveLocation()
 {
-    if (IsMoved()) {
-        border_->ComputeNewLocation();
+    border_->ComputeNewLocation();
 
-        tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
-            polygons_[counter]->MoveLocation();
-        });
+    tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) { polygons_[counter]->MoveLocation(); });
+}
+
+void ModelMesh::UpdateGridPlacement()
+{
+    if (parent_->IsInside(*this)) {
+        parent_->UpdateChildPlacement(this);
     }
-
-    /*
-     *  Compute GL coords for childs
-     *  TransfertChild (called by Move) can move child to another parent
-     *  So, need to have a sequential loop
-     */
-    for (auto counter = 0; counter < objects_.size();) {
-        auto nb_objs = objects_.size();
-
-        objects_[counter]->Move();
-
-        if (nb_objs == objects_.size()) {
-            counter++;
-        }
-    }
-
-    if (IsMoved()) {
-        if (parent_->IsInside(*this)) {
-            parent_->UpdateChildPlacement(this);
-        }
-        else {
-            parent_ = parent_->TransfertChildToNeighbor(this);
-        }
+    else {
+        parent_ = parent_->TransfertChildToNeighbor(this);
     }
 }
 
@@ -231,6 +213,7 @@ Mesh* ModelMesh::TransfertChildToNeighbor(Mesh* child)
 Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh)
 {
     assert(mesh != nullptr);
+    tbb::mutex::scoped_lock lock_map(mutex_);
 
     auto mesh_raw = mesh.get();
 
@@ -247,10 +230,11 @@ Mesh* ModelMesh::AddIntoChild(std::unique_ptr<Mesh> mesh)
 
 Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object)
 {
+    tbb::mutex::scoped_lock lock_map(mutex_);
+
     auto object_raw = object.get();
     object_raw->set_parent(this);
 
-    lock();
     auto initial_objects_size = objects_.size();
     /* Insert Camera as first element. Push on the stack for others */
     if (object_raw->IsCamera()) {
@@ -262,7 +246,6 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object)
 
     /* Ensure object is well added */
     assert(objects_.size() == initial_objects_size + 1);
-    unlock();
 
     return object_raw;
 }
@@ -270,7 +253,7 @@ Mesh* ModelMesh::add_child(std::unique_ptr<Mesh> object)
 void ModelMesh::InitChildsIntoGrid()
 {
     for (auto& object : objects_) {
-        if (!object->hasNoChilds()) {
+        if (object->hasChilds()) {
             object->InitChildsIntoGrid();
         }
         object->AddIntoAscendantGrid();
@@ -297,19 +280,19 @@ void ModelMesh::AddMeshToGrid(Mesh* object)
 
 std::unique_ptr<Mesh> ModelMesh::remove_child(Mesh* child)
 {
+    tbb::mutex::scoped_lock lock_map(mutex_);
+
     std::unique_ptr<Mesh> ret{nullptr};
 
     RemoveItemsToGrid(child);
 
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         if (objects_[cnt].get() == child) {
-            lock();
             auto initial_count_childs = objects_.size();
             ret = std::move(objects_[cnt]);
             objects_.erase(objects_.begin() + cnt);
             /* Ensure child is erased from current objects_ array */
             assert(initial_count_childs == objects_.size() + 1);
-            unlock();
 
             return ret;
         }
@@ -337,8 +320,9 @@ bool ModelMesh::IsLastObstacle(Mesh* obstacle) const
 
 void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
 {
+    tbb::mutex::scoped_lock lock_map(mutex_);
+
     /* Update obstacle and distance if lower than former */
-    lock();
     if (obstacle_distance < border_->move_factor()) {
         obstacle_ = obstacle;
         border_->set_move_factor(-obstacle_distance);
@@ -351,7 +335,6 @@ void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
             LogCollision(*obstacle, obstacle_distance);
         }
     }
-    unlock();
 }
 
 void ModelMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)

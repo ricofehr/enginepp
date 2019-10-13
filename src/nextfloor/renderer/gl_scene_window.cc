@@ -56,6 +56,7 @@ GlSceneWindow::GlSceneWindow(ShaderFactory* shader_factory)
 {
     assert(!sInstanciated);
     sInstanciated = true;
+    shader_factory_ = shader_factory;
 
     /**
      *  Subroutines Order is matters
@@ -70,7 +71,7 @@ GlSceneWindow::GlSceneWindow(ShaderFactory* shader_factory)
     InitVAO();
     InitVSync();
     InitProgramId();
-    LoadShaders(shader_factory);
+    LoadShaders();
     InitMatrixId();
     InitPolygonMode();
     CheckPrerequisites();
@@ -126,10 +127,11 @@ void GlSceneWindow::InitProgramId()
     program_id_ = glCreateProgram();
 }
 
-void GlSceneWindow::LoadShaders(ShaderFactory* shader_factory)
+void GlSceneWindow::LoadShaders()
 {
-    vertex_shader_ = shader_factory->MakeVertexShader(kVERTEXFILEPATH, program_id_);
-    fragment_shader_ = shader_factory->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
+    assert(shader_factory_ != nullptr);
+    vertex_shader_ = shader_factory_->MakeVertexShader(kVERTEXFILEPATH, program_id_);
+    fragment_shader_ = shader_factory_->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
 
     vertex_shader_->LoadShader();
     fragment_shader_->LoadShader();

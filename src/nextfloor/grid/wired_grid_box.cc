@@ -28,11 +28,15 @@ void WiredGridBox::add(nextfloor::objects::Mesh* object)
     if (IsInto(*object)) {
         return;
     }
+
+    tbb::mutex::scoped_lock lock_map(mutex_);
     occupants_.push_back(object);
 }
 
 void WiredGridBox::remove(nextfloor::objects::Mesh* object)
 {
+    tbb::mutex::scoped_lock lock_map(mutex_);
+
     for (auto cnt = 0; cnt < occupants_.size(); cnt++) {
         if (occupants_[cnt] == object) {
             occupants_.erase(occupants_.begin() + cnt);

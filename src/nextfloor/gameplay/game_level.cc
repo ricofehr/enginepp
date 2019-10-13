@@ -56,13 +56,14 @@ void GameLevel::ExecutePlayerAction(Action* command, double elapsed_time)
 
 void GameLevel::Move()
 {
-    DetectCollision();
-    universe_->Move();
+    auto moving_objects = universe_->GetMovingObjects();
+    DetectCollision(moving_objects);
+    MoveObjects(moving_objects);
+    // universe_->Move();
 }
 
-void GameLevel::DetectCollision()
+void GameLevel::DetectCollision(std::vector<nextfloor::objects::Mesh*> moving_objects)
 {
-    auto moving_objects = universe_->GetMovingObjects();
     tbb::parallel_for(0, (int)moving_objects.size(), 1, [&](int i) { PivotCollisonOnObject(moving_objects[i]); });
 }
 
@@ -75,6 +76,19 @@ void GameLevel::PivotCollisonOnObject(nextfloor::objects::Mesh* pivot)
         collision_engine_->DetectCollision(pivot, test_objects[i]);
     });
 }
+
+void GameLevel::MoveObjects(std::vector<nextfloor::objects::Mesh*> moving_objects)
+{
+    tbb::parallel_for(0, (int)moving_objects.size(), 1, [&](int i) {
+        moving_objects[i]->MoveLocation();
+        moving_objects[i]->UpdateGridPlacement();
+    });
+
+    // for (auto& object : moving_objects) {
+    //     object->UpdateGridPlacement();
+    // }
+}
+
 
 void GameLevel::Draw()
 {

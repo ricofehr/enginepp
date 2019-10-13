@@ -19,7 +19,7 @@ GlShader::GlShader(const std::string& shader_filepath, GLuint program_id)
 {
     shader_filepath_ = shader_filepath;
     program_id_ = program_id;
-};
+}
 
 void GlShader::LinkShader()
 {

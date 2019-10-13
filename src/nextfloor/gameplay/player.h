@@ -11,7 +11,8 @@
 
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/objects/border.h"
+#include "nextfloor/objects/camera.h"
 
 namespace nextfloor {
 
@@ -30,7 +31,7 @@ public:
     ~Player() final = default;
 
 
-    void Move() final;
+    void MoveLocation() final;
     bool IsPlayer() const final { return true; }
 };
 

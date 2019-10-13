@@ -45,7 +45,7 @@ private:
     static constexpr const char kVERTEXFILEPATH[] = "glsl/SimpleVertexShader.vertexshader";
     static constexpr const char kFRAGMENTFILEPATH[] = "glsl/SimpleFragmentShader.fragmentshader";
 
-    void LoadShaders(ShaderFactory* shader_factory);
+    void LoadShaders();
     void InitVAO();
     void InitVSync();
     void CreateWindow();
@@ -66,6 +66,7 @@ private:
 
     Shader* fragment_shader_{nullptr};
     Shader* vertex_shader_{nullptr};
+    ShaderFactory* shader_factory_;
 
     float window_width_{1200.0f};
     float window_height_{800.0f};

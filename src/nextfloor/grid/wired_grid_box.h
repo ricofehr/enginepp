@@ -10,6 +10,7 @@
 #include "nextfloor/objects/grid_box.h"
 
 #include <glm/glm.hpp>
+#include <tbb/mutex.h>
 
 #include "nextfloor/objects/grid.h"
 #include "nextfloor/objects/mesh.h"
@@ -28,8 +29,8 @@ public:
     WiredGridBox(const glm::vec3& coords);
     ~WiredGridBox() override = default;
 
-    WiredGridBox(WiredGridBox&&) = default;
-    WiredGridBox& operator=(WiredGridBox&&) = default;
+    WiredGridBox(WiredGridBox&&) = delete;
+    WiredGridBox& operator=(WiredGridBox&&) = delete;
     WiredGridBox(const WiredGridBox&) = delete;
     WiredGridBox& operator=(const WiredGridBox&) = delete;
 
@@ -78,6 +79,7 @@ private:
     std::vector<nextfloor::objects::Mesh*> occupants_;
     nextfloor::objects::Grid* owner_{nullptr};
     glm::vec3 coords_;
+    tbb::mutex mutex_;
 };
 
 }  // namespace grid

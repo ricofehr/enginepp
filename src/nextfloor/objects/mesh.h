@@ -36,7 +36,8 @@ public:
     virtual std::vector<Mesh*> FindCollisionNeighbors() const = 0;
     virtual std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const = 0;
     virtual bool IsNeighborEligibleForCollision(const Mesh& neighbor) const = 0;
-    virtual void Move() = 0;
+    virtual void MoveLocation() = 0;
+    virtual void UpdateGridPlacement() = 0;
 
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const = 0;
 
@@ -50,6 +51,7 @@ public:
     virtual void AddMeshToGrid(Mesh* object) = 0;
     virtual void RemoveItemsToGrid(Mesh* object) = 0;
     virtual std::vector<Mesh*> childs() = 0;
+    virtual bool hasChilds() const = 0;
     virtual bool hasNoChilds() const = 0;
     virtual std::vector<Mesh*> AllStubMeshs() = 0;
     virtual std::vector<Mesh*> descendants() const = 0;
@@ -86,9 +88,6 @@ public:
     virtual void set_move_factor(float move_factor) = 0;
     virtual void set_camera(std::unique_ptr<Camera> camera) = 0;
     virtual void TransferCameraToOtherMesh(Mesh* other) = 0;
-
-    virtual void lock() = 0;
-    virtual void unlock() = 0;
 
     virtual bool ready() const = 0;
     virtual void toready() = 0;

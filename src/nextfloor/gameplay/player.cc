@@ -21,19 +21,9 @@ Player::Player(const glm::vec3& location,
     camera_ = std::move(camera);
 }
 
-void Player::Move()
+void Player::MoveLocation()
 {
-    if (IsMoved()) {
-        border_->ComputeNewLocation();
-
-        if (parent_->IsInside(*this)) {
-            parent_->UpdateChildPlacement(this);
-        }
-        else {
-            parent_ = parent_->TransfertChildToNeighbor(this);
-        }
-    }
-
+    border_->ComputeNewLocation();
     set_movement(glm::vec3(0.0f));
 }
 

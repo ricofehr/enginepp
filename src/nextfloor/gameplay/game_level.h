@@ -49,8 +49,9 @@ public:
 private:
     void SetActiveCamera(nextfloor::objects::Camera* active_camera);
 
-    void DetectCollision();
+    void DetectCollision(std::vector<nextfloor::objects::Mesh*> moving_objects);
     void PivotCollisonOnObject(nextfloor::objects::Mesh* pivot);
+    void MoveObjects(std::vector<nextfloor::objects::Mesh*> moving_objects);
 
     std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
     nextfloor::objects::Mesh* player_{nullptr};

@@ -41,7 +41,8 @@ public:
     std::vector<Mesh*> FindCollisionNeighbors() const final;
     std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
     bool IsNeighborEligibleForCollision(const Mesh& neighbor) const final;
-    void Move() override;
+    void MoveLocation() override;
+    void UpdateGridPlacement() override;
 
     Mesh* AddIntoChild(std::unique_ptr<Mesh> mesh) final;
     bool IsInside(const Mesh& mesh) const final;
@@ -115,6 +116,7 @@ public:
     bool ready() const final { return ready_; }
     void toready() final { ready_ = true; }
 
+    bool hasChilds() const final { return objects_.size() != 0; }
     bool hasNoChilds() const final { return objects_.size() == 0; }
 
     std::vector<Mesh*> AllStubMeshs() final;
@@ -153,9 +155,6 @@ protected:
     ModelMesh& operator=(ModelMesh&&) = delete;
     ModelMesh(const ModelMesh&) = delete;
     ModelMesh& operator=(const ModelMesh&) = delete;
-
-    void lock() final { mutex_.lock(); }
-    void unlock() final { mutex_.unlock(); }
 
     bool IsMoved() const { return border_->IsMoved(); }
     void ResetObstacle();
