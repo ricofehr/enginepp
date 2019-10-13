@@ -28,7 +28,6 @@ public:
     ~HeadCamera() final = default;
 
     void ComputeOrientation() final;
-    void ComputeFOV(float delta_fov) final;
     bool IsInFieldOfView(const nextfloor::objects::Mesh& target) const final;
     glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const final;
 

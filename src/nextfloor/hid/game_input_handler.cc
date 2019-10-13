@@ -76,11 +76,6 @@ nextfloor::gameplay::HIDPointer GameInputHandler::RecordHIDPointer(double elapse
     return hid_->RecordHIDPointer(elapsed_time);
 }
 
-float GameInputHandler::RecordFOV()
-{
-    return hid_->RecordFOV();
-}
-
 void GameInputHandler::PollEvents()
 {
     hid_->PollEvents();

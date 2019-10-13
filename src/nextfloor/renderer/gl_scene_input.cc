@@ -6,15 +6,13 @@
 
 #include "nextfloor/renderer/gl_scene_input.h"
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace renderer {
 
-GlSceneInput::GlSceneInput(nextfloor::gameplay::SceneWindow* window)
+GlSceneInput::GlSceneInput(GLFWwindow* glfw_window)
 {
-    glfw_window_ = static_cast<GLFWwindow*>(window->window());
+    glfw_window_ = glfw_window;
     glfwSetInputMode(glfw_window_, GLFW_STICKY_KEYS, GL_TRUE);
 }
 
@@ -66,11 +64,6 @@ void GlSceneInput::SetCursorPos(float x, float y)
 {
     glfwSetCursorPos(glfw_window_, x, y);
 }
-
-// void GlSceneInput::SetScrollCallBack(void (*on_scroll)(void* window, double delta_x, double delta_y))
-// {
-//     glfwSetScrollCallback(glfw_window_, on_scroll);
-// }
 
 }  // namespace renderer
 

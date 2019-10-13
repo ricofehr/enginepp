@@ -44,12 +44,6 @@ public:
      */
     nextfloor::gameplay::HIDPointer RecordHIDPointer(double elapsed_time) final;
 
-    /**
-     *  Get FOV (FieldOfView) Current State
-     *  @return FOV value
-     */
-    float RecordFOV() final;
-
     void PollEvents() final;
     bool IsCloseWindowEventOccurs() final;
 

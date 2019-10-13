@@ -59,13 +59,6 @@ public:
      */
     nextfloor::gameplay::HIDPointer RecordHIDPointer(double elapsed_time) final;
 
-    /**
-     *  Return current "Field of View"
-     *  @param  window GL Main Window
-     *  @return        Current Field of View
-     */
-    float RecordFOV() final;
-
     virtual void PollEvents() final;
 
     virtual bool IsCloseWindowEventOccurs() final;

@@ -25,7 +25,6 @@ public:
     virtual ~Camera() = default;
 
     virtual void ComputeOrientation() = 0;
-    virtual void ComputeFOV(float delta_fov) = 0;
     virtual bool IsInFieldOfView(const Mesh& target) const = 0;
     virtual glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const = 0;
 

@@ -106,13 +106,13 @@ std::vector<Mesh*> ModelMesh::FindCollisionNeighborsOf(const Mesh& target) const
     all_neighbors.erase(unique(all_neighbors.begin(), all_neighbors.end()), all_neighbors.end());
     all_neighbors.erase(std::remove(all_neighbors.begin(), all_neighbors.end(), &target));
 
-    tbb::mutex mutex;
+    tbb::mutex neighbors_mutex;
     std::vector<Mesh*> collision_neighbors(0);
-    // for (auto& neighbor : all_neighbors) {
+
     tbb::parallel_for(0, (int)all_neighbors.size(), 1, [&](int i) {
         auto neighbor = all_neighbors[i];
         if (target.IsNeighborEligibleForCollision(*neighbor)) {
-            tbb::mutex::scoped_lock lock_map(mutex);
+            tbb::mutex::scoped_lock lock_map(neighbors_mutex);
             collision_neighbors.push_back(neighbor);
         }
     });
@@ -125,17 +125,17 @@ bool ModelMesh::IsNeighborEligibleForCollision(const Mesh& neighbor) const
     return IsInDirection(neighbor) && IsNeighborReachable(neighbor);
 }
 
+bool ModelMesh::IsInDirection(const Mesh& target) const
+{
+    auto target_vector = target.location() - location();
+    return glm::dot(movement(), target_vector) > 0;
+}
+
 bool ModelMesh::IsNeighborReachable(const Mesh& neighbor) const
 {
     auto vector_neighbor = neighbor.location() - location();
     return glm::length(movement()) + glm::length(neighbor.movement())
            >= glm::length(vector_neighbor) - (diagonal() + neighbor.diagonal()) / 2.0f;
-}
-
-bool ModelMesh::IsInDirection(const Mesh& target) const
-{
-    auto target_vector = target.location() - location();
-    return glm::dot(movement(), target_vector) > 0;
 }
 
 std::vector<Mesh*> ModelMesh::AllStubMeshs()

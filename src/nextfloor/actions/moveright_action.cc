@@ -17,13 +17,11 @@ void MoveRightAction::execute(nextfloor::objects::Mesh* actor, double elapsed_ti
     glm::vec3 head = actor->movement();
     if (actor->IsCamera()) {
         auto camera = actor->camera();
-        if (camera != nullptr) {
-            movement = actor->camera()->direction();
-            if (actor->IsPlayer()) {
-                movement *= elapsed_time;
-            }
-            head = camera->head();
+        movement = camera->direction();
+        if (actor->IsPlayer()) {
+            movement *= elapsed_time;
         }
+        head = camera->head();
     }
 
     /* Right vector */

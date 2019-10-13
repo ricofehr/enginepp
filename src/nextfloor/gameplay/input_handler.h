@@ -37,12 +37,6 @@ public:
      */
     virtual HIDPointer RecordHIDPointer(double elapsed_time) = 0;
 
-    /**
-     *  Get FOV (FieldOfView) Current State
-     *  @return FOV value
-     */
-    virtual float RecordFOV() = 0;
-
     virtual void PollEvents() = 0;
     virtual bool IsCloseWindowEventOccurs() = 0;
 };

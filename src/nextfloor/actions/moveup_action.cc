@@ -14,11 +14,9 @@ void MoveUpAction::execute(nextfloor::objects::Mesh* actor, double elapsed_time)
     glm::vec3 movement = actor->movement();
     if (actor->IsCamera()) {
         auto camera = actor->camera();
-        if (camera != nullptr) {
-            movement = actor->camera()->direction();
-            if (actor->IsPlayer()) {
-                movement *= elapsed_time;
-            }
+        movement = camera->direction();
+        if (actor->IsPlayer()) {
+            movement *= elapsed_time;
         }
     }
 

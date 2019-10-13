@@ -114,9 +114,6 @@ public:
     Border* border() const final { return border_.get(); }
 
     std::vector<glm::ivec3> coords() const final;
-    bool ready() const final { return ready_; }
-    void toready() final { ready_ = true; }
-
     bool hasChilds() const final { return objects_.size() != 0; }
     bool hasNoChilds() const final { return objects_.size() == 0; }
 
@@ -180,9 +177,6 @@ private:
     int id_{0};
 
     Mesh* obstacle_{nullptr};
-
-    /** turn to true after 10 first frames */
-    bool ready_{false};
 
     tbb::mutex mutex_;
 };

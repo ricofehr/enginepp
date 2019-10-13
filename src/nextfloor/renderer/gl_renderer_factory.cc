@@ -63,7 +63,7 @@ nextfloor::gameplay::SceneWindow* GlRendererFactory::GetOrMakeSceneWindow()
 
 std::unique_ptr<nextfloor::gameplay::SceneInput> GlRendererFactory::MakeSceneInput()
 {
-    return std::make_unique<GlSceneInput>(GetOrMakeSceneWindow());
+    return std::make_unique<GlSceneInput>(static_cast<GLFWwindow*>(GetOrMakeSceneWindow()->window()));
 }
 
 GlRendererFactory::~GlRendererFactory() noexcept

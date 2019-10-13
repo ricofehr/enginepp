@@ -40,8 +40,7 @@ public:
     GameLevel(const GameLevel&) = delete;
     GameLevel& operator=(const GameLevel&) = delete;
 
-    void toready() final { universe_->toready(); }
-    void UpdateCameraOrientation(HIDPointer angles, float input_fov) final;
+    void UpdateCameraOrientation(HIDPointer angles) final;
     void ExecutePlayerAction(Action* command, double elapsed_time) final;
     void Move() final;
     void Draw(float window_size_ratio) final;

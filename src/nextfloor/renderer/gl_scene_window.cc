@@ -182,16 +182,6 @@ void GlSceneWindow::PrepareDisplay()
     glPolygonMode(GL_FRONT_AND_BACK, polygon_mode_);
 }
 
-void GlSceneWindow::UpdateMoveFactor(int fps)
-{
-    /** Fps displayed can't be greater than monitor refresh rate */
-    if (fps > monitor_refresh_rate_) {
-        fps = monitor_refresh_rate_;
-    }
-
-    move_factor_ = kFpsBase / fps;
-}
-
 void GlSceneWindow::SwapBuffers()
 {
     /* Swap buffers and poll */

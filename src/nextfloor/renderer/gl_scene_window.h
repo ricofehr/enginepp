@@ -29,18 +29,13 @@ public:
 
     void PrepareDisplay() final;
     void SwapBuffers() final;
-    void UpdateMoveFactor(int fps) final;
 
     void* window() const final { return glfw_window_; }
     GLuint getMatrixId() const final { return matrix_id_; }
     GLuint getProgramId() const final { return program_id_; }
     float getWindowRatio() const final { return window_width_ / window_height_; }
-    float getFpsFixMoveFactor() const final { return 1.0f; }  // move_factor_; }
 
 private:
-    /** Fps target for speed movement compute on Engine */
-    static constexpr float kFpsBase = 60.0f;
-
     static constexpr const char kVERTEXFILEPATH[] = "glsl/SimpleVertexShader.vertexshader";
     static constexpr const char kFRAGMENTFILEPATH[] = "glsl/SimpleFragmentShader.fragmentshader";
 
@@ -69,12 +64,6 @@ private:
 
     float window_width_{1200.0f};
     float window_height_{800.0f};
-
-    /**
-     *  Represents the speed factor between fps taken in initial move computes
-     *  and fps displayed at screen
-     */
-    float move_factor_{1.0f};
 };
 
 }  // namespace renderer

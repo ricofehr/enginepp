@@ -88,9 +88,6 @@ public:
     virtual void set_move_factor(float move_factor) = 0;
     virtual void set_camera(std::unique_ptr<Camera> camera) = 0;
     virtual void TransferCameraToOtherMesh(Mesh* other) = 0;
-
-    virtual bool ready() const = 0;
-    virtual void toready() = 0;
 };
 
 }  // namespace objects

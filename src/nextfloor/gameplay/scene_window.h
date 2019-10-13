@@ -18,16 +18,10 @@ public:
 
     virtual void PrepareDisplay() = 0;
     virtual void SwapBuffers() = 0;
-    virtual void UpdateMoveFactor(int fps) = 0;
 
     virtual void* window() const = 0;
 
-    /**
-     *  GameWindow Global Variables Accessors
-     */
     virtual float getWindowRatio() const = 0;
-    virtual float getFpsFixMoveFactor() const = 0;
-
     virtual unsigned int getMatrixId() const = 0;
     virtual unsigned int getProgramId() const = 0;
 };

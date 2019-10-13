@@ -12,8 +12,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "nextfloor/gameplay/scene_window.h"
-
 namespace nextfloor {
 
 namespace renderer {
@@ -21,7 +19,7 @@ namespace renderer {
 class GlSceneInput : public nextfloor::gameplay::SceneInput {
 
 public:
-    GlSceneInput(nextfloor::gameplay::SceneWindow* window);
+    GlSceneInput(GLFWwindow* glfw_window);
     ~GlSceneInput() final = default;
 
     void PollEvents() final;
@@ -29,7 +27,6 @@ public:
     bool IsPressed(int ACTION_BUTTON) final;
     glm::vec2 GetCursorPos() final;
     void SetCursorPos(float x, float y) final;
-    // void SetScrollCallBack(void (*on_scroll)(void* window, double delta_x, double delta_y)) override;
 
 private:
     int getKeyValueForAction(int ACTION_BUTTON);

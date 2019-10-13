@@ -40,14 +40,6 @@ void HeadCamera::ComputeOrientation()
     head_ = glm::cross(right, direction_);
 }
 
-void HeadCamera::ComputeFOV(float delta_fov)
-{
-    fov_ = fov_ + delta_fov;
-    /* fov cant be less than 5° and more than 130° */
-    fov_ = fov_ < 5.0f ? 5.0f : fov_;
-    fov_ = fov_ > 130.0f ? 130.0f : fov_;
-}
-
 bool HeadCamera::IsInFieldOfView(const nextfloor::objects::Mesh& target) const
 {
     using nextfloor::core::CommonServices;

@@ -51,17 +51,12 @@ void GameLoop::RunLoop()
 void GameLoop::UpdateTime()
 {
     timer_->Loop();
-    if (timer_->getLoopCountBySecond() != 0) {
-        game_window_->UpdateMoveFactor(timer_->getLoopCountBySecond());
-        level_->toready();
-    }
 }
 
 void GameLoop::UpdateCameraOrientation()
 {
     auto delta_angles = input_handler_->RecordHIDPointer(timer_->getDeltaTimeSinceLastLoop());
-    auto input_fov = input_handler_->RecordFOV();
-    level_->UpdateCameraOrientation(delta_angles, input_fov);
+    level_->UpdateCameraOrientation(delta_angles);
 }
 
 void GameLoop::HandlerInput()
@@ -117,8 +112,7 @@ void GameLoop::LogFps()
     using nextfloor::core::CommonServices;
 
     std::ostringstream message_fps;
-    message_fps << timer_->getLoopCountBySecond();
-    message_fps << " fps (move factor: " << game_window_->getFpsFixMoveFactor() << ") - ";
+    message_fps << timer_->getLoopCountBySecond() << " fps - ";
     CommonServices::getLog()->Write(std::move(message_fps));
 }
 

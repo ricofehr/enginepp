@@ -43,13 +43,6 @@ public:
      */
     virtual HIDPointer RecordHIDPointer(double elapsed_time) = 0;
 
-    /**
-     *  Return current "Field of View"
-     *  @param  window GL Main Window
-     *  @return        Current Field of View
-     */
-    virtual float RecordFOV() = 0;
-
     virtual void PollEvents() = 0;
 
     virtual bool IsCloseWindowEventOccurs() = 0;

@@ -40,10 +40,9 @@ void GameLevel::SetActiveCamera(nextfloor::objects::Camera* active_camera)
     }
 }
 
-void GameLevel::UpdateCameraOrientation(HIDPointer angles, float input_fov)
+void GameLevel::UpdateCameraOrientation(HIDPointer angles)
 {
     auto active_camera = game_cameras_.front();
-    active_camera->ComputeFOV(input_fov);
     active_camera->increment_angles(angles.horizontal_delta_angle, angles.vertical_delta_angle);
     active_camera->ComputeOrientation();
 }
