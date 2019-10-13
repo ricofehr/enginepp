@@ -25,12 +25,15 @@ public:
     ~GlRendererEngine() override = default;
 
 protected:
-    GlRendererEngine(const std::string& texture);
+    GlRendererEngine(const std::string& texture, GLuint program_id, GLuint matrix_id);
 
     GlRendererEngine(GlRendererEngine&&) = default;
     GlRendererEngine& operator=(GlRendererEngine&&) = default;
     GlRendererEngine(const GlRendererEngine&) = delete;
     GlRendererEngine& operator=(const GlRendererEngine&) = delete;
+
+    GLuint program_id_;
+    GLuint matrix_id_;
 
     GLuint elementbuffer_;
     GLuint vertexbuffer_;

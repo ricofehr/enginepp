@@ -9,7 +9,7 @@
 
 #include "nextfloor/objects/model_mesh.h"
 
-#include "nextfloor/objects/mesh_factory.h"
+#include <memory>
 
 namespace nextfloor {
 

@@ -30,6 +30,7 @@ public:
     void ComputeOrientation() final;
     void ComputeFOV(float delta_fov) final;
     bool IsInFieldOfView(const nextfloor::objects::Mesh& target) const final;
+    glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const final;
 
     glm::vec3 location() const final { return owner_->location(); }
     glm::vec3 direction() const final { return direction_; }
@@ -45,6 +46,10 @@ public:
     }
 
 private:
+    glm::mat4 GetProjectionMatrix(float window_size_ratio) const;
+    glm::mat4 GetViewMatrix() const;
+
+
     nextfloor::objects::Mesh* owner_;
     float horizontal_angle_;
     float vertical_angle_;

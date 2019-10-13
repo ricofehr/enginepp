@@ -9,9 +9,8 @@
 
 #include "nextfloor/objects/depth_wall.h"
 
+#include <memory>
 #include <glm/glm.hpp>
-
-#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -27,7 +26,7 @@ public:
     LeftWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks);
     ~LeftWall() final = default;
 
-    void PrepareDraw(const Camera& active_camera) final;
+    void PrepareDraw(const glm::mat4& view_projection_matrix) final;
 };
 
 }  // namespace objects

@@ -14,11 +14,6 @@
 #include "nextfloor/core/random_generator.h"
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/exit.h"
-#include "nextfloor/core/window_settings.h"
-
-#include "nextfloor/objects/camera.h"
-
-#include "nextfloor/gameplay/scene_window.h"
 
 #include "nextfloor/core/services_core_factory.h"
 
@@ -40,8 +35,6 @@ public:
      */
     static ConfigParser* getConfig() { return Instance()->config(); }
 
-    static const WindowSettings* getWindowSettings() { return Instance()->window_settings(); }
-
     static const FileIO* getFileIO() { return Instance()->fileIO(); }
 
     static const Log* getLog() { return Instance()->log(); }
@@ -49,8 +42,6 @@ public:
     static const RandomGenerator* getRandomGenerator() { return Instance()->random_generator(); }
 
     static const Exit* getExit() { return Instance()->exit(); }
-
-    static void initWindowSettings(nextfloor::gameplay::SceneWindow* window) { Instance()->makeWindowSettings(window); }
 
 protected:
     CommonServices(const CoreFactory& factory);
@@ -71,7 +62,7 @@ private:
     static CommonServices* Instance()
     {
         /* Raw pointer because static var */
-        nextfloor::core::ServicesCoreFactory factory;
+        ServicesCoreFactory factory;
         static auto instance = new CommonServices(factory);
         return instance;
     }
@@ -80,12 +71,6 @@ private:
     {
         assert(config_ != nullptr);
         return config_.get();
-    }
-
-    const WindowSettings* window_settings()
-    {
-        assert(window_settings_ != nullptr);
-        return window_settings_.get();
     }
 
     const FileIO* fileIO()
@@ -112,14 +97,7 @@ private:
         return exit_.get();
     }
 
-    void makeWindowSettings(nextfloor::gameplay::SceneWindow* window)
-    {
-        nextfloor::core::ServicesCoreFactory factory;
-        window_settings_ = factory.MakeWindowSettings(window);
-    }
-
     std::unique_ptr<ConfigParser> config_{nullptr};
-    std::unique_ptr<WindowSettings> window_settings_{nullptr};
     std::unique_ptr<FileIO> file_io_{nullptr};
     std::unique_ptr<Log> log_{nullptr};
     std::unique_ptr<RandomGenerator> random_generator_{nullptr};

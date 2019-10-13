@@ -7,11 +7,12 @@
 #ifndef NEXTFLOOR_OBJECTS_ROOM_H_
 #define NEXTFLOOR_OBJECTS_ROOM_H_
 
-#include <vector>
-#include <glm/glm.hpp>
 
 #include "nextfloor/objects/model_mesh.h"
-#include "nextfloor/objects/mesh_factory.h"
+
+#include <memory>
+#include <vector>
+#include <glm/glm.hpp>
 
 namespace nextfloor {
 

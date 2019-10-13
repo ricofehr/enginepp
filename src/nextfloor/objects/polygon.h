@@ -27,7 +27,7 @@ class Polygon {
 public:
     virtual ~Polygon() = default;
 
-    virtual void UpdateModelViewProjectionMatrix(const Camera& camera) = 0;
+    virtual void UpdateModelViewProjectionMatrix(const glm::mat4& view_projection_matrix) = 0;
 
     virtual void MoveLocation() = 0;
     virtual bool IsMoved() const = 0;
@@ -42,11 +42,6 @@ public:
     virtual glm::vec3 scale() const = 0;
     virtual glm::mat4 mvp() const = 0;
     virtual std::string texture() const = 0;
-
-    static void NewFrame() { is_viewprojection_setted_ = false; }
-
-protected:
-    static bool is_viewprojection_setted_;
 };
 
 }  // namespace objects

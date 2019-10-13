@@ -40,13 +40,12 @@ bool operator!=(const ModelMesh& o1, const ModelMesh& o2)
     return o1.id_ != o2.id_;
 }
 
-void ModelMesh::PrepareDraw(const Camera& active_camera)
+void ModelMesh::PrepareDraw(const glm::mat4& view_projection_matrix)
 {
-    Polygon::NewFrame();
-    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(active_camera); });
+    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(view_projection_matrix); });
 
     tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
-        polygons_[counter]->UpdateModelViewProjectionMatrix(active_camera);
+        polygons_[counter]->UpdateModelViewProjectionMatrix(view_projection_matrix);
     });
 }
 
@@ -72,7 +71,7 @@ std::vector<Mesh*> ModelMesh::GetMovingObjects()
 {
     std::vector<Mesh*> moving_objects;
 
-    static tbb::mutex movers_lock;
+    tbb::mutex movers_lock;
 
     if (IsMoved()) {
         moving_objects.push_back(this);

@@ -9,10 +9,8 @@
 
 #include "nextfloor/objects/wall.h"
 
+#include <memory>
 #include <glm/glm.hpp>
-#include <string>
-
-#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -36,7 +34,7 @@ public:
 
     void AddDoor() final;
     void AddWindow() final;
-    void PrepareDraw(const Camera& active_camera) final;
+    void PrepareDraw(const glm::mat4& view_projection_matrix) final;
 };
 
 }  // namespace objects

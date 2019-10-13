@@ -9,6 +9,7 @@
 
 #include "nextfloor/objects/mesh.h"
 
+#include <memory>
 #include <vector>
 #include <tbb/mutex.h>
 #include <glm/glm.hpp>
@@ -57,7 +58,7 @@ public:
 
     bool IsLastObstacle(Mesh* obstacle) const final;
     void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) final;
-    void PrepareDraw(const Camera& active_camera) override;
+    void PrepareDraw(const glm::mat4& view_projection_matrix) override;
 
     bool IsFrontPositionFilled() const final;
     bool IsRightPositionFilled() const final;

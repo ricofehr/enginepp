@@ -16,7 +16,7 @@ namespace renderer {
 class CubeGlRendererEngine : public GlRendererEngine {
 
 public:
-    CubeGlRendererEngine(const std::string& texture);
+    CubeGlRendererEngine(const std::string& texture, GLuint program_id, GLuint matrix_id);
     ~CubeGlRendererEngine() final = default;
 
     void Draw(const glm::mat4& mvp) final;

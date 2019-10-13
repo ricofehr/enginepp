@@ -9,10 +9,9 @@
 
 #include "nextfloor/objects/width_wall.h"
 
+#include <memory>
 #include <glm/glm.hpp>
 #include <string>
-
-#include "nextfloor/objects/mesh_factory.h"
 
 namespace nextfloor {
 
@@ -28,7 +27,7 @@ public:
     BackWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Mesh>> wall_bricks);
     ~BackWall() final = default;
 
-    void PrepareDraw(const Camera& active_camera) final;
+    void PrepareDraw(const glm::mat4& view_projection_matrix) final;
 };
 
 }  // namespace objects

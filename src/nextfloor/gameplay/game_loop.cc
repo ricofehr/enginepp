@@ -76,7 +76,7 @@ void GameLoop::Draw()
 {
     game_window_->PrepareDisplay();
     level_->Move();
-    level_->Draw();
+    level_->Draw(game_window_->getWindowRatio());
     game_window_->SwapBuffers();
 }
 

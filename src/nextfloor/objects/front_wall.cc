@@ -14,7 +14,7 @@ FrontWall::FrontWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr
       : WidthWall(std::move(border), std::move(wall_bricks))
 {}
 
-void FrontWall::PrepareDraw(const Camera& active_camera)
+void FrontWall::PrepareDraw(const glm::mat4& view_projection_matrix)
 {
     if (parent_->IsFrontPositionFilled()) {
         AddDoor();
@@ -23,7 +23,7 @@ void FrontWall::PrepareDraw(const Camera& active_camera)
         AddWindow();
     }
 
-    WidthWall::PrepareDraw(active_camera);
+    WidthWall::PrepareDraw(view_projection_matrix);
 }
 
 }  // namespace objects

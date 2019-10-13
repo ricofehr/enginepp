@@ -10,7 +10,6 @@
 #include "nextfloor/core/pseudo_random_generator.h"
 #include "nextfloor/core/game_file_io.h"
 #include "nextfloor/core/terminal_log.h"
-#include "nextfloor/core/game_window_settings.h"
 
 namespace nextfloor {
 
@@ -39,11 +38,6 @@ std::unique_ptr<Log> ServicesCoreFactory::MakeLog() const
 std::unique_ptr<RandomGenerator> ServicesCoreFactory::MakeRandomGenerator() const
 {
     return std::make_unique<PseudoRandomGenerator>();
-}
-
-std::unique_ptr<WindowSettings> ServicesCoreFactory::MakeWindowSettings(nextfloor::gameplay::SceneWindow* sw) const
-{
-    return std::make_unique<GameWindowSettings>(sw);
 }
 
 }  // namespace core

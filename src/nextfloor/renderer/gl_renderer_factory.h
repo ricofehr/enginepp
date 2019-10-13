@@ -28,19 +28,20 @@ public:
     GlRendererFactory();
     ~GlRendererFactory() noexcept final;
 
-    GlRendererFactory(GlRendererFactory&&) = default;
-    GlRendererFactory& operator=(GlRendererFactory&&) = default;
+    GlRendererFactory(GlRendererFactory&&) = delete;
+    GlRendererFactory& operator=(GlRendererFactory&&) = delete;
     GlRendererFactory(const GlRendererFactory&) = delete;
     GlRendererFactory& operator=(const GlRendererFactory&) = delete;
 
     nextfloor::gameplay::RendererEngine* MakeCubeRenderer(const std::string& texture) final;
-    nextfloor::gameplay::SceneWindow* MakeSceneWindow() final;
+    nextfloor::gameplay::SceneWindow* GetOrMakeSceneWindow() final;
     std::unique_ptr<nextfloor::gameplay::SceneInput> MakeSceneInput() final;
 
 private:
     std::map<std::string, std::unique_ptr<nextfloor::gameplay::RendererEngine>> renderers_;
     std::unique_ptr<nextfloor::gameplay::SceneWindow> scene_window_;
     std::unique_ptr<ShaderFactory> shader_factory_;
+    tbb::mutex mutex_;
 };
 
 }  // namespace renderer

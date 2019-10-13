@@ -35,13 +35,13 @@ void Floor::AddDoor()
 
 void Floor::AddWindow() {}
 
-void Floor::PrepareDraw(const Camera& active_camera)
+void Floor::PrepareDraw(const glm::mat4& view_projection_matrix)
 {
     if (parent_->IsBottomPositionFilled()) {
         AddDoor();
     }
 
-    Wall::PrepareDraw(active_camera);
+    Wall::PrepareDraw(view_projection_matrix);
 }
 
 }  // namespace objects

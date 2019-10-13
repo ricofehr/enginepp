@@ -36,13 +36,13 @@ void Roof::AddDoor()
 
 void Roof::AddWindow() {}
 
-void Roof::PrepareDraw(const Camera& active_camera)
+void Roof::PrepareDraw(const glm::mat4& view_projection_matrix)
 {
     if (parent_->IsTopPositionFilled()) {
         AddDoor();
     }
 
-    Wall::PrepareDraw(active_camera);
+    Wall::PrepareDraw(view_projection_matrix);
 }
 
 }  // namespace objects

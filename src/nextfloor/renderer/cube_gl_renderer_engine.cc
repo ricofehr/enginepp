@@ -8,8 +8,6 @@
 
 #include <vector>
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace renderer {
@@ -54,7 +52,9 @@ const GLfloat sBufferData[192] = {
 
 }  // namespace
 
-CubeGlRendererEngine::CubeGlRendererEngine(const std::string& texture) : GlRendererEngine(texture) {}
+CubeGlRendererEngine::CubeGlRendererEngine(const std::string& texture, GLuint program_id, GLuint matrix_id)
+      : GlRendererEngine(texture, program_id, matrix_id)
+{}
 
 void CubeGlRendererEngine::Init()
 {
@@ -139,15 +139,13 @@ void CubeGlRendererEngine::CreateTextureBuffer()
 
 void CubeGlRendererEngine::Draw(const glm::mat4& mvp)
 {
-    using nextfloor::core::CommonServices;
-
     {
         if (!is_initialized_) {
             Init();
         }
 
         glEnable(GL_CULL_FACE);
-        glUniformMatrix4fv(CommonServices::getWindowSettings()->getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(matrix_id_, 1, GL_FALSE, &mvp[0][0]);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
@@ -164,7 +162,7 @@ void CubeGlRendererEngine::Draw(const glm::mat4& mvp)
         glActiveTexture(GL_TEXTURE0 + texturebuffer_);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-        glUniform1i(glGetUniformLocation(CommonServices::getWindowSettings()->getProgramId(), "tex"), texturebuffer_);
+        glUniform1i(glGetUniformLocation(program_id_, "tex"), texturebuffer_);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glDisableVertexAttribArray(0);

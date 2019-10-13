@@ -63,7 +63,7 @@ public:
     virtual void InitChildsIntoGrid() = 0;
     virtual void AddIntoAscendantGrid() = 0;
 
-    virtual void PrepareDraw(const Camera& active_camera) = 0;
+    virtual void PrepareDraw(const glm::mat4& view_projection_matrix) = 0;
 
     virtual bool IsFrontPositionFilled() const = 0;
     virtual bool IsRightPositionFilled() const = 0;

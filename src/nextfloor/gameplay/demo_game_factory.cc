@@ -32,7 +32,7 @@ DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
 std::unique_ptr<Loop> DemoGameFactory::MakeLoop() const
 {
     auto level = MakeLevel();
-    auto game_window = renderer_factory_->MakeSceneWindow();
+    auto game_window = renderer_factory_->GetOrMakeSceneWindow();
     auto input_handler = hid_factory_->MakeInputHandler();
     auto timer = MakeFrameTimer();
 

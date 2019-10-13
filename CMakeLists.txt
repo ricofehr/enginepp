@@ -30,7 +30,6 @@ set(core_SRCS
         src/nextfloor/core/common_services.cc
         src/nextfloor/core/file_config_parser.cc
         src/nextfloor/core/game_file_io.cc
-        src/nextfloor/core/game_window_settings.cc
         src/nextfloor/core/program_exit.cc
         src/nextfloor/core/pseudo_random_generator.cc
         src/nextfloor/core/services_core_factory.cc
@@ -129,14 +128,12 @@ set(core_HDRS
         src/nextfloor/core/file_config_parser.h
         src/nextfloor/core/file_io.h
         src/nextfloor/core/game_file_io.h
-        src/nextfloor/core/game_window_settings.h
         src/nextfloor/core/log.h
         src/nextfloor/core/program_exit.h
         src/nextfloor/core/pseudo_random_generator.h
         src/nextfloor/core/random_generator.h
         src/nextfloor/core/services_core_factory.h
-        src/nextfloor/core/terminal_log.h
-        src/nextfloor/core/window_settings.h)
+        src/nextfloor/core/terminal_log.h)
 
 set(gameplay_HDRS
         src/nextfloor/gameplay/action.h

@@ -34,8 +34,7 @@ public:
     void* window() const final { return glfw_window_; }
     GLuint getMatrixId() const final { return matrix_id_; }
     GLuint getProgramId() const final { return program_id_; }
-    float getWidth() const final { return window_width_; }
-    float getHeight() const final { return window_height_; }
+    float getWindowRatio() const final { return window_width_ / window_height_; }
     float getFpsFixMoveFactor() const final { return 1.0f; }  // move_factor_; }
 
 private:

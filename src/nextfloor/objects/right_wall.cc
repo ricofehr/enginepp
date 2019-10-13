@@ -14,7 +14,7 @@ RightWall::RightWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr
       : DepthWall(std::move(border), std::move(wall_bricks))
 {}
 
-void RightWall::PrepareDraw(const Camera& active_camera)
+void RightWall::PrepareDraw(const glm::mat4& view_projection_matrix)
 {
     if (parent_->IsRightPositionFilled()) {
         AddDoor();
@@ -23,7 +23,7 @@ void RightWall::PrepareDraw(const Camera& active_camera)
         AddWindow();
     }
 
-    DepthWall::PrepareDraw(active_camera);
+    DepthWall::PrepareDraw(view_projection_matrix);
 }
 
 }  // namespace objects

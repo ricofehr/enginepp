@@ -13,7 +13,6 @@
 
 #include "nextfloor/renderer/gl_shader_factory.h"
 
-#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -35,41 +34,36 @@ GlRendererFactory::GlRendererFactory()
 
 nextfloor::gameplay::RendererEngine* GlRendererFactory::MakeCubeRenderer(const std::string& texture)
 {
-    static tbb::mutex renderer_mutex_;
+    tbb::mutex::scoped_lock lock_map(mutex_);
 
-    renderer_mutex_.lock();
     if (renderers_.find(texture) == renderers_.end()) {
-        renderers_[texture] = std::make_unique<CubeGlRendererEngine>(texture);
+        renderers_[texture] = std::make_unique<CubeGlRendererEngine>(
+          texture, GetOrMakeSceneWindow()->getProgramId(), GetOrMakeSceneWindow()->getMatrixId());
     }
-    renderer_mutex_.unlock();
 
     assert(renderers_.find(texture) != renderers_.end());
 
     return renderers_[texture].get();
 }
 
-nextfloor::gameplay::SceneWindow* GlRendererFactory::MakeSceneWindow()
+nextfloor::gameplay::SceneWindow* GlRendererFactory::GetOrMakeSceneWindow()
 {
-    static tbb::mutex scene_mutex_;
-
     if (scene_window_ != nullptr) {
         return scene_window_.get();
     }
 
-    scene_mutex_.lock();
+    tbb::mutex::scoped_lock lock_map(mutex_);
+
     if (scene_window_ == nullptr) {
         scene_window_ = std::make_unique<GlSceneWindow>(shader_factory_.get());
-        using nextfloor::core::CommonServices;
-        CommonServices::initWindowSettings(scene_window_.get());
     }
-    scene_mutex_.unlock();
 
     return scene_window_.get();
 }
 
 std::unique_ptr<nextfloor::gameplay::SceneInput> GlRendererFactory::MakeSceneInput()
 {
-    return std::make_unique<GlSceneInput>(MakeSceneWindow());
+    return std::make_unique<GlSceneInput>(GetOrMakeSceneWindow());
 }
 
 GlRendererFactory::~GlRendererFactory() noexcept

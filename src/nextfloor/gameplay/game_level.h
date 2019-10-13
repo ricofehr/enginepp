@@ -44,7 +44,7 @@ public:
     void UpdateCameraOrientation(HIDPointer angles, float input_fov) final;
     void ExecutePlayerAction(Action* command, double elapsed_time) final;
     void Move() final;
-    void Draw() final;
+    void Draw(float window_size_ratio) final;
 
 private:
     void SetActiveCamera(nextfloor::objects::Camera* active_camera);

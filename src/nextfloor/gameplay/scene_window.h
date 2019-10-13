@@ -25,8 +25,7 @@ public:
     /**
      *  GameWindow Global Variables Accessors
      */
-    virtual float getWidth() const = 0;
-    virtual float getHeight() const = 0;
+    virtual float getWindowRatio() const = 0;
     virtual float getFpsFixMoveFactor() const = 0;
 
     virtual unsigned int getMatrixId() const = 0;

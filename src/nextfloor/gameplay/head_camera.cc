@@ -7,6 +7,8 @@
 #include "nextfloor/gameplay/head_camera.h"
 
 #include <math.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include "nextfloor/core/common_services.h"
 
@@ -66,6 +68,22 @@ bool HeadCamera::IsInFieldOfView(const nextfloor::objects::Mesh& target) const
     /* From dot product rule to known wich side is a point from an other */
     return cos_camera_vector >= cos(camera_fov * M_PI / 180.0f);
 }
+
+glm::mat4 HeadCamera::GetViewProjectionMatrix(float window_size_ratio) const
+{
+    return GetProjectionMatrix(window_size_ratio) * GetViewMatrix();
+}
+
+glm::mat4 HeadCamera::GetProjectionMatrix(float window_size_ratio) const
+{
+    return glm::perspective(glm::radians(fov()), window_size_ratio, 0.1f, 300.0f);
+}
+
+glm::mat4 HeadCamera::GetViewMatrix() const
+{
+    return glm::lookAt(location(), location() + direction(), head());
+}
+
 
 }  // namespace gameplay
 

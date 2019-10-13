@@ -14,7 +14,7 @@ LeftWall::LeftWall(std::unique_ptr<Border> border, std::vector<std::unique_ptr<M
       : DepthWall(std::move(border), std::move(wall_bricks))
 {}
 
-void LeftWall::PrepareDraw(const Camera& active_camera)
+void LeftWall::PrepareDraw(const glm::mat4& view_projection_matrix)
 {
     if (parent_->IsLeftPositionFilled()) {
         AddDoor();
@@ -23,7 +23,7 @@ void LeftWall::PrepareDraw(const Camera& active_camera)
         AddWindow();
     }
 
-    DepthWall::PrepareDraw(active_camera);
+    DepthWall::PrepareDraw(view_projection_matrix);
 }
 
 }  // namespace objects

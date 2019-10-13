@@ -28,7 +28,7 @@ public:
     virtual ~RendererFactory() = default;
 
     virtual RendererEngine* MakeCubeRenderer(const std::string& texture) = 0;
-    virtual SceneWindow* MakeSceneWindow() = 0;
+    virtual SceneWindow* GetOrMakeSceneWindow() = 0;
     virtual std::unique_ptr<SceneInput> MakeSceneInput() = 0;
 };
 

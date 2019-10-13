@@ -9,10 +9,8 @@
 
 #include "nextfloor/objects/model_mesh.h"
 
+#include <memory>
 #include <glm/glm.hpp>
-
-#include "nextfloor/objects/polygon_factory.h"
-
 
 namespace nextfloor {
 

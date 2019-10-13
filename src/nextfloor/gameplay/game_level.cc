@@ -59,7 +59,6 @@ void GameLevel::Move()
     auto moving_objects = universe_->GetMovingObjects();
     DetectCollision(moving_objects);
     MoveObjects(moving_objects);
-    // universe_->Move();
 }
 
 void GameLevel::DetectCollision(std::vector<nextfloor::objects::Mesh*> moving_objects)
@@ -83,17 +82,13 @@ void GameLevel::MoveObjects(std::vector<nextfloor::objects::Mesh*> moving_object
         moving_objects[i]->MoveLocation();
         moving_objects[i]->UpdateGridPlacement();
     });
-
-    // for (auto& object : moving_objects) {
-    //     object->UpdateGridPlacement();
-    // }
 }
 
 
-void GameLevel::Draw()
+void GameLevel::Draw(float window_size_ratio)
 {
     auto active_camera = game_cameras_.front();
-    universe_->PrepareDraw(*active_camera);
+    universe_->PrepareDraw(active_camera->GetViewProjectionMatrix(window_size_ratio));
     auto polygons = universe_->GetPolygonsReadyToDraw(*active_camera);
     for (const auto& polygon : polygons) {
         auto renderer = renderer_factory_->MakeCubeRenderer(polygon->texture());

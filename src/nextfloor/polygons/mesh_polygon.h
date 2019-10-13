@@ -24,7 +24,7 @@ class MeshPolygon : public nextfloor::objects::Polygon {
 public:
     ~MeshPolygon() noexcept override = default;
 
-    void UpdateModelViewProjectionMatrix(const nextfloor::objects::Camera& camera) final;
+    void UpdateModelViewProjectionMatrix(const glm::mat4& view_projection_matrix) final;
 
     inline void MoveLocation() final
     {
@@ -39,8 +39,8 @@ public:
 
     bool IsMoved() const final { return movement_[0] != 0.0f || movement_[1] != 0.0f || movement_[2] != 0.0f; }
 
-    float move_factor() const final { return fabs(move_factor_); }
     glm::vec3 movement() const final;
+    float move_factor() const final { return fabs(move_factor_); }
     glm::vec3 location() const final { return location_; }
     glm::vec3 scale() const final { return scale_; }
     glm::mat4 mvp() const final { return mvp_; }
@@ -66,8 +66,6 @@ protected:
     float move_factor_{1.0f};
 
 private:
-    glm::mat4 GetProjectionMatrix(const nextfloor::objects::Camera& camera);
-    glm::mat4 GetViewMatrix(const nextfloor::objects::Camera& camera);
     glm::mat4 GetModelMatrix();
 };
 
