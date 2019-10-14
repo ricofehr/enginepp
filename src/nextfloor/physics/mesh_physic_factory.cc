@@ -19,7 +19,7 @@ namespace nextfloor {
 
 namespace physics {
 
-MeshPhysicFactory::MeshPhysicFactory(nextfloor::objects::PolygonFactory* polygon_factory)
+MeshPhysicFactory::MeshPhysicFactory(nextfloor::polygons::PolygonFactory* polygon_factory)
 {
     polygon_factory_ = polygon_factory;
 }

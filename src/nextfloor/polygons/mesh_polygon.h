@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_POLYGONS_MESHPOLYGON_H_
 #define NEXTFLOOR_POLYGONS_MESHPOLYGON_H_
 
-#include "nextfloor/objects/polygon.h"
+#include "nextfloor/polygons/polygon.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -19,7 +19,7 @@ namespace polygons {
  *  @class MeshPolygon
  *  @brief Abstract class which define the mesh polygons part
  */
-class MeshPolygon : public nextfloor::objects::Polygon {
+class MeshPolygon : public Polygon {
 
 public:
     ~MeshPolygon() noexcept override = default;
@@ -73,4 +73,4 @@ private:
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_GRAPHICS_SHAPE3D_H_
+#endif  // NEXTFLOOR_POLYGONS_MESHPOLYGON_H_

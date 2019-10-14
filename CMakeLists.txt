@@ -185,8 +185,6 @@ set(objects_HDRS
         src/nextfloor/objects/model_mesh.h
         src/nextfloor/objects/model_mesh_factory.h
         src/nextfloor/objects/physic_factory.h
-        src/nextfloor/objects/polygon.h
-        src/nextfloor/objects/polygon_factory.h
         src/nextfloor/objects/right_wall.h
         src/nextfloor/objects/rock.h
         src/nextfloor/objects/roof.h
@@ -207,7 +205,9 @@ set(physics_HDRS
 set(polygons_HDRS
         src/nextfloor/polygons/cube.h
         src/nextfloor/polygons/mesh_polygon.h
-        src/nextfloor/polygons/mesh_polygon_factory.h)
+        src/nextfloor/polygons/mesh_polygon_factory.h
+        src/nextfloor/polygons/polygon.h
+        src/nextfloor/polygons/polygon_factory.h)
 
 set(renderer_HDRS
         src/nextfloor/renderer/cube_gl_renderer_engine.h

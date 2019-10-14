@@ -37,7 +37,6 @@ public:
     virtual bool IsPressed(int ACTION_BUTTON) = 0;
     virtual glm::vec2 GetCursorPos() = 0;
     virtual void SetCursorPos(float x, float y) = 0;
-    // virtual void SetScrollCallBack(void (*on_scroll)(void* window, double delta_x, double delta_y)) = 0;
 };
 
 }  // namespace gameplay

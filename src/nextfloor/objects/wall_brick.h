@@ -23,7 +23,7 @@ namespace objects {
 class WallBrick : public ModelMesh {
 
 public:
-    WallBrick(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> bricks);
+    WallBrick(std::unique_ptr<Border> border, std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> bricks);
     ~WallBrick() final = default;
 };
 

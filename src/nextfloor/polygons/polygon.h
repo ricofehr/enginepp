@@ -4,19 +4,18 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_POLYGON_H_
-#define NEXTFLOOR_OBJECTS_POLYGON_H_
+#ifndef NEXTFLOOR_POLYGONS_POLYGON_H_
+#define NEXTFLOOR_POLYGONS_POLYGON_H_
 
 #include <glm/glm.hpp>
 #include <string>
 
-#include "nextfloor/objects/camera.h"
-
+/* TODO: comment reason to enable experimental */
 #define GLM_ENABLE_EXPERIMENTAL
 
 namespace nextfloor {
 
-namespace objects {
+namespace polygons {
 
 /**
  *  @class Polygon
@@ -44,8 +43,8 @@ public:
     virtual std::string texture() const = 0;
 };
 
-}  // namespace objects
+}  // namespace polygons
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_OBJECTS_POLYGON_H_
+#endif  // NEXTFLOOR_POLYGONS_POLYGON_H_

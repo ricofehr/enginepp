@@ -12,9 +12,10 @@
 #include <list>
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/polygon.h"
 #include "nextfloor/objects/border.h"
 #include "nextfloor/objects/camera.h"
+
+#include "nextfloor/polygons/polygon.h"
 
 namespace nextfloor {
 
@@ -31,7 +32,7 @@ class Mesh {
 public:
     virtual ~Mesh() = default;
 
-    virtual std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const = 0;
+    virtual std::vector<nextfloor::polygons::Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const = 0;
     virtual std::vector<Mesh*> GetMovingObjects() = 0;
     virtual std::vector<Mesh*> FindCollisionNeighbors() const = 0;
     virtual std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const = 0;

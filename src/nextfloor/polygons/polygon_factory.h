@@ -4,18 +4,18 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_POLYGONFACTORY_H_
-#define NEXTFLOOR_OBJECTS_POLYGONFACTORY_H_
+#ifndef NEXTFLOOR_POLYGONS_POLYGONFACTORY_H_
+#define NEXTFLOOR_POLYGONS_POLYGONFACTORY_H_
 
 #include <memory>
 #include <string>
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/polygon.h"
+#include "nextfloor/polygons/polygon.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace polygons {
 
 /**
  *  @class MeshFactory
@@ -34,8 +34,8 @@ public:
                                               const std::string& texture) const = 0;
 };
 
-}  // namespace objects
+}  // namespace polygons
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_OBJECTS_POLYGONFACTORY_H_
+#endif  // NEXTFLOOR_POLYGONS_POLYGONFACTORY_H_

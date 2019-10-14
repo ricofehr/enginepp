@@ -1,6 +1,6 @@
 /**
- *  @file shape3d.cc
- *  @brief Shape3D class file
+ *  @file mesh_polygon.cc
+ *  @brief MeshPolygon class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 

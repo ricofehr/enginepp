@@ -9,7 +9,7 @@
 
 #include "nextfloor/objects/physic_factory.h"
 
-#include "nextfloor/objects/polygon_factory.h"
+#include "nextfloor/polygons/polygon_factory.h"
 
 namespace nextfloor {
 
@@ -22,7 +22,7 @@ namespace physics {
 class MeshPhysicFactory : public nextfloor::objects::PhysicFactory {
 
 public:
-    MeshPhysicFactory(nextfloor::objects::PolygonFactory* polygon_factory);
+    MeshPhysicFactory(nextfloor::polygons::PolygonFactory* polygon_factory);
     ~MeshPhysicFactory() final = default;
 
     std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, float scale) const final;
@@ -30,7 +30,7 @@ public:
     std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const final;
 
 private:
-    nextfloor::objects::PolygonFactory* polygon_factory_;
+    nextfloor::polygons::PolygonFactory* polygon_factory_;
 };
 
 }  // namespace physics

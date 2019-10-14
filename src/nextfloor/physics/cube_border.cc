@@ -56,10 +56,10 @@ static const std::vector<glm::vec3> sDefaultCoords = {
 }  // anonymous namespace
 
 
-CubeBorder::CubeBorder(std::unique_ptr<nextfloor::objects::Polygon> cube) : CubeBorder(std::move(cube), sDefaultCoords)
+CubeBorder::CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube) : CubeBorder(std::move(cube), sDefaultCoords)
 {}
 
-CubeBorder::CubeBorder(std::unique_ptr<nextfloor::objects::Polygon> cube, std::vector<glm::vec3> coords)
+CubeBorder::CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube, std::vector<glm::vec3> coords)
 {
     cube_ = std::move(cube);
     coords_ = coords;

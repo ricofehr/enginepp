@@ -9,9 +9,10 @@
 
 #include "nextfloor/objects/mesh_factory.h"
 
-#include "nextfloor/objects/polygon_factory.h"
 #include "nextfloor/objects/grid_factory.h"
 #include "nextfloor/objects/physic_factory.h"
+
+#include "nextfloor/polygons/polygon_factory.h"
 
 namespace nextfloor {
 
@@ -24,7 +25,9 @@ namespace objects {
 class ModelMeshFactory : public MeshFactory {
 
 public:
-    ModelMeshFactory(PolygonFactory* polygon_factory, GridFactory* grid_factory, PhysicFactory* physic_factory);
+    ModelMeshFactory(nextfloor::polygons::PolygonFactory* polygon_factory,
+                     GridFactory* grid_factory,
+                     PhysicFactory* physic_factory);
     ~ModelMeshFactory() final = default;
 
     std::unique_ptr<Mesh> MakeUniverse() const final;
@@ -47,7 +50,7 @@ private:
                                                           const glm::vec3& brick_dimension,
                                                           const std::string& texture) const;
 
-    PolygonFactory* polygon_factory_;
+    nextfloor::polygons::PolygonFactory* polygon_factory_;
     GridFactory* grid_factory_;
     PhysicFactory* physic_factory_;
 };

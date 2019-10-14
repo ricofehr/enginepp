@@ -49,9 +49,9 @@ void ModelMesh::PrepareDraw(const glm::mat4& view_projection_matrix)
     });
 }
 
-std::vector<Polygon*> ModelMesh::GetPolygonsReadyToDraw(const Camera& active_camera) const
+std::vector<nextfloor::polygons::Polygon*> ModelMesh::GetPolygonsReadyToDraw(const Camera& active_camera) const
 {
-    std::vector<Polygon*> polygons;
+    std::vector<nextfloor::polygons::Polygon*> polygons;
 
     /* Draw meshes of current object */
     if (active_camera.IsInFieldOfView(*this)) {

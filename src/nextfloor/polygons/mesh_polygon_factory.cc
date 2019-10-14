@@ -13,22 +13,19 @@ namespace nextfloor {
 
 namespace polygons {
 
-std::unique_ptr<nextfloor::objects::Polygon> MeshPolygonFactory::MakeCube(const glm::vec3& location,
-                                                                          float scale,
-                                                                          const std::string& texture) const
+std::unique_ptr<Polygon> MeshPolygonFactory::MakeCube(const glm::vec3& location, float scale, const std::string& texture) const
 {
     return MakeCube(location, glm::vec3(scale), texture);
 }
 
-std::unique_ptr<nextfloor::objects::Polygon> MeshPolygonFactory::MakeCube(const glm::vec3& location,
-                                                                          const glm::vec3& scale) const
+std::unique_ptr<Polygon> MeshPolygonFactory::MakeCube(const glm::vec3& location, const glm::vec3& scale) const
 {
     return std::make_unique<Cube>(location, scale);
 }
 
-std::unique_ptr<nextfloor::objects::Polygon> MeshPolygonFactory::MakeCube(const glm::vec3& location,
-                                                                          const glm::vec3& scale,
-                                                                          const std::string& texture) const
+std::unique_ptr<Polygon> MeshPolygonFactory::MakeCube(const glm::vec3& location,
+                                                      const glm::vec3& scale,
+                                                      const std::string& texture) const
 {
     return std::make_unique<Cube>(location, scale, texture);
 }

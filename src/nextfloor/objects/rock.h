@@ -30,7 +30,9 @@ public:
 
     static constexpr char kTEXTURE[] = "assets/rock.jpg";
 
-    Rock(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> rock, const glm::vec3& movement);
+    Rock(std::unique_ptr<Border> border,
+         std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> rock,
+         const glm::vec3& movement);
     ~Rock() final = default;
 };
 

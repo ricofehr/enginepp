@@ -14,10 +14,8 @@
 #include <tbb/mutex.h>
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/border.h"
 #include "nextfloor/objects/grid.h"
 #include "nextfloor/objects/grid_box.h"
-#include "nextfloor/objects/polygon.h"
 
 namespace nextfloor {
 
@@ -37,7 +35,7 @@ public:
     friend bool operator==(const ModelMesh& o1, const ModelMesh& o2);
     friend bool operator!=(const ModelMesh& o1, const ModelMesh& o2);
 
-    std::vector<Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const override;
+    std::vector<nextfloor::polygons::Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const override;
     std::vector<Mesh*> GetMovingObjects() override;
     std::vector<Mesh*> FindCollisionNeighbors() const final;
     std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
@@ -161,7 +159,7 @@ protected:
     std::vector<GridBox*> coords_list_;
     std::unique_ptr<Grid> grid_{nullptr};
     std::vector<std::unique_ptr<Mesh>> objects_;
-    std::vector<std::unique_ptr<Polygon>> polygons_;
+    std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> polygons_;
     std::unique_ptr<Border> border_{nullptr};
     std::unique_ptr<Camera> camera_{nullptr};
 

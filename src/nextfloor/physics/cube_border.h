@@ -14,7 +14,7 @@
 #include <vector>
 #include <memory>
 
-#include "nextfloor/objects/polygon.h"
+#include "nextfloor/polygons/polygon.h"
 
 namespace nextfloor {
 
@@ -29,8 +29,8 @@ namespace physics {
 class CubeBorder : public nextfloor::objects::Border {
 
 public:
-    CubeBorder(std::unique_ptr<nextfloor::objects::Polygon> cube);
-    CubeBorder(std::unique_ptr<nextfloor::objects::Polygon> cube, std::vector<glm::vec3> coords);
+    CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube);
+    CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube, std::vector<glm::vec3> coords);
     ~CubeBorder() final = default;
 
     CubeBorder(CubeBorder&&) = default;
@@ -72,7 +72,7 @@ private:
     bool IsObstacleInSameHeightAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
     bool IsObstacleInSameDepthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
 
-    std::unique_ptr<nextfloor::objects::Polygon> cube_{nullptr};
+    std::unique_ptr<nextfloor::polygons::Polygon> cube_{nullptr};
     std::vector<glm::vec3> coords_;
     /** Border coords in Model Matrix */
     std::vector<glm::vec3> coords_model_matrix_computed_;

@@ -22,7 +22,9 @@ namespace nextfloor {
 
 namespace objects {
 
-ModelMeshFactory::ModelMeshFactory(PolygonFactory* polygon_factory, GridFactory* grid_factory, PhysicFactory* physic_factory)
+ModelMeshFactory::ModelMeshFactory(nextfloor::polygons::PolygonFactory* polygon_factory,
+                                   GridFactory* grid_factory,
+                                   PhysicFactory* physic_factory)
 {
     polygon_factory_ = polygon_factory;
     grid_factory_ = grid_factory;
@@ -127,25 +129,25 @@ std::unique_ptr<Mesh> ModelMeshFactory::MakeWallBrick(const glm::vec3& location,
                                                       const std::string& texture) const
 {
     auto border = physic_factory_->MakeBorder(location, scale);
-    std::vector<std::unique_ptr<Polygon>> bricks;
-    bricks.push_back(polygon_factory_->MakeCube(location, scale, texture));
-    return std::make_unique<WallBrick>(std::move(border), std::move(bricks));
+    std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> brick;
+    brick.push_back(polygon_factory_->MakeCube(location, scale, texture));
+    return std::make_unique<WallBrick>(std::move(border), std::move(brick));
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeRock(const glm::vec3& location, const glm::vec3& movement) const
 {
     auto border = physic_factory_->MakeBorder(location, Rock::kBIG_SCALE);
-    std::vector<std::unique_ptr<Polygon>> rocks;
-    rocks.push_back(polygon_factory_->MakeCube(location, Rock::kBIG_SCALE, Rock::kTEXTURE));
-    return std::make_unique<Rock>(std::move(border), std::move(rocks), movement);
+    std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> rock;
+    rock.push_back(polygon_factory_->MakeCube(location, Rock::kBIG_SCALE, Rock::kTEXTURE));
+    return std::make_unique<Rock>(std::move(border), std::move(rock), movement);
 }
 
 std::unique_ptr<Mesh> ModelMeshFactory::MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const
 {
     auto border = physic_factory_->MakeBorder(location, Rock::kSMALL_SCALE);
-    std::vector<std::unique_ptr<Polygon>> rocks;
-    rocks.push_back(polygon_factory_->MakeCube(location, Rock::kSMALL_SCALE, Rock::kTEXTURE));
-    return std::make_unique<Rock>(std::move(border), std::move(rocks), movement);
+    std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> rock;
+    rock.push_back(polygon_factory_->MakeCube(location, Rock::kSMALL_SCALE, Rock::kTEXTURE));
+    return std::make_unique<Rock>(std::move(border), std::move(rock), movement);
 }
 
 }  // namespace objects

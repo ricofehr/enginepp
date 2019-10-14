@@ -10,7 +10,7 @@ namespace nextfloor {
 
 namespace objects {
 
-WallBrick::WallBrick(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> bricks)
+WallBrick::WallBrick(std::unique_ptr<Border> border, std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> bricks)
 {
     polygons_ = std::move(bricks);
     border_ = std::move(border);

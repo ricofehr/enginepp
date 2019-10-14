@@ -12,7 +12,9 @@ namespace nextfloor {
 
 namespace objects {
 
-Rock::Rock(std::unique_ptr<Border> border, std::vector<std::unique_ptr<Polygon>> rock, const glm::vec3& movement)
+Rock::Rock(std::unique_ptr<Border> border,
+           std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> rock,
+           const glm::vec3& movement)
 {
     polygons_ = std::move(rock);
     border_ = std::move(border);
