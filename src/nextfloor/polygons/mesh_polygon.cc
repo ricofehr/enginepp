@@ -6,8 +6,11 @@
 
 #include "nextfloor/polygons/mesh_polygon.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+/* Need Experimental flag for transform methods */
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 namespace nextfloor {
 

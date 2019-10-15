@@ -9,8 +9,6 @@
 
 #include "nextfloor/polygons/polygon.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-
 namespace nextfloor {
 
 namespace polygons {

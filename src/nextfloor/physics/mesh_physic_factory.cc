@@ -19,11 +19,6 @@ namespace nextfloor {
 
 namespace physics {
 
-MeshPhysicFactory::MeshPhysicFactory(nextfloor::polygons::PolygonFactory* polygon_factory)
-{
-    polygon_factory_ = polygon_factory;
-}
-
 std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location, float scale) const
 {
     return MakeBorder(location, glm::vec3(scale));
@@ -32,7 +27,7 @@ std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const 
 std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location,
                                                                           const glm::vec3& scale) const
 {
-    return std::make_unique<CubeBorder>(polygon_factory_->MakeCube(location, scale));
+    return std::make_unique<CubeBorder>(location, scale);
 }
 
 std::unique_ptr<nextfloor::objects::CollisionEngine> MeshPhysicFactory::MakeCollisionEngine() const

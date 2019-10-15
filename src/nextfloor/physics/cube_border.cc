@@ -6,8 +6,10 @@
 
 #include "nextfloor/physics/cube_border.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+/* Need Experimental flag for transform methods */
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <tbb/tbb.h>
 
 #include "nextfloor/core/common_services.h"
@@ -56,12 +58,13 @@ static const std::vector<glm::vec3> sDefaultCoords = {
 }  // anonymous namespace
 
 
-CubeBorder::CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube) : CubeBorder(std::move(cube), sDefaultCoords)
+CubeBorder::CubeBorder(const glm::vec3& location, const glm::vec3& scale) : CubeBorder(location, scale, sDefaultCoords)
 {}
 
-CubeBorder::CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube, std::vector<glm::vec3> coords)
+CubeBorder::CubeBorder(const glm::vec3& location, const glm::vec3& scale, std::vector<glm::vec3> coords)
 {
-    cube_ = std::move(cube);
+    location_ = location;
+    scale_ = scale;
     coords_ = coords;
     ComputesModelMatrixCoords();
 }

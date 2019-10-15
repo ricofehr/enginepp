@@ -9,12 +9,9 @@
 
 #include "nextfloor/objects/border.h"
 
-//#define GLM_SWIZZLE
 #include <glm/glm.hpp>
 #include <vector>
 #include <memory>
-
-#include "nextfloor/polygons/polygon.h"
 
 namespace nextfloor {
 
@@ -29,8 +26,8 @@ namespace physics {
 class CubeBorder : public nextfloor::objects::Border {
 
 public:
-    CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube);
-    CubeBorder(std::unique_ptr<nextfloor::polygons::Polygon> cube, std::vector<glm::vec3> coords);
+    CubeBorder(const glm::vec3& location, const glm::vec3& scale);
+    CubeBorder(const glm::vec3& location, const glm::vec3& scale, std::vector<glm::vec3> coords);
     ~CubeBorder() final = default;
 
     CubeBorder(CubeBorder&&) = default;
@@ -42,16 +39,17 @@ public:
     void ComputeNewLocation() final;
     bool IsObstacleInCollisionAfterPartedMove(const Border& obstacle, float move_part) const final;
 
-    glm::vec3 location() const final { return cube_->location(); }
     /* Coords are a 2.0f width cube, so dimension is 2 * scale */
-    glm::vec3 dimension() const final { return 2.0f * cube_->scale(); }
-    glm::vec3 movement() const final { return cube_->movement(); }
-    float move_factor() const final { return cube_->move_factor(); }
-    bool IsMoved() const noexcept final { return cube_->IsMoved(); }
-    float diagonal() const noexcept final { return glm::length(dimension()); }
+    glm::vec3 dimension() const final { return 2.0f * scale(); }
+    bool IsMoved() const final { return movement_[0] != 0.0f || movement_[1] != 0.0f || movement_[2] != 0.0f; }
+    float diagonal() const final { return glm::length(dimension()); }
 
-    void set_movement(const glm::vec3& movement) final { cube_->set_movement(movement); }
-    void set_move_factor(float move_factor) final { cube_->set_move_factor(move_factor); }
+    glm::vec3 movement() const final { return movement_; }
+    float move_factor() const final { return fabs(move_factor_); }
+    glm::vec3 location() const final { return location_; }
+
+    void set_move_factor(float move_factor) final { move_factor_ = move_factor; }
+    void set_movement(const glm::vec3& movement) final { movement_ = movement; }
 
     glm::vec3 getFirstPoint() const final;
     glm::vec3 getLastPoint() const final;
@@ -62,17 +60,36 @@ private:
     float CalculateDepth() const final;
     glm::vec3 RetrieveFirstPointAfterPartedMove(float move_part) const final;
 
-    glm::vec3 scale() const { return cube_->scale(); }
-
+    glm::vec3 scale() const { return scale_; }
     glm::mat4 CalculateModelMatrix() const;
-    void MoveLocation() { cube_->MoveLocation(); }
+
+    void MoveLocation()
+    {
+        location_ += movement() * move_factor();
+
+        if (move_factor_ <= 0.0f) {
+            InverseMove();
+        }
+
+        move_factor_ = 1.0f;
+    }
+
+    void InverseMove() { movement_ = -movement_; }
+
     void ComputesModelMatrixCoords();
 
     bool IsObstacleInSameWidthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
     bool IsObstacleInSameHeightAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
     bool IsObstacleInSameDepthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
 
-    std::unique_ptr<nextfloor::polygons::Polygon> cube_{nullptr};
+    glm::vec3 location_{0.0f, 0.0f, 0.0f};
+    glm::vec3 scale_{0.0f, 0.0f, 0.0f};
+    glm::vec3 movement_{0.0f, 0.0f, 0.0f};
+
+    /** MOve factor with collision shape (1 -> no collision detected) */
+    float move_factor_{1.0f};
+
+    // std::unique_ptr<nextfloor::objects::HiddenObject> hidden_cube_{nullptr};
     std::vector<glm::vec3> coords_;
     /** Border coords in Model Matrix */
     std::vector<glm::vec3> coords_model_matrix_computed_;
