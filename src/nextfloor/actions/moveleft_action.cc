@@ -11,7 +11,7 @@ namespace nextfloor {
 
 namespace actions {
 
-void MoveLeftAction::execute(nextfloor::objects::Mesh* actor, double elapsed_time)
+void MoveLeftAction::execute(nextfloor::gameplay::Character* actor, double elapsed_time)
 {
     glm::vec3 movement = actor->movement();
     glm::vec3 head = actor->movement();

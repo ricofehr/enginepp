@@ -9,7 +9,7 @@ namespace nextfloor {
 
 namespace actions {
 
-void MoveDownAction::execute(nextfloor::objects::Mesh* actor, double elapsed_time)
+void MoveDownAction::execute(nextfloor::gameplay::Character* actor, double elapsed_time)
 {
     glm::vec3 movement = actor->movement();
     if (actor->IsCamera()) {

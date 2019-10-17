@@ -138,6 +138,10 @@ set(core_HDRS
 set(gameplay_HDRS
         src/nextfloor/gameplay/action.h
         src/nextfloor/gameplay/action_factory.h
+        src/nextfloor/gameplay/camera.h
+        src/nextfloor/gameplay/character.h
+        src/nextfloor/gameplay/character_factory.h
+        src/nextfloor/gameplay/collision_engine.h
         src/nextfloor/gameplay/demo_game_factory.h
         src/nextfloor/gameplay/frame_timer.h
         src/nextfloor/gameplay/game_character_factory.h
@@ -172,7 +176,6 @@ set(hid_HDRS
 set(objects_HDRS
         src/nextfloor/objects/back_wall.h
         src/nextfloor/objects/border.h
-        src/nextfloor/objects/collision_engine.h
         src/nextfloor/objects/depth_wall.h
         src/nextfloor/objects/floor.h
         src/nextfloor/objects/front_wall.h

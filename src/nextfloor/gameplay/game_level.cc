@@ -15,22 +15,22 @@ namespace nextfloor {
 namespace gameplay {
 
 GameLevel::GameLevel(std::unique_ptr<nextfloor::objects::Mesh> universe,
-                     std::unique_ptr<nextfloor::objects::Mesh> player,
-                     std::unique_ptr<nextfloor::objects::CollisionEngine> collision_engine,
+                     std::unique_ptr<Character> player,
+                     std::unique_ptr<CollisionEngine> collision_engine,
                      RendererFactory* renderer_factory)
 {
     player_ = player.get();
     universe_ = std::move(universe);
     universe_->AddIntoChild(std::move(player));
-    game_cameras_ = universe_->all_cameras();
+    game_cameras_.push_front(player_->camera());
     SetActiveCamera(player_->camera());
     collision_engine_ = std::move(collision_engine);
     renderer_factory_ = renderer_factory;
 }
 
-void GameLevel::SetActiveCamera(nextfloor::objects::Camera* active_camera)
+void GameLevel::SetActiveCamera(Camera* active_camera)
 {
-    std::list<nextfloor::objects::Camera*>::iterator it;
+    std::list<Camera*>::iterator it;
     for (it = game_cameras_.begin(); it != game_cameras_.end(); ++it) {
         if (*it == active_camera) {
             game_cameras_.remove(active_camera);
@@ -51,7 +51,6 @@ void GameLevel::ExecutePlayerAction(Action* command, double elapsed_time)
 {
     command->execute(player_, elapsed_time);
 }
-
 
 void GameLevel::Move()
 {
@@ -86,12 +85,29 @@ void GameLevel::MoveObjects(std::vector<nextfloor::objects::Mesh*> moving_object
 
 void GameLevel::Draw(float window_size_ratio)
 {
+    PrepareDraw(window_size_ratio);
+    Renderer(*universe_.get());
+}
+
+void GameLevel::PrepareDraw(float window_size_ratio)
+{
     auto active_camera = game_cameras_.front();
     universe_->PrepareDraw(active_camera->GetViewProjectionMatrix(window_size_ratio));
-    auto polygons = universe_->GetPolygonsReadyToDraw(*active_camera);
-    for (const auto& polygon : polygons) {
-        auto renderer = renderer_factory_->MakeCubeRenderer(polygon->texture());
-        renderer->Draw(polygon->mvp());
+}
+
+void GameLevel::Renderer(const nextfloor::objects::Mesh& mesh)
+{
+    auto active_camera = game_cameras_.front();
+    if (active_camera->IsInFieldOfView(mesh)) {
+        for (const auto& child : mesh.childs()) {
+            Renderer(*child);
+        }
+
+        auto mvps = mesh.GetModelViewProjectionsAndTextureToDraw();
+        for (const auto& [mvp, texture] : mvps) {
+            auto renderer_engine = renderer_factory_->MakeCubeRenderer(texture);
+            renderer_engine->Draw(mvp);
+        }
     }
 }
 

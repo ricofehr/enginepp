@@ -22,7 +22,7 @@ class MeshPhysicFactory : public nextfloor::objects::PhysicFactory {
 public:
     std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, float scale) const final;
     std::unique_ptr<nextfloor::objects::Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const final;
-    std::unique_ptr<nextfloor::objects::CollisionEngine> MakeCollisionEngine() const final;
+    std::unique_ptr<nextfloor::gameplay::CollisionEngine> MakeCollisionEngine() const final;
 };
 
 }  // namespace physics

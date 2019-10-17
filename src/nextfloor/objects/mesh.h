@@ -9,12 +9,11 @@
 
 #include <memory>
 #include <vector>
+#include <map>
 #include <list>
 #include <glm/glm.hpp>
 
 #include "nextfloor/objects/border.h"
-#include "nextfloor/objects/camera.h"
-
 #include "nextfloor/polygons/polygon.h"
 
 namespace nextfloor {
@@ -41,7 +40,7 @@ public:
     virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) = 0;
 
     /* Draw methods */
-    virtual std::vector<nextfloor::polygons::Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const = 0;
+    virtual std::vector<std::pair<glm::mat4, std::string>> GetModelViewProjectionsAndTextureToDraw() const = 0;
     virtual void PrepareDraw(const glm::mat4& view_projection_matrix) = 0;
 
     /* Grid placement methods */
@@ -67,7 +66,7 @@ public:
     virtual void UpdateChildPlacement(Mesh* object) = 0;
     virtual void AddMeshToGrid(Mesh* object) = 0;
     virtual void RemoveItemsToGrid(Mesh* object) = 0;
-    virtual std::vector<Mesh*> childs() = 0;
+    virtual std::vector<Mesh*> childs() const = 0;
     virtual bool hasChilds() const = 0;
     virtual bool hasNoChilds() const = 0;
     virtual std::vector<Mesh*> AllStubMeshs() = 0;
@@ -81,8 +80,6 @@ public:
     virtual glm::vec3 movement() const = 0;
     virtual float diagonal() const = 0;
     virtual Border* border() const = 0;
-    virtual Camera* camera() const = 0;
-    virtual std::list<Camera*> all_cameras() const = 0;
     virtual bool IsCamera() const = 0;
     virtual bool IsPlayer() const = 0;
 
@@ -90,8 +87,6 @@ public:
     virtual void set_parent(Mesh* parent) = 0;
     virtual void set_movement(const glm::vec3& movement) = 0;
     virtual void set_move_factor(float move_factor) = 0;
-    virtual void set_camera(std::unique_ptr<Camera> camera) = 0;
-    virtual void TransferCameraToOtherMesh(Mesh* other) = 0;
 };
 
 }  // namespace objects

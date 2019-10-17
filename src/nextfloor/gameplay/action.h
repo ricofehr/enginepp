@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_GAMEPLAY_ACTION_H_
 #define NEXTFLOOR_GAMEPLAY_ACTION_H_
 
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/gameplay/character.h"
 
 namespace nextfloor {
 
@@ -24,7 +24,7 @@ public:
     /**
      * Execute Action on target object (actor)
      */
-    virtual void execute(nextfloor::objects::Mesh* actor, double elapsed_time) = 0;
+    virtual void execute(Character* actor, double elapsed_time) = 0;
 };
 
 }  // namespace gameplay

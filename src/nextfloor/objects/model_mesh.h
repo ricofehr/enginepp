@@ -10,7 +10,6 @@
 #include "nextfloor/objects/mesh.h"
 
 #include <memory>
-#include <vector>
 #include <tbb/mutex.h>
 #include <glm/glm.hpp>
 
@@ -28,14 +27,12 @@ namespace objects {
 class ModelMesh : public Mesh {
 
 public:
-    static constexpr int kMODEL_CAMERA = 2;
-
     ~ModelMesh() override = default;
 
     friend bool operator==(const ModelMesh& o1, const ModelMesh& o2);
     friend bool operator!=(const ModelMesh& o1, const ModelMesh& o2);
 
-    std::vector<nextfloor::polygons::Polygon*> GetPolygonsReadyToDraw(const Camera& active_camera) const override;
+    std::vector<std::pair<glm::mat4, std::string>> GetModelViewProjectionsAndTextureToDraw() const override;
     std::vector<Mesh*> GetMovingObjects() override;
     std::vector<Mesh*> FindCollisionNeighbors() const final;
     std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
@@ -70,9 +67,7 @@ public:
     glm::vec3 dimension() const final { return border_->dimension(); }
     float diagonal() const final { return border_->diagonal(); }
     Grid* grid() const { return grid_.get(); }
-    Camera* camera() const final;
-    std::list<Camera*> all_cameras() const final;
-    bool IsCamera() const final { return camera_ != nullptr; }
+    bool IsCamera() const override { return false; }
     bool IsPlayer() const override { return false; }
     glm::vec3 movement() const final { return border_->movement(); }
 
@@ -101,9 +96,6 @@ public:
         }
     }
 
-    void set_camera(std::unique_ptr<Camera> camera) final { camera_ = std::move(camera); }
-    void TransferCameraToOtherMesh(Mesh* other) final;
-
     std::vector<glm::vec3> getCoordsModelMatrixComputed() const final
     {
         return border_->getCoordsModelMatrixComputed();
@@ -117,7 +109,7 @@ public:
 
     std::vector<Mesh*> AllStubMeshs() final;
 
-    std::vector<Mesh*> childs() final
+    std::vector<Mesh*> childs() const final
     {
         std::vector<Mesh*> ret_childs(0);
         for (auto& object : objects_) {
@@ -161,7 +153,6 @@ protected:
     std::vector<std::unique_ptr<Mesh>> objects_;
     std::vector<std::unique_ptr<nextfloor::polygons::Polygon>> polygons_;
     std::unique_ptr<Border> border_{nullptr};
-    std::unique_ptr<Camera> camera_{nullptr};
 
 private:
     void InitCollisionEngine();

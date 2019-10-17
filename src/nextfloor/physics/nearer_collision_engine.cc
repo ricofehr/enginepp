@@ -22,7 +22,6 @@ void NearerCollisionEngine::DetectCollision(nextfloor::objects::Mesh* target, ne
     target->UpdateObstacleIfNearer(obstacle, distance);
 }
 
-
 }  // namespace physics
 
 }  // namespace nextfloor

@@ -9,11 +9,8 @@
 
 #include <memory>
 
-#include "nextfloor/gameplay/frame_timer.h"
 #include "nextfloor/gameplay/level.h"
 #include "nextfloor/gameplay/loop.h"
-#include "nextfloor/objects/camera.h"
-#include "nextfloor/objects/mesh.h"
 
 namespace nextfloor {
 

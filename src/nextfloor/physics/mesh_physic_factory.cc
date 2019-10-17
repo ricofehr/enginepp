@@ -30,11 +30,11 @@ std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const 
     return std::make_unique<CubeBorder>(location, scale);
 }
 
-std::unique_ptr<nextfloor::objects::CollisionEngine> MeshPhysicFactory::MakeCollisionEngine() const
+std::unique_ptr<nextfloor::gameplay::CollisionEngine> MeshPhysicFactory::MakeCollisionEngine() const
 {
     using nextfloor::core::CommonServices;
 
-    std::unique_ptr<nextfloor::objects::CollisionEngine> engine_collision{nullptr};
+    std::unique_ptr<nextfloor::gameplay::CollisionEngine> engine_collision{nullptr};
 
     /* Get parallell type from config */
     int type_parallell = CommonServices::getConfig()->getParallellAlgoType();

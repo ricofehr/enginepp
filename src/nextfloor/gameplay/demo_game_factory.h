@@ -11,13 +11,13 @@
 
 #include "nextfloor/gameplay/loop.h"
 #include "nextfloor/gameplay/level.h"
+#include "nextfloor/gameplay/frame_timer.h"
 #include "nextfloor/objects/mesh.h"
-#include "nextfloor/objects/camera.h"
 
 #include "nextfloor/gameplay/hid_factory.h"
 #include "nextfloor/gameplay/renderer_factory.h"
 #include "nextfloor/objects/mesh_factory.h"
-#include "nextfloor/objects/character_factory.h"
+#include "nextfloor/gameplay/character_factory.h"
 #include "nextfloor/objects/physic_factory.h"
 
 namespace nextfloor {
@@ -34,7 +34,7 @@ public:
     DemoGameFactory(HidFactory* hid_factory,
                     RendererFactory* renderer_factory,
                     nextfloor::objects::MeshFactory* mesh_factory,
-                    nextfloor::objects::CharacterFactory* character_factory,
+                    CharacterFactory* character_factory,
                     nextfloor::objects::PhysicFactory* physic_factory);
     ~DemoGameFactory() final = default;
 
@@ -51,7 +51,7 @@ private:
     HidFactory* hid_factory_{nullptr};
     RendererFactory* renderer_factory_{nullptr};
     nextfloor::objects::MeshFactory* mesh_factory_{nullptr};
-    nextfloor::objects::CharacterFactory* character_factory_{nullptr};
+    CharacterFactory* character_factory_{nullptr};
     nextfloor::objects::PhysicFactory* physic_factory_{nullptr};
 };
 

@@ -11,11 +11,6 @@
 
 #include "nextfloor/core/common_services.h"
 
-// TODO: remove this bad dependencies !
-#include "nextfloor/polygons/mesh_polygon_factory.h"
-#include "nextfloor/physics/mesh_physic_factory.h"
-
-
 namespace nextfloor {
 
 namespace objects {
@@ -49,22 +44,13 @@ void ModelMesh::PrepareDraw(const glm::mat4& view_projection_matrix)
     });
 }
 
-std::vector<nextfloor::polygons::Polygon*> ModelMesh::GetPolygonsReadyToDraw(const Camera& active_camera) const
+std::vector<std::pair<glm::mat4, std::string>> ModelMesh::GetModelViewProjectionsAndTextureToDraw() const
 {
-    std::vector<nextfloor::polygons::Polygon*> polygons;
-
-    /* Draw meshes of current object */
-    if (active_camera.IsInFieldOfView(*this)) {
-        for (const auto& polygon : polygons_) {
-            polygons.push_back(polygon.get());
-        }
-        for (auto& object : objects_) {
-            auto object_polygons = object->GetPolygonsReadyToDraw(active_camera);
-            polygons.insert(polygons.end(), object_polygons.begin(), object_polygons.end());
-        }
+    std::vector<std::pair<glm::mat4, std::string>> mvps_with_texture;
+    for (auto& polygon : polygons_) {
+        mvps_with_texture.push_back(std::pair<glm::mat4, std::string>(polygon->mvp(), polygon->texture()));
     }
-
-    return polygons;
+    return mvps_with_texture;
 }
 
 std::vector<Mesh*> ModelMesh::GetMovingObjects()
@@ -344,36 +330,6 @@ void ModelMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)
     message << "Object::" << id() << " - Obstacle::" << obstacle.id();
     message << " - Distance::" << obstacle_distance;
     CommonServices::getLog()->WriteLine(std::move(message));
-}
-
-void ModelMesh::TransferCameraToOtherMesh(Mesh* other)
-{
-    other->set_camera(std::move(camera_));
-    camera_ = nullptr;
-}
-
-Camera* ModelMesh::camera() const
-{
-    if (camera_ == nullptr) {
-        return nullptr;
-    }
-    return camera_.get();
-}
-
-std::list<Camera*> ModelMesh::all_cameras() const
-{
-    std::list<Camera*> cameras(0);
-
-    for (const auto& object : objects_) {
-        auto child_cameras = object->all_cameras();
-        cameras.merge(child_cameras);
-    }
-
-    if (camera() != nullptr) {
-        cameras.push_back(camera());
-    }
-
-    return cameras;
 }
 
 bool ModelMesh::IsFrontPositionFilled() const

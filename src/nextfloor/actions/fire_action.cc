@@ -10,7 +10,7 @@ namespace nextfloor {
 namespace actions {
 
 /* TODO: Implement Run Execute action */
-void FireAction::execute(nextfloor::objects::Mesh* actor, double elapsed_time)
+void FireAction::execute(nextfloor::gameplay::Character* actor, double elapsed_time)
 {
     ;
 }

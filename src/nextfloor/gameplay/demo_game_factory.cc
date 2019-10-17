@@ -8,8 +8,6 @@
 #include "nextfloor/gameplay/game_level.h"
 #include "nextfloor/gameplay/game_loop.h"
 #include "nextfloor/gameplay/game_timer.h"
-#include "nextfloor/gameplay/head_camera.h"
-#include "nextfloor/gameplay/player.h"
 
 namespace nextfloor {
 
@@ -19,7 +17,7 @@ namespace gameplay {
 DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
                                  RendererFactory* renderer_factory,
                                  nextfloor::objects::MeshFactory* mesh_factory,
-                                 nextfloor::objects::CharacterFactory* character_factory,
+                                 CharacterFactory* character_factory,
                                  nextfloor::objects::PhysicFactory* physic_factory)
 {
     hid_factory_ = hid_factory;

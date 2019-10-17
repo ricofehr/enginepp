@@ -10,12 +10,12 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/mesh.h"
-#include "nextfloor/objects/camera.h"
+#include "nextfloor/gameplay/character.h"
+#include "nextfloor/gameplay/camera.h"
 
 namespace nextfloor {
 
-namespace objects {
+namespace gameplay {
 
 /**
  *  @class CharacterFactory
@@ -26,11 +26,11 @@ class CharacterFactory {
 public:
     virtual ~CharacterFactory() = default;
 
-    virtual std::unique_ptr<Mesh> MakePlayer(const glm::vec3& location) const = 0;
-    virtual std::unique_ptr<Camera> MakeCamera(Mesh* owner) const = 0;
+    virtual std::unique_ptr<Character> MakePlayer(const glm::vec3& location) const = 0;
+    virtual std::unique_ptr<Camera> MakeCamera() const = 0;
 };
 
-}  // namespace objects
+}  // namespace gameplay
 
 }  // namespace nextfloor
 

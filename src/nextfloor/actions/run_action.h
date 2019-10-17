@@ -20,7 +20,7 @@ namespace actions {
 class RunAction : public nextfloor::gameplay::Action {
 
 public:
-    void execute(nextfloor::objects::Mesh* actor, double elapsed_time) final;
+    void execute(nextfloor::gameplay::Character* actor, double elapsed_time) final;
 };
 
 }  // namespace actions

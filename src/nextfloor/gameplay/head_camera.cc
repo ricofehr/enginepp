@@ -10,13 +10,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace gameplay {
 
-HeadCamera::HeadCamera(float horizontal_angle, float vertical_angle, nextfloor::objects::Mesh* owner)
+HeadCamera::HeadCamera(float horizontal_angle, float vertical_angle, Character* owner)
 {
     owner_ = owner;
     horizontal_angle_ = horizontal_angle;
@@ -42,8 +40,6 @@ void HeadCamera::ComputeOrientation()
 
 bool HeadCamera::IsInFieldOfView(const nextfloor::objects::Mesh& target) const
 {
-    using nextfloor::core::CommonServices;
-
     /* For rooms, display always the one where we're in */
     if (target.IsInside(location())) {
         return true;
@@ -75,7 +71,6 @@ glm::mat4 HeadCamera::GetViewMatrix() const
 {
     return glm::lookAt(location(), location() + direction(), head());
 }
-
 
 }  // namespace gameplay
 
