@@ -27,7 +27,6 @@ class CubeBorder : public nextfloor::objects::Border {
 
 public:
     CubeBorder(const glm::vec3& location, const glm::vec3& scale);
-    CubeBorder(const glm::vec3& location, const glm::vec3& scale, std::vector<glm::vec3> coords);
     ~CubeBorder() final = default;
 
     CubeBorder(CubeBorder&&) = default;
