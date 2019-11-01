@@ -13,12 +13,14 @@ namespace actions {
 
 void MoveRightAction::execute(nextfloor::gameplay::Character* actor, double elapsed_time)
 {
+    assert(actor != nullptr);
+
     glm::vec3 movement = actor->movement();
-    glm::vec3 head = actor->movement();
+    auto head = movement;
     if (actor->IsCamera()) {
         auto camera = actor->camera();
         movement = camera->direction();
-        if (actor->IsPlayer()) {
+        if (elapsed_time != kFrameElapsedTime) {
             movement *= elapsed_time;
         }
         head = camera->head();

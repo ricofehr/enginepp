@@ -1,6 +1,6 @@
 /**
- *  @file fire_action.h
- *  @brief Fire action for an object in the world
+ *  @file jump_action.h
+ *  @brief Jump Action Heder file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,7 +15,7 @@ namespace actions {
 
 /**
  *  @class JumpAction
- *  @brief Implements Action (Command Pattern), generate Jump action for any object
+ *  @brief Implements Action (Command Pattern), generate Jump action for any character
  */
 class JumpAction : public nextfloor::gameplay::Action {
 

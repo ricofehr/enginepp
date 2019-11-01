@@ -9,7 +9,7 @@ namespace nextfloor {
 
 namespace actions {
 
-/* TODO: Implement Run Execute action */
+/* TODO: Implement Jump Execute action */
 void JumpAction::execute(nextfloor::gameplay::Character* actor, double elapsed_time)
 {
     ;

@@ -1,6 +1,6 @@
 /**
  *  @file action_factory.h
- *  @brief Abstract Factory Class Implementation for action part
+ *  @brief Action Factory Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,7 +15,7 @@ namespace actions {
 
 /**
  *  @class SrpiteActionFactory
- *  @brief Concrete Action Factory for player and NPJ actions
+ *  @brief Concrete Action Factory for any character (player and NPJs) actions
  */
 class SpriteActionFactory : public nextfloor::gameplay::ActionFactory {
 

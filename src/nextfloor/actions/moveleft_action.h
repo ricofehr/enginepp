@@ -1,6 +1,6 @@
 /**
- *  @file fire_action.h
- *  @brief Fire action for an object in the world
+ *  @file moveleft_action.h
+ *  @brief Move Left action Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,7 +15,7 @@ namespace actions {
 
 /**
  *  @class MoveLeftAction
- *  @brief Implements Action (Command Pattern), generate Move Left action for any object
+ *  @brief Implements Action (Command Pattern), generate Move Left action for any character
  */
 class MoveLeftAction : public nextfloor::gameplay::Action {
 

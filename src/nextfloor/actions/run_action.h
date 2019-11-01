@@ -1,6 +1,6 @@
 /**
  *  @file run_action.h
- *  @brief Run action for any object
+ *  @brief Run action Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,7 +15,7 @@ namespace actions {
 
 /**
  *  @class MoveRunAction
- *  @brief Implements Action (Command Pattern), generate Run action for any object
+ *  @brief Implements Action (Command Pattern), generate Run action for any character
  */
 class RunAction : public nextfloor::gameplay::Action {
 

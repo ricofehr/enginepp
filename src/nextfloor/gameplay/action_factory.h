@@ -1,6 +1,6 @@
 /**
  *  @file action_factory.h
- *  @brief Abstract Factory Class Implementation for action part
+ *  @brief ActionFactory Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,7 +15,7 @@ namespace gameplay {
 
 /**
  *  @class ActionFactory
- *  @brief Abstract Factory for player and NPJ actions
+ *  @brief Abstract Factory for character actions
  */
 class ActionFactory {
 

@@ -1,6 +1,6 @@
 /**
  *  @file fire_action.h
- *  @brief Fire action for an object in the world
+ *  @brief Fire action Header File
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,7 +15,7 @@ namespace actions {
 
 /**
  *  @class FireAction
- *  @brief Implements Action (Command Pattern), generate Fire action for any object
+ *  @brief Implements Action (Command Pattern), generate Fire action for any character
  */
 class FireAction : public nextfloor::gameplay::Action {
 

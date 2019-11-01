@@ -1,6 +1,6 @@
 /**
- *  @file fire_action.h
- *  @brief Fire action for an object in the world
+ *  @file moveup_action.h
+ *  @brief MoveUp Action Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,7 +15,7 @@ namespace actions {
 
 /**
  *  @class MoveUpAction
- *  @brief Implements Action (Command Pattern), generate Move Up action for any object
+ *  @brief Implements Action (Command Pattern), generate Move Up action for any character
  */
 class MoveUpAction : public nextfloor::gameplay::Action {
 

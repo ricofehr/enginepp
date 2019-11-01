@@ -1,6 +1,6 @@
 /**
  *  @file action.h
- *  @brief BaseClass Action class header
+ *  @brief BaseClass Action Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -15,16 +15,21 @@ namespace gameplay {
 
 /**
  *  @class Action
- *  @brief Action pure interface, baseclass for apply Action Pattern to player and NPJ actions
+ *  @brief Action interface, base class for apply Command Pattern to any character (player and NPJs) actions
  */
 class Action {
 
 public:
     virtual ~Action() = default;
+
     /**
      * Execute Action on target object (actor)
      */
-    virtual void execute(Character* actor, double elapsed_time) = 0;
+    virtual void execute(Character* actor, double elapsed_time = kFrameElapsedTime) = 0;
+
+protected:
+    /* Default elapsed time : frame delay */
+    static constexpr int kFrameElapsedTime = 0;
 };
 
 }  // namespace gameplay
