@@ -70,31 +70,11 @@ public:
     bool IsCamera() const override { return false; }
     bool IsPlayer() const override { return false; }
     glm::vec3 movement() const final { return border_->movement(); }
+    float move_factor() const final;
 
+    void set_move_factor(float move_factor) final;
+    void set_movement(const glm::vec3& movement) final;
     void set_parent(Mesh* parent) final { parent_ = parent; }
-    void set_movement(const glm::vec3& movement) final
-    {
-        border_->set_movement(movement);
-        for (auto& object : objects_) {
-            object->set_movement(movement);
-        }
-
-        for (auto& polygon : polygons_) {
-            polygon->set_movement(movement);
-        }
-    }
-
-    void set_move_factor(float move_factor) final
-    {
-        border_->set_move_factor(move_factor);
-        for (auto& object : objects_) {
-            object->set_move_factor(move_factor);
-        }
-
-        for (auto& polygon : polygons_) {
-            polygon->set_move_factor(move_factor);
-        }
-    }
 
     std::vector<glm::vec3> getCoordsModelMatrixComputed() const final
     {

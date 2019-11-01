@@ -308,17 +308,44 @@ void ModelMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
     tbb::mutex::scoped_lock lock_map(mutex_);
 
     /* Update obstacle and distance if lower than former */
-    if (obstacle_distance < border_->move_factor()) {
+    if (obstacle_distance < move_factor()) {
         obstacle_ = obstacle;
-        border_->set_move_factor(-obstacle_distance);
-        for (auto& polygon : polygons_) {
-            polygon->set_move_factor(-obstacle_distance);
-        }
-
+        set_move_factor(obstacle_distance);
         using nextfloor::core::CommonServices;
         if (CommonServices::getConfig()->IsCollisionDebugEnabled()) {
             LogCollision(*obstacle, obstacle_distance);
         }
+    }
+}
+
+float ModelMesh::move_factor() const
+{
+    return border_->move_factor();
+}
+
+void ModelMesh::set_movement(const glm::vec3& movement)
+{
+    border_->set_movement(movement);
+    for (auto& object : objects_) {
+        object->set_movement(movement);
+    }
+
+    for (auto& polygon : polygons_) {
+        polygon->set_movement(movement);
+    }
+}
+
+
+void ModelMesh::set_move_factor(float move_factor)
+{
+    border_->set_move_factor(-move_factor);
+
+    for (auto& object : objects_) {
+        object->set_move_factor(move_factor);
+    }
+
+    for (auto& polygon : polygons_) {
+        polygon->set_move_factor(-move_factor);
     }
 }
 

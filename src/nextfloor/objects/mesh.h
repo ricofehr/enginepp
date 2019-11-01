@@ -82,6 +82,7 @@ public:
     virtual Border* border() const = 0;
     virtual bool IsCamera() const = 0;
     virtual bool IsPlayer() const = 0;
+    virtual float move_factor() const = 0;
 
     /* Setters */
     virtual void set_parent(Mesh* parent) = 0;
