@@ -3,11 +3,11 @@
  *  @brief MOveUp Action class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/actions/moveup_action.h"
+#include "nextfloor/action/moveup_action.h"
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
 void MoveUpAction::execute(nextfloor::character::Character* actor, double elapsed_time)
 {
@@ -25,6 +25,6 @@ void MoveUpAction::execute(nextfloor::character::Character* actor, double elapse
     actor->set_movement(movement);
 }
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor

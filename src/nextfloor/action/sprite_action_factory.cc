@@ -3,19 +3,19 @@
  *  @brief Factory Class for actor actions
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/actions/sprite_action_factory.h"
+#include "nextfloor/action/sprite_action_factory.h"
 
-#include "nextfloor/actions/fire_action.h"
-#include "nextfloor/actions/jump_action.h"
-#include "nextfloor/actions/movedown_action.h"
-#include "nextfloor/actions/moveleft_action.h"
-#include "nextfloor/actions/moveright_action.h"
-#include "nextfloor/actions/moveup_action.h"
-#include "nextfloor/actions/run_action.h"
+#include "nextfloor/action/fire_action.h"
+#include "nextfloor/action/jump_action.h"
+#include "nextfloor/action/movedown_action.h"
+#include "nextfloor/action/moveleft_action.h"
+#include "nextfloor/action/moveright_action.h"
+#include "nextfloor/action/moveup_action.h"
+#include "nextfloor/action/run_action.h"
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
 std::unique_ptr<nextfloor::gameplay::Action> SpriteActionFactory::MakeFireAction() const
 {
@@ -52,6 +52,6 @@ std::unique_ptr<nextfloor::gameplay::Action> SpriteActionFactory::MakeRunAction(
     return std::make_unique<RunAction>();
 }
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor

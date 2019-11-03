@@ -3,11 +3,11 @@
  *  @brief Jump Action class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/actions/jump_action.h"
+#include "nextfloor/action/jump_action.h"
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
 /* TODO: Implement Jump Execute action */
 void JumpAction::execute(nextfloor::character::Character* actor, double elapsed_time)
@@ -15,6 +15,6 @@ void JumpAction::execute(nextfloor::character::Character* actor, double elapsed_
     ;
 }
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor

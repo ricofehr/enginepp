@@ -16,15 +16,15 @@ IF(APPLE)
     LINK_DIRECTORIES(/usr/local/lib)
 ENDIF()
 
-set(actions_SRCS
-        src/nextfloor/actions/fire_action.cc
-        src/nextfloor/actions/jump_action.cc
-        src/nextfloor/actions/movedown_action.cc
-        src/nextfloor/actions/moveleft_action.cc
-        src/nextfloor/actions/moveright_action.cc
-        src/nextfloor/actions/moveup_action.cc
-        src/nextfloor/actions/run_action.cc
-        src/nextfloor/actions/sprite_action_factory.cc)
+set(action_SRCS
+        src/nextfloor/action/fire_action.cc
+        src/nextfloor/action/jump_action.cc
+        src/nextfloor/action/movedown_action.cc
+        src/nextfloor/action/moveleft_action.cc
+        src/nextfloor/action/moveright_action.cc
+        src/nextfloor/action/moveup_action.cc
+        src/nextfloor/action/run_action.cc
+        src/nextfloor/action/sprite_action_factory.cc)
 
 set(camera_SRCS
         src/nextfloor/camera/game_camera_factory.cc
@@ -103,7 +103,7 @@ set(renderer_SRCS
         src/nextfloor/renderer/vertex_gl_shader.cc)
 
 set(nextfloor_SRCS
-        ${actions_SRCS}
+        ${action_SRCS}
         ${camera_SRCS}
         ${character_SRCS}
         ${core_SRCS}
@@ -117,15 +117,15 @@ set(nextfloor_SRCS
         ${renderer_SRCS}
         src/nextfloor.cc)
 
-set(actions_HDRS
-        src/nextfloor/actions/fire_action.h
-        src/nextfloor/actions/jump_action.h
-        src/nextfloor/actions/movedown_action.h
-        src/nextfloor/actions/moveleft_action.h
-        src/nextfloor/actions/moveright_action.h
-        src/nextfloor/actions/moveup_action.h
-        src/nextfloor/actions/run_action.h
-        src/nextfloor/actions/sprite_action_factory.h)
+set(action_HDRS
+        src/nextfloor/action/fire_action.h
+        src/nextfloor/action/jump_action.h
+        src/nextfloor/action/movedown_action.h
+        src/nextfloor/action/moveleft_action.h
+        src/nextfloor/action/moveright_action.h
+        src/nextfloor/action/moveup_action.h
+        src/nextfloor/action/run_action.h
+        src/nextfloor/action/sprite_action_factory.h)
 
 set(camera_HDRS
         src/nextfloor/camera/game_camera_factory.h
@@ -238,7 +238,7 @@ set(renderer_HDRS
         src/nextfloor/renderer/vertex_gl_shader.h)
 
 set(nextfloor_HDRS
-        ${actions_HDRS}
+        ${action_HDRS}
         ${camera_HDRS}
         ${character_HDRS}
         ${core_HDRS}

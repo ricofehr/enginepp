@@ -4,14 +4,14 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_ACTIONS_SPRITEACTIONFACTORY_H_
-#define NEXTFLOOR_ACTIONS_SPRITEACTIONFACTORY_H_
+#ifndef NEXTFLOOR_ACTION_SPRITEACTIONFACTORY_H_
+#define NEXTFLOOR_ACTION_SPRITEACTIONFACTORY_H_
 
 #include "nextfloor/gameplay/action_factory.h"
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
 /**
  *  @class SrpiteActionFactory
@@ -29,8 +29,8 @@ public:
     std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const final;
 };
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_ACTIONS_SPRITEACTIONFACTORY_H_
+#endif  // NEXTFLOOR_ACTION_SPRITEACTIONFACTORY_H_

@@ -4,14 +4,14 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_ACTIONS_FIREACTION_H_
-#define NEXTFLOOR_ACTIONS_FIREACTION_H_
+#ifndef NEXTFLOOR_ACTION_FIREACTION_H_
+#define NEXTFLOOR_ACTION_FIREACTION_H_
 
 #include "nextfloor/gameplay/action.h"
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
 /**
  *  @class FireAction
@@ -23,8 +23,8 @@ public:
     void execute(nextfloor::character::Character* actor, double elapsed_time) final;
 };
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_ACTIONS_FIREACTION_H_
+#endif  // NEXTFLOOR_ACTION_FIREACTION_H_

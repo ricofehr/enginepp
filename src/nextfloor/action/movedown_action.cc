@@ -3,13 +3,13 @@
  *  @brief MoveDown Action class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/actions/movedown_action.h"
+#include "nextfloor/action/movedown_action.h"
 
 #include <cassert>
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
 void MoveDownAction::execute(nextfloor::character::Character* actor, double elapsed_time)
 {
@@ -27,6 +27,6 @@ void MoveDownAction::execute(nextfloor::character::Character* actor, double elap
     actor->set_movement(-movement);
 }
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor

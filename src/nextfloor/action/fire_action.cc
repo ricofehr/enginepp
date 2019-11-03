@@ -3,11 +3,11 @@
  *  @brief Fire Action class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/actions/fire_action.h"
+#include "nextfloor/action/fire_action.h"
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
 /* TODO: Implement Run Execute action */
 void FireAction::execute(nextfloor::character::Character* actor, double elapsed_time)
@@ -15,6 +15,6 @@ void FireAction::execute(nextfloor::character::Character* actor, double elapsed_
     ;
 }
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor

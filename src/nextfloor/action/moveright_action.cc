@@ -1,17 +1,17 @@
 /**
- *  @file moveleft_action.cc
- *  @brief MoveLeft Action class file
+ *  @file moveright_action.cc
+ *  @brief MoveRight Action class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/actions/moveleft_action.h"
+#include "nextfloor/action/moveright_action.h"
 
 #include <glm/glm.hpp>
 
 namespace nextfloor {
 
-namespace actions {
+namespace action {
 
-void MoveLeftAction::execute(nextfloor::character::Character* actor, double elapsed_time)
+void MoveRightAction::execute(nextfloor::character::Character* actor, double elapsed_time)
 {
     assert(actor != nullptr);
 
@@ -26,11 +26,11 @@ void MoveLeftAction::execute(nextfloor::character::Character* actor, double elap
         head = camera->head();
     }
 
-    /* Left vector */
-    glm::vec3 left_movement = -glm::cross(movement, head);
-    actor->set_movement(left_movement);
+    /* Right vector */
+    glm::vec3 right_movement = glm::cross(movement, head);
+    actor->set_movement(right_movement);
 }
 
-}  // namespace actions
+}  // namespace action
 
 }  // namespace nextfloor

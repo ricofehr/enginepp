@@ -17,7 +17,7 @@
 #include "nextfloor/renderer/gl_renderer_factory.h"
 #include "nextfloor/objects/model_mesh_factory.h"
 #include "nextfloor/core/services_core_factory.h"
-#include "nextfloor/actions/sprite_action_factory.h"
+#include "nextfloor/action/sprite_action_factory.h"
 #include "nextfloor/core/common_services.h"
 
 int main(int argc, char* argv[])
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
     /* Init Factories */
     nextfloor::polygons::MeshPolygonFactory polygon_factory;
-    nextfloor::actions::SpriteActionFactory action_factory;
+    nextfloor::action::SpriteActionFactory action_factory;
     nextfloor::renderer::GlRendererFactory renderer_factory;
     nextfloor::grid::MeshGridFactory grid_factory;
     nextfloor::physics::MeshPhysicFactory physic_factory;
