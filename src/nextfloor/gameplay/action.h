@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_GAMEPLAY_ACTION_H_
 #define NEXTFLOOR_GAMEPLAY_ACTION_H_
 
-#include "nextfloor/gameplay/character.h"
+#include "nextfloor/character/character.h"
 
 namespace nextfloor {
 
@@ -25,7 +25,7 @@ public:
     /**
      * Execute Action on target object (actor)
      */
-    virtual void execute(Character* actor, double elapsed_time = kFrameElapsedTime) = 0;
+    virtual void execute(nextfloor::character::Character* actor, double elapsed_time = kFrameElapsedTime) = 0;
 
 protected:
     /* Default elapsed time : frame delay */

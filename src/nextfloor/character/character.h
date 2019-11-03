@@ -4,16 +4,16 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_GAMEPLAY_CHARACTER_H_
-#define NEXTFLOOR_GAMEPLAY_CHARACTER_H_
+#ifndef NEXTFLOOR_CHARACTER_CHARACTER_H_
+#define NEXTFLOOR_CHARACTER_CHARACTER_H_
 
 #include "nextfloor/objects/model_mesh.h"
 
-#include "nextfloor/gameplay/camera.h"
+#include "nextfloor/character/camera.h"
 
 namespace nextfloor {
 
-namespace gameplay {
+namespace character {
 
 /**
  *  @class Character
@@ -33,10 +33,15 @@ protected:
     Character& operator=(Character&&) = delete;
     Character(const Character&) = delete;
     Character& operator=(const Character&) = delete;
+
+    void reset_movement() { set_movement(glm::vec3(kNoMovement)); }
+
+private:
+    static constexpr float kNoMovement = 0.0f;
 };
 
-}  // namespace gameplay
+}  // namespace character
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_GAMEPLAY_CHARACTER_H_
+#endif  // NEXTFLOOR_CHARACTER_CHARACTER_H_

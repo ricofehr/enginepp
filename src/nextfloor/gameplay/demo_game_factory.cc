@@ -17,7 +17,7 @@ namespace gameplay {
 DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
                                  RendererFactory* renderer_factory,
                                  nextfloor::objects::MeshFactory* mesh_factory,
-                                 CharacterFactory* character_factory,
+                                 nextfloor::character::CharacterFactory* character_factory,
                                  nextfloor::objects::PhysicFactory* physic_factory)
 {
     hid_factory_ = hid_factory;

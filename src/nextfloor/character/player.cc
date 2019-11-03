@@ -4,13 +4,13 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/gameplay/player.h"
+#include "nextfloor/character/player.h"
 
 namespace nextfloor {
 
-namespace gameplay {
+namespace character {
 
-Player::Player(const glm::vec3& location, std::unique_ptr<nextfloor::objects::Border> border, std::unique_ptr<Camera> camera)
+Player::Player(std::unique_ptr<nextfloor::objects::Border> border, std::unique_ptr<Camera> camera)
 {
     border_ = std::move(border);
     camera->set_owner(this);
@@ -19,8 +19,12 @@ Player::Player(const glm::vec3& location, std::unique_ptr<nextfloor::objects::Bo
 
 void Player::MoveLocation()
 {
+    assert(border_ != nullptr);
+
     border_->ComputeNewLocation();
-    set_movement(glm::vec3(0.0f));
+
+    /* After each step, get back control to HID Device */
+    reset_movement();
 }
 
 Camera* Player::camera() const
@@ -29,6 +33,6 @@ Camera* Player::camera() const
     return camera_.get();
 }
 
-}  // namespace gameplay
+}  // namespace character
 
 }  // namespace nextfloor

@@ -20,7 +20,7 @@ namespace actions {
 class FireAction : public nextfloor::gameplay::Action {
 
 public:
-    void execute(nextfloor::gameplay::Character* actor, double elapsed_time) final;
+    void execute(nextfloor::character::Character* actor, double elapsed_time) final;
 };
 
 }  // namespace actions

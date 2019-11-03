@@ -1,21 +1,20 @@
 /**
- *  @file object_factory.h
- *  @brief Abstract Factory Class for Characters
+ *  @file character_factory.h
+ *  @brief CharacterFactory Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_OBJECTS_CHARACTERFACTORY_H_
-#define NEXTFLOOR_OBJECTS_CHARACTERFACTORY_H_
+#ifndef NEXTFLOOR_CHARACTER_CHARACTERFACTORY_H_
+#define NEXTFLOOR_CHARACTER_CHARACTERFACTORY_H_
 
 #include <memory>
 #include <glm/glm.hpp>
 
-#include "nextfloor/gameplay/character.h"
-#include "nextfloor/gameplay/camera.h"
+#include "nextfloor/character/character.h"
 
 namespace nextfloor {
 
-namespace gameplay {
+namespace character {
 
 /**
  *  @class CharacterFactory
@@ -25,13 +24,11 @@ class CharacterFactory {
 
 public:
     virtual ~CharacterFactory() = default;
-
     virtual std::unique_ptr<Character> MakePlayer(const glm::vec3& location) const = 0;
-    virtual std::unique_ptr<Camera> MakeCamera() const = 0;
 };
 
-}  // namespace gameplay
+}  // namespace character
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_OBJECTS_CHARACTERFACTORY_H_
+#endif  // NEXTFLOOR_CHARACTER_CHARACTERFACTORY_H_

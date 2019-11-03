@@ -11,7 +11,7 @@ namespace nextfloor {
 
 namespace actions {
 
-void MoveDownAction::execute(nextfloor::gameplay::Character* actor, double elapsed_time)
+void MoveDownAction::execute(nextfloor::character::Character* actor, double elapsed_time)
 {
     assert(actor != nullptr);
 

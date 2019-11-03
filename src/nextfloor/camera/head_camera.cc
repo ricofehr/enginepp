@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/gameplay/head_camera.h"
+#include "nextfloor/camera/head_camera.h"
 
 #include <math.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -12,14 +12,14 @@
 
 namespace nextfloor {
 
-namespace gameplay {
+namespace camera {
 
-HeadCamera::HeadCamera(float horizontal_angle, float vertical_angle, Character* owner)
+HeadCamera::HeadCamera(float horizontal_angle, float vertical_angle, nextfloor::character::Character* owner)
 {
     owner_ = owner;
-    horizontal_angle_ = horizontal_angle;
-    vertical_angle_ = vertical_angle;
-    fov_ = 45.0f;
+    horizontal_angle_ = glm::radians(horizontal_angle);
+    vertical_angle_ = glm::radians(vertical_angle);
+    fov_ = glm::radians(kDefaultFov);
 
     ComputeOrientation();
 }
@@ -31,11 +31,8 @@ void HeadCamera::ComputeOrientation()
     direction_[1] = sin(vertical_angle_);
     direction_[2] = cos(vertical_angle_) * cos(horizontal_angle_);
 
-    /* Right vector */
-    glm::vec3 right = glm::vec3(sin(horizontal_angle_ - 3.14f / 2.0f), 0, cos(horizontal_angle_ - 3.14f / 2.0f));
-
     /* head_ vector : perpendicular to both direction and right */
-    head_ = glm::cross(right, direction_);
+    head_ = glm::cross(right_vector(), direction_);
 }
 
 bool HeadCamera::IsInFieldOfView(const nextfloor::objects::Mesh& target) const
@@ -45,16 +42,7 @@ bool HeadCamera::IsInFieldOfView(const nextfloor::objects::Mesh& target) const
         return true;
     }
 
-    /*
-     * For nearer object, or bigger object, increase fov
-     * TODO : avoid magics numbers
-     */
-    auto vector = target.location() - location();
-    auto cos_camera_vector = glm::dot(direction(), vector) / (glm::length(direction()) * glm::length(vector));
-    float camera_fov = glm::length(vector) < 4.0f || target.diagonal() > 3.0f ? 95.0f : fov();
-
-    /* From dot product rule to known wich side is a point from an other */
-    return cos_camera_vector >= cos(camera_fov * M_PI / 180.0f);
+    return target_abs_angle(target) <= fov();
 }
 
 glm::mat4 HeadCamera::GetViewProjectionMatrix(float window_size_ratio) const
@@ -64,7 +52,7 @@ glm::mat4 HeadCamera::GetViewProjectionMatrix(float window_size_ratio) const
 
 glm::mat4 HeadCamera::GetProjectionMatrix(float window_size_ratio) const
 {
-    return glm::perspective(glm::radians(fov()), window_size_ratio, 0.1f, 300.0f);
+    return glm::perspective(fov(), window_size_ratio, kPerspectiveNear, kPerspectiveFar);
 }
 
 glm::mat4 HeadCamera::GetViewMatrix() const
@@ -72,6 +60,6 @@ glm::mat4 HeadCamera::GetViewMatrix() const
     return glm::lookAt(location(), location() + direction(), head());
 }
 
-}  // namespace gameplay
+}  // namespace camera
 
 }  // namespace nextfloor

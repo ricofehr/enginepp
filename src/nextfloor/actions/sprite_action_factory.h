@@ -1,6 +1,6 @@
 /**
- *  @file action_factory.h
- *  @brief Action Factory Header file
+ *  @file sprite_action_factory.h
+ *  @brief SpriteAction Factory Header file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 

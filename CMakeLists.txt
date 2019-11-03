@@ -26,6 +26,14 @@ set(actions_SRCS
         src/nextfloor/actions/run_action.cc
         src/nextfloor/actions/sprite_action_factory.cc)
 
+set(camera_SRCS
+        src/nextfloor/camera/game_camera_factory.cc
+        src/nextfloor/camera/head_camera.cc)
+
+set(character_SRCS
+        src/nextfloor/character/game_character_factory.cc
+        src/nextfloor/character/player.cc)
+
 set(core_SRCS
         src/nextfloor/core/common_services.cc
         src/nextfloor/core/file_config_parser.cc
@@ -36,13 +44,10 @@ set(core_SRCS
         src/nextfloor/core/terminal_log.cc)
 
 set(gameplay_SRCS
-        src/nextfloor/gameplay/game_character_factory.cc
         src/nextfloor/gameplay/demo_game_factory.cc
         src/nextfloor/gameplay/game_level.cc
         src/nextfloor/gameplay/game_loop.cc
-        src/nextfloor/gameplay/game_timer.cc
-        src/nextfloor/gameplay/head_camera.cc
-        src/nextfloor/gameplay/player.cc)
+        src/nextfloor/gameplay/game_timer.cc)
 
 set(grid_SRCS
         src/nextfloor/grid/mesh_grid_factory.cc
@@ -99,6 +104,8 @@ set(renderer_SRCS
 
 set(nextfloor_SRCS
         ${actions_SRCS}
+        ${camera_SRCS}
+        ${character_SRCS}
         ${core_SRCS}
         ${factory_SRCS}
         ${gameplay_SRCS}
@@ -120,6 +127,17 @@ set(actions_HDRS
         src/nextfloor/actions/run_action.h
         src/nextfloor/actions/sprite_action_factory.h)
 
+set(camera_HDRS
+        src/nextfloor/camera/game_camera_factory.h
+        src/nextfloor/camera/head_camera.h)
+
+set(character_HDRS
+        src/nextfloor/character/camera.h
+        src/nextfloor/character/character.h
+        src/nextfloor/character/character_factory.h
+        src/nextfloor/character/game_character_factory.h
+        src/nextfloor/character/player.h)
+
 set(core_HDRS
         src/nextfloor/core/common_services.h
         src/nextfloor/core/config_parser.h
@@ -138,24 +156,18 @@ set(core_HDRS
 set(gameplay_HDRS
         src/nextfloor/gameplay/action.h
         src/nextfloor/gameplay/action_factory.h
-        src/nextfloor/gameplay/camera.h
-        src/nextfloor/gameplay/character.h
-        src/nextfloor/gameplay/character_factory.h
         src/nextfloor/gameplay/collision_engine.h
         src/nextfloor/gameplay/demo_game_factory.h
         src/nextfloor/gameplay/frame_timer.h
-        src/nextfloor/gameplay/game_character_factory.h
         src/nextfloor/gameplay/game_factory.h
         src/nextfloor/gameplay/game_level.h
         src/nextfloor/gameplay/game_loop.h
         src/nextfloor/gameplay/game_timer.h
-        src/nextfloor/gameplay/head_camera.h
         src/nextfloor/gameplay/hid.h
         src/nextfloor/gameplay/hid_factory.h
         src/nextfloor/gameplay/input_handler.h
         src/nextfloor/gameplay/level.h
         src/nextfloor/gameplay/loop.h
-        src/nextfloor/gameplay/player.h
         src/nextfloor/gameplay/renderer_engine.h
         src/nextfloor/gameplay/renderer_factory.h
         src/nextfloor/gameplay/scene_input.h
@@ -226,10 +238,13 @@ set(renderer_HDRS
         src/nextfloor/renderer/vertex_gl_shader.h)
 
 set(nextfloor_HDRS
+        ${actions_HDRS}
+        ${camera_HDRS}
+        ${character_HDRS}
         ${core_HDRS}
-        ${factory_HDRS}
         ${gameplay_HDRS}
         ${grid_HDRS}
+        ${hid_HDRS}
         ${objects_HDRS}
         ${physics_HDRS}
         ${polygons_HDRS}

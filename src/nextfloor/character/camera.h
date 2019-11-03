@@ -4,24 +4,22 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_GAMEPLAY_CAMERA_H_
-#define NEXTFLOOR_GAMEPLAY_CAMERA_H_
+#ifndef NEXTFLOOR_CHARACTER_CAMERA_H_
+#define NEXTFLOOR_CHARACTER_CAMERA_H_
 
 #include <glm/glm.hpp>
 
+#include "nextfloor/objects/mesh.h"
+
 namespace nextfloor {
 
-namespace objects {
-class Mesh;
-}
-
-namespace gameplay {
+namespace character {
 
 class Character;
 
 /**
  *  @class Camera
- *  @brief Camera Abstract representation.\n
+ *  @brief Camera Interface
  */
 class Camera {
 
@@ -42,7 +40,7 @@ public:
     virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
 };
 
-}  // namespace gameplay
+}  // namespace character
 
 }  // namespace nextfloor
 

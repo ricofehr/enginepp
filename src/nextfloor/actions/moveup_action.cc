@@ -9,7 +9,7 @@ namespace nextfloor {
 
 namespace actions {
 
-void MoveUpAction::execute(nextfloor::gameplay::Character* actor, double elapsed_time)
+void MoveUpAction::execute(nextfloor::character::Character* actor, double elapsed_time)
 {
     assert(actor != nullptr);
 
