@@ -30,7 +30,7 @@ public:
     ~HeadCamera() final = default;
 
     void ComputeOrientation() final;
-    bool IsInFieldOfView(const nextfloor::objects::Mesh& target) const final;
+    bool IsInFieldOfView(const nextfloor::mesh::Mesh& target) const final;
     glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const final;
 
     glm::vec3 location() const final { return owner_->location(); }
@@ -62,14 +62,14 @@ private:
         return glm::vec3(sin(horizontal_angle_ - kHalfPi), 0, cos(horizontal_angle_ - kHalfPi));
     }
 
-    float target_abs_angle(const nextfloor::objects::Mesh& target) const
+    float target_abs_angle(const nextfloor::mesh::Mesh& target) const
     {
         auto vector = target_vector(target);
         /* From dot formula : a . b = ||a|| ||b|| cos a^b */
         return abs(acos(glm::dot(direction(), vector) / (glm::length(direction()) * glm::length(vector))));
     }
 
-    glm::vec3 target_vector(const nextfloor::objects::Mesh& target) const { return target.location() - location(); }
+    glm::vec3 target_vector(const nextfloor::mesh::Mesh& target) const { return target.location() - location(); }
 
     float increased_fov() const { return 4 * fov(); }
 

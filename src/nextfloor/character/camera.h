@@ -9,7 +9,7 @@
 
 #include <glm/glm.hpp>
 
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 
@@ -27,7 +27,7 @@ public:
     virtual ~Camera() = default;
 
     virtual void ComputeOrientation() = 0;
-    virtual bool IsInFieldOfView(const nextfloor::objects::Mesh& target) const = 0;
+    virtual bool IsInFieldOfView(const nextfloor::mesh::Mesh& target) const = 0;
     virtual glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const = 0;
 
     virtual glm::vec3 location() const = 0;

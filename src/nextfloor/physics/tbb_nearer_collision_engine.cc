@@ -25,7 +25,7 @@ void TbbNearerCollisionEngine::InitCollisionEngine()
     granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 }
 
-float TbbNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
+float TbbNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
     float distance(1.0f);
     auto target_border = target->border();

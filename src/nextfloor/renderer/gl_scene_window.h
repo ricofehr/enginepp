@@ -13,7 +13,7 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/mesh/mesh.h"
 #include "nextfloor/renderer/shader.h"
 #include "nextfloor/renderer/shader_factory.h"
 

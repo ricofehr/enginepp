@@ -6,11 +6,14 @@
 
 #include "nextfloor/character/player.h"
 
+#include <glm/glm.hpp>
+#include "nextfloor/playground/ground.h"
+
 namespace nextfloor {
 
 namespace character {
 
-Player::Player(std::unique_ptr<nextfloor::objects::Border> border, std::unique_ptr<Camera> camera)
+Player::Player(std::unique_ptr<nextfloor::mesh::Border> border, std::unique_ptr<Camera> camera)
 {
     border_ = std::move(border);
     camera->set_owner(this);
@@ -22,6 +25,7 @@ void Player::MoveLocation()
     assert(border_ != nullptr);
 
     border_->ComputeNewLocation();
+    parent_ = parent_->UpdateChildPlacement(this);
 
     /* After each step, get back control to HID Device */
     reset_movement();

@@ -11,7 +11,7 @@
 
 #include <tbb/mutex.h>
 
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/mesh/mesh.h"
 
 
 namespace nextfloor {
@@ -34,7 +34,7 @@ public:
     ~NearerCollisionEngine() override = default;
 
     /* Template Method : Detect if a collision exists between target and obstacle. */
-    void DetectCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) final;
+    void DetectCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 
 protected:
     NearerCollisionEngine() = default;

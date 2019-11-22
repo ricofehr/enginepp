@@ -11,11 +11,12 @@
 #include "nextfloor/character/game_character_factory.h"
 #include "nextfloor/camera/game_camera_factory.h"
 #include "nextfloor/physics/mesh_physic_factory.h"
-#include "nextfloor/polygons/mesh_polygon_factory.h"
-#include "nextfloor/grid/mesh_grid_factory.h"
+#include "nextfloor/polygon/mesh_polygon_factory.h"
+#include "nextfloor/layout/mesh_grid_factory.h"
 
 #include "nextfloor/renderer/gl_renderer_factory.h"
-#include "nextfloor/objects/model_mesh_factory.h"
+#include "nextfloor/playground/game_ground_factory.h"
+#include "nextfloor/thing/game_thing_factory.h"
 #include "nextfloor/core/services_core_factory.h"
 #include "nextfloor/action/sprite_action_factory.h"
 #include "nextfloor/core/common_services.h"
@@ -31,17 +32,18 @@ int main(int argc, char* argv[])
     CommonServices::getConfig()->ManageProgramParameters(argc, argv);
 
     /* Init Factories */
-    nextfloor::polygons::MeshPolygonFactory polygon_factory;
+    nextfloor::polygon::MeshPolygonFactory polygon_factory;
     nextfloor::action::SpriteActionFactory action_factory;
     nextfloor::renderer::GlRendererFactory renderer_factory;
-    nextfloor::grid::MeshGridFactory grid_factory;
+    nextfloor::layout::MeshGridFactory grid_factory;
     nextfloor::physics::MeshPhysicFactory physic_factory;
     nextfloor::camera::GameCameraFactory camera_factory;
     nextfloor::character::GameCharacterFactory character_factory(&camera_factory, &physic_factory);
-    nextfloor::objects::ModelMeshFactory mesh_factory(&polygon_factory, &grid_factory, &physic_factory);
+    nextfloor::thing::GameThingFactory thing_factory(&polygon_factory, &physic_factory);
+    nextfloor::playground::GameGroundFactory ground_factory(&thing_factory, &grid_factory, &physic_factory);
     nextfloor::hid::MouseHidFactory hid_factory(&action_factory, &renderer_factory);
     nextfloor::gameplay::DemoGameFactory game_factory(
-      &hid_factory, &renderer_factory, &mesh_factory, &character_factory, &physic_factory);
+      &hid_factory, &renderer_factory, &ground_factory, &thing_factory, &character_factory, &physic_factory);
 
     auto game_loop = game_factory.MakeLoop();
 

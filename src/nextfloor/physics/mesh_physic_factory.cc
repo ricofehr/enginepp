@@ -19,12 +19,12 @@ namespace nextfloor {
 
 namespace physics {
 
-std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location, float scale) const
+std::unique_ptr<nextfloor::mesh::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location, float scale) const
 {
     return MakeBorder(location, glm::vec3(scale));
 }
 
-std::unique_ptr<nextfloor::objects::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location,
+std::unique_ptr<nextfloor::mesh::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location,
                                                                           const glm::vec3& scale) const
 {
     return std::make_unique<CubeBorder>(location, scale);

@@ -9,7 +9,7 @@
 
 #include "nextfloor/physics/nearer_collision_engine.h"
 
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 
@@ -25,7 +25,7 @@ public:
     TbbNearerCollisionEngine();
     ~TbbNearerCollisionEngine() final = default;
 
-    float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) final;
+    float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 
 private:
     void InitCollisionEngine() final;

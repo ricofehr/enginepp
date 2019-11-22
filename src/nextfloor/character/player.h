@@ -24,7 +24,7 @@ class Player : public Character {
 public:
     static constexpr float kBorderScale = 0.4f;
 
-    Player(std::unique_ptr<nextfloor::objects::Border> border, std::unique_ptr<Camera> camera);
+    Player(std::unique_ptr<nextfloor::mesh::Border> border, std::unique_ptr<Camera> camera);
     ~Player() final = default;
 
     void MoveLocation() final;

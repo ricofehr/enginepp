@@ -35,7 +35,7 @@ void HeadCamera::ComputeOrientation()
     head_ = glm::cross(right_vector(), direction_);
 }
 
-bool HeadCamera::IsInFieldOfView(const nextfloor::objects::Mesh& target) const
+bool HeadCamera::IsInFieldOfView(const nextfloor::mesh::Mesh& target) const
 {
     /* For rooms, display always the one where we're in */
     if (target.IsInside(location())) {

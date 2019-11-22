@@ -49,34 +49,23 @@ set(gameplay_SRCS
         src/nextfloor/gameplay/game_loop.cc
         src/nextfloor/gameplay/game_timer.cc)
 
-set(grid_SRCS
-        src/nextfloor/grid/mesh_grid_factory.cc
-        src/nextfloor/grid/room_grid.cc
-        src/nextfloor/grid/universe_grid.cc
-        src/nextfloor/grid/wired_grid.cc
-        src/nextfloor/grid/wired_grid_box.cc)
-
 set(hid_SRCS
         src/nextfloor/hid/game_input_handler.cc
         src/nextfloor/hid/mouse_hid_factory.cc
         src/nextfloor/hid/mouse_keyboard.cc)
 
-set(objects_SRCS
-        src/nextfloor/objects/back_wall.cc
-        src/nextfloor/objects/depth_wall.cc
-        src/nextfloor/objects/floor.cc
-        src/nextfloor/objects/front_wall.cc
-        src/nextfloor/objects/left_wall.cc
-        src/nextfloor/objects/model_mesh.cc
-        src/nextfloor/objects/model_mesh_factory.cc
-        src/nextfloor/objects/right_wall.cc
-        src/nextfloor/objects/rock.cc
-        src/nextfloor/objects/roof.cc
-        src/nextfloor/objects/room.cc
-        src/nextfloor/objects/universe.cc
-        src/nextfloor/objects/wall.cc
-        src/nextfloor/objects/wall_brick.cc
-        src/nextfloor/objects/width_wall.cc)
+set(layout_SRCS
+        src/nextfloor/layout/mesh_grid_factory.cc
+        src/nextfloor/layout/room_grid.cc
+        src/nextfloor/layout/universe_grid.cc
+        src/nextfloor/layout/wired_grid.cc
+        src/nextfloor/layout/wired_grid_box.cc)
+
+set(mesh_SRCS
+        src/nextfloor/mesh/collision_mesh.cc
+        src/nextfloor/mesh/composite_mesh.cc
+        src/nextfloor/mesh/drawing_mesh.cc
+        src/nextfloor/mesh/dynamic_mesh.cc)
 
 set(physics_SRCS
         src/nextfloor/physics/cl_nearer_collision_engine.cc
@@ -86,10 +75,25 @@ set(physics_SRCS
         src/nextfloor/physics/serial_nearer_collision_engine.cc
         src/nextfloor/physics/tbb_nearer_collision_engine.cc)
 
-set(polygons_SRCS
-        src/nextfloor/polygons/cube.cc
-        src/nextfloor/polygons/mesh_polygon.cc
-        src/nextfloor/polygons/mesh_polygon_factory.cc)
+set(playground_SRCS
+        src/nextfloor/playground/back_wall.cc
+        src/nextfloor/playground/depth_wall.cc
+        src/nextfloor/playground/floor.cc
+        src/nextfloor/playground/front_wall.cc
+        src/nextfloor/playground/game_ground_factory.cc
+        src/nextfloor/playground/ground.cc
+        src/nextfloor/playground/left_wall.cc
+        src/nextfloor/playground/right_wall.cc
+        src/nextfloor/playground/roof.cc
+        src/nextfloor/playground/room.cc
+        src/nextfloor/playground/universe.cc
+        src/nextfloor/playground/wall.cc
+        src/nextfloor/playground/width_wall.cc)
+
+set(polygon_SRCS
+        src/nextfloor/polygon/cube.cc
+        src/nextfloor/polygon/mesh_polygon.cc
+        src/nextfloor/polygon/mesh_polygon_factory.cc)
 
 set(renderer_SRCS
         src/nextfloor/renderer/cube_gl_renderer_engine.cc
@@ -102,19 +106,25 @@ set(renderer_SRCS
         src/nextfloor/renderer/gl_shader_factory.cc
         src/nextfloor/renderer/vertex_gl_shader.cc)
 
+set(thing_SRCS
+        src/nextfloor/thing/game_thing_factory.cc
+        src/nextfloor/thing/rock.cc
+        src/nextfloor/thing/wall_brick.cc)
+
 set(nextfloor_SRCS
         ${action_SRCS}
         ${camera_SRCS}
         ${character_SRCS}
         ${core_SRCS}
-        ${factory_SRCS}
         ${gameplay_SRCS}
-        ${grid_SRCS}
+        ${layout_SRCS}
         ${hid_SRCS}
-        ${objects_SRCS}
+        ${mesh_SRCS}
         ${physics_SRCS}
-        ${polygons_SRCS}
+        ${playground_SRCS}
+        ${polygon_SRCS}
         ${renderer_SRCS}
+        ${thing_SRCS}
         src/nextfloor.cc)
 
 set(action_HDRS
@@ -133,6 +143,7 @@ set(camera_HDRS
 
 set(character_HDRS
         src/nextfloor/character/camera.h
+        src/nextfloor/character/camera_factory.h
         src/nextfloor/character/character.h
         src/nextfloor/character/character_factory.h
         src/nextfloor/character/game_character_factory.h
@@ -173,56 +184,61 @@ set(gameplay_HDRS
         src/nextfloor/gameplay/scene_input.h
         src/nextfloor/gameplay/scene_window.h)
 
-set(grid_HDRS
-        src/nextfloor/grid/mesh_grid_factory.h
-        src/nextfloor/grid/room_grid.h
-        src/nextfloor/grid/universe_grid.h
-        src/nextfloor/grid/wired_grid.h
-        src/nextfloor/grid/wired_grid_box.h)
-
 set(hid_HDRS
         src/nextfloor/hid/game_input_handler.h
         src/nextfloor/hid/mouse_hid_factory.h
         src/nextfloor/hid/mouse_keyboard.h)
 
-set(objects_HDRS
-        src/nextfloor/objects/back_wall.h
-        src/nextfloor/objects/border.h
-        src/nextfloor/objects/depth_wall.h
-        src/nextfloor/objects/floor.h
-        src/nextfloor/objects/front_wall.h
-        src/nextfloor/objects/grid.h
-        src/nextfloor/objects/grid_box.h
-        src/nextfloor/objects/grid_factory.h
-        src/nextfloor/objects/left_wall.h
-        src/nextfloor/objects/mesh.h
-        src/nextfloor/objects/mesh_factory.h
-        src/nextfloor/objects/model_mesh.h
-        src/nextfloor/objects/model_mesh_factory.h
-        src/nextfloor/objects/physic_factory.h
-        src/nextfloor/objects/right_wall.h
-        src/nextfloor/objects/rock.h
-        src/nextfloor/objects/roof.h
-        src/nextfloor/objects/room.h
-        src/nextfloor/objects/universe.h
-        src/nextfloor/objects/wall.h
-        src/nextfloor/objects/wall_brick.h
-        src/nextfloor/objects/width_wall.h)
+set(layout_HDRS
+        src/nextfloor/layout/mesh_grid_factory.h
+        src/nextfloor/layout/room_grid.h
+        src/nextfloor/layout/universe_grid.h
+        src/nextfloor/layout/wired_grid.h
+        src/nextfloor/layout/wired_grid_box.h)
+
+set(mesh_HDRS
+        src/nextfloor/mesh/border.h
+        src/nextfloor/mesh/collision_mesh.h
+        src/nextfloor/mesh/composite_mesh.h
+        src/nextfloor/mesh/default_mesh.h
+        src/nextfloor/mesh/drawing_mesh.h
+        src/nextfloor/mesh/dynamic_mesh.h
+        src/nextfloor/mesh/grid_box.h
+        src/nextfloor/mesh/mesh.h
+        src/nextfloor/mesh/physic_factory.h
+        src/nextfloor/mesh/polygon.h)
 
 set(physics_HDRS
         src/nextfloor/physics/cl_nearer_collision_engine.h
         src/nextfloor/physics/cube_border.h
-        src/nextfloor/physics/nearer_collision_engine.h
         src/nextfloor/physics/mesh_physic_factory.h
+        src/nextfloor/physics/nearer_collision_engine.h
         src/nextfloor/physics/serial_nearer_collision_engine.h
         src/nextfloor/physics/tbb_nearer_collision_engine.h)
 
-set(polygons_HDRS
-        src/nextfloor/polygons/cube.h
-        src/nextfloor/polygons/mesh_polygon.h
-        src/nextfloor/polygons/mesh_polygon_factory.h
-        src/nextfloor/polygons/polygon.h
-        src/nextfloor/polygons/polygon_factory.h)
+set(playground_HDRS
+        src/nextfloor/playground/back_wall.h
+        src/nextfloor/playground/depth_wall.h
+        src/nextfloor/playground/floor.h
+        src/nextfloor/playground/front_wall.h
+        src/nextfloor/playground/game_ground_factory.h
+        src/nextfloor/playground/grid.h
+        src/nextfloor/playground/grid_factory.h
+        src/nextfloor/playground/ground.h
+        src/nextfloor/playground/ground_factory.h
+        src/nextfloor/playground/left_wall.h
+        src/nextfloor/playground/right_wall.h
+        src/nextfloor/playground/roof.h
+        src/nextfloor/playground/room.h
+        src/nextfloor/playground/universe.h
+        src/nextfloor/playground/wall.h
+        src/nextfloor/playground/width_wall.h)
+
+set(polygon_HDRS
+        src/nextfloor/polygon/cube.h
+        src/nextfloor/polygon/mesh_polygon.h
+        src/nextfloor/polygon/mesh_polygon_factory.h
+        src/nextfloor/polygon/polygon_factory.h)
 
 set(renderer_HDRS
         src/nextfloor/renderer/cube_gl_renderer_engine.h
@@ -237,18 +253,27 @@ set(renderer_HDRS
         src/nextfloor/renderer/shader_factory.h
         src/nextfloor/renderer/vertex_gl_shader.h)
 
+set(thing_HDRS
+        src/nextfloor/thing/game_thing_factory.h
+        src/nextfloor/thing/rock.h
+        src/nextfloor/thing/thing.h
+        src/nextfloor/thing/thing_factory.h
+        src/nextfloor/thing/wall_brick.h)
+
 set(nextfloor_HDRS
         ${action_HDRS}
         ${camera_HDRS}
         ${character_HDRS}
         ${core_HDRS}
         ${gameplay_HDRS}
-        ${grid_HDRS}
+        ${layout_HDRS}
         ${hid_HDRS}
-        ${objects_HDRS}
+        ${mesh_HDRS}
         ${physics_HDRS}
-        ${polygons_HDRS}
-        ${renderer_HDRS})
+        ${playground_HDRS}
+        ${polygon_HDRS}
+        ${renderer_HDRS}
+        ${thing_HDRS})
 
 add_executable(nextfloor ${nextfloor_SRCS} ${nextfloor_HDRS})
 

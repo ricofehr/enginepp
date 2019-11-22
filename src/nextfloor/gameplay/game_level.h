@@ -15,7 +15,8 @@
 
 #include "nextfloor/gameplay/collision_engine.h"
 #include "nextfloor/character/character.h"
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/playground/ground.h"
+#include "nextfloor/thing/thing.h"
 #include "nextfloor/character/camera.h"
 
 
@@ -30,7 +31,7 @@ namespace gameplay {
 class GameLevel : public Level {
 
 public:
-    GameLevel(std::unique_ptr<nextfloor::objects::Mesh> universe,
+    GameLevel(std::unique_ptr<nextfloor::playground::Ground> universe,
               std::unique_ptr<nextfloor::character::Character> player,
               std::unique_ptr<CollisionEngine> collision_engine,
               RendererFactory* renderer_factory);
@@ -49,14 +50,14 @@ public:
 private:
     void SetActiveCamera(nextfloor::character::Camera* active_camera);
 
-    void DetectCollision(std::vector<nextfloor::objects::Mesh*> moving_objects);
-    void PivotCollisonOnObject(nextfloor::objects::Mesh* pivot);
-    void MoveObjects(std::vector<nextfloor::objects::Mesh*> moving_objects);
+    void DetectCollision(std::vector<nextfloor::mesh::Mesh*> moving_objects);
+    void PivotCollisonOnObject(nextfloor::mesh::Mesh* pivot);
+    void MoveObjects(std::vector<nextfloor::mesh::Mesh*> moving_objects);
 
     void PrepareDraw(float window_size_ratio);
-    void Renderer(const nextfloor::objects::Mesh& mesh);
+    void Renderer(const nextfloor::mesh::Mesh& mesh);
 
-    std::unique_ptr<nextfloor::objects::Mesh> universe_{nullptr};
+    std::unique_ptr<nextfloor::playground::Ground> universe_{nullptr};
     nextfloor::character::Character* player_{nullptr};
     std::list<nextfloor::character::Camera*> game_cameras_;
     std::unique_ptr<CollisionEngine> collision_engine_{nullptr};

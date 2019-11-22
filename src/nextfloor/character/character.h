@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_CHARACTER_CHARACTER_H_
 #define NEXTFLOOR_CHARACTER_CHARACTER_H_
 
-#include "nextfloor/objects/model_mesh.h"
+#include "nextfloor/mesh/dynamic_mesh.h"
 
 #include "nextfloor/character/camera.h"
 
@@ -19,12 +19,14 @@ namespace character {
  *  @class Character
  *  @brief Abstract class who defines moving character
  */
-class Character : public nextfloor::objects::ModelMesh {
+class Character : public nextfloor::mesh::DynamicMesh {
 
 public:
     ~Character() override = default;
 
     virtual Camera* camera() const = 0;
+
+    std::string class_name() final { return "Character"; }
 
 protected:
     Character() = default;

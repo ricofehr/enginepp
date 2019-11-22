@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_PHYSICS_CUBEBORDER_H_
 #define NEXTFLOOR_PHYSICS_CUBEBORDER_H_
 
-#include "nextfloor/objects/border.h"
+#include "nextfloor/mesh/border.h"
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -23,7 +23,7 @@ namespace physics {
  *  This border is represented by a Cube object with a Delegator scheme.\n
  *  Used for 3d objects coordinates and collision compute.
  */
-class CubeBorder : public nextfloor::objects::Border {
+class CubeBorder : public nextfloor::mesh::Border {
 
 public:
     CubeBorder(const glm::vec3& location, const glm::vec3& scale);
@@ -77,9 +77,9 @@ private:
 
     void ComputesModelMatrixCoords();
 
-    bool IsObstacleInSameWidthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
-    bool IsObstacleInSameHeightAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
-    bool IsObstacleInSameDepthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const;
+    bool IsObstacleInSameWidthAfterPartedMove(const nextfloor::mesh::Border& obstacle, float move_part) const;
+    bool IsObstacleInSameHeightAfterPartedMove(const nextfloor::mesh::Border& obstacle, float move_part) const;
+    bool IsObstacleInSameDepthAfterPartedMove(const nextfloor::mesh::Border& obstacle, float move_part) const;
 
     glm::vec3 location_{0.0f, 0.0f, 0.0f};
     glm::vec3 scale_{0.0f, 0.0f, 0.0f};
@@ -88,7 +88,7 @@ private:
     /** MOve factor with collision shape (1 -> no collision detected) */
     float move_factor_{1.0f};
 
-    // std::unique_ptr<nextfloor::objects::HiddenObject> hidden_cube_{nullptr};
+    // std::unique_ptr<nextfloor::mesh::HiddenObject> hidden_cube_{nullptr};
     std::vector<glm::vec3> coords_;
     /** Border coords in Model Matrix */
     std::vector<glm::vec3> coords_model_matrix_computed_;

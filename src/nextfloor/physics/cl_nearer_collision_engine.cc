@@ -10,7 +10,7 @@
 #include <sstream>
 #include <fstream>
 
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/mesh/mesh.h"
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -105,7 +105,7 @@ void ClNearerCollisionEngine::HandleErrorOnInit(cl::Error error)
     CommonServices::getExit()->ExitOnError();
 }
 
-float ClNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
+float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
     auto target_border = target->border();
     auto obstacle_border = obstacle->border();

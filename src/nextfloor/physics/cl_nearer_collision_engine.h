@@ -44,7 +44,7 @@ public:
     ClNearerCollisionEngine(const ClNearerCollisionEngine&) = delete;
     ClNearerCollisionEngine& operator=(const ClNearerCollisionEngine&) = delete;
 
-    float ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle) final;
+    float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 
 protected:
     void InitCollisionEngine() final;

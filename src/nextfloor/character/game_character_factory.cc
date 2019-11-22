@@ -11,8 +11,7 @@ namespace nextfloor {
 
 namespace character {
 
-GameCharacterFactory::GameCharacterFactory(CameraFactory* camera_factory,
-                                           nextfloor::objects::PhysicFactory* physic_factory)
+GameCharacterFactory::GameCharacterFactory(CameraFactory* camera_factory, nextfloor::mesh::PhysicFactory* physic_factory)
 {
     camera_factory_ = camera_factory;
     physic_factory_ = physic_factory;

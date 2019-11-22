@@ -14,7 +14,7 @@ namespace nextfloor {
 
 namespace gameplay {
 
-GameLevel::GameLevel(std::unique_ptr<nextfloor::objects::Mesh> universe,
+GameLevel::GameLevel(std::unique_ptr<nextfloor::playground::Ground> universe,
                      std::unique_ptr<nextfloor::character::Character> player,
                      std::unique_ptr<CollisionEngine> collision_engine,
                      RendererFactory* renderer_factory)
@@ -59,12 +59,12 @@ void GameLevel::Move()
     MoveObjects(moving_objects);
 }
 
-void GameLevel::DetectCollision(std::vector<nextfloor::objects::Mesh*> moving_objects)
+void GameLevel::DetectCollision(std::vector<nextfloor::mesh::Mesh*> moving_objects)
 {
     tbb::parallel_for(0, (int)moving_objects.size(), 1, [&](int i) { PivotCollisonOnObject(moving_objects[i]); });
 }
 
-void GameLevel::PivotCollisonOnObject(nextfloor::objects::Mesh* pivot)
+void GameLevel::PivotCollisonOnObject(nextfloor::mesh::Mesh* pivot)
 {
     auto test_objects = pivot->FindCollisionNeighbors();
 
@@ -74,12 +74,9 @@ void GameLevel::PivotCollisonOnObject(nextfloor::objects::Mesh* pivot)
     });
 }
 
-void GameLevel::MoveObjects(std::vector<nextfloor::objects::Mesh*> moving_objects)
+void GameLevel::MoveObjects(std::vector<nextfloor::mesh::Mesh*> moving_objects)
 {
-    tbb::parallel_for(0, (int)moving_objects.size(), 1, [&](int i) {
-        moving_objects[i]->MoveLocation();
-        moving_objects[i]->UpdateGridPlacement();
-    });
+    tbb::parallel_for(0, (int)moving_objects.size(), 1, [&](int i) { moving_objects[i]->MoveLocation(); });
 }
 
 
@@ -95,7 +92,7 @@ void GameLevel::PrepareDraw(float window_size_ratio)
     universe_->PrepareDraw(active_camera->GetViewProjectionMatrix(window_size_ratio));
 }
 
-void GameLevel::Renderer(const nextfloor::objects::Mesh& mesh)
+void GameLevel::Renderer(const nextfloor::mesh::Mesh& mesh)
 {
     for (const auto& child : mesh.childs()) {
         Renderer(*child);

@@ -12,13 +12,14 @@
 #include "nextfloor/gameplay/loop.h"
 #include "nextfloor/gameplay/level.h"
 #include "nextfloor/gameplay/frame_timer.h"
-#include "nextfloor/objects/mesh.h"
+#include "nextfloor/mesh/mesh.h"
 
 #include "nextfloor/gameplay/hid_factory.h"
 #include "nextfloor/gameplay/renderer_factory.h"
-#include "nextfloor/objects/mesh_factory.h"
+#include "nextfloor/playground/ground_factory.h"
+#include "nextfloor/thing/thing_factory.h"
 #include "nextfloor/character/character_factory.h"
-#include "nextfloor/objects/physic_factory.h"
+#include "nextfloor/mesh/physic_factory.h"
 
 namespace nextfloor {
 
@@ -33,9 +34,10 @@ class DemoGameFactory : public GameFactory {
 public:
     DemoGameFactory(HidFactory* hid_factory,
                     RendererFactory* renderer_factory,
-                    nextfloor::objects::MeshFactory* mesh_factory,
+                    nextfloor::playground::GroundFactory* ground_factory,
+                    nextfloor::thing::ThingFactory* thing_factory,
                     nextfloor::character::CharacterFactory* character_factory,
-                    nextfloor::objects::PhysicFactory* physic_factory);
+                    nextfloor::mesh::PhysicFactory* physic_factory);
     ~DemoGameFactory() final = default;
 
     std::unique_ptr<Loop> MakeLoop() const override;
@@ -44,15 +46,19 @@ public:
 private:
     std::unique_ptr<FrameTimer> MakeFrameTimer() const;
 
-    std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith3Rooms() const;
-    std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith7Rooms() const;
-    std::unique_ptr<nextfloor::objects::Mesh> GenerateUniverseWith27Rooms() const;
+    std::unique_ptr<nextfloor::playground::Ground> GenerateUniverseWith3Rooms() const;
+    std::unique_ptr<nextfloor::playground::Ground> GenerateUniverseWith7Rooms() const;
+    std::unique_ptr<nextfloor::playground::Ground> GenerateUniverseWith27Rooms() const;
+    std::unique_ptr<nextfloor::playground::Ground> GenerateRoom(glm::vec3 location,
+                                                                std::vector<glm::vec3> rocks_location,
+                                                                std::vector<glm::vec3> rocks_movement) const;
 
     HidFactory* hid_factory_{nullptr};
     RendererFactory* renderer_factory_{nullptr};
-    nextfloor::objects::MeshFactory* mesh_factory_{nullptr};
+    nextfloor::playground::GroundFactory* ground_factory_{nullptr};
+    nextfloor::thing::ThingFactory* thing_factory_{nullptr};
     nextfloor::character::CharacterFactory* character_factory_{nullptr};
-    nextfloor::objects::PhysicFactory* physic_factory_{nullptr};
+    nextfloor::mesh::PhysicFactory* physic_factory_{nullptr};
 };
 
 }  // namespace gameplay

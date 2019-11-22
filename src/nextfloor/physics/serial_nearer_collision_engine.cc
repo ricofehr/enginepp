@@ -25,7 +25,7 @@ void SerialNearerCollisionEngine::InitCollisionEngine()
     granularity_ = CommonServices::getConfig()->getCollisionGranularity();
 }
 
-float SerialNearerCollisionEngine::ComputeCollision(nextfloor::objects::Mesh* target, nextfloor::objects::Mesh* obstacle)
+float SerialNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
     auto target_border = target->border();
     auto obstacle_border = obstacle->border();

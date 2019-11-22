@@ -158,7 +158,7 @@ glm::vec3 CubeBorder::getLastPoint() const
     return last_point;
 }
 
-bool CubeBorder::IsObstacleInCollisionAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
+bool CubeBorder::IsObstacleInCollisionAfterPartedMove(const nextfloor::mesh::Border& obstacle, float move_part) const
 {
     if (!IsObstacleInSameWidthAfterPartedMove(obstacle, move_part)) {
         return false;
@@ -175,7 +175,7 @@ bool CubeBorder::IsObstacleInCollisionAfterPartedMove(const nextfloor::objects::
     return true;
 }
 
-bool CubeBorder::IsObstacleInSameWidthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
+bool CubeBorder::IsObstacleInSameWidthAfterPartedMove(const nextfloor::mesh::Border& obstacle, float move_part) const
 {
     auto current_x_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).x;
     auto obstacle_x_afer_parted_move = obstacle.RetrieveFirstPointAfterPartedMove(move_part).x;
@@ -188,7 +188,7 @@ bool CubeBorder::IsObstacleInSameWidthAfterPartedMove(const nextfloor::objects::
     return false;
 }
 
-bool CubeBorder::IsObstacleInSameHeightAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
+bool CubeBorder::IsObstacleInSameHeightAfterPartedMove(const nextfloor::mesh::Border& obstacle, float move_part) const
 {
     auto current_y_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).y;
     auto obstacle_y_afer_parted_move = obstacle.RetrieveFirstPointAfterPartedMove(move_part).y;
@@ -201,7 +201,7 @@ bool CubeBorder::IsObstacleInSameHeightAfterPartedMove(const nextfloor::objects:
     return false;
 }
 
-bool CubeBorder::IsObstacleInSameDepthAfterPartedMove(const nextfloor::objects::Border& obstacle, float move_part) const
+bool CubeBorder::IsObstacleInSameDepthAfterPartedMove(const nextfloor::mesh::Border& obstacle, float move_part) const
 {
     auto current_z_afer_parted_move = RetrieveFirstPointAfterPartedMove(move_part).z;
     auto obstacle_z_afer_parted_move = obstacle.RetrieveFirstPointAfterPartedMove(move_part).z;
