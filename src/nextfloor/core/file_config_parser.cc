@@ -14,7 +14,7 @@
 #include <sstream>
 
 #include "nextfloor/core/common_services.h"
-#include "nextfloor/physics/nearer_collision_engine.h"
+#include "nextfloor/physic/nearer_collision_engine.h"
 
 namespace nextfloor {
 
@@ -66,7 +66,7 @@ void FileConfigParser::InitDefaultValues()
 
 void FileConfigParser::SetDefaultParallellValueIfEmpty()
 {
-    using nextfloor::physics::NearerCollisionEngine;
+    using nextfloor::physic::NearerCollisionEngine;
 
     if (!IsExist("parallell")) {
         setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_SERIAL);
@@ -263,7 +263,7 @@ void FileConfigParser::ManageGranularityParameter(const std::string& parameter_n
 void FileConfigParser::ManagePrallellAlgoTypeParameter(const std::string& parameter_name,
                                                        const std::string& parameter_value)
 {
-    using nextfloor::physics::NearerCollisionEngine;
+    using nextfloor::physic::NearerCollisionEngine;
 
     if (parameter_name == "-p") {
         if (parameter_value == "serial") {
@@ -296,7 +296,7 @@ void FileConfigParser::ManageWorkerCountParameter(const std::string& parameter_n
 
 void FileConfigParser::EnsureCoherentWorkerSetting()
 {
-    using nextfloor::physics::NearerCollisionEngine;
+    using nextfloor::physic::NearerCollisionEngine;
 
     /* Disable tbb usage when serial parallel algorithm is setted */
     if (getSetting<int>("parallell") == NearerCollisionEngine::kPARALLELL_SERIAL) {

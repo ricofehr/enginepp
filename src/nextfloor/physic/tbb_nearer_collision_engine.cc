@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/physics/tbb_nearer_collision_engine.h"
+#include "nextfloor/physic/tbb_nearer_collision_engine.h"
 
 #include <tbb/tbb.h>
 
@@ -12,7 +12,7 @@
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 TbbNearerCollisionEngine::TbbNearerCollisionEngine()
 {
@@ -47,6 +47,6 @@ float TbbNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, 
     return distance;
 }
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor

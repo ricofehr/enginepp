@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_PHYSICS_CUBEBORDER_H_
-#define NEXTFLOOR_PHYSICS_CUBEBORDER_H_
+#ifndef NEXTFLOOR_PHYSIC_CUBEBORDER_H_
+#define NEXTFLOOR_PHYSIC_CUBEBORDER_H_
 
 #include "nextfloor/mesh/border.h"
 
@@ -15,7 +15,7 @@
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 /**
  *  @class CubeBorder
@@ -94,8 +94,8 @@ private:
     std::vector<glm::vec3> coords_model_matrix_computed_;
 };
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_PHYSICS_BORDER_H_
+#endif  // NEXTFLOOR_PHYSIC_BORDER_H_

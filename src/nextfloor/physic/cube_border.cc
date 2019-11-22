@@ -1,10 +1,10 @@
 /**
- *  @file border.cc
- *  @brief Border class file
+ *  @file cube_border.cc
+ *  @brief CubeBorder class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/physics/cube_border.h"
+#include "nextfloor/physic/cube_border.h"
 
 /* Need Experimental flag for transform methods */
 #define GLM_ENABLE_EXPERIMENTAL
@@ -16,7 +16,7 @@
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 namespace {
 
@@ -236,6 +236,6 @@ void CubeBorder::ComputeNewLocation()
     ComputesModelMatrixCoords();
 }
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor

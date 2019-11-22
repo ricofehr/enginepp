@@ -4,16 +4,16 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_PHYSICS_TBBNEARERCOLLISIONENGINE_H_
-#define NEXTFLOOR_PHYSICS_TBBNEARERCOLLISIONENGINE_H_
+#ifndef NEXTFLOOR_PHYSIC_TBBNEARERCOLLISIONENGINE_H_
+#define NEXTFLOOR_PHYSIC_TBBNEARERCOLLISIONENGINE_H_
 
-#include "nextfloor/physics/nearer_collision_engine.h"
+#include "nextfloor/physic/nearer_collision_engine.h"
 
 #include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 /**
  *  @class TbbNearerCollisionEngine
@@ -31,8 +31,8 @@ private:
     void InitCollisionEngine() final;
 };
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_PHYSICS_TBBNEARERCOLLISIONENGINE_H_
+#endif  // NEXTFLOOR_PHYSIC_TBBNEARERCOLLISIONENGINE_H_

@@ -5,19 +5,19 @@
  */
 
 
-#include "nextfloor/physics/mesh_physic_factory.h"
+#include "nextfloor/physic/mesh_physic_factory.h"
 
-#include "nextfloor/physics/cube_border.h"
-#include "nextfloor/physics/tbb_nearer_collision_engine.h"
-#include "nextfloor/physics/serial_nearer_collision_engine.h"
-#include "nextfloor/physics/cl_nearer_collision_engine.h"
+#include "nextfloor/physic/cube_border.h"
+#include "nextfloor/physic/tbb_nearer_collision_engine.h"
+#include "nextfloor/physic/serial_nearer_collision_engine.h"
+#include "nextfloor/physic/cl_nearer_collision_engine.h"
 
 #include "nextfloor/core/common_services.h"
 
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 std::unique_ptr<nextfloor::mesh::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location, float scale) const
 {
@@ -25,7 +25,7 @@ std::unique_ptr<nextfloor::mesh::Border> MeshPhysicFactory::MakeBorder(const glm
 }
 
 std::unique_ptr<nextfloor::mesh::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location,
-                                                                          const glm::vec3& scale) const
+                                                                       const glm::vec3& scale) const
 {
     return std::make_unique<CubeBorder>(location, scale);
 }
@@ -56,6 +56,6 @@ std::unique_ptr<nextfloor::gameplay::CollisionEngine> MeshPhysicFactory::MakeCol
     return engine_collision;
 }
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor

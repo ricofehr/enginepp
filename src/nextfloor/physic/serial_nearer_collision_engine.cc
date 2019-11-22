@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/physics/serial_nearer_collision_engine.h"
+#include "nextfloor/physic/serial_nearer_collision_engine.h"
 
 #include <tbb/tbb.h>
 
@@ -12,7 +12,7 @@
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 SerialNearerCollisionEngine::SerialNearerCollisionEngine()
 {
@@ -40,6 +40,6 @@ float SerialNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* targe
     return 1.0f;
 }
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor

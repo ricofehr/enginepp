@@ -4,14 +4,14 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_PHYSICS_MESHPHYSICFACTORY_H_
-#define NEXTFLOOR_PHYSICS_MESHPHYSICFACTORY_H_
+#ifndef NEXTFLOOR_PHYSIC_MESHPHYSICFACTORY_H_
+#define NEXTFLOOR_PHYSIC_MESHPHYSICFACTORY_H_
 
 #include "nextfloor/mesh/physic_factory.h"
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 /**
  *  @class MeshPhysicFactory
@@ -25,8 +25,8 @@ public:
     std::unique_ptr<nextfloor::gameplay::CollisionEngine> MakeCollisionEngine() const final;
 };
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_PHYSICS_MESHPHYSICFACTORY_H_
+#endif  // NEXTFLOOR_PHYSIC_MESHPHYSICFACTORY_H_

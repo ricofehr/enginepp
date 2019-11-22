@@ -4,13 +4,13 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/physics/nearer_collision_engine.h"
+#include "nextfloor/physic/nearer_collision_engine.h"
 
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 void NearerCollisionEngine::DetectCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
@@ -22,6 +22,6 @@ void NearerCollisionEngine::DetectCollision(nextfloor::mesh::Mesh* target, nextf
     target->UpdateObstacleIfNearer(obstacle, distance);
 }
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor

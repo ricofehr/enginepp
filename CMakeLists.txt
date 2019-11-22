@@ -67,13 +67,13 @@ set(mesh_SRCS
         src/nextfloor/mesh/drawing_mesh.cc
         src/nextfloor/mesh/dynamic_mesh.cc)
 
-set(physics_SRCS
-        src/nextfloor/physics/cl_nearer_collision_engine.cc
-        src/nextfloor/physics/cube_border.cc
-        src/nextfloor/physics/mesh_physic_factory.cc
-        src/nextfloor/physics/nearer_collision_engine.cc
-        src/nextfloor/physics/serial_nearer_collision_engine.cc
-        src/nextfloor/physics/tbb_nearer_collision_engine.cc)
+set(physic_SRCS
+        src/nextfloor/physic/cl_nearer_collision_engine.cc
+        src/nextfloor/physic/cube_border.cc
+        src/nextfloor/physic/mesh_physic_factory.cc
+        src/nextfloor/physic/nearer_collision_engine.cc
+        src/nextfloor/physic/serial_nearer_collision_engine.cc
+        src/nextfloor/physic/tbb_nearer_collision_engine.cc)
 
 set(playground_SRCS
         src/nextfloor/playground/back_wall.cc
@@ -120,7 +120,7 @@ set(nextfloor_SRCS
         ${layout_SRCS}
         ${hid_SRCS}
         ${mesh_SRCS}
-        ${physics_SRCS}
+        ${physic_SRCS}
         ${playground_SRCS}
         ${polygon_SRCS}
         ${renderer_SRCS}
@@ -208,13 +208,13 @@ set(mesh_HDRS
         src/nextfloor/mesh/physic_factory.h
         src/nextfloor/mesh/polygon.h)
 
-set(physics_HDRS
-        src/nextfloor/physics/cl_nearer_collision_engine.h
-        src/nextfloor/physics/cube_border.h
-        src/nextfloor/physics/mesh_physic_factory.h
-        src/nextfloor/physics/nearer_collision_engine.h
-        src/nextfloor/physics/serial_nearer_collision_engine.h
-        src/nextfloor/physics/tbb_nearer_collision_engine.h)
+set(physic_HDRS
+        src/nextfloor/physic/cl_nearer_collision_engine.h
+        src/nextfloor/physic/cube_border.h
+        src/nextfloor/physic/mesh_physic_factory.h
+        src/nextfloor/physic/nearer_collision_engine.h
+        src/nextfloor/physic/serial_nearer_collision_engine.h
+        src/nextfloor/physic/tbb_nearer_collision_engine.h)
 
 set(playground_HDRS
         src/nextfloor/playground/back_wall.h
@@ -269,7 +269,7 @@ set(nextfloor_HDRS
         ${layout_HDRS}
         ${hid_HDRS}
         ${mesh_HDRS}
-        ${physics_HDRS}
+        ${physic_HDRS}
         ${playground_HDRS}
         ${polygon_HDRS}
         ${renderer_HDRS}

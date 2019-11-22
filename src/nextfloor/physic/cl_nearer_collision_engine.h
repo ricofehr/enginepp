@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_PHYSICS_CLNEARERCOLLISIONENGINE_H_
-#define NEXTFLOOR_PHYSICS_CLNEARERCOLLISIONENGINE_H_
+#ifndef NEXTFLOOR_PHYSIC_CLNEARERCOLLISIONENGINE_H_
+#define NEXTFLOOR_PHYSIC_CLNEARERCOLLISIONENGINE_H_
 
 /* OpenCL 1.2 */
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
@@ -23,11 +23,11 @@
 #include <CL/cl2.hpp>
 #endif
 
-#include "nextfloor/physics/nearer_collision_engine.h"
+#include "nextfloor/physic/nearer_collision_engine.h"
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 /**
  *  @class ClNearerCollisionEngine
@@ -71,8 +71,8 @@ private:
     int wk_size_{32};
 };
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_PHYSICS_CLNEARERCOLLISIONENGINE_H_
+#endif  // NEXTFLOOR_PHYSIC_CLNEARERCOLLISIONENGINE_H_

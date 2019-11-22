@@ -4,7 +4,7 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/physics/cl_nearer_collision_engine.h"
+#include "nextfloor/physic/cl_nearer_collision_engine.h"
 
 #include <iostream>
 #include <sstream>
@@ -15,7 +15,7 @@
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 ClNearerCollisionEngine::ClNearerCollisionEngine()
 {
@@ -181,6 +181,6 @@ float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, n
     return ret;
 }
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor

@@ -4,8 +4,8 @@
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_PHYSICS_NEARERCOLLISIONENGINE_H_
-#define NEXTFLOOR_PHYSICS_NEARERCOLLISIONENGINE_H_
+#ifndef NEXTFLOOR_PHYSIC_NEARERCOLLISIONENGINE_H_
+#define NEXTFLOOR_PHYSIC_NEARERCOLLISIONENGINE_H_
 
 #include "nextfloor/gameplay/collision_engine.h"
 
@@ -16,7 +16,7 @@
 
 namespace nextfloor {
 
-namespace physics {
+namespace physic {
 
 /**
  *  @class NearerCollisionEngine
@@ -50,8 +50,8 @@ protected:
     int granularity_{16};
 };
 
-}  // namespace physics
+}  // namespace physic
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_PHYSICS_NEARERCOLLISIONENGINE_H_
+#endif  // NEXTFLOOR_PHYSIC_NEARERCOLLISIONENGINE_H_
