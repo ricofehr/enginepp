@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_PHYSIC_NEARERCOLLISIONENGINE_H_
 #define NEXTFLOOR_PHYSIC_NEARERCOLLISIONENGINE_H_
 
-#include "nextfloor/gameplay/collision_engine.h"
+#include "nextfloor/physic/collision_engine.h"
 
 #include <tbb/mutex.h>
 
@@ -24,7 +24,7 @@ namespace physic {
  *  Use Strategy / Template Method Patterns for this abstract class and subclasses,\n
  *  which proposes 3 differents Collision Algorithm: serial, cilkplus version and opencl version
  */
-class NearerCollisionEngine : public nextfloor::gameplay::CollisionEngine {
+class NearerCollisionEngine : public CollisionEngine {
 
 public:
     static constexpr int kPARALLELL_SERIAL = 1;

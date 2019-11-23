@@ -16,7 +16,7 @@ namespace gameplay {
 
 GameLevel::GameLevel(std::unique_ptr<nextfloor::playground::Ground> universe,
                      std::unique_ptr<nextfloor::character::Character> player,
-                     std::unique_ptr<CollisionEngine> collision_engine,
+                     std::unique_ptr<nextfloor::physic::CollisionEngine> collision_engine,
                      RendererFactory* renderer_factory)
 {
     player_ = player.get();

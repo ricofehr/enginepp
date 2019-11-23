@@ -11,18 +11,18 @@ namespace nextfloor {
 
 namespace character {
 
-GameCharacterFactory::GameCharacterFactory(CameraFactory* camera_factory, nextfloor::mesh::PhysicFactory* physic_factory)
+GameCharacterFactory::GameCharacterFactory(CameraFactory* camera_factory, nextfloor::mesh::BorderFactory* border_factory)
 {
     camera_factory_ = camera_factory;
-    physic_factory_ = physic_factory;
+    border_factory_ = border_factory;
 }
 
 std::unique_ptr<Character> GameCharacterFactory::MakePlayer(const glm::vec3& location) const
 {
-    assert(physic_factory_ != nullptr);
+    assert(border_factory_ != nullptr);
     assert(camera_factory_ != nullptr);
 
-    auto border = physic_factory_->MakeBorder(location, Player::kBorderScale);
+    auto border = border_factory_->MakeBorder(location, Player::kBorderScale);
     auto camera = camera_factory_->MakeCamera();
     return std::make_unique<Player>(std::move(border), std::move(camera));
 }

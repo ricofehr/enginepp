@@ -22,17 +22,17 @@ namespace playground {
 
 GameGroundFactory::GameGroundFactory(nextfloor::thing::ThingFactory* thing_factory,
                                      GridFactory* grid_factory,
-                                     nextfloor::mesh::PhysicFactory* physic_factory)
+                                     nextfloor::mesh::BorderFactory* border_factory)
 {
     thing_factory_ = thing_factory;
     grid_factory_ = grid_factory;
-    physic_factory_ = physic_factory;
+    border_factory_ = border_factory;
 }
 
 std::unique_ptr<Ground> GameGroundFactory::MakeUniverse(std::vector<std::unique_ptr<Ground>> rooms) const
 {
     auto grid = grid_factory_->MakeUniverseGrid(glm::vec3(0.0f));
-    auto border = physic_factory_->MakeBorder(glm::vec3(0.0f), grid->scale());
+    auto border = border_factory_->MakeBorder(glm::vec3(0.0f), grid->scale());
     return std::make_unique<Universe>(std::move(grid), std::move(border), std::move(rooms));
 }
 
@@ -40,7 +40,7 @@ std::unique_ptr<Ground> GameGroundFactory::MakeRoom(const glm::vec3& location,
                                                     std::vector<std::unique_ptr<nextfloor::mesh::DynamicMesh>> objects) const
 {
     auto grid = grid_factory_->MakeRoomGrid(location);
-    auto border = physic_factory_->MakeBorder(location, grid->scale());
+    auto border = border_factory_->MakeBorder(location, grid->scale());
 
     std::vector<std::unique_ptr<Wall>> walls;
     walls.push_back(MakeFrontWall(grid->CalculateFrontSideLocation(), grid->CalculateFrontSideBorderScale()));
@@ -55,7 +55,7 @@ std::unique_ptr<Ground> GameGroundFactory::MakeRoom(const glm::vec3& location,
 
 std::unique_ptr<Wall> GameGroundFactory::MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto border = physic_factory_->MakeBorder(location, scale);
+    auto border = border_factory_->MakeBorder(location, scale);
     auto brick_dimension = glm::vec3(FrontWall::kBRICK_WIDTH, FrontWall::kBRICK_HEIGHT, FrontWall::kBRICK_DEPTH);
     return std::make_unique<FrontWall>(
       std::move(border),
@@ -64,7 +64,7 @@ std::unique_ptr<Wall> GameGroundFactory::MakeFrontWall(const glm::vec3& location
 
 std::unique_ptr<Wall> GameGroundFactory::MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto border = physic_factory_->MakeBorder(location, scale);
+    auto border = border_factory_->MakeBorder(location, scale);
     auto brick_dimension = glm::vec3(RightWall::kBRICK_WIDTH, RightWall::kBRICK_HEIGHT, RightWall::kBRICK_DEPTH);
     return std::make_unique<RightWall>(
       std::move(border),
@@ -73,7 +73,7 @@ std::unique_ptr<Wall> GameGroundFactory::MakeRightWall(const glm::vec3& location
 
 std::unique_ptr<Wall> GameGroundFactory::MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto border = physic_factory_->MakeBorder(location, scale);
+    auto border = border_factory_->MakeBorder(location, scale);
     auto brick_dimension = glm::vec3(BackWall::kBRICK_WIDTH, BackWall::kBRICK_HEIGHT, BackWall::kBRICK_DEPTH);
     return std::make_unique<BackWall>(
       std::move(border),
@@ -82,7 +82,7 @@ std::unique_ptr<Wall> GameGroundFactory::MakeBackWall(const glm::vec3& location,
 
 std::unique_ptr<Wall> GameGroundFactory::MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto border = physic_factory_->MakeBorder(location, scale);
+    auto border = border_factory_->MakeBorder(location, scale);
     auto brick_dimension = glm::vec3(LeftWall::kBRICK_WIDTH, LeftWall::kBRICK_HEIGHT, LeftWall::kBRICK_DEPTH);
     return std::make_unique<LeftWall>(
       std::move(border),
@@ -91,7 +91,7 @@ std::unique_ptr<Wall> GameGroundFactory::MakeLeftWall(const glm::vec3& location,
 
 std::unique_ptr<Wall> GameGroundFactory::MakeFloor(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto border = physic_factory_->MakeBorder(location, scale);
+    auto border = border_factory_->MakeBorder(location, scale);
     auto brick_dimension = glm::vec3(Floor::kBRICK_WIDTH, Floor::kBRICK_HEIGHT, Floor::kBRICK_DEPTH);
     return std::make_unique<Floor>(
       std::move(border),
@@ -100,7 +100,7 @@ std::unique_ptr<Wall> GameGroundFactory::MakeFloor(const glm::vec3& location, co
 
 std::unique_ptr<Wall> GameGroundFactory::MakeRoof(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto border = physic_factory_->MakeBorder(location, scale);
+    auto border = border_factory_->MakeBorder(location, scale);
     auto brick_dimension = glm::vec3(Roof::kBRICK_WIDTH, Roof::kBRICK_HEIGHT, Roof::kBRICK_DEPTH);
     return std::make_unique<Roof>(
       std::move(border),

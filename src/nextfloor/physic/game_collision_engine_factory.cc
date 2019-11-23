@@ -1,13 +1,12 @@
 /**
- *  @file mesh_physic_factory.cc
- *  @brief Factory Class for universe objects
+ *  @file game_collision_engine_factory.cc
+ *  @brief GameCollisionEngineFactory Class File
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
 
-#include "nextfloor/physic/mesh_physic_factory.h"
+#include "nextfloor/physic/game_collision_engine_factory.h"
 
-#include "nextfloor/physic/cube_border.h"
 #include "nextfloor/physic/tbb_nearer_collision_engine.h"
 #include "nextfloor/physic/serial_nearer_collision_engine.h"
 #include "nextfloor/physic/cl_nearer_collision_engine.h"
@@ -19,22 +18,11 @@ namespace nextfloor {
 
 namespace physic {
 
-std::unique_ptr<nextfloor::mesh::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location, float scale) const
-{
-    return MakeBorder(location, glm::vec3(scale));
-}
-
-std::unique_ptr<nextfloor::mesh::Border> MeshPhysicFactory::MakeBorder(const glm::vec3& location,
-                                                                       const glm::vec3& scale) const
-{
-    return std::make_unique<CubeBorder>(location, scale);
-}
-
-std::unique_ptr<nextfloor::gameplay::CollisionEngine> MeshPhysicFactory::MakeCollisionEngine() const
+std::unique_ptr<CollisionEngine> GameCollisionEngineFactory::MakeCollisionEngine() const
 {
     using nextfloor::core::CommonServices;
 
-    std::unique_ptr<nextfloor::gameplay::CollisionEngine> engine_collision{nullptr};
+    std::unique_ptr<CollisionEngine> engine_collision{nullptr};
 
     /* Get parallell type from config */
     int type_parallell = CommonServices::getConfig()->getParallellAlgoType();

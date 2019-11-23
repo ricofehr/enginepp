@@ -19,7 +19,7 @@
 #include "nextfloor/playground/ground_factory.h"
 #include "nextfloor/thing/thing_factory.h"
 #include "nextfloor/character/character_factory.h"
-#include "nextfloor/mesh/physic_factory.h"
+#include "nextfloor/physic/collision_engine_factory.h"
 
 namespace nextfloor {
 
@@ -37,7 +37,7 @@ public:
                     nextfloor::playground::GroundFactory* ground_factory,
                     nextfloor::thing::ThingFactory* thing_factory,
                     nextfloor::character::CharacterFactory* character_factory,
-                    nextfloor::mesh::PhysicFactory* physic_factory);
+                    nextfloor::physic::CollisionEngineFactory* collision_engine_factory);
     ~DemoGameFactory() final = default;
 
     std::unique_ptr<Loop> MakeLoop() const override;
@@ -58,7 +58,7 @@ private:
     nextfloor::playground::GroundFactory* ground_factory_{nullptr};
     nextfloor::thing::ThingFactory* thing_factory_{nullptr};
     nextfloor::character::CharacterFactory* character_factory_{nullptr};
-    nextfloor::mesh::PhysicFactory* physic_factory_{nullptr};
+    nextfloor::physic::CollisionEngineFactory* collision_engine_factory_{nullptr};
 };
 
 }  // namespace gameplay

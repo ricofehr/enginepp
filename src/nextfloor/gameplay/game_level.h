@@ -13,7 +13,7 @@
 
 #include "nextfloor/gameplay/renderer_factory.h"
 
-#include "nextfloor/gameplay/collision_engine.h"
+#include "nextfloor/physic/collision_engine.h"
 #include "nextfloor/character/character.h"
 #include "nextfloor/playground/ground.h"
 #include "nextfloor/thing/thing.h"
@@ -33,7 +33,7 @@ class GameLevel : public Level {
 public:
     GameLevel(std::unique_ptr<nextfloor::playground::Ground> universe,
               std::unique_ptr<nextfloor::character::Character> player,
-              std::unique_ptr<CollisionEngine> collision_engine,
+              std::unique_ptr<nextfloor::physic::CollisionEngine> collision_engine,
               RendererFactory* renderer_factory);
     ~GameLevel() final = default;
 
@@ -60,7 +60,7 @@ private:
     std::unique_ptr<nextfloor::playground::Ground> universe_{nullptr};
     nextfloor::character::Character* player_{nullptr};
     std::list<nextfloor::character::Camera*> game_cameras_;
-    std::unique_ptr<CollisionEngine> collision_engine_{nullptr};
+    std::unique_ptr<nextfloor::physic::CollisionEngine> collision_engine_{nullptr};
     RendererFactory* renderer_factory_{nullptr};
 };
 

@@ -1,34 +1,32 @@
 /**
- *  @file physic_factory.h
- *  @brief Abstract Factory Class for Physics concept
+ *  @file border_factory.h
+ *  @brief Abstract Factory Class for Border elements
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_MESH_PHYSICFACTORY_H_
-#define NEXTFLOOR_MESH_PHYSICFACTORY_H_
+#ifndef NEXTFLOOR_MESH_BORDERFACTORY_H_
+#define NEXTFLOOR_MESH_BORDERFACTORY_H_
 
 #include <memory>
 #include <glm/glm.hpp>
 
 #include "nextfloor/mesh/border.h"
-#include "nextfloor/gameplay/collision_engine.h"
 
 namespace nextfloor {
 
 namespace mesh {
 
 /**
- *  @class PhysicFactory
- *  @brief Abstract Factory Pattern for Physics concept
+ *  @class BorderFactory
+ *  @brief Abstract Factory Pattern for Border elements
  */
-class PhysicFactory {
+class BorderFactory {
 
 public:
-    virtual ~PhysicFactory() = default;
+    virtual ~BorderFactory() = default;
 
     virtual std::unique_ptr<Border> MakeBorder(const glm::vec3& location, float scale) const = 0;
     virtual std::unique_ptr<Border> MakeBorder(const glm::vec3& location, const glm::vec3& scale) const = 0;
-    virtual std::unique_ptr<nextfloor::gameplay::CollisionEngine> MakeCollisionEngine() const = 0;
 };
 
 }  // namespace mesh

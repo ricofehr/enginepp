@@ -10,7 +10,7 @@
 #include "nextfloor/character/character_factory.h"
 
 #include "nextfloor/character/camera_factory.h"
-#include "nextfloor/mesh/physic_factory.h"
+#include "nextfloor/mesh/border_factory.h"
 
 namespace nextfloor {
 
@@ -23,14 +23,14 @@ namespace character {
 class GameCharacterFactory : public CharacterFactory {
 
 public:
-    GameCharacterFactory(CameraFactory* camera_factory, nextfloor::mesh::PhysicFactory* physic_factory);
+    GameCharacterFactory(CameraFactory* camera_factory, nextfloor::mesh::BorderFactory* border_factory);
     ~GameCharacterFactory() final = default;
 
     std::unique_ptr<Character> MakePlayer(const glm::vec3& location) const override;
 
 private:
     CameraFactory* camera_factory_{nullptr};
-    nextfloor::mesh::PhysicFactory* physic_factory_{nullptr};
+    nextfloor::mesh::BorderFactory* border_factory_{nullptr};
 };
 
 }  // namespace character

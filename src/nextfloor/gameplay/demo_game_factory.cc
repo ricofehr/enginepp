@@ -19,14 +19,14 @@ DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
                                  nextfloor::playground::GroundFactory* ground_factory,
                                  nextfloor::thing::ThingFactory* thing_factory,
                                  nextfloor::character::CharacterFactory* character_factory,
-                                 nextfloor::mesh::PhysicFactory* physic_factory)
+                                 nextfloor::physic::CollisionEngineFactory* collision_engine_factory)
 {
     hid_factory_ = hid_factory;
     renderer_factory_ = renderer_factory;
     ground_factory_ = ground_factory;
     thing_factory_ = thing_factory;
     character_factory_ = character_factory;
-    physic_factory_ = physic_factory;
+    collision_engine_factory_ = collision_engine_factory;
 }
 
 std::unique_ptr<Loop> DemoGameFactory::MakeLoop() const
@@ -49,7 +49,7 @@ std::unique_ptr<Level> DemoGameFactory::MakeLevel() const
     auto universe = GenerateUniverseWith3Rooms();
     auto player = character_factory_->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
     return std::make_unique<GameLevel>(
-      std::move(universe), std::move(player), physic_factory_->MakeCollisionEngine(), renderer_factory_);
+      std::move(universe), std::move(player), collision_engine_factory_->MakeCollisionEngine(), renderer_factory_);
 }
 
 std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateUniverseWith3Rooms() const

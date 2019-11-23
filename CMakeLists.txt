@@ -70,7 +70,8 @@ set(mesh_SRCS
 set(physic_SRCS
         src/nextfloor/physic/cl_nearer_collision_engine.cc
         src/nextfloor/physic/cube_border.cc
-        src/nextfloor/physic/mesh_physic_factory.cc
+        src/nextfloor/physic/game_collision_engine_factory.cc
+        src/nextfloor/physic/mesh_border_factory.cc
         src/nextfloor/physic/nearer_collision_engine.cc
         src/nextfloor/physic/serial_nearer_collision_engine.cc
         src/nextfloor/physic/tbb_nearer_collision_engine.cc)
@@ -167,7 +168,6 @@ set(core_HDRS
 set(gameplay_HDRS
         src/nextfloor/gameplay/action.h
         src/nextfloor/gameplay/action_factory.h
-        src/nextfloor/gameplay/collision_engine.h
         src/nextfloor/gameplay/demo_game_factory.h
         src/nextfloor/gameplay/frame_timer.h
         src/nextfloor/gameplay/game_factory.h
@@ -198,6 +198,7 @@ set(layout_HDRS
 
 set(mesh_HDRS
         src/nextfloor/mesh/border.h
+        src/nextfloor/mesh/border_factory.h
         src/nextfloor/mesh/collision_mesh.h
         src/nextfloor/mesh/composite_mesh.h
         src/nextfloor/mesh/default_mesh.h
@@ -205,13 +206,16 @@ set(mesh_HDRS
         src/nextfloor/mesh/dynamic_mesh.h
         src/nextfloor/mesh/grid_box.h
         src/nextfloor/mesh/mesh.h
-        src/nextfloor/mesh/physic_factory.h
-        src/nextfloor/mesh/polygon.h)
+        src/nextfloor/mesh/polygon.h
+        src/nextfloor/mesh/polygon_factory.h)
 
 set(physic_HDRS
         src/nextfloor/physic/cl_nearer_collision_engine.h
+        src/nextfloor/physic/collision_engine.h
+        src/nextfloor/physic/collision_engine_factory.h
         src/nextfloor/physic/cube_border.h
-        src/nextfloor/physic/mesh_physic_factory.h
+        src/nextfloor/physic/game_collision_engine_factory.h
+        src/nextfloor/physic/mesh_border_factory.h
         src/nextfloor/physic/nearer_collision_engine.h
         src/nextfloor/physic/serial_nearer_collision_engine.h
         src/nextfloor/physic/tbb_nearer_collision_engine.h)
@@ -237,8 +241,7 @@ set(playground_HDRS
 set(polygon_HDRS
         src/nextfloor/polygon/cube.h
         src/nextfloor/polygon/mesh_polygon.h
-        src/nextfloor/polygon/mesh_polygon_factory.h
-        src/nextfloor/polygon/polygon_factory.h)
+        src/nextfloor/polygon/mesh_polygon_factory.h)
 
 set(renderer_HDRS
         src/nextfloor/renderer/cube_gl_renderer_engine.h

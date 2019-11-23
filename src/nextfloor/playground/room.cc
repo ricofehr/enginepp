@@ -35,18 +35,6 @@ void Room::InitChilds(std::vector<std::unique_ptr<Wall>> walls,
     }
 }
 
-// void Room::InitChildsIntoGrid()
-// {
-//     for (auto& object : objects_) {
-//         if (object->hasNoChilds()) {
-//             object->AddIntoAscendantGrid();
-//         }
-//         else {
-//             object->InitChildsIntoGrid();
-//         }
-//     }
-// }
-
 }  // namespace playground
 
 }  // namespace nextfloor

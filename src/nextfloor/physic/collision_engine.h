@@ -11,7 +11,7 @@
 
 namespace nextfloor {
 
-namespace gameplay {
+namespace physic {
 
 /**
  *  @class EngineCollision
@@ -32,7 +32,7 @@ public:
     virtual float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) = 0;
 };
 
-}  // namespace gameplay
+}  // namespace physic
 
 }  // namespace nextfloor
 

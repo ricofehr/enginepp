@@ -12,7 +12,7 @@
 #include "nextfloor/playground/grid_factory.h"
 #include "nextfloor/playground/wall.h"
 
-#include "nextfloor/mesh/physic_factory.h"
+#include "nextfloor/mesh/border_factory.h"
 #include "nextfloor/thing/thing_factory.h"
 
 namespace nextfloor {
@@ -28,7 +28,7 @@ class GameGroundFactory : public GroundFactory {
 public:
     GameGroundFactory(nextfloor::thing::ThingFactory* thing_factory,
                       GridFactory* grid_factory,
-                      nextfloor::mesh::PhysicFactory* physic_factory);
+                      nextfloor::mesh::BorderFactory* border_factory);
     ~GameGroundFactory() final = default;
 
     std::unique_ptr<Ground> MakeUniverse(std::vector<std::unique_ptr<Ground>> rooms) const final;
@@ -45,7 +45,7 @@ private:
 
     nextfloor::thing::ThingFactory* thing_factory_;
     GridFactory* grid_factory_;
-    nextfloor::mesh::PhysicFactory* physic_factory_;
+    nextfloor::mesh::BorderFactory* border_factory_;
 };
 
 }  // namespace playground

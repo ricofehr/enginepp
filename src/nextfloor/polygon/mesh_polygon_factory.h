@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_POLYGON_MESHPOLYGONFACTORY_H_
 #define NEXTFLOOR_POLYGON_MESHPOLYGONFACTORY_H_
 
-#include "nextfloor/polygon/polygon_factory.h"
+#include "nextfloor/mesh/polygon_factory.h"
 
 namespace nextfloor {
 
@@ -17,7 +17,7 @@ namespace polygon {
  *  @class MeshFactory
  *  @brief Concret factory for Polygons
  */
-class MeshPolygonFactory : public PolygonFactory {
+class MeshPolygonFactory : public nextfloor::mesh::PolygonFactory {
 
 public:
     std::unique_ptr<nextfloor::mesh::Polygon> MakeCube(const glm::vec3& location,

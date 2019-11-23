@@ -9,9 +9,9 @@
 
 #include "nextfloor/thing/thing_factory.h"
 
-#include "nextfloor/mesh/physic_factory.h"
+#include "nextfloor/mesh/border_factory.h"
 
-#include "nextfloor/polygon/polygon_factory.h"
+#include "nextfloor/mesh/polygon_factory.h"
 
 namespace nextfloor {
 
@@ -24,7 +24,7 @@ namespace thing {
 class GameThingFactory : public ThingFactory {
 
 public:
-    GameThingFactory(nextfloor::polygon::PolygonFactory* polygon_factory, nextfloor::mesh::PhysicFactory* physic_factory);
+    GameThingFactory(nextfloor::mesh::PolygonFactory* polygon_factory, nextfloor::mesh::BorderFactory* border_factory);
     ~GameThingFactory() final = default;
 
     std::unique_ptr<Thing> MakeRock(const glm::vec3& location, const glm::vec3& movement) const final;
@@ -41,8 +41,8 @@ private:
                                          const glm::vec3& scale,
                                          const std::string& texture) const;
 
-    nextfloor::polygon::PolygonFactory* polygon_factory_;
-    nextfloor::mesh::PhysicFactory* physic_factory_;
+    nextfloor::mesh::PolygonFactory* polygon_factory_;
+    nextfloor::mesh::BorderFactory* border_factory_;
 };
 
 }  // namespace thing
