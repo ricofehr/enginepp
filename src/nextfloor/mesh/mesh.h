@@ -41,7 +41,7 @@ public:
     virtual void set_movement(const glm::vec3& movement) = 0;
     virtual void set_move_factor(float move_factor) = 0;
 
-    /* Collision methods */
+    /* Placement methods */
     virtual std::vector<Mesh*> GetMovingObjects() = 0;
     virtual bool IsLastObstacle(Mesh* obstacle) const = 0;
     virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) = 0;

@@ -202,24 +202,6 @@ bool Ground::IsTopPositionFilled() const
     return false;
 }
 
-
-// void CompositeMesh::InitChildsIntoGrid()
-// {
-//     for (auto& object : objects_) {
-//         if (object->hasChilds()) {
-//             object->InitChildsIntoGrid();
-//         }
-//         object->AddIntoAscendantGrid();
-//     }
-// }
-
-// void CompositeMesh::AddIntoAscendantGrid()
-// {
-//     assert(parent_ != nullptr);
-//     parent_->AddMeshToGrid(this);
-// }
-
-
 }  // namespace playground
 
 }  // namespace nextfloor

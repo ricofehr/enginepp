@@ -10,9 +10,8 @@ namespace nextfloor {
 
 namespace playground {
 
-BackWall::BackWall(std::unique_ptr<nextfloor::mesh::Border> border,
-                   std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks)
-      : WidthWall(std::move(border), std::move(wall_bricks))
+BackWall::BackWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks)
+      : WidthWall(std::move(wall_bricks))
 {}
 
 void BackWall::PrepareDraw(const glm::mat4& view_projection_matrix)

@@ -37,8 +37,7 @@ public:
     void AddWindow() final;
 
 protected:
-    WidthWall(std::unique_ptr<nextfloor::mesh::Border> border,
-              std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+    WidthWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
 };
 
 }  // namespace playground

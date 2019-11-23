@@ -23,8 +23,7 @@ namespace playground {
 class FrontWall : public WidthWall {
 
 public:
-    FrontWall(std::unique_ptr<nextfloor::mesh::Border> border,
-              std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+    FrontWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     ~FrontWall() final = default;
 
     void PrepareDraw(const glm::mat4& view_projection_matrix) final;

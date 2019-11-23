@@ -22,7 +22,7 @@ namespace playground {
  *  @class Wall
  *  @brief Wall : define Abstract Wall class
  */
-class Wall : public nextfloor::mesh::DrawingMesh {
+class Wall : public nextfloor::mesh::CompositeMesh {
 
 public:
     ~Wall() override = default;
@@ -32,11 +32,9 @@ public:
 
     void AddBricks(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
-    std::string class_name() final { return "Wall"; }
+    std::unique_ptr<nextfloor::mesh::Mesh> remove_child(nextfloor::mesh::Mesh* child) final;
 
-protected:
-    glm::vec3 brick_dimension_{0.0f};
-    glm::ivec3 bricks_count_{0, 0, 0};
+    std::string class_name() final { return "Wall"; }
 };
 
 }  // namespace playground

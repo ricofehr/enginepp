@@ -40,6 +40,7 @@ public:
     std::vector<Mesh*> AllStubMeshs() final;
     std::vector<Mesh*> childs() const final;
     std::vector<Mesh*> descendants() const final;
+    void PrepareDraw(const glm::mat4& view_projection_matrix) override;
 
     std::string class_name() override { return "CompositeMesh"; }
 

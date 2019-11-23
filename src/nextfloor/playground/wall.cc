@@ -20,6 +20,13 @@ std::vector<nextfloor::mesh::Mesh*> Wall::FindCollisionNeighborsOf(const Mesh& t
     return parent_->FindCollisionNeighborsOf(target);
 }
 
+std::unique_ptr<nextfloor::mesh::Mesh> Wall::remove_child(nextfloor::mesh::Mesh* child)
+{
+    child->ClearCoords();
+    return CompositeMesh::remove_child(child);
+}
+
+
 }  // namespace playground
 
 }  // namespace nextfloor

@@ -29,8 +29,7 @@ public:
     static constexpr float kBRICK_HEIGHT = 0.25f;
     static constexpr float kBRICK_DEPTH = 2.0f;
 
-    Roof(std::unique_ptr<nextfloor::mesh::Border> border,
-         std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+    Roof(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     ~Roof() final = default;
 
     void AddDoor() final;

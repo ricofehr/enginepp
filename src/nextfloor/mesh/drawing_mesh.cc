@@ -14,7 +14,7 @@ namespace mesh {
 
 void DrawingMesh::PrepareDraw(const glm::mat4& view_projection_matrix)
 {
-    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(view_projection_matrix); });
+    CompositeMesh::PrepareDraw(view_projection_matrix);
 
     tbb::parallel_for(0, static_cast<int>(polygons_.size()), 1, [&](int counter) {
         polygons_[counter]->UpdateModelViewProjectionMatrix(view_projection_matrix);

@@ -12,12 +12,8 @@ namespace nextfloor {
 
 namespace playground {
 
-Floor::Floor(std::unique_ptr<nextfloor::mesh::Border> border,
-             std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks)
+Floor::Floor(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks)
 {
-    border_ = std::move(border);
-    brick_dimension_ = glm::vec3(kBRICK_WIDTH, kBRICK_HEIGHT, kBRICK_DEPTH);
-    bricks_count_ = border_->dimension() / brick_dimension_;
     AddBricks(std::move(wall_bricks));
 }
 

@@ -30,8 +30,7 @@ public:
     static constexpr float kBRICK_HEIGHT = 0.25f;
     static constexpr float kBRICK_DEPTH = 2.0f;
 
-    Floor(std::unique_ptr<nextfloor::mesh::Border> border,
-          std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+    Floor(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     ~Floor() final = default;
 
     void AddDoor() final;

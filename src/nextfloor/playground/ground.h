@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_PLAYGROUND_GROUND_H_
 #define NEXTFLOOR_PLAYGROUND_GROUND_H_
 
-#include "nextfloor/mesh/drawing_mesh.h"
+#include "nextfloor/mesh/placement_mesh.h"
 
 #include <memory>
 
@@ -21,7 +21,7 @@ namespace playground {
  *  @class Ground
  *  @brief Ground : define Abstract Ground class
  */
-class Ground : public nextfloor::mesh::DrawingMesh {
+class Ground : public nextfloor::mesh::PlacementMesh {
 
 public:
     ~Ground() override = default;

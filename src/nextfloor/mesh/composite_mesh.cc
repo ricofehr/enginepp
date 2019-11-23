@@ -125,6 +125,12 @@ std::unique_ptr<Mesh> CompositeMesh::remove_child(Mesh* child)
     return ret;
 }
 
+void CompositeMesh::PrepareDraw(const glm::mat4& view_projection_matrix)
+{
+    tbb::parallel_for(0, (int)objects_.size(), 1, [&](int i) { objects_[i]->PrepareDraw(view_projection_matrix); });
+}
+
+
 }  // namespace mesh
 
 }  // namespace nextfloor

@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_MESH_DRAWINGMESH_H_
 #define NEXTFLOOR_MESH_DRAWINGMESH_H_
 
-#include "nextfloor/mesh/collision_mesh.h"
+#include "nextfloor/mesh/placement_mesh.h"
 
 #include <memory>
 #include <glm/glm.hpp>
@@ -22,7 +22,7 @@ namespace mesh {
  *  @class DrawingMesh
  *  @brief Abstract class who add drawning functions to a Mesh object
  */
-class DrawingMesh : public CollisionMesh {
+class DrawingMesh : public PlacementMesh {
 
 public:
     ~DrawingMesh() override = default;

@@ -62,7 +62,7 @@ set(layout_SRCS
         src/nextfloor/layout/wired_grid_box.cc)
 
 set(mesh_SRCS
-        src/nextfloor/mesh/collision_mesh.cc
+        src/nextfloor/mesh/placement_mesh.cc
         src/nextfloor/mesh/composite_mesh.cc
         src/nextfloor/mesh/drawing_mesh.cc
         src/nextfloor/mesh/dynamic_mesh.cc)
@@ -199,7 +199,7 @@ set(layout_HDRS
 set(mesh_HDRS
         src/nextfloor/mesh/border.h
         src/nextfloor/mesh/border_factory.h
-        src/nextfloor/mesh/collision_mesh.h
+        src/nextfloor/mesh/placement_mesh.h
         src/nextfloor/mesh/composite_mesh.h
         src/nextfloor/mesh/default_mesh.h
         src/nextfloor/mesh/drawing_mesh.h

@@ -1,10 +1,10 @@
 /**
- *  @file collision_mesh.cc
- *  @brief CollisionMesh class file
+ *  @file placement_mesh.cc
+ *  @brief PlacementMesh class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#include "nextfloor/mesh/collision_mesh.h"
+#include "nextfloor/mesh/placement_mesh.h"
 
 #include <sstream>
 #include <tbb/tbb.h>
@@ -15,7 +15,7 @@ namespace nextfloor {
 
 namespace mesh {
 
-std::vector<glm::ivec3> CollisionMesh::coords() const
+std::vector<glm::ivec3> PlacementMesh::coords() const
 {
     std::vector<glm::ivec3> grid_coords(0);
     for (auto& box : coords_list_) {
@@ -25,12 +25,12 @@ std::vector<glm::ivec3> CollisionMesh::coords() const
     return grid_coords;
 }
 
-bool CollisionMesh::IsLastObstacle(Mesh* obstacle) const
+bool PlacementMesh::IsLastObstacle(Mesh* obstacle) const
 {
     return obstacle_ == obstacle;
 }
 
-void CollisionMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
+void PlacementMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
 {
     tbb::mutex::scoped_lock lock_map(mutex_);
 
@@ -45,7 +45,7 @@ void CollisionMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distan
     }
 }
 
-void CollisionMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)
+void PlacementMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)
 {
     using nextfloor::core::CommonServices;
 
@@ -55,7 +55,7 @@ void CollisionMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)
     CommonServices::getLog()->WriteLine(std::move(message));
 }
 
-void CollisionMesh::delete_gridcoord(GridBox* grid_box)
+void PlacementMesh::delete_gridcoord(GridBox* grid_box)
 {
     for (int cnt = 0; cnt < coords_list_.size(); cnt++) {
         if (coords_list_[cnt] == grid_box) {
@@ -65,7 +65,7 @@ void CollisionMesh::delete_gridcoord(GridBox* grid_box)
     }
 }
 
-std::vector<Mesh*> CollisionMesh::GetMovingObjects()
+std::vector<Mesh*> PlacementMesh::GetMovingObjects()
 {
     std::vector<Mesh*> moving_objects;
 
@@ -86,12 +86,12 @@ std::vector<Mesh*> CollisionMesh::GetMovingObjects()
     return moving_objects;
 }
 
-std::vector<glm::vec3> CollisionMesh::getCoordsModelMatrixComputed() const
+std::vector<glm::vec3> PlacementMesh::getCoordsModelMatrixComputed() const
 {
     return border_->getCoordsModelMatrixComputed();
 }
 
-void CollisionMesh::ClearCoords()
+void PlacementMesh::ClearCoords()
 {
     for (auto& box : coords_list_) {
         box->remove(this);
@@ -99,7 +99,7 @@ void CollisionMesh::ClearCoords()
     }
 }
 
-std::unique_ptr<nextfloor::mesh::Mesh> CollisionMesh::remove_child(nextfloor::mesh::Mesh* child)
+std::unique_ptr<nextfloor::mesh::Mesh> PlacementMesh::remove_child(nextfloor::mesh::Mesh* child)
 {
     child->ClearCoords();
     return CompositeMesh::remove_child(child);

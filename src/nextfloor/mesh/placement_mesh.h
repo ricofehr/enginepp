@@ -1,11 +1,11 @@
 /**
- *  @file collision_mesh.h
- *  @brief CollisionMesh class header
+ *  @file placement_mesh.h
+ *  @brief PlacementMesh class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_MESH_COLLISIONMESH_H_
-#define NEXTFLOOR_MESH_COLLISIONMESH_H_
+#ifndef NEXTFLOOR_MESH_PLACEMENTMESH_H_
+#define NEXTFLOOR_MESH_PLACEMENTMESH_H_
 
 #include "nextfloor/mesh/composite_mesh.h"
 
@@ -20,13 +20,13 @@ namespace nextfloor {
 namespace mesh {
 
 /**
- *  @class CollisionMesh
+ *  @class PlacementMesh
  *  @brief Abstract class who add Border and placement box to a mesh
  */
-class CollisionMesh : public CompositeMesh {
+class PlacementMesh : public CompositeMesh {
 
 public:
-    ~CollisionMesh() override = default;
+    ~PlacementMesh() override = default;
 
     bool IsLastObstacle(Mesh* obstacle) const final;
     void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) final;
@@ -45,10 +45,10 @@ public:
     void ClearCoords() final;
     std::unique_ptr<nextfloor::mesh::Mesh> remove_child(nextfloor::mesh::Mesh* child) override;
 
-    std::string class_name() override { return "CollisionMesh"; }
+    std::string class_name() override { return "PlacementMesh"; }
 
 protected:
-    CollisionMesh() = default;
+    PlacementMesh() = default;
 
     bool IsMoved() const { return border_->IsMoved(); }
     void ResetObstacle();
@@ -67,4 +67,4 @@ private:
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_MESH_COMPOSITEMESH_H_
+#endif  // NEXTFLOOR_MESH_PLACEMENTMESH_H_

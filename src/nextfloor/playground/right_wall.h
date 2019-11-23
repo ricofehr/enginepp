@@ -23,8 +23,7 @@ namespace playground {
 class RightWall : public DepthWall {
 
 public:
-    RightWall(std::unique_ptr<nextfloor::mesh::Border> border,
-              std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+    RightWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     ~RightWall() final = default;
 
     void PrepareDraw(const glm::mat4& view_projection_matrix) final;

@@ -23,8 +23,7 @@ namespace playground {
 class LeftWall : public DepthWall {
 
 public:
-    LeftWall(std::unique_ptr<nextfloor::mesh::Border> border,
-             std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+    LeftWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     ~LeftWall() final = default;
 
     void PrepareDraw(const glm::mat4& view_projection_matrix) final;

@@ -24,8 +24,7 @@ namespace playground {
 class BackWall : public WidthWall {
 
 public:
-    BackWall(std::unique_ptr<nextfloor::mesh::Border> border,
-             std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+    BackWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     ~BackWall() final = default;
 
     void PrepareDraw(const glm::mat4& view_projection_matrix) final;
