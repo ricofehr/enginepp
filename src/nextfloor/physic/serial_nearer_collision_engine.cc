@@ -8,22 +8,11 @@
 
 #include <tbb/tbb.h>
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace physic {
 
-SerialNearerCollisionEngine::SerialNearerCollisionEngine()
-{
-    InitCollisionEngine();
-}
-
-void SerialNearerCollisionEngine::InitCollisionEngine()
-{
-    using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
-}
+SerialNearerCollisionEngine::SerialNearerCollisionEngine(int granularity) : NearerCollisionEngine(granularity) {}
 
 float SerialNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {

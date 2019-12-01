@@ -18,24 +18,19 @@ namespace nextfloor {
 
 namespace physic {
 
-std::unique_ptr<CollisionEngine> GameCollisionEngineFactory::MakeCollisionEngine() const
+std::unique_ptr<CollisionEngine> GameCollisionEngineFactory::MakeCollisionEngine(int type, int granularity) const
 {
-    using nextfloor::core::CommonServices;
-
     std::unique_ptr<CollisionEngine> engine_collision{nullptr};
 
-    /* Get parallell type from config */
-    int type_parallell = CommonServices::getConfig()->getParallellAlgoType();
-
-    switch (type_parallell) {  // clang-format off
+    switch (type) {  // clang-format off
         case NearerCollisionEngine::kPARALLELL_TBB:
-            engine_collision = std::make_unique<TbbNearerCollisionEngine>();
+            engine_collision = std::make_unique<TbbNearerCollisionEngine>(granularity);
             break;
         case NearerCollisionEngine::kPARALLELL_CL:
-            engine_collision = std::make_unique<ClNearerCollisionEngine>();
+            engine_collision = std::make_unique<ClNearerCollisionEngine>(granularity);
             break;
         default:
-            engine_collision = std::make_unique<SerialNearerCollisionEngine>();
+            engine_collision = std::make_unique<SerialNearerCollisionEngine>(granularity);
             break;
     }  // clang-format on
 

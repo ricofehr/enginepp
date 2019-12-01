@@ -6,10 +6,7 @@
 
 #include "nextfloor/mesh/placement_mesh.h"
 
-#include <sstream>
 #include <tbb/tbb.h>
-
-#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -38,21 +35,7 @@ void PlacementMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distan
     if (obstacle_distance < move_factor()) {
         obstacle_ = obstacle;
         set_move_factor(obstacle_distance);
-        using nextfloor::core::CommonServices;
-        if (CommonServices::getConfig()->IsCollisionDebugEnabled()) {
-            LogCollision(*obstacle, obstacle_distance);
-        }
     }
-}
-
-void PlacementMesh::LogCollision(const Mesh& obstacle, float obstacle_distance)
-{
-    using nextfloor::core::CommonServices;
-
-    std::ostringstream message;
-    message << "Object::" << id() << " - Obstacle::" << obstacle.id();
-    message << " - Distance::" << obstacle_distance;
-    CommonServices::getLog()->WriteLine(std::move(message));
 }
 
 void PlacementMesh::delete_gridcoord(GridBox* grid_box)

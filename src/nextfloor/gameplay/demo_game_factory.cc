@@ -9,6 +9,8 @@
 #include "nextfloor/gameplay/game_loop.h"
 #include "nextfloor/gameplay/game_timer.h"
 
+#include "nextfloor/core/common_services.h"
+
 namespace nextfloor {
 
 namespace gameplay {
@@ -48,8 +50,14 @@ std::unique_ptr<Level> DemoGameFactory::MakeLevel() const
 {
     auto universe = GenerateUniverseWith3Rooms();
     auto player = character_factory_->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
+
+    using nextfloor::core::CommonServices;
+    int granularity = CommonServices::getConfig()->getCollisionGranularity();
+    int type = CommonServices::getConfig()->getParallellAlgoType();
+    auto collision_engine = collision_engine_factory_->MakeCollisionEngine(type, granularity);
+
     return std::make_unique<GameLevel>(
-      std::move(universe), std::move(player), collision_engine_factory_->MakeCollisionEngine(), renderer_factory_);
+      std::move(universe), std::move(player), std::move(collision_engine), renderer_factory_);
 }
 
 std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateUniverseWith3Rooms() const

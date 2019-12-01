@@ -36,7 +36,7 @@ namespace physic {
 class ClNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
-    ClNearerCollisionEngine();
+    ClNearerCollisionEngine(int granularity);
     ~ClNearerCollisionEngine() final = default;
 
     ClNearerCollisionEngine(ClNearerCollisionEngine&&) = delete;
@@ -46,11 +46,8 @@ public:
 
     float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 
-protected:
-    void InitCollisionEngine() final;
-
 private:
-    void HandleErrorOnInit(cl::Error error);
+    void InitCollisionEngine();
 
     /** Opencl Kernel Object */
     cl::Kernel cl_kernel_;

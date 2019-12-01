@@ -58,7 +58,6 @@ protected:
 
 private:
     void InitCollisionEngine();
-    void LogCollision(const Mesh& obstacle, float obstacle_distance);
 
     Mesh* obstacle_{nullptr};
 };

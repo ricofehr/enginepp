@@ -37,14 +37,12 @@ public:
     void DetectCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 
 protected:
-    NearerCollisionEngine() = default;
+    NearerCollisionEngine(int granularity) { granularity_ = granularity; }
 
     NearerCollisionEngine(NearerCollisionEngine&&) = default;
     NearerCollisionEngine& operator=(NearerCollisionEngine&&) = default;
     NearerCollisionEngine(const NearerCollisionEngine&) = delete;
     NearerCollisionEngine& operator=(const NearerCollisionEngine&) = delete;
-
-    virtual void InitCollisionEngine() = 0;
 
     /* Accuracy (computes count) of NearerCollisionEngine detection */
     int granularity_{16};

@@ -22,13 +22,10 @@ namespace physic {
 class TbbNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
-    TbbNearerCollisionEngine();
+    TbbNearerCollisionEngine(int granularity);
     ~TbbNearerCollisionEngine() final = default;
 
     float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
-
-private:
-    void InitCollisionEngine() final;
 };
 
 }  // namespace physic

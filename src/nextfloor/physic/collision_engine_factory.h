@@ -24,7 +24,7 @@ class CollisionEngineFactory {
 
 public:
     virtual ~CollisionEngineFactory() = default;
-    virtual std::unique_ptr<CollisionEngine> MakeCollisionEngine() const = 0;
+    virtual std::unique_ptr<CollisionEngine> MakeCollisionEngine(int type, int granularity) const = 0;
 };
 
 }  // namespace physic

@@ -6,18 +6,13 @@
 
 #include "nextfloor/physic/cl_nearer_collision_engine.h"
 
-#include <iostream>
-#include <sstream>
 #include <fstream>
-
-#include "nextfloor/mesh/mesh.h"
-#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
 namespace physic {
 
-ClNearerCollisionEngine::ClNearerCollisionEngine()
+ClNearerCollisionEngine::ClNearerCollisionEngine(int granularity) : NearerCollisionEngine(granularity)
 {
     InitCollisionEngine();
 }
@@ -29,10 +24,6 @@ void ClNearerCollisionEngine::InitCollisionEngine()
     int max_cores = 0;
     size_t num;
 
-    using nextfloor::core::CommonServices;
-    granularity_ = CommonServices::getConfig()->getCollisionGranularity();
-
-    // try {
     /* Query for platforms */
     std::vector<cl::Platform> platforms;
     cl::Platform::get(&platforms);
@@ -89,20 +80,6 @@ void ClNearerCollisionEngine::InitCollisionEngine()
     while (num < wk_size_) {
         wk_size_ /= 2;
     }
-
-    // } catch (cl::Error error) {
-    //     HandleErrorOnInit(error);
-    // }
-}
-
-void ClNearerCollisionEngine::HandleErrorOnInit(cl::Error error)
-{
-    using nextfloor::core::CommonServices;
-
-    std::ostringstream message;
-    message << error.what() << "(" << error.err() << ")";
-    CommonServices::getLog()->WriteLine(std::move(message));
-    CommonServices::getExit()->ExitOnError();
 }
 
 float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)

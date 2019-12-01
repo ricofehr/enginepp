@@ -20,7 +20,7 @@ namespace physic {
 class GameCollisionEngineFactory : public CollisionEngineFactory {
 
 public:
-    std::unique_ptr<CollisionEngine> MakeCollisionEngine() const final;
+    std::unique_ptr<CollisionEngine> MakeCollisionEngine(int type, int granularity) const final;
 };
 
 }  // namespace physic

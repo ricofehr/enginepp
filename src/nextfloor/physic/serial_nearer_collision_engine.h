@@ -22,13 +22,10 @@ namespace physic {
 class SerialNearerCollisionEngine : public NearerCollisionEngine {
 
 public:
-    SerialNearerCollisionEngine();
+    SerialNearerCollisionEngine(int granularity);
     ~SerialNearerCollisionEngine() final = default;
 
     float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
-
-private:
-    void InitCollisionEngine() final;
 };
 
 }  // namespace physic
