@@ -55,44 +55,44 @@ std::unique_ptr<Ground> GameGroundFactory::MakeRoom(const glm::vec3& location,
 
 std::unique_ptr<Wall> GameGroundFactory::MakeFrontWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto brick_dimension = glm::vec3(FrontWall::kBRICK_WIDTH, FrontWall::kBRICK_HEIGHT, FrontWall::kBRICK_DEPTH);
+    auto brick_dimension = glm::vec3(FrontWall::kBrickWidth, FrontWall::kBrickHeight, FrontWall::kBrickDepth);
     return std::make_unique<FrontWall>(
-      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, FrontWall::kTEXTURE));
+      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, FrontWall::kTexture));
 }
 
 std::unique_ptr<Wall> GameGroundFactory::MakeRightWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto brick_dimension = glm::vec3(RightWall::kBRICK_WIDTH, RightWall::kBRICK_HEIGHT, RightWall::kBRICK_DEPTH);
+    auto brick_dimension = glm::vec3(RightWall::kBrickWidth, RightWall::kBrickHeight, RightWall::kBrickDepth);
     return std::make_unique<RightWall>(
-      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, RightWall::kTEXTURE));
+      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, RightWall::kTexture));
 }
 
 std::unique_ptr<Wall> GameGroundFactory::MakeBackWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto brick_dimension = glm::vec3(BackWall::kBRICK_WIDTH, BackWall::kBRICK_HEIGHT, BackWall::kBRICK_DEPTH);
+    auto brick_dimension = glm::vec3(BackWall::kBrickWidth, BackWall::kBrickHeight, BackWall::kBrickDepth);
     return std::make_unique<BackWall>(
-      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, BackWall::kTEXTURE));
+      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, BackWall::kTexture));
 }
 
 std::unique_ptr<Wall> GameGroundFactory::MakeLeftWall(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto brick_dimension = glm::vec3(LeftWall::kBRICK_WIDTH, LeftWall::kBRICK_HEIGHT, LeftWall::kBRICK_DEPTH);
+    auto brick_dimension = glm::vec3(LeftWall::kBrickWidth, LeftWall::kBrickHeight, LeftWall::kBrickDepth);
     return std::make_unique<LeftWall>(
-      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, LeftWall::kTEXTURE));
+      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, LeftWall::kTexture));
 }
 
 std::unique_ptr<Wall> GameGroundFactory::MakeFloor(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto brick_dimension = glm::vec3(Floor::kBRICK_WIDTH, Floor::kBRICK_HEIGHT, Floor::kBRICK_DEPTH);
+    auto brick_dimension = glm::vec3(Floor::kBrickWidth, Floor::kBrickHeight, Floor::kBrickDepth);
     return std::make_unique<Floor>(
-      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, Floor::kTEXTURE));
+      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, Floor::kTexture));
 }
 
 std::unique_ptr<Wall> GameGroundFactory::MakeRoof(const glm::vec3& location, const glm::vec3& scale) const
 {
-    auto brick_dimension = glm::vec3(Roof::kBRICK_WIDTH, Roof::kBRICK_HEIGHT, Roof::kBRICK_DEPTH);
+    auto brick_dimension = glm::vec3(Roof::kBrickWidth, Roof::kBrickHeight, Roof::kBrickDepth);
     return std::make_unique<Roof>(
-      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, Roof::kTEXTURE));
+      thing_factory_->GenerateWallBricks(location - scale, location + scale, brick_dimension, Roof::kTexture));
 }
 
 }  // namespace playground

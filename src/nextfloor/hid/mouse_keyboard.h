@@ -13,16 +13,8 @@
 
 #include "nextfloor/gameplay/scene_input.h"
 
-/**
- *  @namespace nextfloor
- *  @brief Common parent namespace
- */
 namespace nextfloor {
 
-/**
- *  @namespace hid
- *  @brief hid namespace
- */
 namespace hid {
 
 /**
@@ -32,9 +24,6 @@ namespace hid {
 class MouseKeyboard : public nextfloor::gameplay::HID {
 
 public:
-    /**
-     *  Default constructor
-     */
     MouseKeyboard(std::unique_ptr<nextfloor::gameplay::SceneInput> scene_input);
     ~MouseKeyboard() final = default;
 
@@ -43,18 +32,11 @@ public:
     MouseKeyboard(const MouseKeyboard&) = delete;
     MouseKeyboard& operator=(const MouseKeyboard&) = delete;
 
-
-    /**
-     *  Check if a button is pressed
-     *  @param  window        GL Main Window
-     *  @param  ACTION_BUTTON Button to be checked
-     *  @return               True if pressed
-     */
-    bool isPressed(int ACTION_BUTTON) final;
+    bool isPressed(int action_button) final;
 
     /**
      * Get HID Pointer angles changes
-     * @param  window GL Window
+     * @param  elapsed_time since last record
      * @return        HIDPointer struct with orientation angles changes
      */
     nextfloor::gameplay::HIDPointer RecordHIDPointer(double elapsed_time) final;
@@ -64,6 +46,9 @@ public:
     virtual bool IsCloseWindowEventOccurs() final;
 
 private:
+    static constexpr float kHidSpeed = 0.1f;
+    static constexpr int kFramesToBeReady = 10;
+
     std::unique_ptr<nextfloor::gameplay::SceneInput> scene_input_;
 };
 

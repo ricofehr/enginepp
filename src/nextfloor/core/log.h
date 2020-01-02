@@ -23,11 +23,11 @@ public:
     /*
      *  Debug Log Level
      */
-    static constexpr int kDEBUG_QUIET = 0;
-    static constexpr int kDEBUG_TEST = 1;
-    static constexpr int kDEBUG_PERF = 2;
-    static constexpr int kDEBUG_COLLISION = 3;
-    static constexpr int kDEBUG_ALL = 4;
+    static constexpr int kDebugQuiet = 0;
+    static constexpr int kDebugTest = 1;
+    static constexpr int kDebugPerf = 2;
+    static constexpr int kDebugCollision = 3;
+    static constexpr int kDebugAll = 4;
 
     virtual ~Log() = default;
 

@@ -44,6 +44,32 @@ public:
     std::unique_ptr<Level> MakeLevel() const override;
 
 private:
+    static constexpr float kPlayerLocationX = 0.0f;
+    static constexpr float kPlayerLocationY = -2.0f;
+    static constexpr float kPlayerLocationZ = 5.0f;
+
+    static constexpr float kFirstRoomLocationX = 0.0f;
+    static constexpr float kFirstRoomLocationY = 0.0f;
+    static constexpr float kFirstRoomLocationZ = 0.0f;
+
+    static constexpr float kRock1LocationX = -3.0f;
+    static constexpr float kRock1LocationY = -1.5f;
+    static constexpr float kRock1LocationZ = -4.0f;
+    static constexpr float kRock1MoveX = 0.3f;
+    static constexpr float kRock1MoveY = 0.01f;
+    static constexpr float kRock1MoveZ = 0.05f;
+
+    static constexpr float kRock2LocationX = 3.0f;
+    static constexpr float kRock2LocationY = -2.5f;
+    static constexpr float kRock2LocationZ = -5.5f;
+    static constexpr float kRock2MoveX = 0.3f;
+    static constexpr float kRock2MoveY = 0.01f;
+    static constexpr float kRock2MoveZ = 0.05f;
+
+    static constexpr float kFactor0 = -1.0f;
+    static constexpr float kFactor1 = 1.0f;
+    static constexpr float kFactorDelta = 2.0f;
+
     std::unique_ptr<FrameTimer> MakeFrameTimer() const;
 
     std::unique_ptr<nextfloor::playground::Ground> GenerateUniverseWith3Rooms() const;

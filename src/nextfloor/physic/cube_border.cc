@@ -105,24 +105,24 @@ glm::vec3 CubeBorder::getFirstPoint() const
 
     /* Add padding */
     if (first_point.x < last_point.x) {
-        first_point.x += 0.10f;
+        first_point.x += kPoinstStep;
     }
     else {
-        first_point.x -= 0.10f;
+        first_point.x -= kPoinstStep;
     }
 
     if (first_point.y < last_point.y) {
-        first_point.y += 0.10f;
+        first_point.y += kPoinstStep;
     }
     else {
-        first_point.y -= 0.10f;
+        first_point.y -= kPoinstStep;
     }
 
     if (first_point.z < last_point.z) {
-        first_point.z += 0.10f;
+        first_point.z += kPoinstStep;
     }
     else {
-        first_point.z -= 0.10f;
+        first_point.z -= kPoinstStep;
     }
 
     return first_point;
@@ -135,24 +135,24 @@ glm::vec3 CubeBorder::getLastPoint() const
 
     /* Add padding */
     if (first_point.x < last_point.x) {
-        last_point.x -= 0.10f;
+        last_point.x -= kPoinstStep;
     }
     else {
-        last_point.x += 0.10f;
+        last_point.x += kPoinstStep;
     }
 
     if (first_point.y < last_point.y) {
-        last_point.y -= 0.10f;
+        last_point.y -= kPoinstStep;
     }
     else {
-        last_point.y += 0.10f;
+        last_point.y += kPoinstStep;
     }
 
     if (first_point.z < last_point.z) {
-        last_point.z -= 0.10f;
+        last_point.z -= kPoinstStep;
     }
     else {
-        last_point.z += 0.10f;
+        last_point.z += kPoinstStep;
     }
 
     return last_point;
@@ -227,7 +227,7 @@ glm::mat4 CubeBorder::CalculateModelMatrix() const
 void CubeBorder::ComputeNewLocation()
 {
     if (!IsMoved()) {
-        set_move_factor(1.0f);
+        set_move_factor(kInitMoveFactor);
         return;
     }
 

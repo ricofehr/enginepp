@@ -24,12 +24,12 @@ public:
 
     void PollEvents() final;
     bool IsCloseWindowEventOccurs() final;
-    bool IsPressed(int ACTION_BUTTON) final;
+    bool IsPressed(int action_button) final;
     glm::vec2 GetCursorPos() final;
     void SetCursorPos(float x, float y) final;
 
 private:
-    int getKeyValueForAction(int ACTION_BUTTON);
+    int getKeyValueForAction(int action_button);
 
     GLFWwindow* glfw_window_;
 };

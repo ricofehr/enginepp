@@ -23,12 +23,12 @@ public:
     /*
      *  WiredGrid Constants For Romm Setting
      */
-    static constexpr int kWIDTH_BOXES_COUNT = 8;
-    static constexpr int kHEIGHT_BOXES_COUNT = 6;
-    static constexpr int kDEPTH_BOXES_COUNT = 8;
-    static constexpr float kBOX_WIDTH = 2.0f;
-    static constexpr float kBOX_HEIGHT = 2.0f;
-    static constexpr float kBOX_DEPTH = 2.0f;
+    static constexpr int kWidthBoxesCount = 8;
+    static constexpr int kHeightBoxesCount = 6;
+    static constexpr int kDepthBoxesCount = 8;
+    static constexpr float kBoxWidth = 2.0f;
+    static constexpr float kBoxHeight = 2.0f;
+    static constexpr float kBoxDepth = 2.0f;
 
     RoomGrid(const glm::vec3& location, std::unique_ptr<nextfloor::mesh::GridBox>*** boxes);
     ~RoomGrid() noexcept final;

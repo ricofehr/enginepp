@@ -69,7 +69,7 @@ void FileConfigParser::SetDefaultParallellValueIfEmpty()
     using nextfloor::physic::NearerCollisionEngine;
 
     if (!IsExist("parallell")) {
-        setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_SERIAL);
+        setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kParallellSerial);
     }
 }
 
@@ -267,15 +267,15 @@ void FileConfigParser::ManagePrallellAlgoTypeParameter(const std::string& parame
 
     if (parameter_name == "-p") {
         if (parameter_value == "serial") {
-            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_SERIAL);
+            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kParallellSerial);
         }
 
         if (parameter_value == "tbb") {
-            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_TBB);
+            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kParallellTbb);
         }
 
         if (parameter_value == "opencl") {
-            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kPARALLELL_CL);
+            setSetting("parallell", libconfig::Setting::TypeInt, NearerCollisionEngine::kParallellOpenCL);
         }
     }
 }
@@ -299,7 +299,7 @@ void FileConfigParser::EnsureCoherentWorkerSetting()
     using nextfloor::physic::NearerCollisionEngine;
 
     /* Disable tbb usage when serial parallel algorithm is setted */
-    if (getSetting<int>("parallell") == NearerCollisionEngine::kPARALLELL_SERIAL) {
+    if (getSetting<int>("parallell") == NearerCollisionEngine::kParallellSerial) {
         setSetting("workers_count", libconfig::Setting::TypeInt, 1);
     }
 
@@ -311,22 +311,22 @@ void FileConfigParser::EnsureCoherentWorkerSetting()
 
 bool FileConfigParser::IsCollisionDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_COLLISION;
+    return getDebugLevel() >= CommonServices::getLog()->kDebugCollision;
 }
 
 bool FileConfigParser::IsTestDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_TEST;
+    return getDebugLevel() >= CommonServices::getLog()->kDebugTest;
 }
 
 bool FileConfigParser::IsAllDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_ALL;
+    return getDebugLevel() >= CommonServices::getLog()->kDebugAll;
 }
 
 bool FileConfigParser::IsPerfDebugEnabled() const
 {
-    return getDebugLevel() >= CommonServices::getLog()->kDEBUG_PERF;
+    return getDebugLevel() >= CommonServices::getLog()->kDebugPerf;
 }
 
 FileConfigParser::~FileConfigParser() noexcept

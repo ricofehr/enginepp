@@ -17,13 +17,10 @@ IF(APPLE)
 ENDIF()
 
 set(action_SRCS
-        src/nextfloor/action/fire_action.cc
-        src/nextfloor/action/jump_action.cc
         src/nextfloor/action/movedown_action.cc
         src/nextfloor/action/moveleft_action.cc
         src/nextfloor/action/moveright_action.cc
         src/nextfloor/action/moveup_action.cc
-        src/nextfloor/action/run_action.cc
         src/nextfloor/action/sprite_action_factory.cc)
 
 set(camera_SRCS
@@ -129,13 +126,10 @@ set(nextfloor_SRCS
         src/nextfloor.cc)
 
 set(action_HDRS
-        src/nextfloor/action/fire_action.h
-        src/nextfloor/action/jump_action.h
         src/nextfloor/action/movedown_action.h
         src/nextfloor/action/moveleft_action.h
         src/nextfloor/action/moveright_action.h
         src/nextfloor/action/moveup_action.h
-        src/nextfloor/action/run_action.h
         src/nextfloor/action/sprite_action_factory.h)
 
 set(camera_HDRS

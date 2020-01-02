@@ -20,13 +20,10 @@ namespace action {
 class SpriteActionFactory : public nextfloor::gameplay::ActionFactory {
 
 public:
-    std::unique_ptr<nextfloor::gameplay::Action> MakeFireAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const final;
     std::unique_ptr<nextfloor::gameplay::Action> MakeMoveDownAction() const final;
     std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const final;
     std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const final;
     std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const final;
-    std::unique_ptr<nextfloor::gameplay::Action> MakeRunAction() const final;
 };
 
 }  // namespace action

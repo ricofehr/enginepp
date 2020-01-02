@@ -54,6 +54,9 @@ public:
     glm::vec3 getLastPoint() const final;
 
 private:
+    static constexpr float kPoinstStep = 0.10f;
+    static constexpr float kInitMoveFactor = 1.0f;
+
     float CalculateWidth() const final;
     float CalculateHeight() const final;
     float CalculateDepth() const final;

@@ -24,11 +24,10 @@ namespace playground {
 class DepthWall : public Wall {
 
 public:
-    static constexpr char kTEXTURE[] = "assets/wall.png";
-
-    static constexpr float kBRICK_WIDTH = 0.25;
-    static constexpr float kBRICK_HEIGHT = 2.0f;
-    static constexpr float kBRICK_DEPTH = 2.0f;
+    static constexpr char kTexture[] = "assets/wall.png";
+    static constexpr float kBrickWidth = 0.25;
+    static constexpr float kBrickHeight = 2.0f;
+    static constexpr float kBrickDepth = 2.0f;
 
     ~DepthWall() override = default;
 
@@ -37,6 +36,13 @@ public:
 
 protected:
     DepthWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+
+private:
+    static constexpr float kDoorDeltaZ = 6.0f;
+    static constexpr float kDoorDeltaY = 2.0f;
+
+    static constexpr float kWindowDeltaZ = 3.0f;
+    static constexpr float kWindowDeltaY = 3.0f;
 };
 
 }  // namespace playground

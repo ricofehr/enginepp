@@ -15,10 +15,6 @@ namespace nextfloor {
 
 namespace hid {
 
-/**
- *  Constructor
- *  @param  window  GL Main Window
- */
 GameInputHandler::GameInputHandler(std::unique_ptr<nextfloor::gameplay::HID> hid)
 {
     hid_ = std::move(hid);
@@ -31,41 +27,26 @@ void GameInputHandler::InitCommands(const nextfloor::gameplay::ActionFactory& ac
     move_down_command_ = action_factory.MakeMoveDownAction();
     move_left_command_ = action_factory.MakeMoveLeftAction();
     move_right_command_ = action_factory.MakeMoveRightAction();
-    jump_command_ = action_factory.MakeJumpAction();
-    run_command_ = action_factory.MakeRunAction();
-    fire_command_ = action_factory.MakeFireAction();
 }
 
 nextfloor::gameplay::Action* GameInputHandler::HandlerInput()
 {
     using nextfloor::gameplay::SceneInput;
 
-    if (hid_->isPressed(SceneInput::kINPUT_UP)) {
+    if (hid_->isPressed(SceneInput::kInputUp)) {
         return move_up_command_.get();
     }
 
-    if (hid_->isPressed(SceneInput::kINPUT_DOWN)) {
+    if (hid_->isPressed(SceneInput::kInputDown)) {
         return move_down_command_.get();
     }
 
-    if (hid_->isPressed(SceneInput::kINPUT_LEFT)) {
+    if (hid_->isPressed(SceneInput::kInputLeft)) {
         return move_left_command_.get();
     }
 
-    if (hid_->isPressed(SceneInput::kINPUT_RIGHT)) {
+    if (hid_->isPressed(SceneInput::kInputRight)) {
         return move_right_command_.get();
-    }
-
-    if (hid_->isPressed(SceneInput::kINPUT_JUMP)) {
-        return jump_command_.get();
-    }
-
-    if (hid_->isPressed(SceneInput::kINPUT_FIRE)) {
-        return fire_command_.get();
-    }
-
-    if (hid_->isPressed(SceneInput::kINPUT_RUN)) {
-        return run_command_.get();
     }
 
     return nullptr;

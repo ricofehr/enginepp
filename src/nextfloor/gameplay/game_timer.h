@@ -41,6 +41,7 @@ private:
     void ComputeTimers() final;
     void ComputeFps();
     void CheckEndProgram();
+    bool IsSecondElapsed(int last_second_time);
 
     static double deltatime_since_lastloop_;
     static double totaltime_since_beginning_;

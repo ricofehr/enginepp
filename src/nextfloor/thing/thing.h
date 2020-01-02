@@ -20,10 +20,10 @@ namespace thing {
 class Thing : public nextfloor::mesh::DynamicMesh {
 
 public:
-    static constexpr float kBIG_SCALE = 1.0f;
-    static constexpr float kMEDIUM_SCALE = 0.75f;
-    static constexpr float kSMALL_SCALE = 0.5f;
-    static constexpr float kSMALLER_SCALE = 0.5f;
+    static constexpr float kBigScale = 1.0f;
+    static constexpr float kMediumScale = 0.75f;
+    static constexpr float kSmallScale = 0.5f;
+    static constexpr float kSmallerScale = 0.25f;
 
     std::string class_name() final { return "Thing"; }
 };

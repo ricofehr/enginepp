@@ -26,9 +26,9 @@ bool GlSceneInput::IsCloseWindowEventOccurs()
     return glfwGetKey(glfw_window_, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(glfw_window_);
 }
 
-bool GlSceneInput::IsPressed(int ACTION_BUTTON)
+bool GlSceneInput::IsPressed(int action_button)
 {
-    return glfwGetKey(glfw_window_, getKeyValueForAction(ACTION_BUTTON)) == GLFW_PRESS;
+    return glfwGetKey(glfw_window_, getKeyValueForAction(action_button)) == GLFW_PRESS;
 }
 
 /**
@@ -36,16 +36,13 @@ bool GlSceneInput::IsPressed(int ACTION_BUTTON)
  * @param  ACTION_BUTTON Button Identifiant
  * @return               GL Constant value
  */
-int GlSceneInput::getKeyValueForAction(int ACTION_BUTTON)
+int GlSceneInput::getKeyValueForAction(int action_button)
 {
-    switch (ACTION_BUTTON) {
-    case kINPUT_UP: return GLFW_KEY_UP;
-    case kINPUT_DOWN: return GLFW_KEY_DOWN;
-    case kINPUT_LEFT: return GLFW_KEY_LEFT;
-    case kINPUT_RIGHT: return GLFW_KEY_RIGHT;
-    case kINPUT_JUMP: return GLFW_KEY_SPACE;
-    case kINPUT_FIRE: return GLFW_KEY_LEFT_CONTROL;
-    case kINPUT_RUN: return GLFW_KEY_LEFT_SHIFT;
+    switch (action_button) {
+    case kInputUp: return GLFW_KEY_UP;
+    case kInputDown: return GLFW_KEY_DOWN;
+    case kInputLeft: return GLFW_KEY_LEFT;
+    case kInputRight: return GLFW_KEY_RIGHT;
     }
 
     return 0;

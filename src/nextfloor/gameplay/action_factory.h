@@ -22,13 +22,10 @@ class ActionFactory {
 public:
     virtual ~ActionFactory() = default;
 
-    virtual std::unique_ptr<Action> MakeFireAction() const = 0;
-    virtual std::unique_ptr<Action> MakeJumpAction() const = 0;
     virtual std::unique_ptr<Action> MakeMoveDownAction() const = 0;
     virtual std::unique_ptr<Action> MakeMoveLeftAction() const = 0;
     virtual std::unique_ptr<Action> MakeMoveRightAction() const = 0;
     virtual std::unique_ptr<Action> MakeMoveUpAction() const = 0;
-    virtual std::unique_ptr<Action> MakeRunAction() const = 0;
 };
 
 }  // namespace gameplay

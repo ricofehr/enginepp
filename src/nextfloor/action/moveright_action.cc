@@ -26,7 +26,7 @@ void MoveRightAction::execute(nextfloor::character::Character* actor, double ela
         head = camera->head();
     }
 
-    /* Right vector */
+    /* Right vector: perpendicular to both direction and head vector */
     glm::vec3 right_movement = glm::cross(movement, head);
     actor->set_movement(right_movement);
 }

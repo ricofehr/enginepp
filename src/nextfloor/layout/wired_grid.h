@@ -103,6 +103,9 @@ protected:
 
 
 private:
+    static constexpr float kWallPadding = 0.25f;
+    static constexpr float kWallDeepScale = 0.25f;
+
     void InitBoxes();
 
     std::vector<nextfloor::mesh::Mesh*> FindOccupants(const glm::ivec3& coords) const;

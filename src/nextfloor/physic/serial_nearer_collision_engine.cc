@@ -19,10 +19,10 @@ float SerialNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* targe
     auto target_border = target->border();
     auto obstacle_border = obstacle->border();
 
-    for (float fact = 1.0f; fact <= granularity_; fact += 1.0f) {
-        float parted_move = fact / granularity_;
+    for (float factor = 1.0f; factor <= granularity_; factor += 1.0f) {
+        float parted_move = factor / granularity_;
         if (target_border->IsObstacleInCollisionAfterPartedMove(*obstacle_border, parted_move)) {
-            return (fact - 1.0f) / granularity_;
+            return (factor - 1.0f) / granularity_;
         }
     }
 

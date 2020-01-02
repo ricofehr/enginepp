@@ -24,11 +24,11 @@ namespace playground {
 class Floor : public Wall {
 
 public:
-    static constexpr char kTEXTURE[] = "assets/floor.png";
+    static constexpr char kTexture[] = "assets/floor.png";
 
-    static constexpr float kBRICK_WIDTH = 2.0f;
-    static constexpr float kBRICK_HEIGHT = 0.25f;
-    static constexpr float kBRICK_DEPTH = 2.0f;
+    static constexpr float kBrickWidth = 2.0f;
+    static constexpr float kBrickHeight = 0.25f;
+    static constexpr float kBrickDepth = 2.0f;
 
     Floor(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
     ~Floor() final = default;
@@ -36,6 +36,10 @@ public:
     void AddDoor() final;
     void AddWindow() final;
     void PrepareDraw(const glm::mat4& view_projection_matrix) final;
+
+private:
+    static constexpr float kDoorDeltaZ = 3.0f;
+    static constexpr float kDoorDeltaX = 3.0f;
 };
 
 }  // namespace playground

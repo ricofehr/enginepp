@@ -31,7 +31,7 @@ void HeadCamera::ComputeOrientation()
     direction_[1] = sin(vertical_angle_);
     direction_[2] = cos(vertical_angle_) * cos(horizontal_angle_);
 
-    /* head_ vector : perpendicular to both direction and right */
+    /* head_ vector : perpendicular to both direction and right vector */
     head_ = glm::cross(right_vector(), direction_);
 }
 

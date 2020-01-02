@@ -27,9 +27,9 @@ namespace physic {
 class NearerCollisionEngine : public CollisionEngine {
 
 public:
-    static constexpr int kPARALLELL_SERIAL = 1;
-    static constexpr int kPARALLELL_TBB = 2;
-    static constexpr int kPARALLELL_CL = 3;
+    static constexpr int kParallellSerial = 1;
+    static constexpr int kParallellTbb = 2;
+    static constexpr int kParallellOpenCL = 3;
 
     ~NearerCollisionEngine() override = default;
 

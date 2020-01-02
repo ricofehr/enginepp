@@ -37,6 +37,9 @@ public:
 
 
 private:
+    static constexpr float kBrickFactorPadding = 0.5f;
+    static constexpr float kBrickFactorScaling = 0.5f;
+
     std::unique_ptr<Thing> MakeWallBrick(const glm::vec3& location,
                                          const glm::vec3& scale,
                                          const std::string& texture) const;

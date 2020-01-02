@@ -23,7 +23,7 @@ namespace thing {
 class Rock : public Thing {
 
 public:
-    static constexpr char kTEXTURE[] = "assets/rock.jpg";
+    static constexpr char kTexture[] = "assets/rock.jpg";
 
     Rock(std::unique_ptr<nextfloor::mesh::Border> border,
          std::vector<std::unique_ptr<nextfloor::mesh::Polygon>> rock,

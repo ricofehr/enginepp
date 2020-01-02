@@ -16,6 +16,7 @@ CommonServices::CommonServices(const CoreFactory& factory)
     file_io_ = factory.MakeFileIO();
     log_ = factory.MakeLog();
     exit_ = factory.MakeExit();
+    random_generator_ = factory.MakeRandomGenerator();
 }
 
 }  // namespace core

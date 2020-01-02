@@ -42,6 +42,8 @@ public:
     void RunLoop() final;
 
 private:
+    static constexpr float kMsInSecond = 1000.0f;
+
     void UpdateTime();
     void UpdateCameraOrientation();
     void HandlerInput();

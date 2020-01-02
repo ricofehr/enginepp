@@ -30,14 +30,12 @@ public:
     virtual bool IsInFieldOfView(const nextfloor::mesh::Mesh& target) const = 0;
     virtual glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const = 0;
 
-    virtual glm::vec3 location() const = 0;
+    virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
+
     virtual glm::vec3 direction() const = 0;
     virtual glm::vec3 head() const = 0;
-    virtual float fov() const = 0;
 
     virtual void set_owner(Character* owner) = 0;
-
-    virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
 };
 
 }  // namespace character

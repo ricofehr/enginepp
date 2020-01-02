@@ -123,17 +123,18 @@ void CubeGlRendererEngine::CreateTextureBuffer()
     glActiveTexture(GL_TEXTURE0 + texturebuffer_);
     glBindTexture(GL_TEXTURE_2D, texturebuffer_);
 
+    /* Load Texture */
     image = SOIL_load_image(texture_.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     SOIL_free_image_data(image);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // Magnification filter (Stretch the texture)
+    /* Magnification filter (Stretch the texture) */
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // Minification Filter (Shrink the texture)
+    /* Minification Filter (Shrink the texture) */
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    // Create mipmap images
+    /* Create mipmap images */
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
@@ -145,26 +146,31 @@ void CubeGlRendererEngine::Draw(const glm::mat4& mvp)
         }
 
         glEnable(GL_CULL_FACE);
+        /* Assign projection matrix to drawn */
         glUniformMatrix4fv(matrix_id_, 1, GL_FALSE, &mvp[0][0]);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
-        /* 1st attribute buffer : vertices position */
+        /* 1st attribute buffer : vertices position, used 3 floats */
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)0);
 
-        /* 2nd attribute buffer : colors */
+        /* 2nd attribute buffer : colors, used 3 floats */
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
-        /* 3th attribute buffer : texture position */
+        /* 3th attribute buffer : texture position, used 2 floats */
         glEnableVertexAttribArray(2);
         glActiveTexture(GL_TEXTURE0 + texturebuffer_);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
+        /* Assign texture to drawn */
         glUniform1i(glGetUniformLocation(program_id_, "tex"), texturebuffer_);
+
+        /* Draw triangles from vertices setted from mvp matrix thanks elements coordinates */
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);

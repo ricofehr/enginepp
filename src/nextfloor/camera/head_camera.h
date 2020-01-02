@@ -33,10 +33,8 @@ public:
     bool IsInFieldOfView(const nextfloor::mesh::Mesh& target) const final;
     glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const final;
 
-    glm::vec3 location() const final { return owner_->location(); }
     glm::vec3 direction() const final { return direction_; }
     glm::vec3 head() const final { return head_; }
-    float fov() const final { return fov_; }
 
     void set_owner(nextfloor::character::Character* owner) final { owner_ = owner; }
 
@@ -57,6 +55,9 @@ private:
     static constexpr float kPerspectiveNear = 0.1f;
     static constexpr float kPerspectiveFar = 300.0f;
 
+    glm::mat4 GetProjectionMatrix(float window_size_ratio) const;
+    glm::mat4 GetViewMatrix() const;
+
     glm::vec3 right_vector() const
     {
         return glm::vec3(sin(horizontal_angle_ - kHalfPi), 0, cos(horizontal_angle_ - kHalfPi));
@@ -71,18 +72,16 @@ private:
 
     glm::vec3 target_vector(const nextfloor::mesh::Mesh& target) const { return target.location() - location(); }
 
-    float increased_fov() const { return 4 * fov(); }
-
-    glm::mat4 GetProjectionMatrix(float window_size_ratio) const;
-    glm::mat4 GetViewMatrix() const;
+    glm::vec3 location() const { return owner_->location(); }
+    float fov() const { return fov_; }
 
     nextfloor::character::Character* owner_{nullptr};
-    float horizontal_angle_;
-    float vertical_angle_;
-    float fov_;
+    float horizontal_angle_{0.0f};
+    float vertical_angle_{0.0f};
+    float fov_{0.0f};
 
-    glm::vec3 direction_;
-    glm::vec3 head_;
+    glm::vec3 direction_{0.0f};
+    glm::vec3 head_{0.0f};
 };
 
 }  // namespace camera

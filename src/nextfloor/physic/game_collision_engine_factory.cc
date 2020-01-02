@@ -23,10 +23,10 @@ std::unique_ptr<CollisionEngine> GameCollisionEngineFactory::MakeCollisionEngine
     std::unique_ptr<CollisionEngine> engine_collision{nullptr};
 
     switch (type) {  // clang-format off
-        case NearerCollisionEngine::kPARALLELL_TBB:
+        case NearerCollisionEngine::kParallellTbb:
             engine_collision = std::make_unique<TbbNearerCollisionEngine>(granularity);
             break;
-        case NearerCollisionEngine::kPARALLELL_CL:
+        case NearerCollisionEngine::kParallellOpenCL:
             engine_collision = std::make_unique<ClNearerCollisionEngine>(granularity);
             break;
         default:

@@ -57,8 +57,8 @@ void ClNearerCollisionEngine::InitCollisionEngine()
     cl_queue_ = cl::CommandQueue(context, device_target);
 
     /* Create the memory buffers */
-    bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float)));
-    bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, 9 * sizeof(float)));
+    bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, kBufferSize * sizeof(float)));
+    bufferin_.push_back(cl::Buffer(context, CL_MEM_READ_ONLY, kBufferSize * sizeof(float)));
     bufferout_.push_back(cl::Buffer(context, CL_MEM_WRITE_ONLY, granularity_ * sizeof(float)));
 
     /* Read the program Source */
@@ -123,13 +123,13 @@ float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, n
     move2z = obstacle_border->movement()[2];
 
     /* Prepare arrays for computecollision */
-    float box1[9] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
-    float box2[9] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
+    float box1[kBufferSize] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
+    float box2[kBufferSize] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
 
 
     /* Copy the input data to the input buffer */
-    cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, 9 * sizeof(float), box1);
-    cl_queue_.enqueueWriteBuffer(bufferin_[1], CL_TRUE, 0, 9 * sizeof(float), box2);
+    cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, kBufferSize * sizeof(float), box1);
+    cl_queue_.enqueueWriteBuffer(bufferin_[1], CL_TRUE, 0, kBufferSize * sizeof(float), box2);
     cl_queue_.enqueueWriteBuffer(bufferout_[0], CL_TRUE, 0, granularity_ * sizeof(float), distances_ptr);
 
     /* Set kernel arguments */

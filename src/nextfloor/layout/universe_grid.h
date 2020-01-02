@@ -23,12 +23,12 @@ public:
     /*
      *  WiredGrid Constants For Romm Setting
      */
-    static constexpr int kWIDTH_BOXES_COUNT = 8;
-    static constexpr int kHEIGHT_BOXES_COUNT = 4;
-    static constexpr int kDEPTH_BOXES_COUNT = 8;
-    static constexpr float kBOX_WIDTH = 16.0f;
-    static constexpr float kBOX_HEIGHT = 12.0f;
-    static constexpr float kBOX_DEPTH = 16.0f;
+    static constexpr int kWidthBoxesCount = 8;
+    static constexpr int kHeightBoxesCount = 4;
+    static constexpr int kDepthBoxesCount = 8;
+    static constexpr float kBoxWidth = 16.0f;
+    static constexpr float kBoxHeight = 12.0f;
+    static constexpr float kBoxDepth = 16.0f;
 
     UniverseGrid(const glm::vec3& location, std::unique_ptr<nextfloor::mesh::GridBox>*** boxes);
     ~UniverseGrid() noexcept final;

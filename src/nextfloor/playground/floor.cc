@@ -21,8 +21,8 @@ void Floor::AddDoor()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
-        if (obj_location.x >= location().x - 3.0f && obj_location.x <= location().x + 3.0f) {
-            if (obj_location.z >= location().z - 3.0f && obj_location.z <= location().z + 3.0f) {
+        if (obj_location.x >= location().x - kDoorDeltaX && obj_location.x <= location().x + kDoorDeltaX) {
+            if (obj_location.z >= location().z - kDoorDeltaZ && obj_location.z <= location().z + kDoorDeltaZ) {
                 remove_child(objects_[cnt].get());
                 return AddDoor();
             }

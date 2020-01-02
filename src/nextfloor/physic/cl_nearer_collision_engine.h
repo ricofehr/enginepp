@@ -47,6 +47,8 @@ public:
     float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 
 private:
+    static constexpr int kBufferSize = 9;
+
     void InitCollisionEngine();
 
     /** Opencl Kernel Object */

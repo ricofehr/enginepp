@@ -49,7 +49,7 @@ std::unique_ptr<FrameTimer> DemoGameFactory::MakeFrameTimer() const
 std::unique_ptr<Level> DemoGameFactory::MakeLevel() const
 {
     auto universe = GenerateUniverseWith3Rooms();
-    auto player = character_factory_->MakePlayer(glm::vec3(0.0f, -2.0f, 5.0f));
+    auto player = character_factory_->MakePlayer(glm::vec3(kPlayerLocationX, kPlayerLocationY, kPlayerLocationZ));
 
     using nextfloor::core::CommonServices;
     int granularity = CommonServices::getConfig()->getCollisionGranularity();
@@ -64,16 +64,18 @@ std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateUniverse
 {
     std::vector<std::unique_ptr<nextfloor::playground::Ground>> rooms;
 
-    auto first_room_location = glm::vec3(0.0f);
-    std::vector<glm::vec3> rocks_location = {glm::vec3(-3.0f, -1.5f, -4.0f), glm::vec3(3.0f, -2.5f, -5.5f)};
-    std::vector<glm::vec3> rocks_movement = {glm::vec3(0.3, 0.01, 0.05), glm::vec3(0.3, 0.01, 0.05)};
+    auto first_room_location = glm::vec3(kFirstRoomLocationX, kFirstRoomLocationY, kFirstRoomLocationZ);
+    std::vector<glm::vec3> rocks_location = {glm::vec3(kRock1LocationX, kRock1LocationY, kRock1LocationZ),
+                                             glm::vec3(kRock2LocationX, kRock2LocationY, kRock2LocationZ)};
+    std::vector<glm::vec3> rocks_movement
+      = {glm::vec3(kRock1MoveX, kRock1MoveY, kRock1MoveZ), glm::vec3(kRock2MoveX, kRock2MoveY, kRock2MoveZ)};
     rooms.push_back(GenerateRoom(first_room_location, rocks_location, rocks_movement));
     auto room_dimension = rooms[0]->dimension();
 
     auto factor_x = 0.0f;
     auto factor_y = 0.0f;
     float factor_z;
-    for (factor_z = -1.0f; factor_z <= 1.0f; factor_z += 2.0f) {
+    for (factor_z = kFactor0; factor_z <= kFactor1; factor_z += kFactorDelta) {
         auto room_location = first_room_location + glm::vec3(factor_x, factor_y, factor_z) * room_dimension;
         rooms.push_back(GenerateRoom(room_location, rocks_location, rocks_movement));
     }
@@ -85,23 +87,25 @@ std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateUniverse
 {
     std::vector<std::unique_ptr<nextfloor::playground::Ground>> rooms;
 
-    auto first_room_location = glm::vec3(0.0f);
-    std::vector<glm::vec3> rocks_location = {glm::vec3(-3.0f, -1.5f, -4.0f), glm::vec3(3.0f, -2.5f, -5.5f)};
-    std::vector<glm::vec3> rocks_movement = {glm::vec3(0.3, 0.01, 0.05), glm::vec3(0.3, 0.01, 0.05)};
+    auto first_room_location = glm::vec3(kFirstRoomLocationX, kFirstRoomLocationY, kFirstRoomLocationZ);
+    std::vector<glm::vec3> rocks_location = {glm::vec3(kRock1LocationX, kRock1LocationY, kRock1LocationZ),
+                                             glm::vec3(kRock2LocationX, kRock2LocationY, kRock2LocationZ)};
+    std::vector<glm::vec3> rocks_movement
+      = {glm::vec3(kRock1MoveX, kRock1MoveY, kRock1MoveZ), glm::vec3(kRock2MoveX, kRock2MoveY, kRock2MoveZ)};
     rooms.push_back(GenerateRoom(first_room_location, rocks_location, rocks_movement));
     auto room_dimension = rooms[0]->dimension();
 
     auto factor_x = 0.0f;
     auto factor_y = 0.0f;
     float factor_z;
-    for (factor_z = -1.0f; factor_z <= 1.0f; factor_z += 2.0f) {
+    for (factor_z = kFactor0; factor_z <= kFactor1; factor_z += kFactorDelta) {
         auto room_location = first_room_location + glm::vec3(factor_x, factor_y, factor_z) * room_dimension;
         rooms.push_back(GenerateRoom(room_location, rocks_location, rocks_movement));
     }
 
     factor_y = 0.0f;
     factor_z = 0.0f;
-    for (factor_x = -1.0f; factor_x <= 1.0f; factor_x += 2.0f) {
+    for (factor_x = kFactor0; factor_x <= kFactor1; factor_x += kFactorDelta) {
         auto room_location = first_room_location + glm::vec3(factor_x, factor_y, factor_z) * room_dimension;
         rooms.push_back(GenerateRoom(room_location, rocks_location, rocks_movement));
     }
@@ -109,7 +113,7 @@ std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateUniverse
 
     factor_x = 0.0f;
     factor_z = 0.0f;
-    for (factor_y = -1.0f; factor_y <= 1.0f; factor_y += 2.0f) {
+    for (factor_y = kFactor0; factor_y <= kFactor1; factor_y += kFactorDelta) {
         auto room_location = first_room_location + glm::vec3(factor_x, factor_y, factor_z) * room_dimension;
         rooms.push_back(GenerateRoom(room_location, rocks_location, rocks_movement));
     }
@@ -121,16 +125,18 @@ std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateUniverse
 {
     std::vector<std::unique_ptr<nextfloor::playground::Ground>> rooms;
 
-    auto first_room_location = glm::vec3(0.0f);
-    std::vector<glm::vec3> rocks_location = {glm::vec3(-3.0f, -1.5f, -4.0f), glm::vec3(3.0f, -2.5f, -5.5f)};
-    std::vector<glm::vec3> rocks_movement = {glm::vec3(0.3, 0.01, 0.05), glm::vec3(0.3, 0.01, 0.05)};
+    auto first_room_location = glm::vec3(kFirstRoomLocationX, kFirstRoomLocationY, kFirstRoomLocationZ);
+    std::vector<glm::vec3> rocks_location = {glm::vec3(kRock1LocationX, kRock1LocationY, kRock1LocationZ),
+                                             glm::vec3(kRock2LocationX, kRock2LocationY, kRock2LocationZ)};
+    std::vector<glm::vec3> rocks_movement
+      = {glm::vec3(kRock1MoveX, kRock1MoveY, kRock1MoveZ), glm::vec3(kRock2MoveX, kRock2MoveY, kRock2MoveZ)};
     rooms.push_back(GenerateRoom(first_room_location, rocks_location, rocks_movement));
     auto room_dimension = rooms[0]->dimension();
 
     /* create 26 more rooms around the first one */
-    for (auto factor_x = -1.0f; factor_x <= 1.0f; factor_x++) {
-        for (auto factor_y = -1.0f; factor_y <= 1.0f; factor_y++) {
-            for (auto factor_z = -1.0f; factor_z <= 1.0f; factor_z++) {
+    for (auto factor_x = kFactor0; factor_x <= kFactor1; factor_x++) {
+        for (auto factor_y = kFactor0; factor_y <= kFactor1; factor_y++) {
+            for (auto factor_z = kFactor0; factor_z <= kFactor1; factor_z++) {
                 auto room_location = first_room_location + glm::vec3(factor_x, factor_y, factor_z) * room_dimension;
                 if (room_location != first_room_location) {
                     rooms.push_back(GenerateRoom(room_location, rocks_location, rocks_movement));

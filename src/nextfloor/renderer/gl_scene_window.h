@@ -36,8 +36,8 @@ public:
     float getWindowRatio() const final { return window_width_ / window_height_; }
 
 private:
-    static constexpr const char kVERTEXFILEPATH[] = "glsl/SimpleVertexShader.vertexshader";
-    static constexpr const char kFRAGMENTFILEPATH[] = "glsl/SimpleFragmentShader.fragmentshader";
+    static constexpr const char kVertexFilePath[] = "glsl/SimpleVertexShader.vertexshader";
+    static constexpr const char kFragmentFilePath[] = "glsl/SimpleFragmentShader.fragmentshader";
 
     void LoadShaders();
     void InitVAO();

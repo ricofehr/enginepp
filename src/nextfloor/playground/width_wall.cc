@@ -19,7 +19,7 @@ void WidthWall::AddDoor()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
-        if (obj_location.x <= location().x - 6.0f && obj_location.y <= location().y + 2.0f) {
+        if (obj_location.x <= location().x - kDoorDeltaX && obj_location.y <= location().y + kDoorDeltaY) {
             remove_child(objects_[cnt].get());
             return AddDoor();
         }
@@ -30,8 +30,8 @@ void WidthWall::AddWindow()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         auto obj_location = objects_[cnt]->location();
-        if (obj_location.y >= location().y - 3.0f && obj_location.y <= location().y) {
-            if (obj_location.x >= location().x - 3.0f && obj_location.x <= location().x + 3.0f) {
+        if (obj_location.y >= location().y - kWindowDeltaY && obj_location.y <= location().y) {
+            if (obj_location.x >= location().x - kWindowDeltaX && obj_location.x <= location().x + kWindowDeltaX) {
                 remove_child(objects_[cnt].get());
                 return AddWindow();
             }

@@ -22,9 +22,6 @@ public:
 
     virtual void Loop() = 0;
 
-    /**
-     *  Accessors
-     */
     virtual float getDeltaTimeSinceLastLoop() const = 0;
     virtual bool IsNewSecondElapsed() const = 0;
     virtual int getLoopCountBySecond() const = 0;

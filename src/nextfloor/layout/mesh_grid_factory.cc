@@ -18,16 +18,15 @@ namespace layout {
 
 std::unique_ptr<nextfloor::playground::Grid> MeshGridFactory::MakeUniverseGrid(const glm::vec3& location) const
 {
-    return std::make_unique<UniverseGrid>(location,
-                                          GenerateBoxes(UniverseGrid::kWIDTH_BOXES_COUNT,
-                                                        UniverseGrid::kHEIGHT_BOXES_COUNT,
-                                                        UniverseGrid::kDEPTH_BOXES_COUNT));
+    return std::make_unique<UniverseGrid>(
+      location,
+      GenerateBoxes(UniverseGrid::kWidthBoxesCount, UniverseGrid::kHeightBoxesCount, UniverseGrid::kDepthBoxesCount));
 }
 
 std::unique_ptr<nextfloor::playground::Grid> MeshGridFactory::MakeRoomGrid(const glm::vec3& location) const
 {
     return std::make_unique<RoomGrid>(
-      location, GenerateBoxes(RoomGrid::kWIDTH_BOXES_COUNT, RoomGrid::kHEIGHT_BOXES_COUNT, RoomGrid::kDEPTH_BOXES_COUNT));
+      location, GenerateBoxes(RoomGrid::kWidthBoxesCount, RoomGrid::kHeightBoxesCount, RoomGrid::kDepthBoxesCount));
 }
 
 

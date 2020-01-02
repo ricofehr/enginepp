@@ -62,13 +62,18 @@ void GameTimer::ComputeFps()
     is_newsecond_elapsed_ = false;
     sNbFrames++;
 
-    if (totaltime_since_beginning_ - static_cast<double>(sLastSecondTime) >= 1.0) {
+    if (IsSecondElapsed(sLastSecondTime)) {
         current_fps_ = sNbFrames;
         /* Reset timer */
         sNbFrames = 0;
         sLastSecondTime += 1;
         is_newsecond_elapsed_ = true;
     }
+}
+
+bool GameTimer::IsSecondElapsed(int last_second_time)
+{
+    return totaltime_since_beginning_ - static_cast<double>(last_second_time) >= 1.0;
 }
 
 void GameTimer::CheckEndProgram()

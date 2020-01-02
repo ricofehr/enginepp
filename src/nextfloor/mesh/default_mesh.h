@@ -53,7 +53,6 @@ public:
     bool IsTopPositionFilled() const override { return true; }
 
     /* Functions disabled by default, and overrided by drawing Objects */
-    // void PrepareDraw(const glm::mat4& view_projection_matrix) override {}
     std::vector<std::pair<glm::mat4, std::string>> GetModelViewProjectionsAndTextureToDraw() const override
     {
         return std::vector<std::pair<glm::mat4, std::string>>(0);

@@ -27,7 +27,7 @@ public:
     ~Cube() final = default;
 
 private:
-    static constexpr char kNOTEXTURE[] = "";
+    static constexpr char kNoTexture[] = "";
 };
 
 }  // namespace polygon

@@ -93,7 +93,7 @@ void GameLoop::LogLoop()
         /* Print if debug */
         if (CommonServices::getConfig()->IsAllDebugEnabled()) {
             std::ostringstream message_frame;
-            message_frame << 1000.0 / static_cast<double>(timer_->getLoopCountBySecond()) << " ms/frame - ";
+            message_frame << kMsInSecond / static_cast<double>(timer_->getLoopCountBySecond()) << " ms/frame - ";
             CommonServices::getLog()->Write(std::move(message_frame));
         }
 

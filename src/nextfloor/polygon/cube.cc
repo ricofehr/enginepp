@@ -10,7 +10,7 @@ namespace nextfloor {
 
 namespace polygon {
 
-Cube::Cube(const glm::vec3& location, const glm::vec3& scale) : Cube(location, glm::vec3(scale), kNOTEXTURE) {}
+Cube::Cube(const glm::vec3& location, const glm::vec3& scale) : Cube(location, glm::vec3(scale), kNoTexture) {}
 
 Cube::Cube(const glm::vec3& location, const glm::vec3& scale, const std::string& texture)
 {

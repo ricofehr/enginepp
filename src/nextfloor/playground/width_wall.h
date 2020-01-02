@@ -25,11 +25,11 @@ namespace playground {
 class WidthWall : public Wall {
 
 public:
-    static constexpr char kTEXTURE[] = "assets/wall.png";
+    static constexpr char kTexture[] = "assets/wall.png";
 
-    static constexpr float kBRICK_WIDTH = 2.0f;
-    static constexpr float kBRICK_HEIGHT = 2.0f;
-    static constexpr float kBRICK_DEPTH = 0.25f;
+    static constexpr float kBrickWidth = 2.0f;
+    static constexpr float kBrickHeight = 2.0f;
+    static constexpr float kBrickDepth = 0.25f;
 
     ~WidthWall() override = default;
 
@@ -38,6 +38,13 @@ public:
 
 protected:
     WidthWall(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
+
+private:
+    static constexpr float kDoorDeltaX = 6.0f;
+    static constexpr float kDoorDeltaY = 2.0f;
+
+    static constexpr float kWindowDeltaX = 3.0f;
+    static constexpr float kWindowDeltaY = 3.0f;
 };
 
 }  // namespace playground

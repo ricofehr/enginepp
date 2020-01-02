@@ -28,17 +28,11 @@ class HID {
 public:
     virtual ~HID() = default;
 
-    /**
-     *  Check if a button is pressed
-     *  @param  window        GL Main Window
-     *  @param  ACTION_BUTTON Button to be checked
-     *  @return               True if pressed
-     */
     virtual bool isPressed(int ACTION_BUTTON) = 0;
 
     /**
      *  Get Current Delta angles for HID pointer
-     *  @param  window  GL Main Window
+     *  @param  elapsed_time since last record
      *  @return        HID Delta pointer angles (horizontal / vertical)
      */
     virtual HIDPointer RecordHIDPointer(double elapsed_time) = 0;

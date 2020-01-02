@@ -23,17 +23,17 @@ GameThingFactory::GameThingFactory(nextfloor::mesh::PolygonFactory* polygon_fact
 
 std::unique_ptr<Thing> GameThingFactory::MakeRock(const glm::vec3& location, const glm::vec3& movement) const
 {
-    auto border = border_factory_->MakeBorder(location, Rock::kBIG_SCALE);
+    auto border = border_factory_->MakeBorder(location, Rock::kBigScale);
     std::vector<std::unique_ptr<nextfloor::mesh::Polygon>> rock;
-    rock.push_back(polygon_factory_->MakeCube(location, Rock::kBIG_SCALE, Rock::kTEXTURE));
+    rock.push_back(polygon_factory_->MakeCube(location, Rock::kBigScale, Rock::kTexture));
     return std::make_unique<Rock>(std::move(border), std::move(rock), movement);
 }
 
 std::unique_ptr<Thing> GameThingFactory::MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const
 {
-    auto border = border_factory_->MakeBorder(location, Rock::kSMALL_SCALE);
+    auto border = border_factory_->MakeBorder(location, Rock::kSmallScale);
     std::vector<std::unique_ptr<nextfloor::mesh::Polygon>> rock;
-    rock.push_back(polygon_factory_->MakeCube(location, Rock::kSMALL_SCALE, Rock::kTEXTURE));
+    rock.push_back(polygon_factory_->MakeCube(location, Rock::kSmallScale, Rock::kTexture));
     return std::make_unique<Rock>(std::move(border), std::move(rock), movement);
 }
 
@@ -43,7 +43,8 @@ std::vector<std::unique_ptr<Thing>> GameThingFactory::GenerateWallBricks(glm::ve
                                                                          const glm::vec3& brick_dimension,
                                                                          const std::string& texture) const
 {
-    auto padding = brick_dimension / 2.0f;
+    auto padding = brick_dimension * kBrickFactorPadding;
+    auto scaling = brick_dimension * kBrickFactorScaling;
     std::vector<std::unique_ptr<Thing>> bricks;
     firstpoint += padding;
     lastpoint -= padding;
@@ -52,7 +53,7 @@ std::vector<std::unique_ptr<Thing>> GameThingFactory::GenerateWallBricks(glm::ve
         for (float y = firstpoint.y; y <= lastpoint.y; y += brick_dimension.y) {
             for (float z = firstpoint.z; z <= lastpoint.z; z += brick_dimension.z) {
                 auto location = glm::vec3(x, y, z);
-                bricks.push_back(MakeWallBrick(location, brick_dimension / 2.0f, texture));
+                bricks.push_back(MakeWallBrick(location, scaling, texture));
             }
         }
     }

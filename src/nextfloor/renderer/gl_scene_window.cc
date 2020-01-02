@@ -130,8 +130,8 @@ void GlSceneWindow::InitProgramId()
 void GlSceneWindow::LoadShaders()
 {
     assert(shader_factory_ != nullptr);
-    vertex_shader_ = shader_factory_->MakeVertexShader(kVERTEXFILEPATH, program_id_);
-    fragment_shader_ = shader_factory_->MakeFragmentShader(kFRAGMENTFILEPATH, program_id_);
+    vertex_shader_ = shader_factory_->MakeVertexShader(kVertexFilePath, program_id_);
+    fragment_shader_ = shader_factory_->MakeFragmentShader(kFragmentFilePath, program_id_);
 
     vertex_shader_->LoadShader();
     fragment_shader_->LoadShader();

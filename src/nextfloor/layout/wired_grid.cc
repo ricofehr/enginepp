@@ -681,67 +681,67 @@ void WiredGrid::DisplayGrid() const
 glm::vec3 WiredGrid::CalculateFrontSideLocation() const
 {
     auto grid0 = CalculateFirstPointInGrid();
-    return grid0 + glm::vec3(width() / 2, height() / 2, 0.25f);
+    return grid0 + glm::vec3(width() / 2, height() / 2, 0.0f + kWallPadding);
 }
 
 glm::vec3 WiredGrid::CalculateRightSideLocation() const
 {
     auto grid0 = CalculateFirstPointInGrid();
-    return grid0 + glm::vec3(width() - 0.25f, height() / 2, depth() / 2);
+    return grid0 + glm::vec3(width() - kWallPadding, height() / 2, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateBackSideLocation() const
 {
     auto grid0 = CalculateFirstPointInGrid();
-    return grid0 + glm::vec3(width() / 2, height() / 2, depth() - 0.25f);
+    return grid0 + glm::vec3(width() / 2, height() / 2, depth() - kWallPadding);
 }
 
 glm::vec3 WiredGrid::CalculateLeftSideLocation() const
 {
     auto grid0 = CalculateFirstPointInGrid();
-    return grid0 + glm::vec3(0.25f, height() / 2, depth() / 2);
+    return grid0 + glm::vec3(0.0f + kWallPadding, height() / 2, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateBottomSideLocation() const
 {
     auto grid0 = CalculateFirstPointInGrid();
-    return grid0 + glm::vec3(width() / 2, 0.25f, depth() / 2);
+    return grid0 + glm::vec3(width() / 2, 0.0f + kWallPadding, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateTopSideLocation() const
 {
     auto grid0 = CalculateFirstPointInGrid();
-    return grid0 + glm::vec3(width() / 2, height() - 0.25f, depth() / 2);
+    return grid0 + glm::vec3(width() / 2, height() - kWallPadding, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateFrontSideBorderScale() const
 {
-    return glm::vec3(width() / 2, height() / 2, 0.25f);
+    return glm::vec3(width() / 2, height() / 2, kWallDeepScale);
 }
 
 glm::vec3 WiredGrid::CalculateRightSideBorderScale() const
 {
-    return glm::vec3(0.25f, height() / 2, depth() / 2);
+    return glm::vec3(kWallDeepScale, height() / 2, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateBackSideBorderScale() const
 {
-    return glm::vec3(width() / 2, height() / 2, 0.25f);
+    return glm::vec3(width() / 2, height() / 2, kWallDeepScale);
 }
 
 glm::vec3 WiredGrid::CalculateLeftSideBorderScale() const
 {
-    return glm::vec3(0.25f, height() / 2, depth() / 2);
+    return glm::vec3(kWallDeepScale, height() / 2, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateBottomSideBorderScale() const
 {
-    return glm::vec3(width() / 2, 0.25f, depth() / 2);
+    return glm::vec3(width() / 2, kWallDeepScale, depth() / 2);
 }
 
 glm::vec3 WiredGrid::CalculateTopSideBorderScale() const
 {
-    return glm::vec3(width() / 2, 0.25f, depth() / 2);
+    return glm::vec3(width() / 2, kWallDeepScale, depth() / 2);
 }
 
 bool WiredGrid::IsInside(const glm::vec3& location_object) const
