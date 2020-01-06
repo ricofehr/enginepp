@@ -6,6 +6,8 @@
 
 #include "nextfloor/hid/mouse_keyboard.h"
 
+#include <cassert>
+
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -40,6 +42,7 @@ nextfloor::gameplay::HIDPointer MouseKeyboard::RecordHIDPointer(double elapsed_t
 
     /* Ensure cursor is well centered before record move */
     if (sSkipTime < kFramesToBeReady) {
+        assert(scene_input_ != nullptr);
         scene_input_->SetCursorPos(window_width / 2, window_height / 2);
         mouse_position.x = window_width / 2;
         mouse_position.y = window_height / 2;

@@ -9,6 +9,10 @@
 
 #include "nextfloor/playground/grid_factory.h"
 
+#include <memory>
+
+#include "nextfloor/mesh/grid_box.h"
+
 namespace nextfloor {
 
 namespace layout {

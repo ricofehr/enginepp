@@ -7,6 +7,10 @@
 #include "nextfloor/mesh/placement_mesh.h"
 
 #include <tbb/tbb.h>
+#include <glm/glm.hpp>
+#include <vector>
+
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 
@@ -82,7 +86,7 @@ void PlacementMesh::ClearCoords()
     }
 }
 
-std::unique_ptr<nextfloor::mesh::Mesh> PlacementMesh::remove_child(nextfloor::mesh::Mesh* child)
+std::unique_ptr<Mesh> PlacementMesh::remove_child(Mesh* child)
 {
     child->ClearCoords();
     return CompositeMesh::remove_child(child);

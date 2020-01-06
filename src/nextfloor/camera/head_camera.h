@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 
 #include "nextfloor/character/character.h"
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 

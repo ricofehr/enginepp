@@ -9,6 +9,8 @@
 
 #include "nextfloor/mesh/dynamic_mesh.h"
 
+#include <glm/glm.hpp>
+
 #include "nextfloor/character/camera.h"
 
 namespace nextfloor {

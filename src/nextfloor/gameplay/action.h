@@ -28,7 +28,7 @@ public:
     virtual void execute(nextfloor::character::Character* actor, double elapsed_time = kFrameElapsedTime) = 0;
 
 protected:
-    /* Default elapsed time : frame delay */
+    /* Default elapsed time : frame counts */
     static constexpr int kFrameElapsedTime = 0;
 };
 

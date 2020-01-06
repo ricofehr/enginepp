@@ -9,8 +9,6 @@
 
 #include <memory>
 #include <vector>
-#include <map>
-#include <list>
 #include <glm/glm.hpp>
 #include <string>
 

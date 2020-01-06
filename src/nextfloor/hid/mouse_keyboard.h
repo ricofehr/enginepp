@@ -49,7 +49,7 @@ private:
     static constexpr float kHidSpeed = 0.1f;
     static constexpr int kFramesToBeReady = 10;
 
-    std::unique_ptr<nextfloor::gameplay::SceneInput> scene_input_;
+    std::unique_ptr<nextfloor::gameplay::SceneInput> scene_input_{nullptr};
 };
 
 }  // namespace hid

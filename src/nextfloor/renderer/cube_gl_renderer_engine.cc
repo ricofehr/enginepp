@@ -7,6 +7,8 @@
 #include "nextfloor/renderer/cube_gl_renderer_engine.h"
 
 #include <vector>
+#include <GL/glew.h>
+#include <SOIL/SOIL.h>
 
 namespace nextfloor {
 

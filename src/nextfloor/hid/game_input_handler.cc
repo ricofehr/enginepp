@@ -6,9 +6,6 @@
 
 #include "nextfloor/hid/game_input_handler.h"
 
-#include <memory>
-
-#include "nextfloor/hid/mouse_keyboard.h"
 #include "nextfloor/gameplay/scene_input.h"
 
 namespace nextfloor {

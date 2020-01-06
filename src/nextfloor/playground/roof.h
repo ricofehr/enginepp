@@ -1,6 +1,6 @@
 /**
- *  @file floor.h
- *  @brief Floor class header
+ *  @file roof.h
+ *  @brief Roof class header
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
@@ -10,15 +10,17 @@
 #include "nextfloor/playground/wall.h"
 
 #include <memory>
-#include <glm/glm.hpp>
+#include <vector>
+
+#include "nextfloor/thing/thing.h"
 
 namespace nextfloor {
 
 namespace playground {
 
 /**
- *  @class Wall
- *  @brief Wall 3d model
+ *  @class Roof
+ *  @brief Roof of a Room
  */
 class Roof : public Wall {
 

@@ -9,8 +9,8 @@
 
 #include "nextfloor/mesh/placement_mesh.h"
 
+#include <vector>
 #include <memory>
-#include <glm/glm.hpp>
 
 #include "nextfloor/mesh/polygon.h"
 

@@ -40,7 +40,6 @@ protected:
     GlShader(const GlShader&) = delete;
     GlShader& operator=(const GlShader&) = delete;
 
-
     std::string shader_filepath_;
     GLuint shader_id_;
     GLuint program_id_;

@@ -9,8 +9,13 @@
 
 #include "nextfloor/thing/thing_factory.h"
 
-#include "nextfloor/mesh/border_factory.h"
+#include <memory>
+#include <string>
+#include <glm/glm.hpp>
 
+#include "nextfloor/thing/thing.h"
+
+#include "nextfloor/mesh/border_factory.h"
 #include "nextfloor/mesh/polygon_factory.h"
 
 namespace nextfloor {

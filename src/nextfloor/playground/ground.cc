@@ -8,19 +8,20 @@
 
 #include <sstream>
 #include <tbb/tbb.h>
+#include <vector>
+#include <glm/glm.hpp>
 
-#include "nextfloor/core/common_services.h"
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 
 namespace playground {
 
-/* Move this function into Grid Object */
 std::vector<nextfloor::mesh::Mesh*> Ground::FindCollisionNeighborsOf(const nextfloor::mesh::Mesh& target) const
 {
     std::vector<nextfloor::mesh::Mesh*> all_neighbors(0);
-    for (auto& coord : target.coords()) {
-        auto neighbors = grid()->FindCollisionNeighbors(coord);
+    for (glm::ivec3& coord : target.coords()) {
+        std::vector<nextfloor::mesh::Mesh*> neighbors = grid()->FindCollisionNeighbors(coord);
         all_neighbors.insert(all_neighbors.end(), neighbors.begin(), neighbors.end());
     }
 
@@ -127,7 +128,6 @@ void Ground::AddMeshToGrid(nextfloor::mesh::Mesh* child)
     /* Place grid orphan grant child into ground grid */
     if (child->hasChilds() && !child->hasLayout()) {
         for (auto& grant_child : child->childs()) {
-            // std::cout << "Grant child: " << grant_child->id() << std::endl;
             AddMeshToGrid(grant_child);
         }
     }

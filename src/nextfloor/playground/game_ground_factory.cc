@@ -7,6 +7,12 @@
 
 #include "nextfloor/playground/game_ground_factory.h"
 
+#include <glm/glm.hpp>
+#include <memory>
+
+#include "nextfloor/mesh/border.h"
+#include "nextfloor/playground/grid.h"
+
 #include "nextfloor/playground/universe.h"
 #include "nextfloor/playground/room.h"
 #include "nextfloor/playground/front_wall.h"
@@ -31,16 +37,16 @@ GameGroundFactory::GameGroundFactory(nextfloor::thing::ThingFactory* thing_facto
 
 std::unique_ptr<Ground> GameGroundFactory::MakeUniverse(std::vector<std::unique_ptr<Ground>> rooms) const
 {
-    auto grid = grid_factory_->MakeUniverseGrid(glm::vec3(0.0f));
-    auto border = border_factory_->MakeBorder(glm::vec3(0.0f), grid->scale());
+    std::unique_ptr<Grid> grid = grid_factory_->MakeUniverseGrid(glm::vec3(0.0f));
+    std::unique_ptr<nextfloor::mesh::Border> border = border_factory_->MakeBorder(glm::vec3(0.0f), grid->scale());
     return std::make_unique<Universe>(std::move(grid), std::move(border), std::move(rooms));
 }
 
 std::unique_ptr<Ground> GameGroundFactory::MakeRoom(const glm::vec3& location,
                                                     std::vector<std::unique_ptr<nextfloor::mesh::DynamicMesh>> objects) const
 {
-    auto grid = grid_factory_->MakeRoomGrid(location);
-    auto border = border_factory_->MakeBorder(location, grid->scale());
+    std::unique_ptr<Grid> grid = grid_factory_->MakeRoomGrid(location);
+    std::unique_ptr<nextfloor::mesh::Border> border = border_factory_->MakeBorder(location, grid->scale());
 
     std::vector<std::unique_ptr<Wall>> walls;
     walls.push_back(MakeFrontWall(grid->CalculateFrontSideLocation(), grid->CalculateFrontSideBorderScale()));

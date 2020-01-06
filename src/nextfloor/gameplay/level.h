@@ -7,8 +7,6 @@
 #ifndef NEXTFLOOR_GAMEPLAY_LEVEL_H_
 #define NEXTFLOOR_GAMEPLAY_LEVEL_H_
 
-#include <memory>
-
 #include "nextfloor/gameplay/hid.h"
 #include "nextfloor/gameplay/action.h"
 

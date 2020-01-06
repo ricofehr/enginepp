@@ -9,10 +9,12 @@
 
 #include "nextfloor/gameplay/game_factory.h"
 
-#include "nextfloor/gameplay/loop.h"
-#include "nextfloor/gameplay/level.h"
+#include <memory>
+#include <vector>
+#include <glm/glm.hpp>
+
 #include "nextfloor/gameplay/frame_timer.h"
-#include "nextfloor/mesh/mesh.h"
+#include "nextfloor/playground/ground.h"
 
 #include "nextfloor/gameplay/hid_factory.h"
 #include "nextfloor/gameplay/renderer_factory.h"

@@ -8,6 +8,8 @@
 
 #include <tbb/tbb.h>
 
+#include "nextfloor/mesh/border.h"
+
 namespace nextfloor {
 
 namespace physic {
@@ -17,8 +19,8 @@ TbbNearerCollisionEngine::TbbNearerCollisionEngine(int granularity) : NearerColl
 float TbbNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
     float distance(1.0f);
-    auto target_border = target->border();
-    auto obstacle_border = obstacle->border();
+    nextfloor::mesh::Border* target_border = target->border();
+    nextfloor::mesh::Border* obstacle_border = obstacle->border();
     tbb::mutex distance_mutex;
 
     tbb::parallel_for(1, (granularity_ + 1), 1, [&](int factor) {

@@ -7,11 +7,9 @@
 #include "nextfloor/core/file_config_parser.h"
 
 #include <iostream>
-#include <iomanip>
+#include <string>
 #include <sys/stat.h>
-#include <tbb/tbb.h>
 #include <cassert>
-#include <sstream>
 
 #include "nextfloor/core/common_services.h"
 #include "nextfloor/physic/nearer_collision_engine.h"
@@ -57,7 +55,6 @@ void FileConfigParser::InitDefaultValues()
     SetDefaultWidthValueIfEmpty();
     SetDefaultHeightValueIfEmpty();
     SetDefaultCollisionGranularityValueIfEmpty();
-    SetDefaultClippingValueIfEmpty();
     SetDefaultVsyncValueIfEmpty();
     SetDefaultGridModeValueIfEmpty();
     SetDefaultDebugVerbosityValueIfEmpty();
@@ -101,13 +98,6 @@ void FileConfigParser::SetDefaultCollisionGranularityValueIfEmpty()
     }
 }
 
-void FileConfigParser::SetDefaultClippingValueIfEmpty()
-{
-    if (!IsExist("clipping")) {
-        setSetting("clipping", libconfig::Setting::TypeInt, 0);
-    }
-}
-
 void FileConfigParser::SetDefaultVsyncValueIfEmpty()
 {
     if (!IsExist("vsync")) {
@@ -144,8 +134,6 @@ void FileConfigParser::Display() const
     std::cout << "Window width: " << getSetting<float>("width") << std::endl;
     std::cout << "Window height: " << getSetting<float>("height") << std::endl;
     std::cout << "NearerCollisionEngine granularity: " << getSetting<int>("granularity") << std::endl;
-    std::cout << "Clipping (0 -> no clipping, 1 -> high clipping, 2 -> low clipping): " << getSetting<int>("clipping")
-              << std::endl;
     std::cout << "Workers count: " << count_workers << std::endl;
     std::cout << "Execution Time (0 -> no limit): " << getSetting<int>("execution_time") << std::endl;
     std::cout << "Vsync (limit framerate to monitor): " << getSetting<bool>("vsync") << std::endl;
@@ -179,7 +167,6 @@ void FileConfigParser::ManageProgramParameters(int argc, char* argv[])
         assert(cnt < argc);
         const std::string parameter_value(argv[cnt++]);
 
-        ManageClippingParameter(parameter_name, parameter_value);
         ManageDebugParameter(parameter_name, parameter_value);
         ManageExecutionTimeParameter(parameter_name, parameter_value);
         ManageGranularityParameter(parameter_name, parameter_value);
@@ -215,7 +202,6 @@ bool FileConfigParser::IsHelpParameter(const std::string& parameter_name) const
 void FileConfigParser::DisplayHelp(const std::string& command_name) const
 {
     std::cout << command_name << " can be used with following options who overrides config file" << std::endl;
-    std::cout << "-c n   Clipping, 0: no clipping, 1: high clipping, 2: low clipping" << std::endl;
     std::cout << "-d n   Debug mode, 0: no debug, 1: test debug, 2: performance debug, 3: "
                  "collision debug, 4: all debug"
               << std::endl;
@@ -230,13 +216,6 @@ void FileConfigParser::DisplayHelp(const std::string& command_name) const
     std::cout << "-v 1|0 Enable/Disable vsync" << std::endl;
     std::cout << "-w n   Workers (cpu core) count (disabled if -p serial), "
               << "0: no limit, all cpu cores" << std::endl;
-}
-
-void FileConfigParser::ManageClippingParameter(const std::string& parameter_name, const std::string& parameter_value)
-{
-    if (parameter_name == "-c") {
-        setSetting("clipping", libconfig::Setting::TypeInt, std::stoi(parameter_value));
-    }
 }
 
 void FileConfigParser::ManageDebugParameter(const std::string& parameter_name, const std::string& parameter_value)

@@ -6,7 +6,12 @@
 
 #include "nextfloor/renderer/gl_scene_window.h"
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <cassert>
+
 #include "nextfloor/core/common_services.h"
+#include "nextfloor/core/config_parser.h"
 
 namespace nextfloor {
 
@@ -21,7 +26,7 @@ void InitGLFW()
     if (!glfwInit()) {
         using nextfloor::core::CommonServices;
         CommonServices::getLog()->WriteLine("Failed to initialize GLFW");
-        exit(-1);
+        CommonServices::getExit()->ExitOnError();
     }
 }
 
@@ -41,7 +46,7 @@ void InitGlew()
     if (glewInit() != GLEW_OK) {
         using nextfloor::core::CommonServices;
         CommonServices::getLog()->WriteLine("Failed to initialize GLEW");
-        exit(-1);
+        CommonServices::getExit()->ExitOnError();
     }
 }
 
@@ -79,7 +84,7 @@ GlSceneWindow::GlSceneWindow(ShaderFactory* shader_factory)
 
 void GlSceneWindow::InitWindowSize()
 {
-    auto config = nextfloor::core::CommonServices::getConfig();
+    nextfloor::core::ConfigParser* config = nextfloor::core::CommonServices::getConfig();
     window_width_ = config->getWindowWidth();
     window_height_ = config->getWindowHeight();
 }
@@ -92,7 +97,7 @@ void GlSceneWindow::CreateWindow()
         using nextfloor::core::CommonServices;
         CommonServices::getLog()->WriteLine("Failed to open GLFW window");
         glfwTerminate();
-        exit(-1);
+        CommonServices::getExit()->ExitOnError();
     }
     glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwMakeContextCurrent(glfw_window_);
@@ -100,9 +105,9 @@ void GlSceneWindow::CreateWindow()
 
 void GlSceneWindow::InitRefreshRate()
 {
-    auto gl_monitor = glfwGetPrimaryMonitor();
+    GLFWmonitor* gl_monitor = glfwGetPrimaryMonitor();
     assert(gl_monitor != NULL);
-    auto gl_mode = glfwGetVideoMode(gl_monitor);
+    const GLFWvidmode* gl_mode = glfwGetVideoMode(gl_monitor);
     assert(gl_mode != NULL);
     monitor_refresh_rate_ = gl_mode->refreshRate;
 }
@@ -115,10 +120,13 @@ void GlSceneWindow::InitVAO()
 
 void GlSceneWindow::InitVSync()
 {
-    auto config = nextfloor::core::CommonServices::getConfig();
-    is_vsync_enabled_ = config->isVsync();
+    using nextfloor::core::CommonServices;
+    is_vsync_enabled_ = CommonServices::getConfig()->isVsync();
     if (!is_vsync_enabled_) {
         glfwSwapInterval(0);
+    }
+    else {
+        glfwSwapInterval(1);
     }
 }
 
@@ -150,8 +158,8 @@ void GlSceneWindow::InitMatrixId()
 
 void GlSceneWindow::InitPolygonMode()
 {
-    auto config = nextfloor::core::CommonServices::getConfig();
-    if (config->isGridMode()) {
+    using nextfloor::core::CommonServices;
+    if (CommonServices::getConfig()->isGridMode()) {
         polygon_mode_ = GL_LINE;
     }
     else {

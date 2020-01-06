@@ -7,6 +7,16 @@
 #include "nextfloor/physic/cl_nearer_collision_engine.h"
 
 #include <fstream>
+#include <vector>
+#include <glm/glm.hpp>
+
+#ifdef __APPLE__
+#include <OpenCL/cl2.hpp>
+#else
+#include <CL/cl2.hpp>
+#endif
+
+#include "nextfloor/mesh/border.h"
 
 namespace nextfloor {
 
@@ -84,8 +94,8 @@ void ClNearerCollisionEngine::InitCollisionEngine()
 
 float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
-    auto target_border = target->border();
-    auto obstacle_border = obstacle->border();
+    nextfloor::mesh::Border* target_border = target->border();
+    nextfloor::mesh::Border* obstacle_border = obstacle->border();
 
     /* All tbb threads share same opencl objects, need mutex */
     collision_mutex_.lock();
@@ -125,7 +135,6 @@ float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, n
     /* Prepare arrays for computecollision */
     float box1[kBufferSize] = {x1, y1, z1, w1, h1, d1, move1x, move1y, move1z};
     float box2[kBufferSize] = {x2, y2, z2, w2, h2, d2, move2x, move2y, move2z};
-
 
     /* Copy the input data to the input buffer */
     cl_queue_.enqueueWriteBuffer(bufferin_[0], CL_TRUE, 0, kBufferSize * sizeof(float), box1);

@@ -5,6 +5,7 @@
  */
 #include "nextfloor/action/moveleft_action.h"
 
+#include <cassert>
 #include <glm/glm.hpp>
 
 namespace nextfloor {

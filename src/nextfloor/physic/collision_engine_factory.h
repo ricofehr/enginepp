@@ -8,7 +8,6 @@
 #define NEXTFLOOR_MESH_COLLISIONENGINEFACTORY_H_
 
 #include <memory>
-#include <glm/glm.hpp>
 
 #include "nextfloor/physic/collision_engine.h"
 

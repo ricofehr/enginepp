@@ -9,8 +9,6 @@
 
 #include "nextfloor/renderer/gl_shader.h"
 
-#include <string>
-
 namespace nextfloor {
 
 namespace renderer {

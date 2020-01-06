@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_CORE_CONFIGPARSER_H_
 #define NEXTFLOOR_CORE_CONFIGPARSER_H_
 
-#include <iostream>
+#include <string>
 
 namespace nextfloor {
 
@@ -36,7 +36,6 @@ public:
     virtual int getExecutionDuration() const = 0;
     virtual int getDebugLevel() const = 0;
     virtual int getCollisionGranularity() const = 0;
-    virtual int getClippingLevel() const = 0;
     virtual int getThreadsCount() const = 0;
     virtual int getParallellAlgoType() const = 0;
     virtual bool IsCollisionDebugEnabled() const = 0;

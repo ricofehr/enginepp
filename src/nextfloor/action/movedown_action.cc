@@ -6,6 +6,7 @@
 #include "nextfloor/action/movedown_action.h"
 
 #include <cassert>
+#include <glm/glm.hpp>
 
 namespace nextfloor {
 

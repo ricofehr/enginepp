@@ -7,6 +7,10 @@
 #include "nextfloor/mesh/drawing_mesh.h"
 
 #include <tbb/tbb.h>
+#include <glm/glm.hpp>
+#include <vector>
+#include <string>
+#include <utility>
 
 namespace nextfloor {
 

@@ -6,8 +6,6 @@
 
 #include "nextfloor/physic/nearer_collision_engine.h"
 
-#include "nextfloor/core/common_services.h"
-
 namespace nextfloor {
 
 namespace physic {
@@ -18,7 +16,7 @@ void NearerCollisionEngine::DetectCollision(nextfloor::mesh::Mesh* target, nextf
         return;
     }
 
-    auto distance = ComputeCollision(target, obstacle);
+    float distance = ComputeCollision(target, obstacle);
     target->UpdateObstacleIfNearer(obstacle, distance);
 }
 

@@ -10,6 +10,7 @@
 #include "nextfloor/mesh/drawing_mesh.h"
 
 #include <memory>
+#include <vector>
 #include <glm/glm.hpp>
 
 #include "nextfloor/thing/thing.h"
@@ -31,7 +32,7 @@ public:
     virtual void AddWindow() = 0;
 
     void AddBricks(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks);
-    std::vector<Mesh*> FindCollisionNeighborsOf(const Mesh& target) const final;
+    std::vector<nextfloor::mesh::Mesh*> FindCollisionNeighborsOf(const nextfloor::mesh::Mesh& target) const final;
     std::unique_ptr<nextfloor::mesh::Mesh> remove_child(nextfloor::mesh::Mesh* child) final;
 
     std::string class_name() final { return "Wall"; }

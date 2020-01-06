@@ -6,6 +6,8 @@
 
 #include "nextfloor/layout/universe_grid.h"
 
+#include <utility>
+
 namespace nextfloor {
 
 namespace layout {

@@ -12,6 +12,7 @@
 #include <memory>
 
 #include "nextfloor/playground/grid.h"
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 

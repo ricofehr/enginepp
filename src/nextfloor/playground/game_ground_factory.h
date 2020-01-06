@@ -9,9 +9,11 @@
 
 #include "nextfloor/playground/ground_factory.h"
 
-#include "nextfloor/playground/grid_factory.h"
+#include <glm/glm.hpp>
+
 #include "nextfloor/playground/wall.h"
 
+#include "nextfloor/playground/grid_factory.h"
 #include "nextfloor/mesh/border_factory.h"
 #include "nextfloor/thing/thing_factory.h"
 

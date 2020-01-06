@@ -11,7 +11,6 @@
 
 #include <glm/glm.hpp>
 #include <vector>
-#include <memory>
 
 namespace nextfloor {
 

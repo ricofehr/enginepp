@@ -6,6 +6,8 @@
 
 #include "nextfloor/playground/universe.h"
 
+#include <utility>
+
 namespace nextfloor {
 
 namespace playground {

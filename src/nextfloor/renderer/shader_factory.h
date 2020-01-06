@@ -7,9 +7,7 @@
 #ifndef NEXTFLOOR_RENDERER_SHADERFACTORY_H_
 #define NEXTFLOOR_RENDERER_SHADERFACTORY_H_
 
-#include <memory>
-#include <glm/glm.hpp>
-
+#include <string>
 
 #include "nextfloor/renderer/shader.h"
 

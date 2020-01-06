@@ -7,6 +7,9 @@
 
 #include "nextfloor/renderer/gl_shader_factory.h"
 
+#include <tbb/mutex.h>
+#include <cassert>
+
 #include "nextfloor/renderer/vertex_gl_shader.h"
 #include "nextfloor/renderer/fragment_gl_shader.h"
 
@@ -30,11 +33,11 @@ Shader* GlShaderFactory::MakeVertexShader(const std::string& shader_path, unsign
 {
     static tbb::mutex vertex_mutex_;
 
-    // vertex_mutex_.lock();
+    vertex_mutex_.lock();
     if (shaders_.find(shader_path) == shaders_.end()) {
         shaders_[shader_path] = std::make_unique<VertexGlShader>(shader_path, program_id);
     }
-    // vertex_mutex_.unlock();
+    vertex_mutex_.unlock();
 
     assert(shaders_.find(shader_path) != shaders_.end());
 
@@ -45,11 +48,11 @@ Shader* GlShaderFactory::MakeFragmentShader(const std::string& shader_path, unsi
 {
     static tbb::mutex fragment_mutex_;
 
-    // fragment_mutex_.lock();
+    fragment_mutex_.lock();
     if (shaders_.find(shader_path) == shaders_.end()) {
         shaders_[shader_path] = std::make_unique<FragmentGlShader>(shader_path, program_id);
     }
-    // fragment_mutex_.unlock();
+    fragment_mutex_.unlock();
 
     assert(shaders_.find(shader_path) != shaders_.end());
 

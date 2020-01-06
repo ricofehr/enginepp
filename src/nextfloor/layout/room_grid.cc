@@ -6,6 +6,8 @@
 
 #include "nextfloor/layout/room_grid.h"
 
+#include <utility>
+
 namespace nextfloor {
 
 namespace layout {

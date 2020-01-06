@@ -10,9 +10,7 @@
 #include "nextfloor/renderer/cube_gl_renderer_engine.h"
 #include "nextfloor/renderer/gl_scene_window.h"
 #include "nextfloor/renderer/gl_scene_input.h"
-
 #include "nextfloor/renderer/gl_shader_factory.h"
-
 
 namespace nextfloor {
 

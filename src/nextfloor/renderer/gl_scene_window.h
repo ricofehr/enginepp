@@ -11,9 +11,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <memory>
 
-#include "nextfloor/mesh/mesh.h"
 #include "nextfloor/renderer/shader.h"
 #include "nextfloor/renderer/shader_factory.h"
 

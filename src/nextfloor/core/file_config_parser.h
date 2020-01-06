@@ -12,6 +12,7 @@
 #include <libconfig.h++>
 #include <memory>
 #include <tbb/tbb.h>
+#include <string>
 
 namespace nextfloor {
 
@@ -47,8 +48,6 @@ public:
     int getDebugLevel() const final { return getSetting<int>("debug"); }
 
     int getCollisionGranularity() const final { return getSetting<int>("granularity"); }
-
-    int getClippingLevel() const final { return getSetting<int>("clipping"); }
 
     int getThreadsCount() const final
     {
@@ -95,7 +94,6 @@ private:
     void SetDefaultWidthValueIfEmpty();
     void SetDefaultHeightValueIfEmpty();
     void SetDefaultCollisionGranularityValueIfEmpty();
-    void SetDefaultClippingValueIfEmpty();
     void SetDefaultVsyncValueIfEmpty();
     void SetDefaultGridModeValueIfEmpty();
     void SetDefaultDebugVerbosityValueIfEmpty();
@@ -104,7 +102,6 @@ private:
     bool IsHelpParameter(const std::string& parameter_name) const;
     bool IsDisplayConfigParameter(const std::string& parameter_name) const;
 
-    void ManageClippingParameter(const std::string& parameter_name, const std::string& parameter_value);
     void ManageDebugParameter(const std::string& parameter_name, const std::string& parameter_value);
     void ManageExecutionTimeParameter(const std::string& parameter_name, const std::string& parameter_value);
     void ManageGranularityParameter(const std::string& parameter_name, const std::string& parameter_value);

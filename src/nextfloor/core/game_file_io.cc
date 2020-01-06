@@ -7,6 +7,7 @@
 #include "nextfloor/core/game_file_io.h"
 
 #include <cassert>
+#include <fstream>
 #include <sstream>
 
 #include "nextfloor/core/common_services.h"

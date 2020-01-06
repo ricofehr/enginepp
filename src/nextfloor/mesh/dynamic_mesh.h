@@ -9,9 +9,7 @@
 
 #include "nextfloor/mesh/drawing_mesh.h"
 
-#include <memory>
-#include <tbb/mutex.h>
-#include <glm/glm.hpp>
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 

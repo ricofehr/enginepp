@@ -9,7 +9,10 @@
 
 #include "nextfloor/character/character.h"
 
-#include <glm/glm.hpp>
+#include <memory>
+
+#include "nextfloor/character/camera.h"
+#include "nextfloor/mesh/border.h"
 
 namespace nextfloor {
 

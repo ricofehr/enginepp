@@ -6,10 +6,8 @@
 
 #include "nextfloor/mesh/dynamic_mesh.h"
 
-#include <sstream>
+#include <glm/glm.hpp>
 #include <tbb/tbb.h>
-
-#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 
@@ -28,13 +26,13 @@ bool DynamicMesh::IsNeighborEligibleForCollision(const Mesh& neighbor) const
 
 bool DynamicMesh::IsInDirection(const Mesh& target) const
 {
-    auto target_vector = target.location() - location();
+    glm::vec3 target_vector = target.location() - location();
     return glm::dot(movement(), target_vector) > 0;
 }
 
 bool DynamicMesh::IsNeighborReachable(const Mesh& neighbor) const
 {
-    auto vector_neighbor = neighbor.location() - location();
+    glm::vec3 vector_neighbor = neighbor.location() - location();
     return glm::length(movement()) + glm::length(neighbor.movement())
            >= glm::length(vector_neighbor) - (diagonal() + neighbor.diagonal()) / 2.0f;
 }

@@ -8,7 +8,6 @@
 
 #include <cassert>
 #include <sstream>
-#include <list>
 
 #include "nextfloor/core/common_services.h"
 

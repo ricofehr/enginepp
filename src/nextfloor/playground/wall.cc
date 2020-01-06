@@ -1,7 +1,13 @@
+/**
+ *  @file wall.cc
+ *  @brief Wall class file
+ *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
+ */
+
 #include "nextfloor/playground/wall.h"
 
-#include <memory>
-#include <iostream>
+#include <utility>
+#include <cassert>
 
 namespace nextfloor {
 

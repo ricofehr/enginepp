@@ -7,6 +7,7 @@
 #include "nextfloor/core/terminal_log.h"
 
 #include <cassert>
+#include <iostream>
 
 namespace nextfloor {
 

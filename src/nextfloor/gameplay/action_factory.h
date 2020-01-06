@@ -9,6 +9,8 @@
 
 #include "nextfloor/gameplay/action.h"
 
+#include <memory>
+
 namespace nextfloor {
 
 namespace gameplay {

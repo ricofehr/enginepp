@@ -6,7 +6,7 @@
 
 #include "nextfloor/physic/serial_nearer_collision_engine.h"
 
-#include <tbb/tbb.h>
+#include "nextfloor/mesh/border.h"
 
 namespace nextfloor {
 
@@ -16,8 +16,8 @@ SerialNearerCollisionEngine::SerialNearerCollisionEngine(int granularity) : Near
 
 float SerialNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
-    auto target_border = target->border();
-    auto obstacle_border = obstacle->border();
+    nextfloor::mesh::Border* target_border = target->border();
+    nextfloor::mesh::Border* obstacle_border = obstacle->border();
 
     for (float factor = 1.0f; factor <= granularity_; factor += 1.0f) {
         float parted_move = factor / granularity_;

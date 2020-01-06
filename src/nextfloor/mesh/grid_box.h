@@ -7,13 +7,14 @@
 #ifndef NEXTFLOOR_PLAYGROUND_GRIDBOX_H_
 #define NEXTFLOOR_PLAYGROUND_GRIDBOX_H_
 
+#include <vector>
+#include <glm/glm.hpp>
+
 #include "nextfloor/mesh/mesh.h"
 
-namespace nextfloor {
+#include "nextfloor/playground/grid.h"
 
-namespace playground {
-class Grid;
-}  // namespace playground
+namespace nextfloor {
 
 namespace mesh {
 

@@ -5,6 +5,8 @@
  */
 #include "nextfloor/camera/game_camera_factory.h"
 
+#include <memory>
+
 #include "nextfloor/camera/head_camera.h"
 
 namespace nextfloor {

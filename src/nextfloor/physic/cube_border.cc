@@ -6,13 +6,12 @@
 
 #include "nextfloor/physic/cube_border.h"
 
+#include <glm/glm.hpp>
 /* Need Experimental flag for transform methods */
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <tbb/tbb.h>
-
-#include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
 

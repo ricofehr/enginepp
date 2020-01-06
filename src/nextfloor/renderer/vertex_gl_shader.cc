@@ -6,7 +6,8 @@
 
 #include "nextfloor/renderer/vertex_gl_shader.h"
 
-#include <vector>
+#include <GL/glew.h>
+#include <string>
 
 #include "nextfloor/core/common_services.h"
 
@@ -20,7 +21,6 @@ namespace renderer {
 void VertexGlShader::LoadShader()
 {
     using nextfloor::core::CommonServices;
-
     std::string shader_code = CommonServices::getFileIO()->ReadFile(shader_filepath_);
     const char* shader_pointer = shader_code.c_str();
 

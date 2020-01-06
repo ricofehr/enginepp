@@ -9,9 +9,6 @@
 
 #include "nextfloor/mesh/mesh.h"
 
-#include <memory>
-#include <glm/glm.hpp>
-
 namespace nextfloor {
 
 namespace mesh {

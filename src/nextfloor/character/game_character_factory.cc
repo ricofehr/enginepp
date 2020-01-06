@@ -5,6 +5,13 @@
  */
 #include "nextfloor/character/game_character_factory.h"
 
+#include <cassert>
+#include <memory>
+#include <utility>
+
+#include "nextfloor/character/camera.h"
+#include "nextfloor/mesh/border.h"
+
 #include "nextfloor/character/player.h"
 
 namespace nextfloor {
@@ -22,8 +29,9 @@ std::unique_ptr<Character> GameCharacterFactory::MakePlayer(const glm::vec3& loc
     assert(border_factory_ != nullptr);
     assert(camera_factory_ != nullptr);
 
-    auto border = border_factory_->MakeBorder(location, Player::kBorderScale);
-    auto camera = camera_factory_->MakeCamera();
+    using nextfloor::mesh::Border;
+    std::unique_ptr<Border> border = border_factory_->MakeBorder(location, Player::kBorderScale);
+    std::unique_ptr<Camera> camera = camera_factory_->MakeCamera();
     return std::make_unique<Player>(std::move(border), std::move(camera));
 }
 

@@ -7,6 +7,8 @@
 
 #include "nextfloor/physic/mesh_border_factory.h"
 
+#include <glm/glm.hpp>
+
 #include "nextfloor/physic/cube_border.h"
 
 namespace nextfloor {

@@ -6,6 +6,9 @@
 
 #include "nextfloor/renderer/fragment_gl_shader.h"
 
+#include <GL/glew.h>
+#include <string>
+
 #include "nextfloor/core/common_services.h"
 
 namespace nextfloor {
@@ -15,7 +18,6 @@ namespace renderer {
 void FragmentGlShader::LoadShader()
 {
     using nextfloor::core::CommonServices;
-
     std::string shader_code = CommonServices::getFileIO()->ReadFile(shader_filepath_);
     const char* shader_pointer = shader_code.c_str();
 

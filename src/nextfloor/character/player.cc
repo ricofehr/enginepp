@@ -6,8 +6,8 @@
 
 #include "nextfloor/character/player.h"
 
-#include <glm/glm.hpp>
-#include "nextfloor/playground/ground.h"
+#include <cassert>
+#include <utility>
 
 namespace nextfloor {
 

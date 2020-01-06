@@ -7,7 +7,8 @@
 #ifndef NEXTFLOOR_CORE_LOG_H_
 #define NEXTFLOOR_CORE_LOG_H_
 
-#include <iostream>
+#include <string>
+#include <sstream>
 
 namespace nextfloor {
 

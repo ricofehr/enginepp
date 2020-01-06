@@ -14,13 +14,14 @@
 #include "nextfloor/physic/game_collision_engine_factory.h"
 #include "nextfloor/polygon/mesh_polygon_factory.h"
 #include "nextfloor/layout/mesh_grid_factory.h"
-
 #include "nextfloor/renderer/gl_renderer_factory.h"
 #include "nextfloor/playground/game_ground_factory.h"
 #include "nextfloor/thing/game_thing_factory.h"
 #include "nextfloor/core/services_core_factory.h"
 #include "nextfloor/action/sprite_action_factory.h"
 #include "nextfloor/core/common_services.h"
+
+#include "nextfloor/gameplay/loop.h"
 
 int main(int argc, char* argv[])
 {
@@ -47,7 +48,7 @@ int main(int argc, char* argv[])
     nextfloor::gameplay::DemoGameFactory game_factory(
       &hid_factory, &renderer_factory, &ground_factory, &thing_factory, &character_factory, &collision_engine_factory);
 
-    auto game_loop = game_factory.MakeLoop();
+    std::unique_ptr<nextfloor::gameplay::Loop> game_loop = game_factory.MakeLoop();
 
     /* Frame Loop */
     game_loop->RunLoop();

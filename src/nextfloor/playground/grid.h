@@ -10,7 +10,6 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-#include "nextfloor/mesh/grid_box.h"
 #include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {

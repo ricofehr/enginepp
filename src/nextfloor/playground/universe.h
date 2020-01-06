@@ -10,6 +10,10 @@
 #include "nextfloor/playground/ground.h"
 
 #include <memory>
+#include <vector>
+
+#include "nextfloor/playground/grid.h"
+#include "nextfloor/mesh/border.h"
 
 namespace nextfloor {
 

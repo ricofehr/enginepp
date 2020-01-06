@@ -9,8 +9,6 @@
 
 #include "nextfloor/physic/nearer_collision_engine.h"
 
-#include "nextfloor/mesh/mesh.h"
-
 namespace nextfloor {
 
 namespace physic {

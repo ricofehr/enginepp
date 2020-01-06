@@ -8,7 +8,7 @@
 #define NEXTFLOOR_PLAYGROUND_GROUNDFACTORY_H_
 
 #include <memory>
-#include <string>
+#include <vector>
 #include <glm/glm.hpp>
 
 #include "nextfloor/playground/ground.h"

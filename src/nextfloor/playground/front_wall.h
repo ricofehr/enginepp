@@ -10,7 +10,9 @@
 #include "nextfloor/playground/width_wall.h"
 
 #include <memory>
-#include <glm/glm.hpp>
+#include <vector>
+
+#include "nextfloor/thing/thing.h"
 
 namespace nextfloor {
 

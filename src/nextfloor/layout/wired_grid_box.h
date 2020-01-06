@@ -11,6 +11,7 @@
 
 #include <glm/glm.hpp>
 #include <tbb/mutex.h>
+#include <vector>
 
 #include "nextfloor/playground/grid.h"
 #include "nextfloor/mesh/mesh.h"

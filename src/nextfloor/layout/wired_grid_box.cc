@@ -6,7 +6,11 @@
 
 #include "nextfloor/layout/wired_grid_box.h"
 
-#include <iostream>
+#include <vector>
+#include <cassert>
+#include <tbb/mutex.h>
+
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 

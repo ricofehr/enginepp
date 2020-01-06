@@ -7,6 +7,15 @@
 
 #include "nextfloor/thing/game_thing_factory.h"
 
+#include <vector>
+#include <utility>
+#include <memory>
+#include <glm/glm.hpp>
+
+#include "nextfloor/mesh/border.h"
+#include "nextfloor/mesh/polygon.h"
+#include "nextfloor/thing/thing.h"
+
 #include "nextfloor/thing/wall_brick.h"
 #include "nextfloor/thing/rock.h"
 
@@ -23,7 +32,7 @@ GameThingFactory::GameThingFactory(nextfloor::mesh::PolygonFactory* polygon_fact
 
 std::unique_ptr<Thing> GameThingFactory::MakeRock(const glm::vec3& location, const glm::vec3& movement) const
 {
-    auto border = border_factory_->MakeBorder(location, Rock::kBigScale);
+    std::unique_ptr<nextfloor::mesh::Border> border = border_factory_->MakeBorder(location, Rock::kBigScale);
     std::vector<std::unique_ptr<nextfloor::mesh::Polygon>> rock;
     rock.push_back(polygon_factory_->MakeCube(location, Rock::kBigScale, Rock::kTexture));
     return std::make_unique<Rock>(std::move(border), std::move(rock), movement);
@@ -31,7 +40,7 @@ std::unique_ptr<Thing> GameThingFactory::MakeRock(const glm::vec3& location, con
 
 std::unique_ptr<Thing> GameThingFactory::MakeLittleRock(const glm::vec3& location, const glm::vec3& movement) const
 {
-    auto border = border_factory_->MakeBorder(location, Rock::kSmallScale);
+    std::unique_ptr<nextfloor::mesh::Border> border = border_factory_->MakeBorder(location, Rock::kSmallScale);
     std::vector<std::unique_ptr<nextfloor::mesh::Polygon>> rock;
     rock.push_back(polygon_factory_->MakeCube(location, Rock::kSmallScale, Rock::kTexture));
     return std::make_unique<Rock>(std::move(border), std::move(rock), movement);
@@ -65,7 +74,7 @@ std::unique_ptr<Thing> GameThingFactory::MakeWallBrick(const glm::vec3& location
                                                        const glm::vec3& scale,
                                                        const std::string& texture) const
 {
-    auto border = border_factory_->MakeBorder(location, scale);
+    std::unique_ptr<nextfloor::mesh::Border> border = border_factory_->MakeBorder(location, scale);
     std::vector<std::unique_ptr<nextfloor::mesh::Polygon>> brick;
     brick.push_back(polygon_factory_->MakeCube(location, scale, texture));
     return std::make_unique<WallBrick>(std::move(border), std::move(brick));

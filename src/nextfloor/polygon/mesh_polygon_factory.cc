@@ -7,6 +7,8 @@
 
 #include "nextfloor/polygon/mesh_polygon_factory.h"
 
+#include <glm/glm.hpp>
+
 #include "nextfloor/polygon/cube.h"
 
 namespace nextfloor {

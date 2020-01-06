@@ -7,7 +7,6 @@
 #ifndef NEXTFLOOR_RENDERER_SHADER_H_
 #define NEXTFLOOR_RENDERER_SHADER_H_
 
-#include <string>
 
 namespace nextfloor {
 

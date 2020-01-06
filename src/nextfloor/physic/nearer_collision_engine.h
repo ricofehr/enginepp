@@ -9,10 +9,7 @@
 
 #include "nextfloor/physic/collision_engine.h"
 
-#include <tbb/mutex.h>
-
 #include "nextfloor/mesh/mesh.h"
-
 
 namespace nextfloor {
 

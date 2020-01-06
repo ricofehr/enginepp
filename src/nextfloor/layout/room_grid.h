@@ -9,6 +9,11 @@
 
 #include "nextfloor/layout/wired_grid.h"
 
+#include <glm/glm.hpp>
+#include <memory>
+
+#include "nextfloor/mesh/grid_box.h"
+
 namespace nextfloor {
 
 namespace layout {

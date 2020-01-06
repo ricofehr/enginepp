@@ -9,10 +9,6 @@
 
 #include "nextfloor/core/log.h"
 
-#include <iostream>
-#include <sstream>
-
-
 namespace nextfloor {
 
 namespace core {

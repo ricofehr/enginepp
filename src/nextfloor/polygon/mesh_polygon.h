@@ -9,6 +9,9 @@
 
 #include "nextfloor/mesh/polygon.h"
 
+#include <glm/glm.hpp>
+#include <string>
+
 namespace nextfloor {
 
 namespace polygon {

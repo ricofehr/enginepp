@@ -9,6 +9,9 @@
 
 #include "nextfloor/renderer/gl_renderer_engine.h"
 
+#include <string>
+#include <GL/glew.h>
+
 namespace nextfloor {
 
 namespace renderer {

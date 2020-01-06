@@ -6,6 +6,9 @@
 
 #include "nextfloor/renderer/gl_scene_input.h"
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 namespace nextfloor {
 
 namespace renderer {

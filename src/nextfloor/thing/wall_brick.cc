@@ -6,6 +6,8 @@
 
 #include "nextfloor/thing/wall_brick.h"
 
+#include <utility>
+
 namespace nextfloor {
 
 namespace thing {

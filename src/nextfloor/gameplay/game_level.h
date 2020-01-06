@@ -10,9 +10,9 @@
 #include "nextfloor/gameplay/level.h"
 
 #include <memory>
+#include <list>
 
 #include "nextfloor/gameplay/renderer_factory.h"
-
 #include "nextfloor/physic/collision_engine.h"
 #include "nextfloor/character/character.h"
 #include "nextfloor/playground/ground.h"

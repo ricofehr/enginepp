@@ -9,9 +9,13 @@
 
 #include "nextfloor/playground/grid.h"
 
+#include <glm/glm.hpp>
 #include <memory>
 #include <tbb/mutex.h>
+#include <vector>
 
+#include "nextfloor/mesh/mesh.h"
+#include "nextfloor/mesh/grid_box.h"
 
 namespace nextfloor {
 

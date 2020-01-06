@@ -7,12 +7,12 @@
 
 #include "nextfloor/physic/game_collision_engine_factory.h"
 
+#include <memory>
+#include <cassert>
+
 #include "nextfloor/physic/tbb_nearer_collision_engine.h"
 #include "nextfloor/physic/serial_nearer_collision_engine.h"
 #include "nextfloor/physic/cl_nearer_collision_engine.h"
-
-#include "nextfloor/core/common_services.h"
-
 
 namespace nextfloor {
 

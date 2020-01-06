@@ -6,7 +6,8 @@
 
 #include "nextfloor/playground/roof.h"
 
-#include "nextfloor/core/common_services.h"
+#include <utility>
+#include <glm/glm.hpp>
 
 namespace nextfloor {
 
@@ -20,7 +21,7 @@ Roof::Roof(std::vector<std::unique_ptr<nextfloor::thing::Thing>> wall_bricks)
 void Roof::AddDoor()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
-        auto obj_location = objects_[cnt]->location();
+        glm::vec3 obj_location = objects_[cnt]->location();
         if (obj_location.x >= location().x - kDoorDeltaX && obj_location.x <= location().x + kDoorDeltaX) {
             if (obj_location.z >= location().z - kDoorDeltaZ && obj_location.z <= location().z + kDoorDeltaZ) {
                 remove_child(objects_[cnt].get());

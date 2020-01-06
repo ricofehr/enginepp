@@ -10,7 +10,11 @@
 #include "nextfloor/thing/thing.h"
 
 #include <memory>
+#include <vector>
 #include <glm/glm.hpp>
+
+#include "nextfloor/mesh/border.h"
+#include "nextfloor/mesh/polygon.h"
 
 namespace nextfloor {
 

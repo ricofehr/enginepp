@@ -7,6 +7,11 @@
 #ifndef NEXTFLOOR_THING_THINGFACTORY_H_
 #define NEXTFLOOR_THING_THINGFACTORY_H_
 
+#include <memory>
+#include <vector>
+#include <string>
+#include <glm/glm.hpp>
+
 #include "nextfloor/thing/thing.h"
 
 namespace nextfloor {

@@ -6,8 +6,8 @@
 
 #include "nextfloor/renderer/gl_shader.h"
 
+#include <GL/glew.h>
 #include <vector>
-#include <iostream>
 
 #include "nextfloor/core/common_services.h"
 
@@ -53,8 +53,6 @@ void GlShader::CheckShader()
 
 void GlShader::CheckProgram()
 {
-    using nextfloor::core::CommonServices;
-
     GLint result = GL_FALSE;
     int info_log_length;
 

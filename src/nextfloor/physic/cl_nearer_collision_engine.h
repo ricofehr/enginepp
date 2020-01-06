@@ -16,7 +16,6 @@
 #include <vector>
 #include <tbb/mutex.h>
 
-#include <GL/glew.h>
 #ifdef __APPLE__
 #include <OpenCL/cl2.hpp>
 #else

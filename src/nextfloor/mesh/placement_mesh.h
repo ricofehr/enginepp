@@ -10,10 +10,11 @@
 #include "nextfloor/mesh/composite_mesh.h"
 
 #include <memory>
-#include <glm/glm.hpp>
+#include <vector>
 
 #include "nextfloor/mesh/border.h"
 #include "nextfloor/mesh/grid_box.h"
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 
@@ -43,7 +44,7 @@ public:
     std::vector<glm::vec3> getCoordsModelMatrixComputed() const final;
     std::vector<glm::ivec3> coords() const final;
     void ClearCoords() final;
-    std::unique_ptr<nextfloor::mesh::Mesh> remove_child(nextfloor::mesh::Mesh* child) override;
+    std::unique_ptr<Mesh> remove_child(Mesh* child) override;
 
     std::string class_name() override { return "PlacementMesh"; }
 

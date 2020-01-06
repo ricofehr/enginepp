@@ -7,6 +7,8 @@
 #ifndef NEXTFLOOR_GAMEPLAY_HIDFACTORY_H_
 #define NEXTFLOOR_GAMEPLAY_HIDFACTORY_H_
 
+#include <memory>
+
 #include "nextfloor/gameplay/hid.h"
 #include "nextfloor/gameplay/input_handler.h"
 

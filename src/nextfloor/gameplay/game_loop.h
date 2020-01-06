@@ -9,7 +9,6 @@
 
 #include "nextfloor/gameplay/loop.h"
 
-#include <list>
 #include <memory>
 
 #include "nextfloor/gameplay/scene_window.h"

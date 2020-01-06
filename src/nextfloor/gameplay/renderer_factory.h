@@ -8,7 +8,7 @@
 #define NEXTFLOOR_GAMEPLAY_RENDERERFACTORY_H_
 
 #include <memory>
-#include <glm/glm.hpp>
+#include <string>
 
 #include "nextfloor/gameplay/renderer_engine.h"
 #include "nextfloor/gameplay/scene_window.h"

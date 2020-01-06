@@ -8,7 +8,6 @@
 #define NEXTFLOOR_PLAYGROUND_GRIDFACTORY_H_
 
 #include <memory>
-#include <string>
 #include <glm/glm.hpp>
 
 #include "nextfloor/playground/grid.h"

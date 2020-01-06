@@ -6,10 +6,12 @@
 
 #include "nextfloor/mesh/composite_mesh.h"
 
-#include <sstream>
+#include <vector>
+#include <cassert>
+#include <utility>
 #include <tbb/tbb.h>
 
-#include "nextfloor/core/common_services.h"
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 
@@ -69,7 +71,7 @@ std::vector<Mesh*> CompositeMesh::descendants() const
             ret_childs.push_back(object.get());
         }
         else {
-            auto grant_childs = object->descendants();
+            std::vector<Mesh*> grant_childs = object->descendants();
             ret_childs.insert(ret_childs.end(), grant_childs.begin(), grant_childs.end());
         }
     }
@@ -105,7 +107,8 @@ std::unique_ptr<Mesh> CompositeMesh::remove_child(Mesh* child)
     std::unique_ptr<Mesh> ret{nullptr};
 
     if (child->hasChilds()) {
-        for (auto& grant_child : child->childs()) {
+        std::vector<Mesh*> childs = child->childs();
+        for (auto& grant_child : childs) {
             child->remove_child(grant_child);
         }
     }

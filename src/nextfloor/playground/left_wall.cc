@@ -6,6 +6,8 @@
 
 #include "nextfloor/playground/left_wall.h"
 
+#include <utility>
+
 namespace nextfloor {
 
 namespace playground {

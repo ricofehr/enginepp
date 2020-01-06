@@ -6,9 +6,14 @@
 
 #include "nextfloor/layout/wired_grid.h"
 
+#include <glm/glm.hpp>
 #include <tbb/tbb.h>
 #include <tbb/task_group.h>
+#include <vector>
 #include <iostream>
+#include <cassert>
+
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 

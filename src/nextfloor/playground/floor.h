@@ -10,8 +10,9 @@
 #include "nextfloor/playground/wall.h"
 
 #include <memory>
-#include <glm/glm.hpp>
-#include <string>
+#include <vector>
+
+#include "nextfloor/thing/thing.h"
 
 namespace nextfloor {
 

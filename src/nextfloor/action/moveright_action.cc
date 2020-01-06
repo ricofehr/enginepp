@@ -5,6 +5,7 @@
  */
 #include "nextfloor/action/moveright_action.h"
 
+#include <cassert>
 #include <glm/glm.hpp>
 
 namespace nextfloor {

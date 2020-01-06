@@ -7,10 +7,13 @@
 
 #include "nextfloor/layout/mesh_grid_factory.h"
 
+#include <memory>
+
+#include "nextfloor/mesh/grid_box.h"
+
 #include "nextfloor/layout/room_grid.h"
 #include "nextfloor/layout/universe_grid.h"
 #include "nextfloor/layout/wired_grid_box.h"
-
 
 namespace nextfloor {
 

@@ -10,8 +10,10 @@
 #include "nextfloor/mesh/default_mesh.h"
 
 #include <memory>
+#include <vector>
 #include <tbb/mutex.h>
-#include <glm/glm.hpp>
+
+#include "nextfloor/mesh/mesh.h"
 
 namespace nextfloor {
 

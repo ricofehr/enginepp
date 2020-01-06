@@ -6,6 +6,7 @@
 
 #include "nextfloor/thing/rock.h"
 
+#include <utility>
 
 namespace nextfloor {
 

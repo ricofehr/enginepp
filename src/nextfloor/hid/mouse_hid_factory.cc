@@ -7,6 +7,8 @@
 
 #include "nextfloor/hid/mouse_hid_factory.h"
 
+#include <memory>
+
 #include "nextfloor/hid/mouse_keyboard.h"
 #include "nextfloor/hid/game_input_handler.h"
 

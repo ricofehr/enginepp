@@ -7,8 +7,6 @@
 #ifndef NEXTFLOOR_GAMEPLAY_LOOP_H_
 #define NEXTFLOOR_GAMEPLAY_LOOP_H_
 
-#include <list>
-
 namespace nextfloor {
 
 namespace gameplay {

@@ -10,7 +10,10 @@
 #include "nextfloor/renderer/shader_factory.h"
 
 #include <map>
-#include <tbb/mutex.h>
+#include <string>
+#include <memory>
+
+#include "nextfloor/renderer/shader.h"
 
 namespace nextfloor {
 

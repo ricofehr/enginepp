@@ -5,6 +5,9 @@
  */
 #include "nextfloor/action/moveup_action.h"
 
+#include <cassert>
+#include <glm/glm.hpp>
+
 namespace nextfloor {
 
 namespace action {

@@ -9,8 +9,7 @@
 
 #include "nextfloor/core/file_io.h"
 
-#include <fstream>
-#include <iostream>
+#include <string>
 
 namespace nextfloor {
 

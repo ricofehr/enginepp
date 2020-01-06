@@ -7,7 +7,7 @@
 #ifndef NEXTFLOOR_CORE_COMMONSERVICES_H_
 #define NEXTFLOOR_CORE_COMMONSERVICES_H_
 
-#include <cassert>
+#include <memory>
 
 #include "nextfloor/core/config_parser.h"
 #include "nextfloor/core/file_io.h"
@@ -15,7 +15,7 @@
 #include "nextfloor/core/log.h"
 #include "nextfloor/core/exit.h"
 
-#include "nextfloor/core/services_core_factory.h"
+#include "nextfloor/core/core_factory.h"
 
 namespace nextfloor {
 
@@ -33,15 +33,11 @@ public:
     /*
      *  Service Accessors
      */
-    static ConfigParser* getConfig() { return Instance()->config(); }
-
-    static const FileIO* getFileIO() { return Instance()->fileIO(); }
-
-    static const Log* getLog() { return Instance()->log(); }
-
-    static const RandomGenerator* getRandomGenerator() { return Instance()->random_generator(); }
-
-    static const Exit* getExit() { return Instance()->exit(); }
+    static ConfigParser* getConfig();
+    static const FileIO* getFileIO();
+    static const Log* getLog();
+    static const RandomGenerator* getRandomGenerator();
+    static const Exit* getExit();
 
 protected:
     CommonServices(const CoreFactory& factory);
@@ -59,43 +55,13 @@ private:
      *  Return sole Instance
      *  @return sole CommonServices instance
      */
-    static CommonServices* Instance()
-    {
-        /* Raw pointer because static var */
-        ServicesCoreFactory factory;
-        static auto instance = new CommonServices(factory);
-        return instance;
-    }
+    static CommonServices* Instance();
 
-    ConfigParser* config()
-    {
-        assert(config_ != nullptr);
-        return config_.get();
-    }
-
-    const FileIO* fileIO()
-    {
-        assert(file_io_ != nullptr);
-        return file_io_.get();
-    }
-
-    const Log* log() const
-    {
-        assert(log_ != nullptr);
-        return log_.get();
-    }
-
-    const RandomGenerator* random_generator() const
-    {
-        assert(random_generator_ != nullptr);
-        return random_generator_.get();
-    }
-
-    const Exit* exit() const
-    {
-        assert(exit_ != nullptr);
-        return exit_.get();
-    }
+    ConfigParser* config();
+    const FileIO* fileIO();
+    const Log* log() const;
+    const RandomGenerator* random_generator() const;
+    const Exit* exit() const;
 
     std::unique_ptr<ConfigParser> config_{nullptr};
     std::unique_ptr<FileIO> file_io_{nullptr};

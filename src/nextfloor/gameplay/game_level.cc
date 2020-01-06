@@ -7,6 +7,16 @@
 #include "nextfloor/gameplay/game_level.h"
 
 #include <tbb/tbb.h>
+#include <list>
+#include <utility>
+#include <iterator>
+#include <vector>
+#include <string>
+
+#include "nextfloor/gameplay/renderer_engine.h"
+
+#include "nextfloor/mesh/mesh.h"
+#include "nextfloor/character/camera.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -54,7 +64,7 @@ void GameLevel::ExecutePlayerAction(Action* command, double elapsed_time)
 
 void GameLevel::Move()
 {
-    auto moving_objects = universe_->GetMovingObjects();
+    std::vector<nextfloor::mesh::Mesh*> moving_objects = universe_->GetMovingObjects();
     DetectCollision(moving_objects);
     MoveObjects(moving_objects);
 }
@@ -66,7 +76,7 @@ void GameLevel::DetectCollision(std::vector<nextfloor::mesh::Mesh*> moving_objec
 
 void GameLevel::PivotCollisonOnObject(nextfloor::mesh::Mesh* pivot)
 {
-    auto test_objects = pivot->FindCollisionNeighbors();
+    std::vector<nextfloor::mesh::Mesh*> test_objects = pivot->FindCollisionNeighbors();
 
     tbb::parallel_for(0, (int)test_objects.size(), 1, [&](int i) {
         assert(pivot->id() != test_objects[i]->id());
@@ -88,7 +98,7 @@ void GameLevel::Draw(float window_size_ratio)
 
 void GameLevel::PrepareDraw(float window_size_ratio)
 {
-    auto active_camera = game_cameras_.front();
+    nextfloor::character::Camera* active_camera = game_cameras_.front();
     universe_->PrepareDraw(active_camera->GetViewProjectionMatrix(window_size_ratio));
 }
 
@@ -100,9 +110,9 @@ void GameLevel::Renderer(const nextfloor::mesh::Mesh& mesh)
 
     auto active_camera = game_cameras_.front();
     if (active_camera->IsInFieldOfView(mesh)) {
-        auto mvps = mesh.GetModelViewProjectionsAndTextureToDraw();
+        std::vector<std::pair<glm::mat4, std::string>> mvps = mesh.GetModelViewProjectionsAndTextureToDraw();
         for (const auto& [mvp, texture] : mvps) {
-            auto renderer_engine = renderer_factory_->MakeCubeRenderer(texture);
+            RendererEngine* renderer_engine = renderer_factory_->MakeCubeRenderer(texture);
             renderer_engine->Draw(mvp);
         }
     }

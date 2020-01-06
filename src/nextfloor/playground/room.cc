@@ -6,7 +6,7 @@
 
 #include "nextfloor/playground/room.h"
 
-#include "nextfloor/core/common_services.h"
+#include <utility>
 
 namespace nextfloor {
 

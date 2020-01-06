@@ -10,8 +10,12 @@
 #include "nextfloor/gameplay/renderer_factory.h"
 
 #include <map>
+#include <memory>
+#include <string>
 #include <tbb/mutex.h>
 
+#include "nextfloor/gameplay/renderer_engine.h"
+#include "nextfloor/gameplay/scene_window.h"
 #include "nextfloor/renderer/shader_factory.h"
 
 namespace nextfloor {

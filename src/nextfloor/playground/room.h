@@ -7,14 +7,15 @@
 #ifndef NEXTFLOOR_PLAYGROUND_ROOM_H_
 #define NEXTFLOOR_PLAYGROUND_ROOM_H_
 
-
 #include "nextfloor/playground/ground.h"
 
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "nextfloor/playground/grid.h"
 #include "nextfloor/playground/wall.h"
+#include "nextfloor/mesh/border.h"
 #include "nextfloor/mesh/dynamic_mesh.h"
 
 namespace nextfloor {

@@ -10,6 +10,7 @@
 #include "nextfloor/polygon/mesh_polygon.h"
 
 #include <glm/glm.hpp>
+#include <string>
 
 namespace nextfloor {
 

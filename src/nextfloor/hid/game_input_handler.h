@@ -9,7 +9,7 @@
 
 #include "nextfloor/gameplay/input_handler.h"
 
-#include "nextfloor/gameplay/action_factory.h"
+#include <memory>
 
 namespace nextfloor {
 

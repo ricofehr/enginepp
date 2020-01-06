@@ -7,7 +7,6 @@
 #ifndef NEXTFLOOR_GAMEPLAY_SCENEINPUT_H_
 #define NEXTFLOOR_GAMEPLAY_SCENEINPUT_H_
 
-#include <functional>
 #include <glm/glm.hpp>
 
 namespace nextfloor {
