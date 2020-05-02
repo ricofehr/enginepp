@@ -24,6 +24,7 @@ public:
     std::unique_ptr<nextfloor::gameplay::Action> MakeMoveLeftAction() const final;
     std::unique_ptr<nextfloor::gameplay::Action> MakeMoveRightAction() const final;
     std::unique_ptr<nextfloor::gameplay::Action> MakeMoveUpAction() const final;
+    std::unique_ptr<nextfloor::gameplay::Action> MakeJumpAction() const final;
 };
 
 }  // namespace action

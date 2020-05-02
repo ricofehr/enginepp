@@ -61,6 +61,16 @@ glm::mat4 HeadCamera::GetViewMatrix() const
     return glm::lookAt(location(), location() + direction(), head());
 }
 
+glm::vec3 HeadCamera::owner_movement() const
+{
+    auto movement = direction();
+    // if (!owner_->is_flying()) {
+    //     movement.y = -1.0f;
+    // }
+
+    return movement;
+}
+
 }  // namespace camera
 
 }  // namespace nextfloor

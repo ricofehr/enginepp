@@ -33,6 +33,7 @@ public:
     virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
 
     virtual glm::vec3 direction() const = 0;
+    virtual glm::vec3 owner_movement() const = 0;
     virtual glm::vec3 head() const = 0;
 
     virtual void set_owner(Character* owner) = 0;

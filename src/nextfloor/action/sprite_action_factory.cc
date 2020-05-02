@@ -9,6 +9,8 @@
 #include "nextfloor/action/moveleft_action.h"
 #include "nextfloor/action/moveright_action.h"
 #include "nextfloor/action/moveup_action.h"
+#include "nextfloor/action/jump_action.h"
+
 
 namespace nextfloor {
 
@@ -32,6 +34,11 @@ std::unique_ptr<nextfloor::gameplay::Action> SpriteActionFactory::MakeMoveRightA
 std::unique_ptr<nextfloor::gameplay::Action> SpriteActionFactory::MakeMoveUpAction() const
 {
     return std::make_unique<MoveUpAction>();
+}
+
+std::unique_ptr<nextfloor::gameplay::Action> SpriteActionFactory::MakeJumpAction() const
+{
+    return std::make_unique<JumpAction>();
 }
 
 }  // namespace action

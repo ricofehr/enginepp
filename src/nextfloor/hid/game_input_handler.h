@@ -56,6 +56,7 @@ private:
     std::unique_ptr<nextfloor::gameplay::Action> move_down_command_{nullptr};
     std::unique_ptr<nextfloor::gameplay::Action> move_left_command_{nullptr};
     std::unique_ptr<nextfloor::gameplay::Action> move_right_command_{nullptr};
+    std::unique_ptr<nextfloor::gameplay::Action> jump_command_{nullptr};
 };
 
 }  // namespace hid

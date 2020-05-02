@@ -26,7 +26,8 @@ public:
     virtual void UpdateCameraOrientation(HIDPointer angles) = 0;
     virtual void Move() = 0;
     virtual void Draw(float window_size_ratio) = 0;
-    virtual void ExecutePlayerAction(Action* command, double elapsed_time) = 0;
+    virtual void ExecutePlayerAction(Action* command) = 0;
+    virtual void UpdateCharacterStates(double elapsed_time) = 0;
 };
 
 }  // namespace gameplay

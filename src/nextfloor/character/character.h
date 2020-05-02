@@ -11,6 +11,7 @@
 
 #include <glm/glm.hpp>
 
+#include "nextfloor/character/fsm.h"
 #include "nextfloor/character/camera.h"
 
 namespace nextfloor {
@@ -28,6 +29,18 @@ public:
 
     virtual Camera* camera() const = 0;
 
+    virtual bool is_flying() const { return false; }
+
+    virtual void Jump() { fsm_->JumpUp(); }
+    virtual void MoveUp() { fsm_->MoveUp(); }
+    virtual void MoveDown() { fsm_->MoveDown(); }
+    virtual void MoveLeft() { fsm_->MoveLeft(); }
+    virtual void MoveRight() { fsm_->MoveRight(); }
+    virtual void Idle() { fsm_->Idle(); }
+    virtual void UpdateState(double elapsed_time) { fsm_->Update(elapsed_time); }
+
+    void reset_movement() { set_movement(glm::vec3(kNoMovement)); }
+
     std::string class_name() final { return "Character"; }
 
 protected:
@@ -38,7 +51,7 @@ protected:
     Character(const Character&) = delete;
     Character& operator=(const Character&) = delete;
 
-    void reset_movement() { set_movement(glm::vec3(kNoMovement)); }
+    std::unique_ptr<FSM> fsm_{nullptr};
 
 private:
     static constexpr float kNoMovement = 0.0f;

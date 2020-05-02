@@ -43,7 +43,8 @@ public:
     GameLevel& operator=(const GameLevel&) = delete;
 
     void UpdateCameraOrientation(HIDPointer angles) final;
-    void ExecutePlayerAction(Action* command, double elapsed_time) final;
+    void ExecutePlayerAction(Action* command) final;
+    void UpdateCharacterStates(double elapsed_time) final;
     void Move() final;
     void Draw(float window_size_ratio) final;
 

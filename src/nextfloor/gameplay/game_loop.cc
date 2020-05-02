@@ -41,6 +41,7 @@ void GameLoop::RunLoop()
         UpdateTime();
         UpdateCameraOrientation();
         HandlerInput();
+        ManageCharacterStates();
         Draw();
         LogLoop();
         PollEvents();
@@ -62,8 +63,13 @@ void GameLoop::HandlerInput()
 {
     auto command = input_handler_->HandlerInput();
     if (command) {
-        level_->ExecutePlayerAction(command, timer_->getDeltaTimeSinceLastLoop());
+        level_->ExecutePlayerAction(command);
     }
+}
+
+void GameLoop::ManageCharacterStates()
+{
+    level_->UpdateCharacterStates(timer_->getDeltaTimeSinceLastLoop());
 }
 
 void GameLoop::Draw()

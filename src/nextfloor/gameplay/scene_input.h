@@ -23,6 +23,7 @@ public:
     static constexpr int kInputDown = 1;
     static constexpr int kInputLeft = 2;
     static constexpr int kInputRight = 3;
+    static constexpr int kInputSpace = 4;
 
     virtual ~SceneInput() = default;
 

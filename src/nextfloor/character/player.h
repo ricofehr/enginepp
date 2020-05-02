@@ -12,6 +12,7 @@
 #include <memory>
 
 #include "nextfloor/character/camera.h"
+#include "nextfloor/character/fsm.h"
 #include "nextfloor/mesh/border.h"
 
 namespace nextfloor {
@@ -25,9 +26,9 @@ namespace character {
 class Player : public Character {
 
 public:
-    static constexpr float kBorderScale = 0.4f;
+    static constexpr float kBorderScale = 1.5f;
 
-    Player(std::unique_ptr<nextfloor::mesh::Border> border, std::unique_ptr<Camera> camera);
+    Player(std::unique_ptr<nextfloor::mesh::Border> border, std::unique_ptr<Camera> camera, std::unique_ptr<FSM> fsm);
     ~Player() final = default;
 
     void MoveLocation() final;

@@ -57,9 +57,14 @@ void GameLevel::UpdateCameraOrientation(HIDPointer angles)
     active_camera->ComputeOrientation();
 }
 
-void GameLevel::ExecutePlayerAction(Action* command, double elapsed_time)
+void GameLevel::ExecutePlayerAction(Action* command)
 {
-    command->execute(player_, elapsed_time);
+    command->execute(player_);
+}
+
+void GameLevel::UpdateCharacterStates(double elapsed_time)
+{
+    player_->UpdateState(elapsed_time);
 }
 
 void GameLevel::Move()

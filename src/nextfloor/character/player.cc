@@ -13,11 +13,13 @@ namespace nextfloor {
 
 namespace character {
 
-Player::Player(std::unique_ptr<nextfloor::mesh::Border> border, std::unique_ptr<Camera> camera)
+Player::Player(std::unique_ptr<nextfloor::mesh::Border> border, std::unique_ptr<Camera> camera, std::unique_ptr<FSM> fsm)
 {
     border_ = std::move(border);
     camera->set_owner(this);
     camera_ = std::move(camera);
+    fsm_ = std::move(fsm);
+    fsm_->set_owner(this);
 }
 
 void Player::MoveLocation()
@@ -28,7 +30,7 @@ void Player::MoveLocation()
     parent_ = parent_->UpdateChildPlacement(this);
 
     /* After each step, get back control to HID Device */
-    reset_movement();
+    // reset_movement();
 }
 
 Camera* Player::camera() const

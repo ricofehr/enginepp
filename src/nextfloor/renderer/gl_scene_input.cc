@@ -46,6 +46,7 @@ int GlSceneInput::getKeyValueForAction(int action_button)
     case kInputDown: return GLFW_KEY_DOWN;
     case kInputLeft: return GLFW_KEY_LEFT;
     case kInputRight: return GLFW_KEY_RIGHT;
+    case kInputSpace: return GLFW_KEY_SPACE;
     }
 
     return 0;

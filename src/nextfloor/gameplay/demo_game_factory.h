@@ -47,7 +47,7 @@ public:
 
 private:
     static constexpr float kPlayerLocationX = 0.0f;
-    static constexpr float kPlayerLocationY = -2.0f;
+    static constexpr float kPlayerLocationY = -5.09f;
     static constexpr float kPlayerLocationZ = 5.0f;
 
     static constexpr float kFirstRoomLocationX = 0.0f;
@@ -67,6 +67,21 @@ private:
     static constexpr float kRock2MoveX = 0.3f;
     static constexpr float kRock2MoveY = 0.01f;
     static constexpr float kRock2MoveZ = 0.05f;
+
+    static constexpr float kRock3LocationX = 1.0f;
+    static constexpr float kRock3LocationY = -4.5f;
+    static constexpr float kRock3LocationZ = -5.5f;
+    static constexpr float kRock3MoveX = 0.0f;
+    static constexpr float kRock3MoveY = 0.0f;
+    static constexpr float kRock3MoveZ = 0.0f;
+
+    static constexpr float kRock4LocationX = -1.0f;
+    static constexpr float kRock4LocationY = -6.0f;
+    static constexpr float kRock4LocationZ = -4.5f;
+    static constexpr float kRock4MoveX = 0.0f;
+    static constexpr float kRock4MoveY = 0.0f;
+    static constexpr float kRock4MoveZ = 0.0f;
+
 
     static constexpr float kFactor0 = -1.0f;
     static constexpr float kFactor1 = 1.0f;

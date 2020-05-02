@@ -1,9 +1,9 @@
 /**
- *  @file moveup_action.cc
- *  @brief MOveUp Action class file
+ *  @file jump_action.cc
+ *  @brief Jump Action class file
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
-#include "nextfloor/action/moveup_action.h"
+#include "nextfloor/action/jump_action.h"
 
 #include <cassert>
 #include <glm/glm.hpp>
@@ -12,10 +12,10 @@ namespace nextfloor {
 
 namespace action {
 
-void MoveUpAction::execute(nextfloor::character::Character* actor)
+void JumpAction::execute(nextfloor::character::Character* actor)
 {
     assert(actor != nullptr);
-    actor->MoveUp();
+    actor->Jump();
 }
 
 }  // namespace action

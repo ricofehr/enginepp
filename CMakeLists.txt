@@ -17,11 +17,23 @@ IF(APPLE)
 ENDIF()
 
 set(action_SRCS
+        src/nextfloor/action/jump_action.cc
         src/nextfloor/action/movedown_action.cc
         src/nextfloor/action/moveleft_action.cc
         src/nextfloor/action/moveright_action.cc
         src/nextfloor/action/moveup_action.cc
         src/nextfloor/action/sprite_action_factory.cc)
+
+set(ai_SRCS
+        src/nextfloor/ai/character_fsm.cc
+        src/nextfloor/ai/character_fsm_factory.cc
+        src/nextfloor/ai/idle_character_state.cc
+        src/nextfloor/ai/jumpdown_character_state.cc
+        src/nextfloor/ai/jumpup_character_state.cc
+        src/nextfloor/ai/movedown_character_state.cc
+        src/nextfloor/ai/moveleft_character_state.cc
+        src/nextfloor/ai/moveright_character_state.cc
+        src/nextfloor/ai/moveup_character_state.cc)
 
 set(camera_SRCS
         src/nextfloor/camera/game_camera_factory.cc
@@ -111,6 +123,7 @@ set(thing_SRCS
 
 set(nextfloor_SRCS
         ${action_SRCS}
+        ${ai_SRCS}
         ${camera_SRCS}
         ${character_SRCS}
         ${core_SRCS}
@@ -126,11 +139,24 @@ set(nextfloor_SRCS
         src/nextfloor.cc)
 
 set(action_HDRS
+        src/nextfloor/action/jump_action.h
         src/nextfloor/action/movedown_action.h
         src/nextfloor/action/moveleft_action.h
         src/nextfloor/action/moveright_action.h
         src/nextfloor/action/moveup_action.h
         src/nextfloor/action/sprite_action_factory.h)
+
+set(ai_HDRS
+        src/nextfloor/ai/character_fsm.h
+        src/nextfloor/ai/character_fsm_factory.h
+        src/nextfloor/ai/character_state.h
+        src/nextfloor/ai/idle_character_state.h
+        src/nextfloor/ai/jumpdown_character_state.h
+        src/nextfloor/ai/jumpup_character_state.h
+        src/nextfloor/ai/movedown_character_state.h
+        src/nextfloor/ai/moveleft_character_state.h
+        src/nextfloor/ai/moveright_character_state.h
+        src/nextfloor/ai/moveup_character_state.h)
 
 set(camera_HDRS
         src/nextfloor/camera/game_camera_factory.h
@@ -141,8 +167,11 @@ set(character_HDRS
         src/nextfloor/character/camera_factory.h
         src/nextfloor/character/character.h
         src/nextfloor/character/character_factory.h
+        src/nextfloor/character/fsm.h
+        src/nextfloor/character/fsm_factory.h
         src/nextfloor/character/game_character_factory.h
-        src/nextfloor/character/player.h)
+        src/nextfloor/character/player.h
+        src/nextfloor/character/state.h)
 
 set(core_HDRS
         src/nextfloor/core/common_services.h
@@ -259,6 +288,7 @@ set(thing_HDRS
 
 set(nextfloor_HDRS
         ${action_HDRS}
+        ${ai_HDRS}
         ${camera_HDRS}
         ${character_HDRS}
         ${core_HDRS}

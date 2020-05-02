@@ -24,11 +24,16 @@ void GameInputHandler::InitCommands(const nextfloor::gameplay::ActionFactory& ac
     move_down_command_ = action_factory.MakeMoveDownAction();
     move_left_command_ = action_factory.MakeMoveLeftAction();
     move_right_command_ = action_factory.MakeMoveRightAction();
+    jump_command_ = action_factory.MakeJumpAction();
 }
 
 nextfloor::gameplay::Action* GameInputHandler::HandlerInput()
 {
     using nextfloor::gameplay::SceneInput;
+
+    if (hid_->isPressed(SceneInput::kInputSpace)) {
+        return jump_command_.get();
+    }
 
     if (hid_->isPressed(SceneInput::kInputUp)) {
         return move_up_command_.get();

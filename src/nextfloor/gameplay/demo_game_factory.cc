@@ -79,9 +79,13 @@ std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateUniverse
 
     auto first_room_location = glm::vec3(kFirstRoomLocationX, kFirstRoomLocationY, kFirstRoomLocationZ);
     std::vector<glm::vec3> rocks_location = {glm::vec3(kRock1LocationX, kRock1LocationY, kRock1LocationZ),
-                                             glm::vec3(kRock2LocationX, kRock2LocationY, kRock2LocationZ)};
-    std::vector<glm::vec3> rocks_movement
-      = {glm::vec3(kRock1MoveX, kRock1MoveY, kRock1MoveZ), glm::vec3(kRock2MoveX, kRock2MoveY, kRock2MoveZ)};
+                                             glm::vec3(kRock2LocationX, kRock2LocationY, kRock2LocationZ),
+                                             glm::vec3(kRock3LocationX, kRock3LocationY, kRock3LocationZ),
+                                             glm::vec3(kRock4LocationX, kRock4LocationY, kRock4LocationZ)};
+    std::vector<glm::vec3> rocks_movement = {glm::vec3(kRock1MoveX, kRock1MoveY, kRock1MoveZ),
+                                             glm::vec3(kRock2MoveX, kRock2MoveY, kRock2MoveZ),
+                                             glm::vec3(kRock3MoveX, kRock3MoveY, kRock3MoveZ),
+                                             glm::vec3(kRock4MoveX, kRock4MoveY, kRock4MoveZ)};
     rooms.push_back(GenerateRoom(first_room_location, rocks_location, rocks_movement));
     glm::vec3 room_dimension = rooms[0]->dimension();
 

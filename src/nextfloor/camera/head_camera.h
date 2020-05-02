@@ -34,6 +34,7 @@ public:
     bool IsInFieldOfView(const nextfloor::mesh::Mesh& target) const final;
     glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const final;
 
+    glm::vec3 owner_movement() const final;
     glm::vec3 direction() const final { return direction_; }
     glm::vec3 head() const final { return head_; }
 
