@@ -26,12 +26,31 @@ void GlSceneInput::PollEvents()
 
 bool GlSceneInput::IsCloseWindowEventOccurs()
 {
-    return glfwGetKey(glfw_window_, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(glfw_window_);
+    return glfwWindowShouldClose(glfw_window_);
 }
 
 bool GlSceneInput::IsPressed(int action_button)
 {
-    return glfwGetKey(glfw_window_, getKeyValueForAction(action_button)) == GLFW_PRESS;
+    bool is_pressed = glfwGetKey(glfw_window_, getKeyValueForAction(action_button)) == GLFW_PRESS;
+    if (is_pressed) {
+        last_key_pressed_ = action_button;
+    }
+    return is_pressed;
+}
+
+bool GlSceneInput::IsReleased(int action_button)
+{
+    IsPressed(action_button);
+
+    if (last_key_pressed_ == action_button) {
+        bool is_released = glfwGetKey(glfw_window_, getKeyValueForAction(action_button)) == GLFW_RELEASE;
+        if (is_released) {
+            last_key_pressed_ = -10;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -47,6 +66,7 @@ int GlSceneInput::getKeyValueForAction(int action_button)
     case kInputLeft: return GLFW_KEY_LEFT;
     case kInputRight: return GLFW_KEY_RIGHT;
     case kInputSpace: return GLFW_KEY_SPACE;
+    case kInputOpenMainMenu: return GLFW_KEY_ESCAPE;
     }
 
     return 0;

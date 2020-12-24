@@ -31,6 +31,11 @@ bool MouseKeyboard::isPressed(int action_button)
     return scene_input_->IsPressed(action_button);
 }
 
+bool MouseKeyboard::isReleased(int action_button)
+{
+    return scene_input_->IsReleased(action_button);
+}
+
 nextfloor::gameplay::HIDPointer MouseKeyboard::RecordHIDPointer(double elapsed_time)
 {
     using nextfloor::core::CommonServices;
@@ -63,14 +68,18 @@ nextfloor::gameplay::HIDPointer MouseKeyboard::RecordHIDPointer(double elapsed_t
     return pointer;
 }
 
+void MouseKeyboard::ResetPointer()
+{
+    using nextfloor::core::CommonServices;
+    float window_width = CommonServices::getConfig()->getWindowWidth();
+    float window_height = CommonServices::getConfig()->getWindowHeight();
+    /* Reset Cursor position at center of screen */
+    scene_input_->SetCursorPos(window_width / 2, window_height / 2);
+}
+
 void MouseKeyboard::PollEvents()
 {
     scene_input_->PollEvents();
-}
-
-bool MouseKeyboard::IsCloseWindowEventOccurs()
-{
-    return scene_input_->IsCloseWindowEventOccurs();
 }
 
 }  // namespace hid

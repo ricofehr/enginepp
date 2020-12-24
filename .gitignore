@@ -55,6 +55,9 @@ build/*
 # Config overridded
 config/nextfloor.ini
 
+# imgui ini file
+imgui.ini
+
 # tmp folder
 tmp
 

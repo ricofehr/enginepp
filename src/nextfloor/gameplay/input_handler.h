@@ -38,7 +38,8 @@ public:
     virtual HIDPointer RecordHIDPointer(double elapsed_time) = 0;
 
     virtual void PollEvents() = 0;
-    virtual bool IsCloseWindowEventOccurs() = 0;
+    virtual void ResetPointer() = 0;
+    virtual bool IsOpenMenuEventOccurs() = 0;
 };
 
 }  // namespace gameplay

@@ -13,6 +13,7 @@
 #include "nextfloor/core/services_core_factory.h"
 #include "nextfloor/gameplay/demo_game_factory.h"
 #include "nextfloor/hid/mouse_hid_factory.h"
+#include "nextfloor/menu/game_menu_factory.h"
 #include "nextfloor/layout/mesh_grid_factory.h"
 #include "nextfloor/physic/game_collision_engine_factory.h"
 #include "nextfloor/physic/mesh_border_factory.h"
@@ -44,12 +45,18 @@ int main(int argc, char* argv[])
     nextfloor::physic::MeshBorderFactory border_factory;
     nextfloor::physic::GameCollisionEngineFactory collision_engine_factory;
     nextfloor::camera::GameCameraFactory camera_factory;
+    nextfloor::menu::GameMenuFactory menu_factory;
     nextfloor::character::GameCharacterFactory character_factory(&camera_factory, &fsm_factory, &border_factory);
     nextfloor::thing::GameThingFactory thing_factory(&polygon_factory, &border_factory);
     nextfloor::playground::GameGroundFactory ground_factory(&thing_factory, &grid_factory, &border_factory);
     nextfloor::hid::MouseHidFactory hid_factory(&action_factory, &renderer_factory);
-    nextfloor::gameplay::DemoGameFactory game_factory(
-      &hid_factory, &renderer_factory, &ground_factory, &thing_factory, &character_factory, &collision_engine_factory);
+    nextfloor::gameplay::DemoGameFactory game_factory(&hid_factory,
+                                                      &renderer_factory,
+                                                      &menu_factory,
+                                                      &ground_factory,
+                                                      &thing_factory,
+                                                      &character_factory,
+                                                      &collision_engine_factory);
 
     std::unique_ptr<nextfloor::gameplay::Loop> game_loop = game_factory.MakeLoop();
 

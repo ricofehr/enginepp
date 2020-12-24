@@ -28,7 +28,8 @@ class HID {
 public:
     virtual ~HID() = default;
 
-    virtual bool isPressed(int ACTION_BUTTON) = 0;
+    virtual bool isPressed(int action_button) = 0;
+    virtual bool isReleased(int action_button) = 0;
 
     /**
      *  Get Current Delta angles for HID pointer
@@ -38,8 +39,8 @@ public:
     virtual HIDPointer RecordHIDPointer(double elapsed_time) = 0;
 
     virtual void PollEvents() = 0;
+    virtual void ResetPointer() = 0;
 
-    virtual bool IsCloseWindowEventOccurs() = 0;
 };
 
 }  // namespace gameplay

@@ -33,6 +33,7 @@ public:
     MouseKeyboard& operator=(const MouseKeyboard&) = delete;
 
     bool isPressed(int action_button) final;
+    bool isReleased(int action_button) final;
 
     /**
      * Get HID Pointer angles changes
@@ -41,9 +42,8 @@ public:
      */
     nextfloor::gameplay::HIDPointer RecordHIDPointer(double elapsed_time) final;
 
-    virtual void PollEvents() final;
-
-    virtual bool IsCloseWindowEventOccurs() final;
+    void PollEvents() final;
+    void ResetPointer() final;
 
 private:
     static constexpr float kHidSpeed = 0.1f;

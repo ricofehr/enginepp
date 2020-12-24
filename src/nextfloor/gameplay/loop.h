@@ -21,6 +21,8 @@ public:
     virtual ~Loop() = default;
 
     virtual void RunLoop() = 0;
+    virtual void ReturnToGame() = 0;
+    virtual void ExitGame() = 0;
 };
 
 }  // namespace gameplay

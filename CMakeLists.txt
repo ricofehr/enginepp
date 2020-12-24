@@ -16,6 +16,15 @@ IF(APPLE)
     LINK_DIRECTORIES(/usr/local/lib)
 ENDIF()
 
+set(ext_imgui_SRCS
+        src/ext/imgui/imgui.cpp
+        src/ext/imgui/imgui_demo.cpp
+        src/ext/imgui/imgui_draw.cpp
+        src/ext/imgui/imgui_impl_glfw.cpp
+        src/ext/imgui/imgui_impl_opengl3.cpp
+        src/ext/imgui/imgui_tables.cpp
+        src/ext/imgui/imgui_widgets.cpp)
+
 set(action_SRCS
         src/nextfloor/action/jump_action.cc
         src/nextfloor/action/movedown_action.cc
@@ -70,6 +79,10 @@ set(layout_SRCS
         src/nextfloor/layout/wired_grid.cc
         src/nextfloor/layout/wired_grid_box.cc)
 
+set(menu_SRCS
+        src/nextfloor/menu/game_menu_factory.cc
+        src/nextfloor/menu/main_menu.cc)
+
 set(mesh_SRCS
         src/nextfloor/mesh/placement_mesh.cc
         src/nextfloor/mesh/composite_mesh.cc
@@ -122,14 +135,16 @@ set(thing_SRCS
         src/nextfloor/thing/wall_brick.cc)
 
 set(nextfloor_SRCS
+        ${ext_imgui_SRCS}
         ${action_SRCS}
         ${ai_SRCS}
         ${camera_SRCS}
         ${character_SRCS}
         ${core_SRCS}
         ${gameplay_SRCS}
-        ${layout_SRCS}
         ${hid_SRCS}
+        ${layout_SRCS}
+        ${menu_SRCS}
         ${mesh_SRCS}
         ${physic_SRCS}
         ${playground_SRCS}
@@ -137,6 +152,16 @@ set(nextfloor_SRCS
         ${renderer_SRCS}
         ${thing_SRCS}
         src/nextfloor.cc)
+
+set(ext_imgui_HDRS
+        src/ext/imgui/imconfig.h
+        src/ext/imgui/imgui.h
+        src/ext/imgui/imgui_internal.h
+        src/ext/imgui/imgui_impl_glfw.h
+        src/ext/imgui/imgui_impl_opengl3.h
+        src/ext/imgui/imstb_textedit.h
+        src/ext/imgui/imstb_rectpack.h
+        src/ext/imgui/imstb_truetype.h)
 
 set(action_HDRS
         src/nextfloor/action/jump_action.h
@@ -202,6 +227,8 @@ set(gameplay_HDRS
         src/nextfloor/gameplay/input_handler.h
         src/nextfloor/gameplay/level.h
         src/nextfloor/gameplay/loop.h
+        src/nextfloor/gameplay/menu.h
+        src/nextfloor/gameplay/menu_factory.h
         src/nextfloor/gameplay/renderer_engine.h
         src/nextfloor/gameplay/renderer_factory.h
         src/nextfloor/gameplay/scene_input.h
@@ -218,6 +245,10 @@ set(layout_HDRS
         src/nextfloor/layout/universe_grid.h
         src/nextfloor/layout/wired_grid.h
         src/nextfloor/layout/wired_grid_box.h)
+
+set(menu_HDRS
+        src/nextfloor/menu/game_menu_factory.h
+        src/nextfloor/menu/main_menu.h)
 
 set(mesh_HDRS
         src/nextfloor/mesh/border.h
@@ -287,14 +318,16 @@ set(thing_HDRS
         src/nextfloor/thing/wall_brick.h)
 
 set(nextfloor_HDRS
+        ${ext_imgui_HDRS}
         ${action_HDRS}
         ${ai_HDRS}
         ${camera_HDRS}
         ${character_HDRS}
         ${core_HDRS}
         ${gameplay_HDRS}
-        ${layout_HDRS}
         ${hid_HDRS}
+        ${layout_HDRS}
+        ${menu_HDRS}
         ${mesh_HDRS}
         ${physic_HDRS}
         ${playground_HDRS}
@@ -313,5 +346,5 @@ find_package(OpenCL REQUIRED)
 find_library(SOIL REQUIRED)
 add_definitions("-std=gnu++17 -Wall -fno-exceptions")
 include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${Config++_INCLUDE_DIRS})
-target_link_libraries(nextfloor ${OPENGL_gl_LIBRARY} glew SOIL glfw ${OpenCL_LIBRARY} config++ tbb)
+target_link_libraries(nextfloor ${OPENGL_gl_LIBRARY} glew SOIL ${OpenCL_LIBRARY} glfw config++ tbb)
 target_compile_features(nextfloor PUBLIC cxx_nullptr)

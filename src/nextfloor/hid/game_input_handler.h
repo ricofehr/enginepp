@@ -45,7 +45,8 @@ public:
     nextfloor::gameplay::HIDPointer RecordHIDPointer(double elapsed_time) final;
 
     void PollEvents() final;
-    bool IsCloseWindowEventOccurs() final;
+    void ResetPointer() final;
+    bool IsOpenMenuEventOccurs() final;
 
 private:
     /** The main hid */

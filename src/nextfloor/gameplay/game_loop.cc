@@ -11,6 +11,7 @@
 
 #include "nextfloor/core/common_services.h"
 
+
 namespace nextfloor {
 
 namespace gameplay {
@@ -24,7 +25,8 @@ static bool sInstanciated = false;
 GameLoop::GameLoop(std::unique_ptr<Level> level,
                    SceneWindow* game_window,
                    std::unique_ptr<InputHandler> input_handler,
-                   std::unique_ptr<FrameTimer> timer)
+                   std::unique_ptr<FrameTimer> timer,
+                   std::unique_ptr<Menu> main_menu)
 {
     assert(!sInstanciated);
     sInstanciated = true;
@@ -33,19 +35,60 @@ GameLoop::GameLoop(std::unique_ptr<Level> level,
     game_window_ = game_window;
     input_handler_ = std::move(input_handler);
     timer_ = std::move(timer);
+    main_menu_ = std::move(main_menu);
+
+    main_menu_->Init(game_window_->window());
 }
 
 void GameLoop::RunLoop()
 {
     do {
-        UpdateTime();
-        UpdateCameraOrientation();
-        HandlerInput();
-        ManageCharacterStates();
-        Draw();
-        LogLoop();
         PollEvents();
-    } while (IsNextFrame());
+        UpdateTime();
+        LogLoop();
+        ApplyLoop();
+        CheckCurrentState();
+    } while (IsInRunningState());
+}
+
+
+void GameLoop::ReturnToGame()
+{
+    main_menu_->Disable();
+    input_handler_->ResetPointer();
+    current_state_ = kInGameState;
+}
+
+void GameLoop::ExitGame()
+{
+    current_state_ = kExitState;
+}
+
+void GameLoop::ApplyLoop()
+{
+    if (IsInGame()) {
+        RunGame();
+    }
+    else if (IsInMenu()) {
+        DisplayMenu();
+    }
+}
+
+void GameLoop::RunGame()
+{
+    UpdateCameraOrientation();
+    HandlerInput();
+    ManageCharacterStates();
+    Draw();
+}
+
+void GameLoop::DisplayMenu()
+{
+    HandlerInput();
+    game_window_->PrepareDisplay();
+    level_->Draw(game_window_->getWindowRatio());
+    main_menu_->MenuLoop();
+    game_window_->SwapBuffers();
 }
 
 void GameLoop::UpdateTime()
@@ -126,9 +169,29 @@ void GameLoop::PollEvents()
     input_handler_->PollEvents();
 }
 
-bool GameLoop::IsNextFrame() const
+void GameLoop::CheckCurrentState()
 {
-    return !input_handler_->IsCloseWindowEventOccurs();
+    if (current_state_ == kInGameState) {
+        if (input_handler_->IsOpenMenuEventOccurs()) {
+            SetMenuState();
+        }
+    }
+    else
+    {
+        if (main_menu_->IsResumeGamePressed()) {
+            ReturnToGame();
+        }
+
+        if (main_menu_->IsExitGamePressed()) {
+            ExitGame();
+        }
+    }
+}
+
+void GameLoop::SetMenuState()
+{
+    main_menu_->Enable();
+    current_state_ = kInMenuState;
 }
 
 GameLoop::~GameLoop() noexcept

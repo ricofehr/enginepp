@@ -64,9 +64,15 @@ void GameInputHandler::PollEvents()
     hid_->PollEvents();
 }
 
-bool GameInputHandler::IsCloseWindowEventOccurs()
+void GameInputHandler::ResetPointer()
 {
-    return hid_->IsCloseWindowEventOccurs();
+    hid_->ResetPointer();
+}
+
+bool GameInputHandler::IsOpenMenuEventOccurs()
+{
+    using nextfloor::gameplay::SceneInput;
+    return hid_->isReleased(SceneInput::kInputOpenMainMenu);
 }
 
 }  // namespace hid

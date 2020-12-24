@@ -26,6 +26,7 @@ namespace gameplay {
 
 DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
                                  RendererFactory* renderer_factory,
+                                 MenuFactory* menu_factory,
                                  nextfloor::playground::GroundFactory* ground_factory,
                                  nextfloor::thing::ThingFactory* thing_factory,
                                  nextfloor::character::CharacterFactory* character_factory,
@@ -37,6 +38,7 @@ DemoGameFactory::DemoGameFactory(HidFactory* hid_factory,
     thing_factory_ = thing_factory;
     character_factory_ = character_factory;
     collision_engine_factory_ = collision_engine_factory;
+    menu_factory_ = menu_factory;
 }
 
 std::unique_ptr<Loop> DemoGameFactory::MakeLoop() const
@@ -45,8 +47,10 @@ std::unique_ptr<Loop> DemoGameFactory::MakeLoop() const
     auto level = MakeLevel();
     SceneWindow* game_window = renderer_factory_->GetOrMakeSceneWindow();
     std::unique_ptr<InputHandler> input_handler = hid_factory_->MakeInputHandler();
+    std::unique_ptr<Menu> main_menu = menu_factory_->MakeMainMenu();
 
-    return std::make_unique<GameLoop>(std::move(level), game_window, std::move(input_handler), std::move(timer));
+    return std::make_unique<GameLoop>(std::move(level), game_window, std::move(input_handler),
+                                      std::move(timer), std::move(main_menu));
 }
 
 std::unique_ptr<FrameTimer> DemoGameFactory::MakeFrameTimer() const

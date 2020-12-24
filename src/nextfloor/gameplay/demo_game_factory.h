@@ -18,6 +18,7 @@
 
 #include "nextfloor/gameplay/hid_factory.h"
 #include "nextfloor/gameplay/renderer_factory.h"
+#include "nextfloor/gameplay/menu_factory.h"
 #include "nextfloor/playground/ground_factory.h"
 #include "nextfloor/thing/thing_factory.h"
 #include "nextfloor/character/character_factory.h"
@@ -36,6 +37,7 @@ class DemoGameFactory : public GameFactory {
 public:
     DemoGameFactory(HidFactory* hid_factory,
                     RendererFactory* renderer_factory,
+                    MenuFactory* menu_factory,
                     nextfloor::playground::GroundFactory* ground_factory,
                     nextfloor::thing::ThingFactory* thing_factory,
                     nextfloor::character::CharacterFactory* character_factory,
@@ -98,6 +100,7 @@ private:
 
     HidFactory* hid_factory_{nullptr};
     RendererFactory* renderer_factory_{nullptr};
+    MenuFactory* menu_factory_{nullptr};
     nextfloor::playground::GroundFactory* ground_factory_{nullptr};
     nextfloor::thing::ThingFactory* thing_factory_{nullptr};
     nextfloor::character::CharacterFactory* character_factory_{nullptr};

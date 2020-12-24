@@ -24,12 +24,14 @@ public:
     static constexpr int kInputLeft = 2;
     static constexpr int kInputRight = 3;
     static constexpr int kInputSpace = 4;
+    static constexpr int kInputOpenMainMenu = 30;
 
     virtual ~SceneInput() = default;
 
     virtual void PollEvents() = 0;
     virtual bool IsCloseWindowEventOccurs() = 0;
     virtual bool IsPressed(int action_button) = 0;
+    virtual bool IsReleased(int action_button) = 0;
     virtual glm::vec2 GetCursorPos() = 0;
     virtual void SetCursorPos(float x, float y) = 0;
 };
