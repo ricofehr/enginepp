@@ -45,7 +45,6 @@ IncludeBlocks: Preserve
 IndentCaseLabels: false
 IndentWrappedFunctionNames: true
 KeepEmptyLinesAtTheStartOfBlocks: true
-Language: Cpp
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: None
 PenaltyBreakAssignment: 10
