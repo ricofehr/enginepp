@@ -12,9 +12,9 @@ namespace nextfloor {
 namespace menu {
 
 
-void MainMenu::Init(void *glfw_window)
+void MainMenu::Init(void* glfw_window)
 {
-    glfw_window_ = (GLFWwindow *)glfw_window;
+    glfw_window_ = (GLFWwindow*) glfw_window;
 }
 
 void MainMenu::Disable()

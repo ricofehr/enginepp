@@ -19,7 +19,6 @@ void JumpUpCharacterState::Enter(nextfloor::character::Character* actor)
     float location_y = actor->location().y;
     start_y_stage_ = location_y;
     current_y_stage_ = location_y;
-    std::cerr << "Y START::" << start_y_stage_ << std::endl;
     is_interruptible_ = false;
 }
 
@@ -29,12 +28,10 @@ void JumpUpCharacterState::Execute(nextfloor::character::Character* actor, doubl
 
     float location_y = actor->location().y;
     if (first_execution_ && (location_y <= current_y_stage_ || location_y >= start_y_stage_ + kDistance)) {
-        std::cerr << "Y UP::" << location_y << std::endl;
         is_finished_ = true;
         return;
     }
     current_y_stage_ = location_y;
-    std::cerr << "Y TRANSITION::" << location_y << std::endl;
 
     glm::vec3 movement = actor->movement();
     if (actor->IsCamera()) {

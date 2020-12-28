@@ -21,7 +21,10 @@ void MoveLeftCharacterState::Execute(nextfloor::character::Character* actor, dou
     auto head = movement;
     if (actor->IsCamera()) {
         auto camera = actor->camera();
-        movement = camera->direction();
+        movement = camera->direction() * kMoveFactor;
+        if (!actor->is_flying()) {
+            movement.y = 0.0f;
+        }
         movement *= elapsed_time;
         head = camera->head();
     }
@@ -34,7 +37,12 @@ void MoveLeftCharacterState::Execute(nextfloor::character::Character* actor, dou
 
 void MoveLeftCharacterState::Exit(nextfloor::character::Character* actor)
 {
-    owner_->Idle();
+    if (actor->is_flying()) {
+        owner_->Idle();
+    }
+    else {
+        owner_->JumpDown();
+    }
 }
 
 }  // namespace ai

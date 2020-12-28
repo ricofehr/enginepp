@@ -36,6 +36,8 @@ public:
     int type() final { return CharacterState::kMoved; }
 
 private:
+    static constexpr float kMoveFactor = 2.0f;
+
     nextfloor::character::FSM* owner_{nullptr};
 };
 

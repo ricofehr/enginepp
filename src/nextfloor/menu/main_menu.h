@@ -40,8 +40,8 @@ public:
     bool IsExitGamePressed() final { return is_exit_game_pressed_; }
 
 private:
-    GLFWwindow *glfw_window_{nullptr};
-    ImGuiContext *context_{nullptr};
+    GLFWwindow* glfw_window_{nullptr};
+    ImGuiContext* context_{nullptr};
     bool is_resume_game_pressed_{false};
     bool is_exit_game_pressed_{false};
 };

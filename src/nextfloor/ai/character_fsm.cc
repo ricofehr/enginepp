@@ -91,11 +91,11 @@ void CharacterFSM::Update(double elapsed_time)
     assert(current_state_ != nullptr);
     assert(owner_ != nullptr);
 
+    current_state_->Execute(owner_, elapsed_time);
+
     if (current_state_->IsFinished()) {
         current_state_->Exit(owner_);
     }
-
-    current_state_->Execute(owner_, elapsed_time);
 }
 
 void CharacterFSM::change_state(std::unique_ptr<nextfloor::character::State> new_state)

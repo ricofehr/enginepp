@@ -23,7 +23,10 @@ void MoveUpCharacterState::Execute(nextfloor::character::Character* actor, doubl
     glm::vec3 movement = actor->movement();
     if (actor->IsCamera()) {
         auto camera = actor->camera();
-        movement = camera->owner_movement();
+        movement = camera->owner_movement() * kMoveFactor;
+        if (!actor->is_flying()) {
+            movement.y = 0.0f;
+        }
         movement *= elapsed_time;
     }
 
@@ -33,7 +36,12 @@ void MoveUpCharacterState::Execute(nextfloor::character::Character* actor, doubl
 
 void MoveUpCharacterState::Exit(nextfloor::character::Character* actor)
 {
-    owner_->Idle();
+    if (actor->is_flying()) {
+        owner_->Idle();
+    }
+    else {
+        owner_->JumpDown();
+    }
 }
 
 }  // namespace ai

@@ -29,11 +29,9 @@ void JumpDownCharacterState::Execute(nextfloor::character::Character* actor, dou
     float location_y = actor->location().y;
     if (first_execution_ && location_y >= current_y_stage_) {
         is_finished_ = true;
-        std::cerr << "Y END::" << location_y << std::endl;
         return;
     }
 
-    std::cerr << "Y TRANSITION::" << location_y << std::endl;
     current_y_stage_ = location_y;
 
     glm::vec3 movement = actor->movement();
