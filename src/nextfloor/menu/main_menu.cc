@@ -7,6 +7,9 @@
 
 #include <GLFW/glfw3.h>
 
+#include "nextfloor/core/common_services.h"
+
+
 namespace nextfloor {
 
 namespace menu {
@@ -15,6 +18,13 @@ namespace menu {
 void MainMenu::Init(void* glfw_window)
 {
     glfw_window_ = (GLFWwindow*) glfw_window;
+    InitOptionValues();
+}
+
+void MainMenu::InitOptionValues()
+{
+    using nextfloor::core::CommonServices;
+    is_option_grid_mode_ = CommonServices::getConfig()->isGridMode();
 }
 
 void MainMenu::Disable()
@@ -50,18 +60,51 @@ void MainMenu::MenuLoop()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+    if (is_option_display_) {
+        OptionList();
+    } else {
+        MainList();
+    }
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void MainMenu::MainList()
+{
     ImGui::Begin("Main Menu");
     if (ImGui::Button("Resume Game")) {
         is_resume_game_pressed_ = true;
+    }
+
+    if (ImGui::Button("Options")) {
+        is_option_display_ = true;
     }
 
     if (ImGui::Button("Exit Game")) {
         is_exit_game_pressed_ = true;
     }
     ImGui::End();
+}
 
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+void MainMenu::OptionList()
+{
+    ImGui::Begin("Option Menu");
+
+    ImGui::Checkbox("Grid Mode", &is_option_grid_mode_);
+
+    if (ImGui::Button("Back")) {
+        is_option_display_ = false;
+    }
+    ImGui::End();
+
+    UpdateConfigValues();
+}
+
+void MainMenu::UpdateConfigValues() const
+{
+    using nextfloor::core::CommonServices;
+    CommonServices::getConfig()->setGridMode(is_option_grid_mode_);
 }
 
 } // namespace menu

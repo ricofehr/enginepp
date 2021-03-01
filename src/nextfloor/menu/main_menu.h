@@ -40,10 +40,19 @@ public:
     bool IsExitGamePressed() final { return is_exit_game_pressed_; }
 
 private:
+    void MainList();
+    void OptionList();
+    void InitOptionValues();
+    void UpdateConfigValues() const;
+
     GLFWwindow* glfw_window_{nullptr};
     ImGuiContext* context_{nullptr};
     bool is_resume_game_pressed_{false};
     bool is_exit_game_pressed_{false};
+    bool is_option_display_{false};
+
+    // Options settings
+    bool is_option_grid_mode_{false};
 };
 
 }  // namespace menu

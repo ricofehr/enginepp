@@ -42,6 +42,7 @@ public:
     virtual bool IsTestDebugEnabled() const = 0;
     virtual bool IsAllDebugEnabled() const = 0;
     virtual bool IsPerfDebugEnabled() const = 0;
+    virtual void setGridMode(bool grid_mode) = 0;
 
 private:
     virtual bool IsExist(const std::string& key) const = 0;

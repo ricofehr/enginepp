@@ -187,6 +187,7 @@ void GlSceneWindow::PrepareDisplay()
     /* Use defined shaders */
     glUseProgram(program_id_);
 
+    InitPolygonMode();
     glPolygonMode(GL_FRONT_AND_BACK, polygon_mode_);
 }
 

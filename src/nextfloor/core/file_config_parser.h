@@ -62,6 +62,8 @@ public:
     bool IsAllDebugEnabled() const final;
     bool IsPerfDebugEnabled() const final;
 
+    void setGridMode(bool grid_mode) final { setSetting("grid", libconfig::Setting::TypeBoolean, grid_mode); }
+
 private:
     inline bool IsExist(const std::string& key) const final { return config_.exists(key); }
 
