@@ -99,6 +99,7 @@ void GameLevel::Draw(float window_size_ratio)
 {
     PrepareDraw(window_size_ratio);
     Renderer(*universe_.get());
+    RendererCubeMap(window_size_ratio);
 }
 
 void GameLevel::PrepareDraw(float window_size_ratio)
@@ -121,6 +122,13 @@ void GameLevel::Renderer(const nextfloor::mesh::Mesh& mesh)
             renderer_engine->Draw(mvp);
         }
     }
+}
+
+void GameLevel::RendererCubeMap(float window_size_ratio)
+{
+    RendererEngine* cube_map_renderer = renderer_factory_->MakeCubeMapRenderer();
+    nextfloor::character::Camera* active_camera = game_cameras_.front();
+    cube_map_renderer->Draw(active_camera->GetFarAndStaticViewProjectionMatrix(window_size_ratio));
 }
 
 }  // namespace gameplay

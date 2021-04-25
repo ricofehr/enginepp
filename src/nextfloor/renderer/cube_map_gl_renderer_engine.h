@@ -1,11 +1,11 @@
 /**
- *  @file cube_gl_renderer.h
- *  @brief Cube GL Renderer class
+ *  @file cube_map_gl_renderer.h
+ *  @brief CubeMap GL Renderer class
  *  @author Eric Fehr (ricofehr@nextdeploy.io, github: ricofehr)
  */
 
-#ifndef NEXTFLOOR_RENDERER_CUBEGLRENDERER_H_
-#define NEXTFLOOR_RENDERER_CUBEGLRENDERER_H_
+#ifndef NEXTFLOOR_RENDERER_CUBEMAPGLRENDERER_H_
+#define NEXTFLOOR_RENDERER_CUBEMAPGLRENDERER_H_
 
 #include "nextfloor/renderer/gl_renderer_engine.h"
 
@@ -16,26 +16,23 @@ namespace nextfloor {
 
 namespace renderer {
 
-class CubeGlRendererEngine : public GlRendererEngine {
+class CubeMapGlRendererEngine : public GlRendererEngine {
 
 public:
-    CubeGlRendererEngine(const std::string& texture, PipelineProgram* pipeline_program_);
-    ~CubeGlRendererEngine() final = default;
+    CubeMapGlRendererEngine(PipelineProgram* pipeline_program);
+    ~CubeMapGlRendererEngine() final = default;
 
     void Draw(const glm::mat4& mvp) final;
 
 private:
     void Init();
     void CreateVertexBuffer();
-    void CreateElementBuffer();
     void CreateTextureBuffer();
 
     bool is_initialized_ = false;
-    std::string texture_;
 
-    GLuint elementbuffer_;
-    GLuint vertexarray_;
     GLuint vertexbuffer_;
+    GLuint vertexarray_;
     GLuint texturebuffer_;
 };
 
@@ -43,4 +40,4 @@ private:
 
 }  // namespace nextfloor
 
-#endif  // NEXTFLOOR_RENDERER_CUBEGLRENDERER_H_
+#endif  // NEXTFLOOR_RENDERER_CUBEMAPGLRENDERER_H_

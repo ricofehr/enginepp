@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
 
+
 namespace nextfloor {
 
 namespace renderer {
@@ -54,9 +55,11 @@ const GLfloat sBufferData[192] = {
 
 }  // namespace
 
-CubeGlRendererEngine::CubeGlRendererEngine(const std::string& texture, GLuint program_id, GLuint matrix_id)
-      : GlRendererEngine(texture, program_id, matrix_id)
-{}
+CubeGlRendererEngine::CubeGlRendererEngine(const std::string& texture, PipelineProgram* pipeline_program)
+      : GlRendererEngine(pipeline_program)
+{
+    texture_ = texture;
+}
 
 void CubeGlRendererEngine::Init()
 {
@@ -71,9 +74,11 @@ void CubeGlRendererEngine::Init()
  */
 void CubeGlRendererEngine::CreateVertexBuffer()
 {
+    glGenVertexArrays(1, &vertexarray_);
     glGenBuffers(1, &vertexbuffer_);
     assert(vertexbuffer_ != 0);
 
+    glBindVertexArray(vertexarray_);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
     glBufferData(GL_ARRAY_BUFFER, sizeof(sBufferData), sBufferData, GL_STREAM_DRAW);
 }
@@ -147,10 +152,12 @@ void CubeGlRendererEngine::Draw(const glm::mat4& mvp)
             Init();
         }
 
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
+        glUseProgram(pipeline_program_->getProgramId());
         /* Assign projection matrix to drawn */
-        glUniformMatrix4fv(matrix_id_, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(pipeline_program_->getMatrixId(), 1, GL_FALSE, &mvp[0][0]);
 
+        glBindVertexArray(vertexarray_);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer_);
 
         /* 1st attribute buffer : vertices position, used 3 floats */
@@ -167,11 +174,12 @@ void CubeGlRendererEngine::Draw(const glm::mat4& mvp)
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
         /* Assign texture to drawn */
-        glUniform1i(glGetUniformLocation(program_id_, "tex"), texturebuffer_);
+        glUniform1i(glGetUniformLocation(pipeline_program_->getProgramId(), "tex"), texturebuffer_);
 
         /* Draw triangles from vertices setted from mvp matrix thanks elements coordinates */
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer_);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);

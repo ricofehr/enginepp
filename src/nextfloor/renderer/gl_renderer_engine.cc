@@ -10,11 +10,9 @@ namespace nextfloor {
 
 namespace renderer {
 
-GlRendererEngine::GlRendererEngine(const std::string& texture, GLuint program_id, GLuint matrix_id)
+GlRendererEngine::GlRendererEngine(PipelineProgram* pipeline_program)
 {
-    texture_ = texture;
-    program_id_ = program_id;
-    matrix_id_ = matrix_id;
+    pipeline_program_ = pipeline_program;
 }
 
 }  // namespace renderer

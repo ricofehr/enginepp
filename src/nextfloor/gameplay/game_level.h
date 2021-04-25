@@ -57,6 +57,7 @@ private:
 
     void PrepareDraw(float window_size_ratio);
     void Renderer(const nextfloor::mesh::Mesh& mesh);
+    void RendererCubeMap(float window_size_ratio);
 
     std::unique_ptr<nextfloor::playground::Ground> universe_{nullptr};
     nextfloor::character::Character* player_{nullptr};

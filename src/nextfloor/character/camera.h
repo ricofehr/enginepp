@@ -29,6 +29,7 @@ public:
     virtual void ComputeOrientation() = 0;
     virtual bool IsInFieldOfView(const nextfloor::mesh::Mesh& target) const = 0;
     virtual glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const = 0;
+    virtual glm::mat4 GetFarAndStaticViewProjectionMatrix(float window_size_ratio) const = 0;
 
     virtual void increment_angles(float horizontal_angle, float vertical_angle) = 0;
 

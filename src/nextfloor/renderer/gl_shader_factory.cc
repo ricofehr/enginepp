@@ -9,6 +9,7 @@
 
 #include <tbb/mutex.h>
 #include <cassert>
+#include <sstream>
 
 #include "nextfloor/renderer/vertex_gl_shader.h"
 #include "nextfloor/renderer/fragment_gl_shader.h"
@@ -21,6 +22,24 @@ namespace {
 
 static bool sInstanciated = false;
 
+static constexpr const char sShaderFolder[] = "glsl";
+static constexpr const char sVertexShaderSuffix[] = "VertexShader.vertexshader";
+static constexpr const char sFragmentShaderSuffix[] = "FragmentShader.fragmentshader";
+
+
+std::string getVertexShaderPath(std::string label)
+{
+    std::stringstream ss_path;
+    ss_path << sShaderFolder << "/" << label << sVertexShaderSuffix;
+    return ss_path.str();
+}
+std::string getFragmentShaderPath(std::string label)
+{
+    std::stringstream ss_path;
+    ss_path << sShaderFolder << "/" << label << sFragmentShaderSuffix;
+    return ss_path.str();
+}
+
 }  // anonymous namespace
 
 GlShaderFactory::GlShaderFactory()
@@ -29,9 +48,11 @@ GlShaderFactory::GlShaderFactory()
     sInstanciated = true;
 }
 
-Shader* GlShaderFactory::MakeVertexShader(const std::string& shader_path, unsigned int program_id)
+Shader* GlShaderFactory::MakeVertexShader(const std::string& shader_label, unsigned int program_id)
 {
     static tbb::mutex vertex_mutex_;
+
+    std::string shader_path = getVertexShaderPath(shader_label);
 
     vertex_mutex_.lock();
     if (shaders_.find(shader_path) == shaders_.end()) {
@@ -44,9 +65,11 @@ Shader* GlShaderFactory::MakeVertexShader(const std::string& shader_path, unsign
     return shaders_[shader_path].get();
 }
 
-Shader* GlShaderFactory::MakeFragmentShader(const std::string& shader_path, unsigned int program_id)
+Shader* GlShaderFactory::MakeFragmentShader(const std::string& shader_label, unsigned int program_id)
 {
     static tbb::mutex fragment_mutex_;
+
+    std::string shader_path = getFragmentShaderPath(shader_label);
 
     fragment_mutex_.lock();
     if (shaders_.find(shader_path) == shaders_.end()) {

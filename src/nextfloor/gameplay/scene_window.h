@@ -22,8 +22,6 @@ public:
     virtual void* window() const = 0;
 
     virtual float getWindowRatio() const = 0;
-    virtual unsigned int getMatrixId() const = 0;
-    virtual unsigned int getProgramId() const = 0;
 };
 
 }  // namespace gameplay

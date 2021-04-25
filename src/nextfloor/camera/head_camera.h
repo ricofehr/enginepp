@@ -32,6 +32,7 @@ public:
 
     void ComputeOrientation() final;
     bool IsInFieldOfView(const nextfloor::mesh::Mesh& target) const final;
+    glm::mat4 GetFarAndStaticViewProjectionMatrix(float window_size_ratio) const final;
     glm::mat4 GetViewProjectionMatrix(float window_size_ratio) const final;
 
     glm::vec3 owner_movement() const final;

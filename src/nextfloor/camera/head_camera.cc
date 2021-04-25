@@ -46,6 +46,12 @@ bool HeadCamera::IsInFieldOfView(const nextfloor::mesh::Mesh& target) const
     return target_abs_angle(target) <= fov();
 }
 
+glm::mat4 HeadCamera::GetFarAndStaticViewProjectionMatrix(float window_size_ratio) const
+{
+    float factor = (kPerspectiveNear + kPerspectiveFar) / 2;
+    return GetProjectionMatrix(window_size_ratio) * glm::mat4(glm::mat3(GetViewMatrix() * factor)) * glm::mat4(1.0f);
+}
+
 glm::mat4 HeadCamera::GetViewProjectionMatrix(float window_size_ratio) const
 {
     return GetProjectionMatrix(window_size_ratio) * GetViewMatrix();

@@ -7,7 +7,7 @@ The camera can move with mouse (head orientation) and arrow keys (camera directi
 
 ## Prerequisites
 
-Needs Cmake (>3.1 and <3.13), OpenCL (1.2), TBB, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
+Needs Git Lfs Extension, Cmake (>3.1 and <3.13), OpenCL (1.2), TBB, OpenGL3 (>3.3) and GLew / GLM / SOIL / Glfw libraries.
 
 On ubuntu or Debian, apt-get make most of prerequisites install
 ```
@@ -35,7 +35,7 @@ $ cd  opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25 && ./install.sh
 
 On OSX, we need XCode and install some libraries with brew (SOIL must be install manually)
 ```
-$ brew install cmake glm glew glfw3 tbb libconfig
+$ brew install cmake glm glew glfw3 tbb libconfig git-lfs
 ```
 
 And SOIL must be install manually

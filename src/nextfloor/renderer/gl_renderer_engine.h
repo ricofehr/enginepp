@@ -13,6 +13,9 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
+#include "nextfloor/renderer/pipeline_program.h"
+
+
 namespace nextfloor {
 
 namespace renderer {
@@ -23,20 +26,14 @@ public:
     ~GlRendererEngine() override = default;
 
 protected:
-    GlRendererEngine(const std::string& texture, GLuint program_id, GLuint matrix_id);
+    GlRendererEngine(PipelineProgram* pipeline_program);
 
     GlRendererEngine(GlRendererEngine&&) = default;
     GlRendererEngine& operator=(GlRendererEngine&&) = default;
     GlRendererEngine(const GlRendererEngine&) = delete;
     GlRendererEngine& operator=(const GlRendererEngine&) = delete;
 
-    GLuint program_id_;
-    GLuint matrix_id_;
-
-    GLuint elementbuffer_;
-    GLuint vertexbuffer_;
-    GLuint texturebuffer_;
-    std::string texture_;
+    PipelineProgram* pipeline_program_{nullptr};
 };
 
 }  // namespace renderer

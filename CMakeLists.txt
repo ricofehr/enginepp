@@ -120,7 +120,9 @@ set(polygon_SRCS
 
 set(renderer_SRCS
         src/nextfloor/renderer/cube_gl_renderer_engine.cc
+        src/nextfloor/renderer/cube_map_gl_renderer_engine.cc
         src/nextfloor/renderer/fragment_gl_shader.cc
+        src/nextfloor/renderer/gl_pipeline_program.cc
         src/nextfloor/renderer/gl_renderer_engine.cc
         src/nextfloor/renderer/gl_renderer_factory.cc
         src/nextfloor/renderer/gl_scene_input.cc
@@ -299,13 +301,16 @@ set(polygon_HDRS
 
 set(renderer_HDRS
         src/nextfloor/renderer/cube_gl_renderer_engine.h
+        src/nextfloor/renderer/cube_map_gl_renderer_engine.h
         src/nextfloor/renderer/fragment_gl_shader.h
+        src/nextfloor/renderer/gl_pipeline_program.h
         src/nextfloor/renderer/gl_renderer_engine.h
         src/nextfloor/renderer/gl_renderer_factory.h
         src/nextfloor/renderer/gl_scene_input.h
         src/nextfloor/renderer/gl_scene_window.h
         src/nextfloor/renderer/gl_shader.h
         src/nextfloor/renderer/gl_shader_factory.h
+        src/nextfloor/renderer/pipeline_program.h
         src/nextfloor/renderer/shader.h
         src/nextfloor/renderer/shader_factory.h
         src/nextfloor/renderer/vertex_gl_shader.h)
