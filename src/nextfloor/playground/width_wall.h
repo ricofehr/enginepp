@@ -25,7 +25,7 @@ namespace playground {
 class WidthWall : public Wall {
 
 public:
-    static constexpr char kTexture[] = "assets/wall.png";
+    static constexpr char kTexture[] = "assets/brick.jpg";
 
     static constexpr float kBrickWidth = 2.0f;
     static constexpr float kBrickHeight = 2.0f;
