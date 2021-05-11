@@ -46,9 +46,8 @@ void MainMenu::Enable()
     ImGui::SetCurrentContext(context_);
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(glfw_window_, false);
-    ImGui_ImplOpenGL3_Init("#version 150");
+    ImGui_ImplOpenGL3_Init("#version 410");
 
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     is_exit_game_pressed_ = false;
     is_resume_game_pressed_ = false;
@@ -73,7 +72,9 @@ void MainMenu::MenuLoop()
 void MainMenu::MainList()
 {
     ImGui::Begin("Main Menu");
-    if (ImGui::Button("Resume Game")) {
+    ImGui::SetWindowSize(ImVec2(150, 100));
+
+    if (ImGui::Button("Resume GL Scene")) {
         is_resume_game_pressed_ = true;
     }
 
@@ -81,7 +82,7 @@ void MainMenu::MainList()
         is_option_display_ = true;
     }
 
-    if (ImGui::Button("Exit Game")) {
+    if (ImGui::Button("Exit GL Scene")) {
         is_exit_game_pressed_ = true;
     }
     ImGui::End();
@@ -90,6 +91,7 @@ void MainMenu::MainList()
 void MainMenu::OptionList()
 {
     ImGui::Begin("Option Menu");
+    ImGui::SetWindowSize(ImVec2(150, 80));
 
     ImGui::Checkbox("Grid Mode", &is_option_grid_mode_);
 

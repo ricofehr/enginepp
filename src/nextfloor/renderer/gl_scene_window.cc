@@ -87,7 +87,7 @@ void GlSceneWindow::InitWindowSize()
 void GlSceneWindow::CreateWindow()
 {
     /* Open a window and create its OpenGL context (use glfwGetPrimaryMonitor() on third parameter for FS) */
-    glfw_window_ = glfwCreateWindow(window_width_, window_height_, "=== Engine ===", nullptr, nullptr);
+    glfw_window_ = glfwCreateWindow(window_width_, window_height_, "=== NextFloor ===", nullptr, nullptr);
     if (glfw_window_ == nullptr) {
         using nextfloor::core::CommonServices;
         CommonServices::getLog()->WriteLine("Failed to open GLFW window");
