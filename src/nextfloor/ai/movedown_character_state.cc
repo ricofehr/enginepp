@@ -12,7 +12,7 @@ namespace ai {
 
 void MoveDownCharacterState::Enter(nextfloor::character::Character* actor)
 {
-    actor->reset_movement();
+    is_finished_ = false;
 }
 
 void MoveDownCharacterState::Execute(nextfloor::character::Character* actor, double elapsed_time)
@@ -37,7 +37,7 @@ void MoveDownCharacterState::Exit(nextfloor::character::Character* actor)
         owner_->Idle();
     }
     else {
-        owner_->JumpDown();
+        owner_->ApplyGravity();
     }
 }
 

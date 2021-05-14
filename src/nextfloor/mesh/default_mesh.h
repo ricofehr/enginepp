@@ -33,8 +33,8 @@ public:
     Mesh* UpdateChildPlacement(nextfloor::mesh::Mesh* child) override { return nullptr; }
     std::vector<glm::vec3> getCoordsModelMatrixComputed() const override { return std::vector<glm::vec3>(0); }
     glm::vec3 movement() const override { return glm::vec3(0.0f); }
-    float move_factor() const override { return 0.0f; }
-    void set_move_factor(float move_factor) override {}
+    void set_distance_factor(float distance_factor) override {}
+    void set_move_factor(glm::vec3 move_factor) override {}
     void set_movement(const glm::vec3& movement) override {}
 
     /* Functions disabled by default, and overrided by ground Objects */
@@ -58,7 +58,7 @@ public:
     /* Functions disabled by default, and overrided by placement Objects */
     std::vector<Mesh*> GetMovingObjects() override { return std::vector<Mesh*>(0); }
     bool IsLastObstacle(Mesh* obstacle) const override { return false; }
-    void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) override {}
+    void UpdateObstacleIfNearer(Mesh* obstacle, float distance_factor, glm::vec3 move_factor) override {}
     glm::vec3 location() const override { return glm::vec3(0.0f); }
     glm::vec3 dimension() const override { return glm::vec3(0.0f); }
     Border* border() const override { return nullptr; }

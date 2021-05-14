@@ -23,7 +23,7 @@ public:
     TbbNearerCollisionEngine(int granularity);
     ~TbbNearerCollisionEngine() final = default;
 
-    float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
+    PartialMove ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 };
 
 }  // namespace physic

@@ -36,6 +36,7 @@ set(action_SRCS
 set(ai_SRCS
         src/nextfloor/ai/character_fsm.cc
         src/nextfloor/ai/character_fsm_factory.cc
+        src/nextfloor/ai/gravity_character_state.cc
         src/nextfloor/ai/idle_character_state.cc
         src/nextfloor/ai/jumpdown_character_state.cc
         src/nextfloor/ai/jumpup_character_state.cc
@@ -177,6 +178,7 @@ set(ai_HDRS
         src/nextfloor/ai/character_fsm.h
         src/nextfloor/ai/character_fsm_factory.h
         src/nextfloor/ai/character_state.h
+        src/nextfloor/ai/gravity_character_state.h
         src/nextfloor/ai/idle_character_state.h
         src/nextfloor/ai/jumpdown_character_state.h
         src/nextfloor/ai/jumpup_character_state.h

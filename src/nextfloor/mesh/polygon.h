@@ -31,11 +31,10 @@ public:
     virtual void MoveLocation() = 0;
     virtual bool IsMoved() const = 0;
 
-    virtual void set_move_factor(float move_factor) = 0;
+    virtual void set_distance_factor(float distance_factor) = 0;
+    virtual void set_move_factor(glm::vec3 move_factor) = 0;
     virtual void set_movement(const glm::vec3& move) = 0;
-    virtual void InverseMove() = 0;
 
-    virtual float move_factor() const = 0;
     virtual glm::vec3 movement() const = 0;
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 scale() const = 0;

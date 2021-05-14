@@ -14,6 +14,14 @@ namespace nextfloor {
 namespace physic {
 
 /**
+ *  Define partial move with factor of movement and new movement axes
+ */
+typedef struct {
+    float distance_factor;
+    glm::vec3 movement_factor_update;
+} PartialMove;
+
+/**
  *  @class EngineCollision
  *  @brief Interface who manage collisition computes between 3d models\n
  */
@@ -29,7 +37,7 @@ public:
      *  Primitive Operation subclassed: compute collision distance between borders of 2 objects
      *  @return parted (as fraction of setted move) distance between the 2 borders
      */
-    virtual float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) = 0;
+    virtual PartialMove ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) = 0;
 };
 
 }  // namespace physic

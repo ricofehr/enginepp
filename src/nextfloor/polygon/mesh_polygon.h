@@ -29,27 +29,22 @@ public:
 
     inline void MoveLocation() final
     {
-        location_ += movement() * move_factor();
-
-        if (move_factor_ <= 0.0f) {
-            InverseMove();
-        }
-
-        move_factor_ = 1.0f;
+        UpdateLocation();
+        UpdateMovement();
+        ResetMoveFactors();
     }
 
-    bool IsMoved() const final { return movement_[0] != 0.0f || movement_[1] != 0.0f || movement_[2] != 0.0f; }
+    bool IsMoved() const final { return movement_.x != 0.0f || movement_.y != 0.0f || movement_.z != 0.0f; }
 
     glm::vec3 movement() const final;
-    float move_factor() const final { return fabs(move_factor_); }
     glm::vec3 location() const final { return location_; }
     glm::vec3 scale() const final { return scale_; }
     glm::mat4 mvp() const final { return mvp_; }
     std::string texture() const final { return texture_; }
 
-    void set_move_factor(float move_factor) final { move_factor_ = move_factor; }
+    void set_distance_factor(float distance_factor) final { distance_factor_ = distance_factor; }
+    void set_move_factor(glm::vec3 move_factor) final { move_factor_ = move_factor; }
     void set_movement(const glm::vec3& movement) final { movement_ = movement; }
-    void InverseMove() final { movement_ = -movement_; }
 
 protected:
     MeshPolygon() = default;
@@ -64,10 +59,29 @@ protected:
     glm::vec3 movement_{0.0f, 0.0f, 0.0f};
 
     /** MOve factor with collision shape (1 -> no collision detected) */
-    float move_factor_{1.0f};
+    float distance_factor_ = 1.0f;
+    glm::vec3 move_factor_{1.0f, 1.0f, 1.0f};
 
 private:
     glm::mat4 GetModelMatrix();
+
+    inline void UpdateLocation()
+    {
+        location_ += movement_ * distance_factor_;
+    }
+
+    inline void UpdateMovement()
+    {
+        if (distance_factor_ != 0.0f) {
+            movement_ *= move_factor_;
+        }
+    }
+
+    inline void ResetMoveFactors()
+    {
+        distance_factor_ = 1.0f;
+        move_factor_ = glm::vec3(1.0f);
+    }
 };
 
 }  // namespace polygon

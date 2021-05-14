@@ -92,7 +92,7 @@ void ClNearerCollisionEngine::InitCollisionEngine()
     }
 }
 
-float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
+PartialMove ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
     nextfloor::mesh::Border* target_border = target->border();
     nextfloor::mesh::Border* obstacle_border = obstacle->border();
@@ -101,7 +101,7 @@ float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, n
     collision_mutex_.lock();
 
     float* distances_ptr = new float[granularity_];
-    float ret = 1.0f;
+    PartialMove ret = {1.0f, glm::vec3(1.0f)};
 
     std::vector<glm::vec3> coords1 = target_border->getCoordsModelMatrixComputed();
     std::vector<glm::vec3> coords2 = obstacle_border->getCoordsModelMatrixComputed();
@@ -156,7 +156,7 @@ float ClNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, n
 
     for (auto i = 0; i < granularity_; i++) {
         if (distances_ptr[i] != 1.0f) {
-            ret = distances_ptr[i];
+            ret = {distances_ptr[i], glm::vec3(-1.0f)};
             break;
         }
     }

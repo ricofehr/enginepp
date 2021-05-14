@@ -53,6 +53,7 @@ private:
 
     static constexpr double kRadianByDegree = M_PI / 180.0f;
     static constexpr float kDefaultFov = 45.0f;
+    static constexpr float kFactorInFov = 1.5f;
     static constexpr double kHalfPi = M_PI / 2.0f;
 
     static constexpr float kPerspectiveNear = 0.1f;

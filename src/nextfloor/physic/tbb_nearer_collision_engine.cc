@@ -16,9 +16,9 @@ namespace physic {
 
 TbbNearerCollisionEngine::TbbNearerCollisionEngine(int granularity) : NearerCollisionEngine(granularity) {}
 
-float TbbNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
+PartialMove TbbNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
-    float distance(1.0f);
+    PartialMove target_move{1.0f, glm::vec3(1.0f)};
     nextfloor::mesh::Border* target_border = target->border();
     nextfloor::mesh::Border* obstacle_border = obstacle->border();
     tbb::mutex distance_mutex;
@@ -29,13 +29,13 @@ float TbbNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, 
             float test_collision = static_cast<float>(factor - 1) / granularity_;
 
             tbb::mutex::scoped_lock lock_map(distance_mutex);
-            if (test_collision < distance) {
-                distance = test_collision;
+            if (test_collision < target_move.distance_factor) {
+                target_move = {test_collision, glm::vec3(-1.0f)};
             }
         }
     });
 
-    return distance;
+    return target_move;
 }
 
 }  // namespace physic

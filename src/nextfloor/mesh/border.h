@@ -31,12 +31,13 @@ public:
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 dimension() const = 0;
     virtual glm::vec3 movement() const = 0;
-    virtual float move_factor() const = 0;
+    virtual float distance_factor() const = 0;
     virtual bool IsMoved() const = 0;
     virtual float diagonal() const = 0;
 
     virtual void set_movement(const glm::vec3& movement) = 0;
-    virtual void set_move_factor(float move_factor) = 0;
+    virtual void set_distance_factor(float distance_factor) = 0;
+    virtual void set_move_factor(glm::vec3 move_factor) = 0;
 
     virtual float CalculateWidth() const = 0;
     virtual float CalculateHeight() const = 0;

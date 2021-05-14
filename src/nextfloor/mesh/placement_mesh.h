@@ -30,7 +30,7 @@ public:
     ~PlacementMesh() override = default;
 
     bool IsLastObstacle(Mesh* obstacle) const final;
-    void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) final;
+    void UpdateObstacleIfNearer(Mesh* obstacle, float distance_factor, glm::vec3 move_factor) final;
     std::vector<Mesh*> GetMovingObjects() override;
 
     glm::vec3 location() const final { return border_->location(); }
@@ -53,6 +53,8 @@ protected:
 
     bool IsMoved() const { return border_->IsMoved(); }
     void ResetObstacle();
+
+    virtual bool IsDistanceNearer(float distance_factor) const { return false; }
 
     std::vector<GridBox*> coords_list_;
     std::unique_ptr<Border> border_{nullptr};

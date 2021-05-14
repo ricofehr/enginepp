@@ -23,7 +23,7 @@ public:
     SerialNearerCollisionEngine(int granularity);
     ~SerialNearerCollisionEngine() final = default;
 
-    float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
+    PartialMove ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 };
 
 }  // namespace physic

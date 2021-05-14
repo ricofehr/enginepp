@@ -225,11 +225,6 @@ glm::mat4 CubeBorder::CalculateModelMatrix() const
 
 void CubeBorder::ComputeNewLocation()
 {
-    if (!IsMoved()) {
-        set_move_factor(kInitMoveFactor);
-        return;
-    }
-
     /* Compute new location coords for border */
     MoveLocation();
     ComputesModelMatrixCoords();

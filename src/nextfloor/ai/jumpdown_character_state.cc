@@ -27,7 +27,12 @@ void JumpDownCharacterState::Execute(nextfloor::character::Character* actor, dou
     assert(actor != nullptr);
 
     float location_y = actor->location().y;
+
+    /* On first execution, set movement to down, on second execution test if location has changed */
     if (first_execution_ && location_y >= current_y_stage_) {
+        if (location_y > current_y_stage_) {
+            std::cout << location_y - current_y_stage_ << std::endl;
+        }
         is_finished_ = true;
         return;
     }

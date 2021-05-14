@@ -30,6 +30,8 @@ public:
 
     void JumpUp() override;
     void JumpDown() override;
+    void ApplyGravity() override;
+    void EndGravity() override;
     void MoveUp() override;
     void MoveDown() override;
     void MoveLeft() override;

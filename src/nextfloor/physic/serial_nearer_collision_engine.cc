@@ -14,19 +14,21 @@ namespace physic {
 
 SerialNearerCollisionEngine::SerialNearerCollisionEngine(int granularity) : NearerCollisionEngine(granularity) {}
 
-float SerialNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
+PartialMove SerialNearerCollisionEngine::ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle)
 {
+    PartialMove default_move{1.0f, glm::vec3(1.0f)};
     nextfloor::mesh::Border* target_border = target->border();
     nextfloor::mesh::Border* obstacle_border = obstacle->border();
 
     for (float factor = 1.0f; factor <= granularity_; factor += 1.0f) {
         float parted_move = factor / granularity_;
         if (target_border->IsObstacleInCollisionAfterPartedMove(*obstacle_border, parted_move)) {
-            return (factor - 1.0f) / granularity_;
+            float factor_move = (factor - 1) / granularity_;
+            return PartialMove{factor_move, glm::vec3(-1.0f)};
         }
     }
 
-    return 1.0f;
+    return default_move;
 }
 
 }  // namespace physic

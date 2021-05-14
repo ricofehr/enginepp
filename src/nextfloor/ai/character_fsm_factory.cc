@@ -6,6 +6,7 @@
 #include "nextfloor/ai/character_fsm_factory.h"
 
 #include "nextfloor/ai/character_fsm.h"
+#include "nextfloor/ai/gravity_character_state.h"
 #include "nextfloor/ai/idle_character_state.h"
 #include "nextfloor/ai/jumpup_character_state.h"
 #include "nextfloor/ai/jumpdown_character_state.h"
@@ -22,6 +23,11 @@ namespace ai {
 std::unique_ptr<nextfloor::character::FSM> CharacterFSMFactory::MakeCharacterFSM()
 {
     return std::make_unique<CharacterFSM>(this);
+}
+
+std::unique_ptr<nextfloor::character::State> CharacterFSMFactory::MakeGravityCharacterState(nextfloor::character::FSM* owner) const
+{
+    return std::make_unique<GravityCharacterState>(owner);
 }
 
 std::unique_ptr<nextfloor::character::State> CharacterFSMFactory::MakeIdleCharacterState(nextfloor::character::FSM* owner) const

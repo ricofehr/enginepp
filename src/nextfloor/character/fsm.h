@@ -28,6 +28,8 @@ public:
 
     virtual void JumpUp() = 0;
     virtual void JumpDown() = 0;
+    virtual void ApplyGravity() = 0;
+    virtual void EndGravity() = 0;
     virtual void MoveUp() = 0;
     virtual void MoveDown() = 0;
     virtual void MoveLeft() = 0;

@@ -43,7 +43,7 @@ public:
     ClNearerCollisionEngine(const ClNearerCollisionEngine&) = delete;
     ClNearerCollisionEngine& operator=(const ClNearerCollisionEngine&) = delete;
 
-    float ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
+    PartialMove ComputeCollision(nextfloor::mesh::Mesh* target, nextfloor::mesh::Mesh* obstacle) final;
 
 private:
     static constexpr int kBufferSize = 9;

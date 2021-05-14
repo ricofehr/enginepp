@@ -29,9 +29,7 @@ public:
     void MoveLocation() override;
 
     glm::vec3 movement() const final { return border_->movement(); }
-    float move_factor() const final;
 
-    void set_move_factor(float move_factor) final;
     void set_movement(const glm::vec3& movement) final;
 
     std::string class_name() override { return "DynamicMesh"; }
@@ -44,7 +42,9 @@ protected:
     DynamicMesh(const DynamicMesh&) = delete;
     DynamicMesh& operator=(const DynamicMesh&) = delete;
 
-    bool IsMoved() const { return border_->IsMoved(); }
+    bool IsDistanceNearer(float distance_factor) const final { return distance_factor < border_->distance_factor(); }
+    void set_distance_factor(float distance_factor) final;
+    void set_move_factor(glm::vec3 move_factor) final;
 
 private:
     bool IsNeighborReachable(const Mesh& neighbor) const;

@@ -37,6 +37,15 @@ void CharacterFSM::JumpDown()
     }
 }
 
+void CharacterFSM::ApplyGravity()
+{
+    assert(fsm_factory_ != nullptr);
+
+    if (IsInterruptible()) {
+        change_state(fsm_factory_->MakeGravityCharacterState(this));
+    }
+}
+
 void CharacterFSM::MoveUp()
 {
     assert(fsm_factory_ != nullptr);
@@ -85,6 +94,15 @@ void CharacterFSM::Idle()
     }
 }
 
+void CharacterFSM::EndGravity()
+{
+    assert(fsm_factory_ != nullptr);
+
+    if (IsInterruptible()) {
+        revert_to_previous_state();
+    }
+}
+
 
 void CharacterFSM::Update(double elapsed_time)
 {
@@ -118,7 +136,6 @@ void CharacterFSM::revert_to_previous_state()
     assert(previous_state_ != nullptr);
 
     if (IsInterruptible()) {
-        current_state_->Exit(owner_);
         current_state_.swap(previous_state_);
         current_state_->Enter(owner_);
     }

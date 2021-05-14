@@ -43,7 +43,8 @@ bool HeadCamera::IsInFieldOfView(const nextfloor::mesh::Mesh& target) const
         return true;
     }
 
-    return target_abs_angle(target) <= fov();
+    /* Use a factor to keep displaying border objects */
+    return target_abs_angle(target) <= kFactorInFov * fov();
 }
 
 glm::mat4 HeadCamera::GetFarAndStaticViewProjectionMatrix(float window_size_ratio) const
@@ -69,12 +70,7 @@ glm::mat4 HeadCamera::GetViewMatrix() const
 
 glm::vec3 HeadCamera::owner_movement() const
 {
-    auto movement = direction();
-    // if (!owner_->is_flying()) {
-    //     movement.y = -1.0f;
-    // }
-
-    return movement;
+    return direction();
 }
 
 }  // namespace camera

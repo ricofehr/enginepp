@@ -12,12 +12,13 @@ namespace ai {
 
 void IdleCharacterState::Enter(nextfloor::character::Character* actor)
 {
-    actor->reset_movement();
+    //actor->reset_movement();
     is_finished_ = false;
 }
 
 void IdleCharacterState::Execute(nextfloor::character::Character* actor, double elapsed_time)
 {
+    actor->reset_movement();
     is_finished_ = true;
 }
 

@@ -22,6 +22,7 @@ class CharacterFSMFactory : public nextfloor::character::FSMFactory {
 
 public:
     std::unique_ptr<nextfloor::character::FSM> MakeCharacterFSM() override;
+    std::unique_ptr<nextfloor::character::State> MakeGravityCharacterState(nextfloor::character::FSM* owner) const override;
     std::unique_ptr<nextfloor::character::State> MakeIdleCharacterState(nextfloor::character::FSM* owner) const override;
     std::unique_ptr<nextfloor::character::State> MakeJumpUpCharacterState(nextfloor::character::FSM* owner) const override;
     std::unique_ptr<nextfloor::character::State> MakeJumpDownCharacterState(nextfloor::character::FSM* owner) const override;

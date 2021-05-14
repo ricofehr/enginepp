@@ -29,6 +29,8 @@ public:
     static constexpr int kJumpUp = 2;
     static constexpr int kJumpDown = 3;
 
+    static constexpr int kGravity = 4;
+
     ~CharacterState() override = default;
 
     bool IsFinished() override { return is_finished_; }

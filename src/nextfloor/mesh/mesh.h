@@ -35,14 +35,14 @@ public:
     virtual void MoveLocation() = 0;
     virtual std::vector<glm::vec3> getCoordsModelMatrixComputed() const = 0;
     virtual glm::vec3 movement() const = 0;
-    virtual float move_factor() const = 0;
+    virtual void set_distance_factor(float distance_factor) = 0;
+    virtual void set_move_factor(glm::vec3 move_factor) = 0;
     virtual void set_movement(const glm::vec3& movement) = 0;
-    virtual void set_move_factor(float move_factor) = 0;
 
     /* Placement methods */
     virtual std::vector<Mesh*> GetMovingObjects() = 0;
     virtual bool IsLastObstacle(Mesh* obstacle) const = 0;
-    virtual void UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance) = 0;
+    virtual void UpdateObstacleIfNearer(Mesh* obstacle, float distance_factor, glm::vec3 move_factor) = 0;
     virtual glm::vec3 location() const = 0;
     virtual glm::vec3 dimension() const = 0;
     virtual Border* border() const = 0;

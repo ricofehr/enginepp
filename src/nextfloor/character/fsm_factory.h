@@ -25,6 +25,7 @@ public:
     virtual ~FSMFactory() = default;
 
     virtual std::unique_ptr<FSM> MakeCharacterFSM() = 0;
+    virtual std::unique_ptr<State> MakeGravityCharacterState(FSM* owner) const = 0;
     virtual std::unique_ptr<State> MakeIdleCharacterState(FSM* owner) const = 0;
     virtual std::unique_ptr<State> MakeJumpUpCharacterState(FSM* owner) const = 0;
     virtual std::unique_ptr<State> MakeJumpDownCharacterState(FSM* owner) const = 0;

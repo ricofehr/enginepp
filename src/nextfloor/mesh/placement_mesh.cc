@@ -31,14 +31,15 @@ bool PlacementMesh::IsLastObstacle(Mesh* obstacle) const
     return obstacle_ == obstacle;
 }
 
-void PlacementMesh::UpdateObstacleIfNearer(Mesh* obstacle, float obstacle_distance)
+void PlacementMesh::UpdateObstacleIfNearer(Mesh* obstacle, float distance_factor, glm::vec3 move_factor)
 {
     tbb::mutex::scoped_lock lock_map(mutex_);
 
     /* Update obstacle and distance if lower than former */
-    if (obstacle_distance < move_factor()) {
+    if (IsDistanceNearer(distance_factor)) {
         obstacle_ = obstacle;
-        set_move_factor(obstacle_distance);
+        set_move_factor(move_factor);
+        set_distance_factor(distance_factor);
     }
 }
 

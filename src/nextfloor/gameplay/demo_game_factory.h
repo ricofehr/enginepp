@@ -49,7 +49,7 @@ public:
 
 private:
     static constexpr float kPlayerLocationX = 0.0f;
-    static constexpr float kPlayerLocationY = -5.09f;
+    static constexpr float kPlayerLocationY = -5.0f;
     static constexpr float kPlayerLocationZ = 5.0f;
 
     static constexpr float kFirstRoomLocationX = 0.0f;

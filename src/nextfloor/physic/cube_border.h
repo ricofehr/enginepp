@@ -43,10 +43,11 @@ public:
     float diagonal() const final { return glm::length(dimension()); }
 
     glm::vec3 movement() const final { return movement_; }
-    float move_factor() const final { return fabs(move_factor_); }
     glm::vec3 location() const final { return location_; }
+    float distance_factor() const final { return distance_factor_; }
 
-    void set_move_factor(float move_factor) final { move_factor_ = move_factor; }
+    void set_distance_factor(float distance_factor) final { distance_factor_ = distance_factor; }
+    void set_move_factor(glm::vec3 move_factor) final { move_factor_ = move_factor; }
     void set_movement(const glm::vec3& movement) final { movement_ = movement; }
 
     glm::vec3 getFirstPoint() const final;
@@ -54,6 +55,7 @@ public:
 
 private:
     static constexpr float kPoinstStep = 0.10f;
+    static constexpr float kInitDistanceFactor = 1.0f;
     static constexpr float kInitMoveFactor = 1.0f;
 
     float CalculateWidth() const final;
@@ -64,18 +66,30 @@ private:
     glm::vec3 scale() const { return scale_; }
     glm::mat4 CalculateModelMatrix() const;
 
-    void MoveLocation()
+    inline void MoveLocation()
     {
-        location_ += movement() * move_factor();
-
-        if (move_factor_ <= 0.0f) {
-            InverseMove();
-        }
-
-        move_factor_ = 1.0f;
+        UpdateLocation();
+        UpdateMovement();
+        ResetMoveFactors();
     }
 
-    void InverseMove() { movement_ = -movement_; }
+    inline void UpdateLocation()
+    {
+        location_ += movement_ * distance_factor_;
+    }
+
+    inline void UpdateMovement()
+    {
+        if (distance_factor_ != 0.0f) {
+            movement_ *= move_factor_;
+        }
+    }
+
+    inline void ResetMoveFactors()
+    {
+        distance_factor_ = kInitDistanceFactor;
+        move_factor_ = glm::vec3(kInitMoveFactor);
+    }
 
     void ComputesModelMatrixCoords();
 
@@ -87,8 +101,9 @@ private:
     glm::vec3 scale_{0.0f, 0.0f, 0.0f};
     glm::vec3 movement_{0.0f, 0.0f, 0.0f};
 
-    /** MOve factor with collision shape (1 -> no collision detected) */
-    float move_factor_{1.0f};
+    /** Move factor with collision shape (1 -> no collision detected) */
+    float distance_factor_ = 1.0f;
+    glm::vec3 move_factor_{1.0f, 1.0f, 1.0f};
 
     // std::unique_ptr<nextfloor::mesh::HiddenObject> hidden_cube_{nullptr};
     std::vector<glm::vec3> coords_;
