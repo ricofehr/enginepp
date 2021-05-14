@@ -181,11 +181,10 @@ std::unique_ptr<nextfloor::playground::Ground> DemoGameFactory::GenerateRoom(glm
         auto rock_location = location + rocks_location[cnt];
         auto rock_movement = rocks_movement[cnt];
 
-        if (cnt % 2 == 0) {
+        if (rock_movement.x != 0.0f || rock_movement.y != 0.0f || rock_movement.z != 0.0f) {
+            room_objects.push_back(character_factory_->MakeMovingRock(rock_location, rock_movement));
+        } else {
             room_objects.push_back(thing_factory_->MakeRock(rock_location, rock_movement));
-        }
-        else {
-            room_objects.push_back(thing_factory_->MakeLittleRock(rock_location, rock_movement));
         }
     }
 

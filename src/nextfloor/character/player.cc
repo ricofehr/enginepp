@@ -28,9 +28,6 @@ void Player::MoveLocation()
 
     border_->ComputeNewLocation();
     parent_ = parent_->UpdateChildPlacement(this);
-
-    /* After each step, get back control to HID Device */
-    // reset_movement();
 }
 
 Camera* Player::camera() const

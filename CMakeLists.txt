@@ -51,6 +51,7 @@ set(camera_SRCS
 
 set(character_SRCS
         src/nextfloor/character/game_character_factory.cc
+        src/nextfloor/character/moving_rock.cc
         src/nextfloor/character/player.cc)
 
 set(core_SRCS
@@ -199,6 +200,7 @@ set(character_HDRS
         src/nextfloor/character/fsm.h
         src/nextfloor/character/fsm_factory.h
         src/nextfloor/character/game_character_factory.h
+        src/nextfloor/character/moving_rock.h
         src/nextfloor/character/player.h
         src/nextfloor/character/state.h)
 

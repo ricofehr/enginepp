@@ -27,7 +27,7 @@ class Character : public nextfloor::mesh::DynamicMesh {
 public:
     ~Character() override = default;
 
-    virtual Camera* camera() const = 0;
+    virtual Camera* camera() const { return nullptr; }
 
     virtual bool is_flying() const { return false; }
 

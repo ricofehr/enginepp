@@ -25,6 +25,7 @@ class CharacterFactory {
 public:
     virtual ~CharacterFactory() = default;
     virtual std::unique_ptr<Character> MakePlayer(const glm::vec3& location) const = 0;
+    virtual std::unique_ptr<Character> MakeMovingRock(const glm::vec3& location, const glm::vec3& movement) const = 0;
 };
 
 }  // namespace character

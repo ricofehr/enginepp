@@ -46,7 +46,8 @@ int main(int argc, char* argv[])
     nextfloor::physic::GameCollisionEngineFactory collision_engine_factory;
     nextfloor::camera::GameCameraFactory camera_factory;
     nextfloor::menu::GameMenuFactory menu_factory;
-    nextfloor::character::GameCharacterFactory character_factory(&camera_factory, &fsm_factory, &border_factory);
+    nextfloor::character::GameCharacterFactory character_factory(&camera_factory, &fsm_factory,
+                                                                 &border_factory, &polygon_factory);
     nextfloor::thing::GameThingFactory thing_factory(&polygon_factory, &border_factory);
     nextfloor::playground::GameGroundFactory ground_factory(&thing_factory, &grid_factory, &border_factory);
     nextfloor::hid::MouseHidFactory hid_factory(&action_factory, &renderer_factory);

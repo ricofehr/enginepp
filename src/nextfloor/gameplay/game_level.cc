@@ -17,6 +17,7 @@
 
 #include "nextfloor/mesh/mesh.h"
 #include "nextfloor/character/camera.h"
+#include "nextfloor/character/character.h"
 
 #include "nextfloor/core/common_services.h"
 
@@ -65,6 +66,16 @@ void GameLevel::ExecutePlayerAction(Action* command)
 void GameLevel::UpdateCharacterStates(double elapsed_time)
 {
     player_->UpdateState(elapsed_time);
+
+    using nextfloor::character::Character;
+    std::vector<nextfloor::mesh::Mesh*> moving_objects = universe_->GetMovingObjects();
+    tbb::parallel_for(0, (int)moving_objects.size(), 1, [&](int i) {
+        Character* character = (Character*)moving_objects[i];
+        if (!character->IsPlayer()) {
+            character->MoveUp();
+            character->UpdateState(elapsed_time);
+        }
+    });
 }
 
 void GameLevel::Move()
