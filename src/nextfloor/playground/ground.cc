@@ -6,12 +6,11 @@
 
 #include "nextfloor/playground/ground.h"
 
-#include <sstream>
 #include <tbb/tbb.h>
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "nextfloor/mesh/mesh.h"
+#include "nextfloor/mesh/grid_box.h"
 
 namespace nextfloor {
 

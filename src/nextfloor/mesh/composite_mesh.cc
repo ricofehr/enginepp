@@ -17,43 +17,6 @@ namespace nextfloor {
 
 namespace mesh {
 
-namespace {
-/* Unique id for object */
-static int sObjectId = 1;
-}  // anonymous namespace
-
-CompositeMesh::CompositeMesh()
-{
-    id_ = sObjectId++;
-}
-
-bool operator==(const CompositeMesh& o1, const CompositeMesh& o2)
-{
-    return o1.id_ == o2.id_;
-}
-
-bool operator!=(const CompositeMesh& o1, const CompositeMesh& o2)
-{
-    return o1.id_ != o2.id_;
-}
-
-std::vector<Mesh*> CompositeMesh::AllStubMeshs()
-{
-    std::vector<Mesh*> meshes(0);
-
-    if (objects_.size() == 0) {
-        meshes.push_back(this);
-    }
-    else {
-        for (auto& object : objects_) {
-            auto object_meshs = object->AllStubMeshs();
-            meshes.insert(meshes.end(), object_meshs.begin(), object_meshs.end());
-        }
-    }
-
-    return meshes;
-}
-
 std::vector<Mesh*> CompositeMesh::childs() const
 {
     std::vector<Mesh*> ret_childs(0);
@@ -63,17 +26,12 @@ std::vector<Mesh*> CompositeMesh::childs() const
     return ret_childs;
 }
 
-std::vector<Mesh*> CompositeMesh::descendants() const
+std::vector<Mesh*> CompositeMesh::leafs()
 {
     std::vector<Mesh*> ret_childs(0);
     for (auto& object : objects_) {
-        if (object->hasNoChilds()) {
-            ret_childs.push_back(object.get());
-        }
-        else {
-            std::vector<Mesh*> grant_childs = object->descendants();
-            ret_childs.insert(ret_childs.end(), grant_childs.begin(), grant_childs.end());
-        }
+        std::vector<Mesh*> grant_childs = object->leafs();
+        ret_childs.insert(ret_childs.end(), grant_childs.begin(), grant_childs.end());
     }
     return ret_childs;
 }

@@ -25,7 +25,7 @@ public:
     static constexpr float kSmallScale = 0.5f;
     static constexpr float kSmallerScale = 0.25f;
 
-    std::string class_name() final { return "Thing"; }
+    std::string class_name() const final { return "Thing"; }
 };
 
 }  // namespace thing

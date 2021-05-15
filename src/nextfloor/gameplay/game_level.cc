@@ -93,7 +93,6 @@ void GameLevel::DetectCollision(std::vector<nextfloor::mesh::Mesh*> moving_objec
 void GameLevel::PivotCollisonOnObject(nextfloor::mesh::Mesh* pivot)
 {
     std::vector<nextfloor::mesh::Mesh*> test_objects = pivot->FindCollisionNeighbors();
-
     tbb::parallel_for(0, (int)test_objects.size(), 1, [&](int i) {
         assert(pivot->id() != test_objects[i]->id());
         collision_engine_->DetectCollision(pivot, test_objects[i]);

@@ -41,7 +41,7 @@ public:
 
     void reset_movement() { set_movement(glm::vec3(kNoMovement)); }
 
-    std::string class_name() final { return "Character"; }
+    std::string class_name() const final { return "Character"; }
 
 protected:
     Character() = default;

@@ -22,7 +22,7 @@ namespace mesh {
  *  @class DrawingMesh
  *  @brief Abstract class who add drawning functions to a Mesh object
  */
-class DrawingMesh : public PlacementMesh {
+class DrawingMesh : public Mesh {
 
 public:
     ~DrawingMesh() override = default;
@@ -30,7 +30,7 @@ public:
     std::vector<std::pair<glm::mat4, std::string>> GetModelViewProjectionsAndTextureToDraw() const override;
     void PrepareDraw(const glm::mat4& view_projection_matrix) override;
 
-    std::string class_name() override { return "DrawingMesh"; }
+    std::string class_name() const override { return "DrawingMesh"; }
 
 protected:
     DrawingMesh() = default;

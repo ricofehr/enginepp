@@ -40,7 +40,6 @@ public:
     nextfloor::mesh::Mesh* AddIntoChild(std::unique_ptr<nextfloor::mesh::Mesh> mesh) final;
 
     bool IsInside(const nextfloor::mesh::Mesh& mesh) const final;
-    bool IsInside(const glm::vec3& location) const final;
 
     bool IsFrontPositionFilled() const final;
     bool IsRightPositionFilled() const final;
@@ -53,10 +52,13 @@ public:
 
     Grid* grid() const { return grid_.get(); }
 
-    std::string class_name() final { return "Ground"; }
+    std::string class_name() const final { return "Ground"; }
 
 protected:
     std::unique_ptr<Grid> grid_{nullptr};
+
+private:
+    bool IsInside(const glm::vec3& location) const;
 };
 
 }  // namespace playground

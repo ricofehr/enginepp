@@ -38,11 +38,6 @@ void HeadCamera::ComputeOrientation()
 
 bool HeadCamera::IsInFieldOfView(const nextfloor::mesh::Mesh& target) const
 {
-    /* For rooms, display always the one where we're in */
-    if (target.IsInside(location())) {
-        return true;
-    }
-
     /* Use a factor to keep displaying border objects */
     return target_abs_angle(target) <= kFactorInFov * fov();
 }

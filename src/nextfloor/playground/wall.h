@@ -35,7 +35,7 @@ public:
     std::vector<nextfloor::mesh::Mesh*> FindCollisionNeighborsOf(const nextfloor::mesh::Mesh& target) const final;
     std::unique_ptr<nextfloor::mesh::Mesh> remove_child(nextfloor::mesh::Mesh* child) final;
 
-    std::string class_name() final { return "Wall"; }
+    std::string class_name() const final { return "Wall"; }
 };
 
 }  // namespace playground

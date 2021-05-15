@@ -164,7 +164,6 @@ bool WiredGrid::IsPositionFilled(const glm::ivec3& coords) const
 std::vector<nextfloor::mesh::Mesh*> WiredGrid::FindCollisionNeighbors(const glm::vec3& coords) const
 {
     std::vector<nextfloor::mesh::Mesh*> neighbors = FindOccupants(coords);
-
     tbb::task_group tasks;
     std::vector<nextfloor::mesh::Mesh*> front_neighbors, right_neighbors;
     std::vector<nextfloor::mesh::Mesh*> back_neighbors, left_neighbors;

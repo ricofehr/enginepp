@@ -60,7 +60,7 @@ std::vector<nextfloor::mesh::Mesh*> WiredGridBox::occupants() const
 {
     std::vector<nextfloor::mesh::Mesh*> occupants;
     for (auto& occupant : occupants_) {
-        auto meshes = occupant->AllStubMeshs();
+        auto meshes = occupant->leafs();
         occupants.insert(occupants.end(), meshes.begin(), meshes.end());
     }
 
@@ -91,7 +91,7 @@ nextfloor::mesh::Mesh* WiredGridBox::getFirstOccupant()
 bool WiredGridBox::IsInto(const nextfloor::mesh::Mesh& object) const
 {
     for (const auto& occupant : occupants_) {
-        if (object.id() == occupant->id()) {
+        if (object == *occupant) {
             return true;
         }
     }

@@ -10,13 +10,14 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "nextfloor/playground/grid.h"
 #include "nextfloor/mesh/mesh.h"
 
-#include "nextfloor/playground/grid.h"
 
 namespace nextfloor {
 
 namespace mesh {
+
 
 /**
  *  @class GridBox

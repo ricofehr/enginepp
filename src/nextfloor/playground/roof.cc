@@ -22,8 +22,8 @@ void Roof::AddDoor()
 {
     for (auto cnt = 0; cnt < objects_.size(); cnt++) {
         glm::vec3 obj_location = objects_[cnt]->location();
-        if (obj_location.x >= location().x - kDoorDeltaX && obj_location.x <= location().x + kDoorDeltaX) {
-            if (obj_location.z >= location().z - kDoorDeltaZ && obj_location.z <= location().z + kDoorDeltaZ) {
+        if (obj_location.x >= -kDoorDeltaX && obj_location.x <= kDoorDeltaX) {
+            if (obj_location.z >= -kDoorDeltaZ && obj_location.z <= kDoorDeltaZ) {
                 remove_child(objects_[cnt].get());
                 return AddDoor();
             }

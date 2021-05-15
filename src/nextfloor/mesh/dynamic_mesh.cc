@@ -47,9 +47,6 @@ void DynamicMesh::MoveLocation()
 void DynamicMesh::set_movement(const glm::vec3& movement)
 {
     border_->set_movement(movement);
-    for (auto& object : objects_) {
-        object->set_movement(movement);
-    }
 
     for (auto& polygon : polygons_) {
         polygon->set_movement(movement);
@@ -59,9 +56,6 @@ void DynamicMesh::set_movement(const glm::vec3& movement)
 void DynamicMesh::set_move_factor(glm::vec3 move_factor)
 {
     border_->set_move_factor(move_factor);
-    for (auto& object : objects_) {
-        object->set_move_factor(move_factor);
-    }
 
     for (auto& polygon : polygons_) {
         polygon->set_move_factor(move_factor);
@@ -71,9 +65,6 @@ void DynamicMesh::set_move_factor(glm::vec3 move_factor)
 void DynamicMesh::set_distance_factor(float distance_factor)
 {
     border_->set_distance_factor(distance_factor);
-    for (auto& object : objects_) {
-        object->set_distance_factor(distance_factor);
-    }
 
     for (auto& polygon : polygons_) {
         polygon->set_distance_factor(distance_factor);

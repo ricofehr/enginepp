@@ -86,6 +86,7 @@ set(menu_SRCS
         src/nextfloor/menu/main_menu.cc)
 
 set(mesh_SRCS
+        src/nextfloor/mesh/mesh.cc
         src/nextfloor/mesh/placement_mesh.cc
         src/nextfloor/mesh/composite_mesh.cc
         src/nextfloor/mesh/drawing_mesh.cc
@@ -261,7 +262,6 @@ set(mesh_HDRS
         src/nextfloor/mesh/border_factory.h
         src/nextfloor/mesh/placement_mesh.h
         src/nextfloor/mesh/composite_mesh.h
-        src/nextfloor/mesh/default_mesh.h
         src/nextfloor/mesh/drawing_mesh.h
         src/nextfloor/mesh/dynamic_mesh.h
         src/nextfloor/mesh/grid_box.h

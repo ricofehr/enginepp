@@ -32,7 +32,24 @@ public:
 
     void set_movement(const glm::vec3& movement) final;
 
-    std::string class_name() override { return "DynamicMesh"; }
+    std::string class_name() const override { return "DynamicMesh"; }
+
+    bool IsLastObstacle(Mesh* obstacle) const final
+    {
+        return obstacle_ == obstacle;
+    }
+
+    void UpdateObstacleIfNearer(Mesh* obstacle, float distance_factor, glm::vec3 move_factor) final
+    {
+        tbb::mutex::scoped_lock lock_map(mutex_);
+
+        /* Update obstacle and distance if lower than former */
+        if (IsDistanceNearer(distance_factor)) {
+            obstacle_ = obstacle;
+            set_move_factor(move_factor);
+            set_distance_factor(distance_factor);
+        }
+    }
 
 protected:
     DynamicMesh() = default;
@@ -42,7 +59,7 @@ protected:
     DynamicMesh(const DynamicMesh&) = delete;
     DynamicMesh& operator=(const DynamicMesh&) = delete;
 
-    bool IsDistanceNearer(float distance_factor) const final { return distance_factor < border_->distance_factor(); }
+    bool IsDistanceNearer(float distance_factor) const { return distance_factor < border_->distance_factor(); }
     void set_distance_factor(float distance_factor) final;
     void set_move_factor(glm::vec3 move_factor) final;
 
